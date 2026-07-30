@@ -1,5 +1,12 @@
 # Activity Log
 
+- 2026-07-29 (overnight) — Unit 4 / EXP-0003: open question #1 **answered**.
+  PartyDisplaySourceRefresh (`ROMCPU:$C25D26`) decoded byte-exact: copies
+  all six authoritative battle arrays into the `+$2E78` display family.
+  H-BATTLE-0002 and H-BATTLE-0006 resolved (Confirmed); H-BATTLE-0004
+  upgraded; `+$2E98` identified as the status-word copy (`+$3EE4`) and
+  `+$2EA0` as the `+$3EF8` copy. New questions 19–20.
+
 - 2026-07-29 (overnight) — Unit 3 / EXP-0002: PerFrameBattleUpdate fires
   only in battle across all tested contexts (≈175k non-battle frames, zero
   fires; two battles positive). Corrections: "every frame" softened to

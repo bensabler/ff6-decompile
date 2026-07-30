@@ -17,10 +17,12 @@
     (53/39/33 on screen = `$35/$27/$21` in `$2E78` and in records 0–2),
     tracked through damage and a heal.
 - **Interpretation:** Field `+0` of destination record 0 — a per-frame copy
-  of `$2E78[0]`. The array at `$2E78` is upstream of it; which one gameplay
-  logic treats as authoritative is still open.
-- **Alternative explanations:** none remaining for identity; authority
-  (display copy vs. gameplay value) unresolved.
+  of `$2E78[0]`, which is itself a copy of the battle-authoritative
+  `WRAM:+$3BF4[0]` (EXP-0003 chain: delta engine → `+$3BF4` →
+  `ROMCPU:$C25D26` copier → `+$2E78` → CopyCharacterFields → here). Two
+  display layers deep.
+- **Alternative explanations:** none remaining for identity or authority
+  within battle scope (2026-07-29).
 - **Validation experiment:** freeze/edit `$2EB5` vs `$2E78[0]` separately
   and observe display and damage resolution.
 - **Go representation:** `PartySlotRecord.CurrentHP` in

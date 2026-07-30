@@ -17,14 +17,25 @@ Ordered roughly by how much each answer would unlock.
 
 ## Open
 
-1. **What produces `$2E78–$2EA7`, and is it the authoritative party state?**
-   *Partially answered in [SESSION_003](SESSION_003.md):* an upstream
-   per-slot array at `WRAM:+$3BF4` receives the battle damage/heal/death
-   stores, and its slot-0 value was observed propagating into `+$2E78`;
-   init writers `ROMCPU:$C22408` (fills `+$2E7E` with `$FFFF`) and
-   `$C25D33` also hit the region. **Still open:** the in-battle copier
-   `+$3BF4` → `+$2E78`. *Experiment:* the preserved bridge's `+$2E78`
-   write watch during one enemy hit; walk the captured stack.
+1. ~~**What produces `$2E78–$2EA7`, and is it the authoritative party
+   state?**~~ → **Answered** ([SESSION_003](SESSION_003.md) +
+   [EXP-0003](../experiments/EXP-0003-2e78-producer.md)):
+   PartyDisplaySourceRefresh (`ROMCPU:$C25D26`) copies all six
+   authoritative battle arrays (`+$3BF4` family, mutated by the delta
+   engine) into the `+$2E78` display-source family. The `+$2E78` family
+   is *not* authoritative. Follow-ups: #19 (copier's caller/trigger),
+   #2 (records' consumer) unchanged.
+
+19. **Who calls PartyDisplaySourceRefresh (`ROMCPU:$C25D26`) and on what
+    trigger?** Write-count arithmetic says event-driven (~42 calls per
+    battle), not per-frame. *Experiment:* exec watch at `$C25D26` with
+    stack capture during one attack resolution.
+
+20. **What are the routines flanking the copier** — the six-entry
+    `Y≤$0C` loop over `+$3388`/`+$200D`/`+$2015` (enemy-side candidate,
+    entry before `$C25CC0`) and the `$C25D57`+ zeroer of `+$2E99+X` and
+    `+$2F35`–`+$2F40`? *Experiment:* dump `$C25C60–$C25CC0` and
+    `$C25D57–$C25DA0`; exec watches.
 
 1b. ~~**Verify the Session 003 disassembly claims.**~~ → Answered by
    [EXP-0001](../experiments/EXP-0001-c2-delta-engine-dump.md)

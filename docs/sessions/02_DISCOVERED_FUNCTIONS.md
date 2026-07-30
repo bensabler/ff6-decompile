@@ -275,6 +275,62 @@
 - **First observed in session:** [SESSION_003](SESSION_003.md)
 - **Last updated:** 2026-07-29 (EXP-0001)
 
+### PartyDisplaySourceRefresh (candidate) — `ROMCPU:$C25D26`
+
+- **Address:** `ROMCPU:$C25D26`–`$C25D56`
+- **Address space:** ROM CPU
+- **Kind:** Function
+- **Status:** **Confirmed (code, byte-exact — EXP-0003)**; caller and
+  trigger Unknown; "display source" purpose Strong hypothesis (downstream
+  consumer is CopyCharacterFields, whose own consumer is unidentified).
+- **Previous names:** none (writer PC `$C25D33` in Session 003 /
+  EXP-0002 captures).
+- **Observed behavior:**
+
+  ```asm
+  C25D26  PHP
+  C25D27  REP #$20        ; 16-bit A
+  C25D29  SEP #$10        ; 8-bit X/Y
+  C25D2B  LDY #$06        ; slots 3..0, Y = slot*2
+  C25D2D  LDA $3BF4,Y
+  C25D30  STA $2E78,Y     ; current HP (capture pc $C25D33)
+  C25D33  LDA $3C1C,Y
+  C25D36  STA $2E80,Y     ; heal-clamp ceiling -> display max HP
+  C25D39  LDA $3C08,Y
+  C25D3C  STA $2E88,Y     ; MP-path pool -> display
+  C25D3F  LDA $3C30,Y
+  C25D42  STA $2E90,Y     ; MP-path ceiling -> display
+  C25D45  LDA $3EE4,Y
+  C25D48  STA $2E98,Y     ; status word -> display (masked $0038 downstream)
+  C25D4B  LDA $3EF8,Y
+  C25D4E  STA $2EA0,Y     ; -> display; bit 13 drives $61AD downstream
+  C25D51  DEY
+  C25D52  DEY
+  C25D53  BPL $C25D2D
+  C25D55  PLP
+  C25D56  RTS
+  ```
+
+- **Evidence:** EXP-0003 dump `mesen/out/rom_C25CC0_176.hex` (SHA-256
+  `76861e12…a5dc7`); live store captures at `$C25D33` across Session 003
+  and both EXP-0002 battles; EXP-0002 `writers` counts (168 watched
+  writes ≈ 42 invocations over ~6600 battle frames → event-driven).
+- **Interpretation:** the missing link of open question #1 — every
+  CharacterFieldsSource array is a copy of an authoritative battle
+  array. Full chain: delta engine → `WRAM:+$3BF4` family →
+  this copier → `WRAM:+$2E78` family → CopyCharacterFields →
+  `WRAM:+$2EB5` records + `+$61AD`.
+- **Alternative explanations:** none for the copy itself; invocation
+  policy (event-driven vs sampled) rests on write-count arithmetic only.
+- **Validation experiment:** exec watch at `$C25D26` with stack capture
+  → caller and trigger events.
+- **Go representation:** none yet (pure copy; model after caller known).
+- **Related discoveries:** Battle HP/MP delta engine (upstream),
+  CopyCharacterFields (downstream), CharacterFieldsSource.
+- **First observed in session:** [SESSION_003](SESSION_003.md) (store
+  PC); decoded 2026-07-29 (EXP-0003).
+- **Last updated:** 2026-07-29
+
 ### PerFrameBattleUpdate (candidate)
 
 - **Address:** `$C101FB`

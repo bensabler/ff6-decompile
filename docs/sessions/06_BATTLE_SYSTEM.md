@@ -72,7 +72,11 @@ pending-delta producers (unidentified)
                  └─ death @ $C21390: clears $3A89, zeroes HP @ $C21396,
                     $3EE4 bit1 suppresses, else JMP $C20E32 A=$0080 (unexplored)
                       └─ writes WRAM:+$3BF4 per-slot array (Y = slot×2)
-                           └─ propagates (mechanism unidentified) → WRAM:+$2E78
+                           └─ PartyDisplaySourceRefresh @ ROMCPU:$C25D26
+                              (event-driven; caller unknown; EXP-0003)
+                              copies all six arrays:
+                              $3BF4→$2E78  $3C1C→$2E80  $3C08→$2E88
+                              $3C30→$2E90  $3EE4→$2E98  $3EF8→$2EA0
                                 └─ CopyCharacterFields → WRAM:+$2EB5 records
 Lifecycle: $FF fill @ ROMCPU:$C0567B (boot/teardown);
            init @ $C223F6/$C227B4/$C22408 (battle start)

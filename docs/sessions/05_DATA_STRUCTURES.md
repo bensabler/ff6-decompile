@@ -26,16 +26,19 @@
   Displayed HP (`?????`/WEDGE/VICKS = 53/39/33) matched `$2E78[0..2]`
   exactly; a Heal Force cast set `$2E78[0]` to exactly `$2E80[0]`.
 
-- **Interpretation:**
+- **Interpretation** (updated 2026-07-29 by
+  [EXP-0003](../experiments/EXP-0003-2e78-producer.md): every array is a
+  copy of an authoritative battle array, written by
+  PartyDisplaySourceRefresh `ROMCPU:$C25D26`):
 
-  | Array base | Feeds record offset | Meaning | Status |
-  | --- | --- | --- | --- |
-  | `$2E78` | `+$00` | Current HP | **Confirmed** (slots 0–2 vs display) |
-  | `$2E80` | `+$02` | Max HP | Strong hypothesis (heal target; ≥ current; HP gauges displayed) |
-  | `$2E88` | `+$04` | Current MP? | Tentative (24 for slot 0 only) |
-  | `$2E90` | `+$06` | Max MP? | Tentative |
-  | `$2E98` | `+$08` (maskable `$0038`) | Unknown; changes during battle | Unknown |
-  | `$2EA0` | `+$0A` (maskable to 0) | Unknown; bit 13 drives `$61AD` mask | Unknown |
+  | Array base | Copied from | Feeds record offset | Meaning | Status |
+  | --- | --- | --- | --- | --- |
+  | `$2E78` | `WRAM:+$3BF4` | `+$00` | Current HP | **Confirmed** (display match + delta-engine chain) |
+  | `$2E80` | `WRAM:+$3C1C` | `+$02` | Max HP | **Confirmed** (operational: heal-clamp ceiling, heal-snap observation, gauge maximum) |
+  | `$2E88` | `WRAM:+$3C08` | `+$04` | Current MP | Strong hypothesis (copy of the MP-path pool; no live MP observation yet) |
+  | `$2E90` | `WRAM:+$3C30` | `+$06` | Max MP | Strong hypothesis (copy of the MP-path ceiling) |
+  | `$2E98` | `WRAM:+$3EE4` | `+$08` (maskable `$0038`) | Status word (bit 1 = death-event suppression; bits 3–5 survive masked mode) | Partially confirmed (source identity Confirmed; bit meanings mostly Unknown) |
+  | `$2EA0` | `WRAM:+$3EF8` | `+$0A` (maskable to 0) | Unknown; bit 13 drives `$61AD` mask | Source identity Confirmed; meaning Unknown |
 
 - **Alternative explanations:** `$2E88`/`$2E90` could be any current/max
   pair; slot 3 all-zero because the intro party has 3 members — a 4-member

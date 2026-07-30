@@ -34,6 +34,23 @@
       "falsifying_outcome": "nonzero count delta in a verified non-battle context",
       "status": "completed",
       "record": "docs/experiments/EXP-0002-perframe-context.md"
+    },
+    {
+      "schema_version": "1.0",
+      "id": "EXP-0003",
+      "question": "Is the routine containing the $C25D33-captured store the $3BF4->$2E78 copier, and what does it read?",
+      "starting_state": {
+        "emulator": "Mesen 2.1.1 macOS x86_64",
+        "rom_sha256": "0f51b4fca41b7fd509e4b8f9d543151f68efa5e97b08493e4b2a0c06f5d8d5e2",
+        "state": "deterministic ROM read; state-independent"
+      },
+      "expected_outcomes": [
+        "store to $2E78-region at $C25D30 fed from $3BF4-region (supports; chain complete)",
+        "different source (refutes; new question)"
+      ],
+      "falsifying_outcome": "no $2E78-region store at $C25D30, or source is not the $3BF4 family",
+      "status": "completed",
+      "record": "docs/experiments/EXP-0003-2e78-producer.md"
     }
   ]
 }
