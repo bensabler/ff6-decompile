@@ -301,3 +301,48 @@ func BaseAmountStandard(power, statA, statB uint8) uint16 {
 	term := uint16((uint32(power) * uint32(statA) * uint32(statB) >> 5) & 0xFFFF)
 	return stage1 + term
 }
+
+// PhysicalFlags holds one attacker's damage-modifier flags from the
+// per-slot table at WRAM 0x3C58 (family member; EXP-0017). Named by
+// verified effect; gameplay meanings unproven.
+type PhysicalFlags struct {
+	Halve         bool // $3C58,X bit 0: base >>= 1 (party attackers only)
+	ThreeQuarters bool // $3C58,X bit 3: base -= base>>2 (party attackers only)
+}
+
+// BaseAmountPhysical reproduces the $11A2-bit-0 base path at ROM CPU
+// 0xC22BA6-0xC22C20 (EXP-0017, byte-exact): the "vigor-squared" shape.
+//
+//	t = power        (x4 when the attacker is an enemy slot)
+//	t = t*1.75       (unless suppress175; stack-shape (t/2+t)/2+t)
+//	t += statA
+//	t = ((t*statB)&0xFFFF) * statB / 256
+//	party attackers then: t = t*1.5 + power, then Halve/ThreeQuarters
+//
+// statB=16 makes the squared term the identity — the live enemy base 7
+// (power 1: 1*4*1.75=7) closes numerically. All operands are
+// deterministic action state; the path reads no RNG (EXP-0017 census),
+// so hit/miss and variance are decided upstream. statA/statB are WRAM
+// 0x11AE/0x11AF (statB sourced per slot from 0x3B18,X); labels unproven.
+func BaseAmountPhysical(power, statA, statB uint8, enemyAttacker, suppress175 bool, flags PhysicalFlags) uint16 {
+	t := uint16(power)
+	if enemyAttacker {
+		t *= 4
+	}
+	if !suppress175 {
+		t = (t/2+t)/2 + t
+	}
+	t += uint16(statA)
+	t = Scale256(t*uint16(statB), statB)
+	if enemyAttacker {
+		return t
+	}
+	t = (uint16(power)*2+t)/2 + t
+	if flags.Halve {
+		t >>= 1
+	}
+	if flags.ThreeQuarters {
+		t -= t >> 2
+	}
+	return t
+}

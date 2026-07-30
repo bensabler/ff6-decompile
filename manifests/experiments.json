@@ -272,6 +272,23 @@
       "falsifying_outcome": "identical base/queue sequences across trials",
       "status": "completed",
       "record": "docs/experiments/EXP-0016-variance-hunt.md"
+    },
+    {
+      "schema_version": "1.0",
+      "id": "EXP-0017",
+      "question": "Complete the enemy/physical base path; does it read RNG?",
+      "starting_state": {
+        "emulator": "Mesen 2.1.1 macOS x86_64",
+        "rom_sha256": "0f51b4fca41b7fd509e4b8f9d543151f68efa5e97b08493e4b2a0c06f5d8d5e2",
+        "state": "deterministic ROM reads (rom_C22B40_192.hex + rom_C22BFF_48.hex)"
+      },
+      "expected_outcomes": [
+        "an RNG-state read inside the path (locates #28's consumer)",
+        "fully deterministic read set (pushes RNG upstream into action setup)"
+      ],
+      "falsifying_outcome": "for RNG-in-path: all reads are known action-state bytes",
+      "status": "completed",
+      "record": "docs/experiments/EXP-0017-physical-path.md"
     }
   ]
 }

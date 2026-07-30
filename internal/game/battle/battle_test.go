@@ -294,3 +294,31 @@ func TestDamageChainGolden(t *testing.T) {
 		t.Fatalf("ApplyDefense(450, 58) = %d, want ~346", got)
 	}
 }
+
+func TestBaseAmountPhysical(t *testing.T) {
+	tests := []struct {
+		name                string
+		power, statA, statB uint8
+		enemy, suppress175  bool
+		flags               PhysicalFlags
+		want                uint16
+	}{
+		{name: "EXP-0016 enemy base 7 (power 1, statB 16 identity)", power: 1, statB: 16, enemy: true, want: 7},
+		{name: "statB 16 is identity for the squared term", power: 8, statB: 16, enemy: true, want: 56},
+		{name: "suppress175 gate", power: 8, statB: 16, enemy: true, suppress175: true, want: 32},
+		{name: "party tail adds power and x1.5", power: 10, statA: 0, statB: 16, want: 10 + 17 + 17/2 + 0},
+		{name: "halve flag", power: 10, statB: 16, flags: PhysicalFlags{Halve: true}, want: (10 + 17 + 17/2) / 2},
+		{name: "three-quarters flag", power: 10, statB: 16, flags: PhysicalFlags{ThreeQuarters: true}, want: func() uint16 { b := uint16(10 + 17 + 17/2); return b - b>>2 }()},
+		{name: "statA adds before squaring", power: 4, statA: 3, statB: 32, enemy: true,
+			// t = 4*4 = 16; x1.75 via the exact stack shape (16/2+16)/2+16 = 28; +3 = 31
+			want: func() uint16 { tt := (uint16(16)/2+16)/2 + 16 + 3; return Scale256(tt*32, 32) }()},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			got := BaseAmountPhysical(tt.power, tt.statA, tt.statB, tt.enemy, tt.suppress175, tt.flags)
+			if got != tt.want {
+				t.Errorf("BaseAmountPhysical = %d, want %d", got, tt.want)
+			}
+		})
+	}
+}

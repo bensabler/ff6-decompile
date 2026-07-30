@@ -1,5 +1,14 @@
 # Activity Log
 
+- 2026-07-30 (evening) — Unit 18 / EXP-0017: **physical base formula
+  fully decoded — and the entire damage arithmetic is RNG-free.**
+  Vigor²-shaped: t=power(×4 enemy)(×1.75 gated)+statA, ×statB²/256;
+  party tail ×1.5+power; `+$3C58,X` halve/¾ flags (family member #13).
+  Misses arrive as power=0 → RNG lives in the action-setup/hit-roll
+  layer (new #29). `+$11AF` producer found (`+$3B18,X` per-slot table).
+  Go: `BaseAmountPhysical` + `PhysicalFlags` with the EXP-0016 base-7
+  closure as a golden test.
+
 - 2026-07-30 (evening) — Unit 17 / EXP-0016: **variance confirmed,
   timing-dependent** — identical-savestate trials with different input
   timing produced miss-vs-hit on the first enemy action and varying

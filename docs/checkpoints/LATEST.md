@@ -1,7 +1,6 @@
 # Latest Checkpoint
 
-**[2026-07-30 — Unit 17: variance confirmed](2026-07-30-unit17-variance-confirmed.md)**
+**[2026-07-30 — Unit 18: physical formula decoded; RNG upstream](2026-07-30-unit18-physical-decoded.md)**
 
-State: timing-dependent RNG proven via identical-state trials; local
-battle savestate technique established. Mesen live.
-Exact next action: EXP-0017 — decode the enemy base path, find the RNG state.
+State: all damage arithmetic proven deterministic; RNG is in action setup.
+Exact next action: EXP-0018 — +$11A6 write watch, identical-state trials.

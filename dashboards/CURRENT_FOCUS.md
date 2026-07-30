@@ -10,7 +10,8 @@ refactored); queued amount proven equal to displayed damage
 Mesen live with bridge + injected watches (code preserved in
 EXP-0002/0004/0005/0007 records).
 
-**Next exact action:** question #26+#28 combined — precise decode of
-the enemy/physical base path (`$C22B9D`-`$C22C10`, dumps in hand plus
-the `$C22C02` miss site) to identify the timing-varying read (the RNG
-state); then a repeat-trial with a write watch on that state.
+**Next exact action:** question #29 — write watch on `+$11A6` during
+identical-state trials from `exp10-battle.mss`; the writer's routine is
+the action-setup/hit-roll layer and its timing-varying read is the RNG
+state. Alternative integration unit: wire the verified battle package
+into `ff6lab` as a `battle simulate` demo command.

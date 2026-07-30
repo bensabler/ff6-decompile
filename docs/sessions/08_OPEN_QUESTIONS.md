@@ -86,15 +86,28 @@ Ordered roughly by how much each answer would unlock.
     (power×`+$11AE`×`+$11AF`)>>5** (numerically closed live). Spawned:
     #26–#28.
 
-26. **Complete the enemy/physical base path** (`~$C22B9D`–`$C22BE9`:
-    `$B2 BIT #$4000` gate, ≈×1.75 stack-value scaling, double `$47B7`).
-    *Experiment:* precise disassembly of the stretch + a live capture
-    of an enemy attack's operands.
+26. ~~**Complete the enemy/physical base path.**~~ → **Answered**
+    ([EXP-0017](../experiments/EXP-0017-physical-path.md)): the
+    vigor²-shaped physical formula, fully decoded with the ×1.75 gate,
+    statB² scaling, party tail (×1.5 + power), and `+$3C58,X` flags
+    (halve/three-quarters). **No RNG read anywhere in the damage
+    arithmetic** — misses arrive as power=0. See #29.
+
+29. **Where is the RNG actually consumed?** The entire damage
+    arithmetic (both base paths + all post-processing) is
+    deterministic; EXP-0016 proved timing-dependent variance. The
+    consumer must live in the action-setup/hit-roll layer that
+    populates `+$11A1`–`+$11B0` per action (misses → power 0).
+    *Experiment:* write watch on `+$11A6` during identical-state
+    trials from `exp10-battle.mss`; the writer's routine is the
+    hit/setup layer; its timing-varying read is the RNG state.
 
 27. **What are `+$11AE`/`+$11AF`** (28 and 4 for VICKS's Fire Beam —
-    stat candidates) **and what writes them?**
-    *Experiment:* write watches during command selection; compare
-    across characters/commands.
+    stat candidates) **and what writes them?** *Lead (EXP-0017):* the
+    routine at `$C22C21` writes `+$11AF` from per-slot table
+    `+$3B18,X` (level-table candidate).
+    *Experiment:* dump `+$3B18` live for known party; compare against
+    displayed levels; find `+$11AE`'s producer similarly.
 
 28. **Where does damage variance come from?** The decoded standard
     path is deterministic; no RNG found anywhere in the pipeline yet.
