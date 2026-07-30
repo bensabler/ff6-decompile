@@ -1,5 +1,14 @@
 # Activity Log
 
+- 2026-07-30 (daytime) — Unit 12 / EXP-0011: **base-amount routines
+  decoded** — variant A consumes a precomputed base (`+$11B0`) and
+  applies defense ((255−def)/256 shape, pair at `+$3BB8,Y`), flag
+  halvings, party-vs-party halving, and a final `$C2370B` transform;
+  variant B = fraction-of-HP with min 1; `+$11A3` bit 7 retargets X/Y
+  by `$14` (HP→MP). Family census reaches **twelve** `$14`-stride
+  arrays (05 master table). No Go this unit (helpers unverified).
+  Questions #23–25 opened.
+
 - 2026-07-30 (daytime) — Units 10–11 / EXP-0009+0010: formula frame
   verified (`JSR $0B83` at `$C23469`, ten-slot target loop) and the
   **elemental-modifier block decoded byte-exact** (`$C20B83`–`$C20C2C`):

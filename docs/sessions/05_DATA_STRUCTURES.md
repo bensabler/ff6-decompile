@@ -53,14 +53,29 @@
 ### BattleSlotHPArray (candidate authoritative layer) — `WRAM:+$3BF4`
 
 - **Address:** `WRAM:+$3BF4` family — **10-entry unified battle arrays,
-  entries 0–3 party / 4–9 enemies (Confirmed, EXP-0005)**: `+$3BF4`
-  (current HP), `+$3C08` (current MP cand.), `+$3C1C` (max HP), `+$3C30`
-  (max MP cand.), each `$14` apart. The status family repeats the
-  stride: `+$3EE4` + `$14` = `+$3EF8`. Related: `+$3C95` (flags),
-  pending-delta arrays `+$33D0`/`+$33E4` (10-entry; sweeper wrote
-  entry 9). Enemy entries 4–5 observed live (HP 24/35 → damaged →
-  zeroed by the shared engine); entries 6–9 presumed for larger
-  encounters (stride-bounded, unobserved).
+  entries 0–3 party / 4–9 enemies (Confirmed, EXP-0005)**. Census of
+  `$14`-stride members (2026-07-30, EXP-0004/0010/0011):
+
+  | Base | Role | Status |
+  | --- | --- | --- |
+  | `+$33D0` | pending delta, subtractive (damage cand.) | Confirmed (code) |
+  | `+$33E4` | pending delta, additive (heal cand.) | Confirmed (code) |
+  | `+$3BB8` | defense pair (phys/mag by byte; `$FF`=none) | Confirmed (code role); labels Strong |
+  | `+$3BCC` | element flip\|zero masks (absorb\|immune cand.) | Confirmed (code role); labels Strong |
+  | `+$3BE0` | element double\|halve masks (weak\|resist cand.) | Confirmed (code role); labels Strong |
+  | `+$3BF4` | current HP | **Confirmed** |
+  | `+$3C08` | current MP | Strong hypothesis |
+  | `+$3C1C` | max HP | **Confirmed** |
+  | `+$3C30` | max MP | Strong hypothesis |
+  | `+$3C44` | attacker boost flags | Confirmed (code role) |
+  | `+$3EE4` | status word 1 (bit 1 = death-event suppress) | Confirmed (partial) |
+  | `+$3EF8` | status word 2 (bit 13 → `$61AD`; halving flags) | Confirmed (partial) |
+
+  The `+$14` stride doubles as a mechanism: `X/Y += $14` retargets an
+  `abs,Y` read one array over (HP→MP targeting, EXP-0011). Related
+  non-family: `+$3C95` (flags), `+$3AA1` (per-slot halving flags).
+  Enemy entries 4–5 observed live; entries 6–9 stride-bounded,
+  unobserved.
 - **Address space:** WRAM-relative
 - **Kind:** Structure (10-entry per-slot arrays; struct-of-arrays family)
 - **Status:** Writers **Confirmed** (raw captures); engine code operating

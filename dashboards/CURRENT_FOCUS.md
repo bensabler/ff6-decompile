@@ -10,7 +10,7 @@ refactored); queued amount proven equal to displayed damage
 Mesen live with bridge + injected watches (code preserved in
 EXP-0002/0004/0005/0007 records).
 
-**Next exact action:** Unit 12 / EXP-0011 — dump
-`ROMCPU:$C20C9E`-`$C20D86` and `$C20D87`-`$C20E00` (the two base-amount
-routines selected by `+$11A4` bit 7); decode the innermost damage
-formula (question #22).
+**Next exact action:** Unit 13 / EXP-0012 — dump the two arithmetic
+helpers (`ROMCPU:$C247B0`-`$C24800` multiplier, `$C23700`-`$C23760`
+final transform / randomness candidate); decoding them unlocks an
+honest Go implementation of base-formula variant A.

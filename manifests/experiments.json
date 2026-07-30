@@ -170,6 +170,23 @@
       "falsifying_outcome": "no DP $F0-family access and no control flow toward $C20C0B-$C20C2C",
       "status": "completed",
       "record": "docs/experiments/EXP-0010-formula-body.md"
+    },
+    {
+      "schema_version": "1.0",
+      "id": "EXP-0011",
+      "question": "What do the base-amount routines $C20C9E/$C20D87 compute?",
+      "starting_state": {
+        "emulator": "Mesen 2.1.1 macOS x86_64",
+        "rom_sha256": "0f51b4fca41b7fd509e4b8f9d543151f68efa5e97b08493e4b2a0c06f5d8d5e2",
+        "state": "deterministic ROM reads; state-independent"
+      },
+      "expected_outcomes": [
+        "stat reads + multiplications + randomness producing DP $F0 (supports)",
+        "another dispatcher layer (alternative; re-bracket)"
+      ],
+      "falsifying_outcome": "neither routine writes the DP $F0 family",
+      "status": "completed",
+      "record": "docs/experiments/EXP-0011-base-formulas.md"
     }
   ]
 }

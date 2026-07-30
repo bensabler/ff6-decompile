@@ -73,12 +73,25 @@ Ordered roughly by how much each answer would unlock.
     response masks (`+$3BCC`/`+$3BE0` family arrays) and status-driven
     polarity flips. The remaining unknown is #22.
 
-22. **What do the base-amount routines `ROMCPU:$C20C9E` and `$C20D87`
-    compute** (selected by `+$11A4` bit 7 — physical/magical
-    candidates)? This is the innermost damage formula (stats,
-    multipliers, randomness).
-    *Experiment:* dump both routines; correlate with live DP `$F0`
-    values pre-element-block for attacks with known stats.
+22. ~~**What do the base-amount routines compute?**~~ → **Decoded**
+    ([EXP-0011](../experiments/EXP-0011-base-formulas.md)): variant A =
+    defense/halving post-processing of a precomputed base (`+$11B0`);
+    variant B = fraction-of-HP with min 1; `+$11A3` bit 7 = HP→MP index
+    retarget. Remaining unknowns split into #23–#25.
+
+23. **What computes the base amount at `WRAM:+$11B0`** (battle power ×
+    level/stat layer, upstream of the whole pipeline)?
+    *Experiment:* write watch on `+$11B0` during one attack; walk the
+    stack.
+
+24. **What is the final transform `ROMCPU:$C2370B`** applied to `$F0`
+    (randomness/variance candidate)?
+    *Experiment:* dump `$C23700`–`$C23760`; look for RNG state reads.
+
+25. **What is the multiplier helper `ROMCPU:$C247B7`** (used with DP
+    `$E8` operands `255−def` and `$AA`)?
+    *Experiment:* dump `$C247B0`–`$C24800`; expect SNES ALU
+    (`$4202`-family) usage.
 
 14. **What does `WRAM:+$11A2` mean** (bit 7 = MP-path selector)?
     *Experiment:* write watch on `+$11A2` around command execution.
