@@ -10,8 +10,7 @@ refactored); queued amount proven equal to displayed damage
 Mesen live with bridge + injected watches (code preserved in
 EXP-0002/0004/0005/0007 records).
 
-**Next exact action:** question #23 — the `+$11B0` base-amount
-producer (battle power × level/stat layer): write watch on `+$11B0`
-during one attack with stack capture (live experiment; the bridge and
-injected-watch patterns from EXP-0004/0007 apply directly). This is the
-innermost undecoded layer of the damage pipeline.
+**Next exact action:** question #28 (variance hunt) — repeat the same
+attack from the same savestate with different input timing and diff the
+damage; or #27 (stat operands) via write watches during command
+selection; or #26 (physical-path decode), which is dump-only.

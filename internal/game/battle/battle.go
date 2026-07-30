@@ -280,3 +280,24 @@ func ChainBoost(amount uint16, count uint8) uint16 {
 	}
 	return amount
 }
+
+// BaseAmountStandard reproduces the standard-path base-amount
+// computation at ROM CPU 0xC22B69-0xC22B9C (EXP-0015, byte-exact and
+// numerically closed against a live capture: power=60, statA=28,
+// statB=4 -> 450):
+//
+//	base = power*4 + (power*statA*statB)>>5
+//
+// with two verified quirks preserved exactly: when statB is zero the
+// initial term is power (the x4 is skipped), and the final add wraps
+// at 16 bits (the original has no clamp here). statA/statB are the
+// bytes at WRAM 0x11AE/0x11AF; their gameplay meanings are unproven
+// (stat-pair candidates), so the parameters carry positional names.
+func BaseAmountStandard(power, statA, statB uint8) uint16 {
+	stage1 := uint16(power)
+	if statB != 0 {
+		stage1 *= 4
+	}
+	term := uint16((uint32(power) * uint32(statA) * uint32(statB) >> 5) & 0xFFFF)
+	return stage1 + term
+}

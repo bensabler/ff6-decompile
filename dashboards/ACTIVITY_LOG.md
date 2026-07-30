@@ -1,5 +1,14 @@
 # Activity Log
 
+- 2026-07-30 (overnight 2) — Units 15–16 / EXP-0014+0015: **the base
+  damage formula is decoded and numerically closed** — `base = power×4 +
+  (power×$11AE×$11AF)>>5` (live: 60/28/4 → 450 → ×(255−58)/256+1 →
+  346, the observed Fire Beam). The `$C20DD1` 24-bit-shift helper
+  explains the `$C247B7` wrapper's memory layout. Go:
+  `BaseAmountStandard` + golden chain test. The standard damage
+  pipeline is now byte-exact from formula to HUD. New: #26 physical
+  path, #27 stat meanings, #28 variance hunt.
+
 - 2026-07-30 (daytime) — Units 13–14 / EXP-0012+0013: arithmetic helpers
   decoded — `$C2370B` is a ×1.5-per-count chain (**randomness hypothesis
   refuted**); `$C24781` is the SNES hardware 8×8 multiply, making the

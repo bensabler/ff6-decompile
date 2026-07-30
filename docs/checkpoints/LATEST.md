@@ -1,7 +1,6 @@
 # Latest Checkpoint
 
-**[2026-07-30 — Unit 14 + daytime session wrap](2026-07-30-unit14-session-wrap.md)**
+**[2026-07-30 — Unit 16: base formula closed; overnight wrap](2026-07-30-unit16-formula-closed.md)**
 
-State: 14 units complete; battle damage pipeline decoded from target loop
-to HUD except the $11B0 base producer. Mesen still running with watches.
-Exact next action: EXP-0014 — write watch on +$11B0 (question #23).
+State: the standard damage pipeline is byte-exact end to end. Mesen live.
+Exact next action: EXP-0016 — variance hunt (question #28).

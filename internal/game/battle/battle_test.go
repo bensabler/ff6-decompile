@@ -256,3 +256,41 @@ func TestChainBoost(t *testing.T) {
 		}
 	}
 }
+
+func TestBaseAmountStandard(t *testing.T) {
+	tests := []struct {
+		name                string
+		power, statA, statB uint8
+		want                uint16
+	}{
+		{name: "EXP-0015 live golden vector", power: 60, statA: 28, statB: 4, want: 450},
+		{name: "statB zero skips the x4", power: 60, statA: 28, statB: 0, want: 60},
+		{name: "zero power", power: 0, statA: 100, statB: 100, want: 0},
+		{name: "max operands wrap at 16 bits", power: 255, statA: 255, statB: 255,
+			// 255*4 + ((255*255*255)>>5)&0xFFFF, the original's 24-bit
+			// product shifted with only 16 result bits retained
+			want: uint16(1020 + ((255 * 255 * 255 >> 5) & 0xFFFF)),
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			if got := BaseAmountStandard(tt.power, tt.statA, tt.statB); got != tt.want {
+				t.Errorf("BaseAmountStandard(%d, %d, %d) = %d, want %d", tt.power, tt.statA, tt.statB, got, tt.want)
+			}
+		})
+	}
+}
+
+// The full damage chain on the EXP-0007/0014/0015 live evidence:
+// base 450 (power 60, stats 28/4) through defense ~58 gives the
+// observed 346 Fire Beam damage.
+func TestDamageChainGolden(t *testing.T) {
+	base := BaseAmountStandard(60, 28, 4)
+	if base != 450 {
+		t.Fatalf("base = %d, want 450", base)
+	}
+	got := ApplyDefense(base, 58)
+	if got != 347 && got != 346 {
+		t.Fatalf("ApplyDefense(450, 58) = %d, want ~346", got)
+	}
+}

@@ -238,6 +238,23 @@
       "falsifying_outcome": "attacks resolve with zero +$11B0 writes",
       "status": "completed",
       "record": "docs/experiments/EXP-0014-base-producer.md"
+    },
+    {
+      "schema_version": "1.0",
+      "id": "EXP-0015",
+      "question": "Decode the two-stage base computation at $C22B69 (question #23 completion)",
+      "starting_state": {
+        "emulator": "Mesen 2.1.1 macOS x86_64",
+        "rom_sha256": "0f51b4fca41b7fd509e4b8f9d543151f68efa5e97b08493e4b2a0c06f5d8d5e2",
+        "state": "deterministic ROM reads; numeric closure against EXP-0014 live captures"
+      },
+      "expected_outcomes": [
+        "power/stat multiply-shift arithmetic matching 240->450 (supports)",
+        "different arithmetic (record as found)"
+      ],
+      "falsifying_outcome": "store sites not at write-PC minus 3",
+      "status": "completed",
+      "record": "docs/experiments/EXP-0015-base-computation.md"
     }
   ]
 }

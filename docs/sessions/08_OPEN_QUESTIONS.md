@@ -79,10 +79,28 @@ Ordered roughly by how much each answer would unlock.
     variant B = fraction-of-HP with min 1; `+$11A3` bit 7 = HP→MP index
     retarget. Remaining unknowns split into #23–#25.
 
-23. **What computes the base amount at `WRAM:+$11B0`** (battle power ×
-    level/stat layer, upstream of the whole pipeline)?
-    *Experiment:* write watch on `+$11B0` during one attack; walk the
-    stack.
+23. ~~**What computes the base amount at `WRAM:+$11B0`?**~~ →
+    **Answered** (EXP-0014 +
+    [EXP-0015](../experiments/EXP-0015-base-computation.md)):
+    `ROMCPU:$C22B69` computes **base = power×4 +
+    (power×`+$11AE`×`+$11AF`)>>5** (numerically closed live). Spawned:
+    #26–#28.
+
+26. **Complete the enemy/physical base path** (`~$C22B9D`–`$C22BE9`:
+    `$B2 BIT #$4000` gate, ≈×1.75 stack-value scaling, double `$47B7`).
+    *Experiment:* precise disassembly of the stretch + a live capture
+    of an enemy attack's operands.
+
+27. **What are `+$11AE`/`+$11AF`** (28 and 4 for VICKS's Fire Beam —
+    stat candidates) **and what writes them?**
+    *Experiment:* write watches during command selection; compare
+    across characters/commands.
+
+28. **Where does damage variance come from?** The decoded standard
+    path is deterministic; no RNG found anywhere in the pipeline yet.
+    *Experiment:* repeat the same attack from the same savestate with
+    different frame timing; if damage varies, watch for the diverging
+    write.
 
 24. ~~**What is the final transform `ROMCPU:$C2370B`?**~~ → **Answered,
     hypothesis refuted**
