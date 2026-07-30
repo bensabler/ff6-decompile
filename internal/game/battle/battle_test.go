@@ -181,3 +181,78 @@ func TestApplyElementResponse(t *testing.T) {
 		})
 	}
 }
+
+func TestScale256(t *testing.T) {
+	tests := []struct {
+		value  uint16
+		factor uint8
+		want   uint16
+	}{
+		{0, 255, 0},
+		{256, 255, 255},
+		{1000, 128, 500},
+		{0xFFFF, 255, 0xFEFF},
+		{346, 170, 229}, // the $AA (~2/3) path on the EXP-0007 Fire Beam value
+		{12345, 0, 0},
+	}
+	for _, tt := range tests {
+		if got := Scale256(tt.value, tt.factor); got != tt.want {
+			t.Errorf("Scale256(%d, %d) = %d, want %d", tt.value, tt.factor, got, tt.want)
+		}
+		// Cross-check against the original's byte-composition form.
+		alt := uint16(tt.factor)*uint16(tt.value>>8) + uint16(tt.factor)*uint16(tt.value&0xFF)>>8
+		if alt != Scale256(tt.value, tt.factor) {
+			t.Errorf("composition mismatch for (%d, %d): %d vs %d", tt.value, tt.factor, alt, Scale256(tt.value, tt.factor))
+		}
+	}
+}
+
+func FuzzScale256Composition(f *testing.F) {
+	f.Add(uint16(346), uint8(170))
+	f.Fuzz(func(t *testing.T, value uint16, factor uint8) {
+		want := uint16(factor)*uint16(value>>8) + uint16(factor)*uint16(value&0xFF)>>8
+		if got := Scale256(value, factor); got != want {
+			t.Errorf("Scale256(%d, %d) = %d, byte-composition = %d", value, factor, got, want)
+		}
+	})
+}
+
+func TestApplyDefense(t *testing.T) {
+	tests := []struct {
+		amount  uint16
+		defense uint8
+		want    uint16
+	}{
+		{1000, NoDefense, 1000}, // $FF sentinel skips entirely (no +1)
+		{1000, 0, 997},          // (1000*255)/256+1
+		{1000, 128, 497},        // (1000*127)/256+1
+		{1000, 254, 4},          // (1000*1)/256+1
+		{0, 0, 1},               // minimum 1 after scaling
+	}
+	for _, tt := range tests {
+		if got := ApplyDefense(tt.amount, tt.defense); got != tt.want {
+			t.Errorf("ApplyDefense(%d, %d) = %d, want %d", tt.amount, tt.defense, got, tt.want)
+		}
+	}
+}
+
+func TestChainBoost(t *testing.T) {
+	tests := []struct {
+		amount uint16
+		count  uint8
+		want   uint16
+	}{
+		{100, 0, 100},
+		{100, 1, 150},
+		{100, 2, 225},
+		{101, 1, 151},       // odd: 101 + 50
+		{0xFFFF, 1, 0xFFFF}, // clamp
+		{0xAAAB, 1, 0xFFFF}, // 0xAAAB + 0x5555 = 0x10000 -> clamp
+		{0xAAAA, 1, 0xFFFF}, // 0xAAAA + 0x5555 = 0xFFFF exactly
+	}
+	for _, tt := range tests {
+		if got := ChainBoost(tt.amount, tt.count); got != tt.want {
+			t.Errorf("ChainBoost(%d, %d) = %d, want %d", tt.amount, tt.count, got, tt.want)
+		}
+	}
+}

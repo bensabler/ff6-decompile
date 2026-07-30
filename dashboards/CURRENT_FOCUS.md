@@ -10,7 +10,8 @@ refactored); queued amount proven equal to displayed damage
 Mesen live with bridge + injected watches (code preserved in
 EXP-0002/0004/0005/0007 records).
 
-**Next exact action:** Unit 13 / EXP-0012 — dump the two arithmetic
-helpers (`ROMCPU:$C247B0`-`$C24800` multiplier, `$C23700`-`$C23760`
-final transform / randomness candidate); decoding them unlocks an
-honest Go implementation of base-formula variant A.
+**Next exact action:** question #23 — the `+$11B0` base-amount
+producer (battle power × level/stat layer): write watch on `+$11B0`
+during one attack with stack capture (live experiment; the bridge and
+injected-watch patterns from EXP-0004/0007 apply directly). This is the
+innermost undecoded layer of the damage pipeline.

@@ -238,3 +238,45 @@ func ApplyElementResponse(amount uint16, heal bool, elems, nullified uint8, r El
 	}
 	return amount, heal
 }
+
+// Scale256 reproduces the multiplier composition at ROM CPU 0xC247B7
+// over the hardware 8x8 multiply at 0xC24781 (EXP-0013, byte-exact):
+// floor(value * factor / 256). The original computes it as
+// factor*high(value) + floor(factor*low(value)/256), which is
+// algebraically identical and cannot overflow 16 bits.
+func Scale256(value uint16, factor uint8) uint16 {
+	return uint16(uint32(value) * uint32(factor) >> 8)
+}
+
+// NoDefense is the sentinel in the defense pair at WRAM 0x3BB8 meaning
+// "skip defense scaling" (INC/BEQ test at ROM CPU 0xC20CD4).
+const NoDefense = 0xFF
+
+// ApplyDefense reproduces the defense application of base-amount
+// variant A (ROM CPU 0xC20CCC-0xC20CBA region, EXP-0011 + EXP-0013):
+// amount = floor(amount * (255-defense) / 256) + 1, skipped entirely
+// when defense is the 0xFF sentinel. The conditional #$C1 defense
+// override observed under the $3A82&$3A83 gate is not modeled
+// (condition semantics unknown).
+func ApplyDefense(amount uint16, defense uint8) uint16 {
+	if defense == NoDefense {
+		return amount
+	}
+	return Scale256(amount, 255-defense) + 1
+}
+
+// ChainBoost reproduces the x1.5-per-count chain at ROM CPU 0xC2370B
+// (EXP-0012, byte-exact): count times, amount += amount>>1 with a
+// 0xFFFF clamp. In the original the count lives in DP $BC, incremented
+// per target under the $3A54 gate in the target loop, and is consumed
+// (zeroed) by the call.
+func ChainBoost(amount uint16, count uint8) uint16 {
+	for ; count > 0; count-- {
+		sum := uint32(amount) + uint32(amount>>1)
+		if sum > 0xFFFF {
+			return 0xFFFF
+		}
+		amount = uint16(sum)
+	}
+	return amount
+}

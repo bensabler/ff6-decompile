@@ -204,6 +204,23 @@
       "falsifying_outcome": "helper entries fall mid-instruction",
       "status": "completed",
       "record": "docs/experiments/EXP-0012-arithmetic-helpers.md"
+    },
+    {
+      "schema_version": "1.0",
+      "id": "EXP-0013",
+      "question": "What does the core multiply ROMCPU:$C24781 compute?",
+      "starting_state": {
+        "emulator": "Mesen 2.1.1 macOS x86_64",
+        "rom_sha256": "0f51b4fca41b7fd509e4b8f9d543151f68efa5e97b08493e4b2a0c06f5d8d5e2",
+        "state": "deterministic ROM read; state-independent"
+      },
+      "expected_outcomes": [
+        "$4202/$4203 write + $4216 product read (supports)",
+        "software multiply loop (alternative)"
+      ],
+      "falsifying_outcome": "$C24781 falls mid-instruction",
+      "status": "completed",
+      "record": "docs/experiments/EXP-0013-core-multiply.md"
     }
   ]
 }

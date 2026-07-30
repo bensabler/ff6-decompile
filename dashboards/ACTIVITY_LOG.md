@@ -1,5 +1,13 @@
 # Activity Log
 
+- 2026-07-30 (daytime) — Units 13–14 / EXP-0012+0013: arithmetic helpers
+  decoded — `$C2370B` is a ×1.5-per-count chain (**randomness hypothesis
+  refuted**); `$C24781` is the SNES hardware 8×8 multiply, making the
+  defense scaling exactly `(amount×(255−def))/256 + 1`. Go:
+  `Scale256`, `ApplyDefense`, `ChainBoost` + tables + a composition
+  fuzz target. Questions #24/#25 closed; #23 (`+$11B0` producer) is the
+  innermost frontier.
+
 - 2026-07-30 (daytime) — Unit 12 / EXP-0011: **base-amount routines
   decoded** — variant A consumes a precomputed base (`+$11B0`) and
   applies defense ((255−def)/256 shape, pair at `+$3BB8,Y`), flag

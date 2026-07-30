@@ -6,7 +6,7 @@ As of 2026-07-30 (mid daytime session; regenerate via `/weekly-review`):
 |---|---|
 | Documented sessions | 3 (SES-001..003; SES-003 reconstructed post-hoc) |
 | Function records | 9 (FN-0001..0009; FN-0003..0009 Confirmed code via EXP-0001/0003/0006/0009/0010) |
-| Experiment records | 10 completed (EXP-0001..0010; EXP-0008 negative-result) |
+| Experiment records | 13 completed (EXP-0001..0013; EXP-0008 negative-result, EXP-0012 refuted a hypothesis) |
 | Variable records | 4 (VAR-0001..0004) |
 | Structure records | 3 (ST-0001..0003) |
 | Contradiction records | 1 resolved (CONTRA-0001, notation standards) |

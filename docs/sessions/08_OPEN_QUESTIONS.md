@@ -91,11 +91,14 @@ Ordered roughly by how much each answer would unlock.
     `+$3A54` gate, clamped `$FFFF`, consumed on use) — not randomness.
     Where the damage variance comes from folds into #23/#25.
 
-25. **What is the core multiply `ROMCPU:$C24781`?** (EXP-0012 decoded
-    the `$C247B7` wrapper — two calls composing a 16×8 product; the
-    adjacent code reads ALU `$4214`.)
-    *Experiment:* dump `$C24770`–`$C247B0`; expect `$4202`/`$4216`
-    writes/reads.
+25. ~~**What is the core multiply `ROMCPU:$C24781`?**~~ → **Answered**
+    ([EXP-0013](../experiments/EXP-0013-core-multiply.md)): the SNES
+    hardware 8×8 multiply of A's own bytes (`$4202/$4203` via one
+    16-bit store, product from `$4216`); the `$C247B7` wrapper is
+    algebraically `floor(value×$E8/256)`, making the defense scaling
+    exactly `(amount×(255−def))/256 + 1`. Bonus: `$C24792` = hardware
+    divide helper. Remaining innermost frontier: #23 (`+$11B0`
+    producer).
 
 14. **What does `WRAM:+$11A2` mean** (bit 7 = MP-path selector)?
     *Experiment:* write watch on `+$11A2` around command execution.
