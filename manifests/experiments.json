@@ -221,6 +221,23 @@
       "falsifying_outcome": "$C24781 falls mid-instruction",
       "status": "completed",
       "record": "docs/experiments/EXP-0013-core-multiply.md"
+    },
+    {
+      "schema_version": "1.0",
+      "id": "EXP-0014",
+      "question": "What writes the base amount at WRAM +$11B0?",
+      "starting_state": {
+        "emulator": "Mesen 2.1.1 macOS x86_64 (fresh launch)",
+        "rom_sha256": "0f51b4fca41b7fd509e4b8f9d543151f68efa5e97b08493e4b2a0c06f5d8d5e2",
+        "state": "checkpoint3-mines.mss; encounter via injected walking; watches re-injected (code in record)"
+      },
+      "expected_outcomes": [
+        "small writer-PC set with values matching the damage chain (supports)",
+        "no writes before accumulator activity (refutes precomputed-base model)"
+      ],
+      "falsifying_outcome": "attacks resolve with zero +$11B0 writes",
+      "status": "completed",
+      "record": "docs/experiments/EXP-0014-base-producer.md"
     }
   ]
 }
