@@ -1,5 +1,13 @@
 # Activity Log
 
+- 2026-07-29 (overnight) — Unit 3 / EXP-0002: PerFrameBattleUpdate fires
+  only in battle across all tested contexts (≈175k non-battle frames, zero
+  fires; two battles positive). Corrections: "every frame" softened to
+  phase-dependent ≈0.23–0.87/frame; second one-shot caller `JSR
+  ROMCPU:$C11090` discovered at battle entry. Hazard: Mesen auto-save
+  destroyed the `_11.mss` battle state (recorded in capability matrix).
+  Battle-init writers reproduced in an independent encounter.
+
 - 2026-07-29 (overnight) — Unit 2 / EXP-0001: launched Mesen 2.1.1 with the
   bridge, dumped `ROMCPU:$C212F0–$C2141F`, verified every battle.go
   disassembly claim byte-exact; FN-0003..0006 upgraded to Confirmed

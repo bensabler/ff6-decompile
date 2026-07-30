@@ -29,3 +29,11 @@ through the bridge on next launch.
 | DSP register inspection | Unknown | | | | |
 
 Mesen's published code and historical documentation support substantial SNES debugging and Lua capabilities, but export behavior and UI details must be verified against the installed build.
+
+> **Hazard (observed 2026-07-29, EXP-0002):** slot file
+> `SaveStates/<rom>_11.mss` is Mesen's **auto-save slot** — it was
+> silently overwritten mid-session (mtime 22:08) while the emulator idled,
+> destroying the Session 002/003 Narshe-battle state. Any state worth
+> keeping must be copied out of `SaveStates/` immediately (the
+> `mesen/out/checkpoint*.mss` practice). Never cite `_11.mss` as stable
+> evidence.

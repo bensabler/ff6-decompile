@@ -17,6 +17,23 @@
       "falsifying_outcome": "bytes at $C21338/$C21347/$C21396 are not 3-byte store instructions, or claimed entry points fall mid-instruction",
       "status": "completed",
       "record": "docs/experiments/EXP-0001-c2-delta-engine-dump.md"
+    },
+    {
+      "schema_version": "1.0",
+      "id": "EXP-0002",
+      "question": "Does PerFrameBattleUpdate (ROMCPU:$C101FB) execute outside battle?",
+      "starting_state": {
+        "emulator": "Mesen 2.1.1 macOS x86_64",
+        "rom_sha256": "0f51b4fca41b7fd509e4b8f9d543151f68efa5e97b08493e4b2a0c06f5d8d5e2",
+        "state": "title screen; then checkpoint1/2/3 field states; then a random encounter entered by injected walking"
+      },
+      "expected_outcomes": [
+        "zero fires in non-battle contexts and ~per-frame fires in battle (supports H-BATTLE-0003)",
+        "nonzero fires in a verified non-battle context (refutes)"
+      ],
+      "falsifying_outcome": "nonzero count delta in a verified non-battle context",
+      "status": "completed",
+      "record": "docs/experiments/EXP-0002-perframe-context.md"
     }
   ]
 }

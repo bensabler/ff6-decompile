@@ -25,9 +25,15 @@ bank $C2 frame driver (unexplored; JSL at ~$C26425)
 
 Observed facts supporting this:
 
-- `$C10DF3` fired once per frame, every frame, while the battle ran
-  (menu open, actions resolving) — and zero times at the title screen.
-- The return address was `$C1:0203` on every capture (thousands of frames).
+- `$C10DF3` fired repeatedly while battles ran and zero times at the
+  title screen and in field/event contexts (EXP-0002: ≈175k non-battle
+  frames, zero fires across four contexts).
+- Rate (EXP-0002 correction): up to ~1/frame when the battle is settled
+  (~0.87 observed), lower during entry/heavy phases (≈0.23–0.7) — cause
+  undiscriminated (lag frames vs conditional dispatch).
+- The return address was `$C1:0203` on every steady-state capture
+  (thousands of hits); one additional one-shot caller at battle entry:
+  `JSR` at `ROMCPU:$C11090` (EXP-0002).
 - The stack shows entry via `JSL` from bank `$C2` (return `$C2:6429`).
 
 ## Party-slot data flow

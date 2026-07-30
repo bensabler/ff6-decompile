@@ -97,8 +97,14 @@
 - **Outputs / modified memory:** records at `$2EB5+n*$20` offsets `+0..+$B`;
   `$61AD`; direct-page scratch `$10`, `$12`; registers A, X, Y, flags.
 - **Callers:** `JSR $0DF3` at `$C10200`, inside PerFrameBattleUpdate
-  (`$C101FB`, below). Observed firing once per frame during battle; never
-  at the title screen. No other callers observed yet.
+  (`$C101FB`, below) — the steady-state caller during battle. **Second
+  caller (EXP-0002):** a one-shot `JSR` at `ROMCPU:$C11090` (return
+  `$C1:1093`) fired once at battle entry, before the per-frame stream
+  began; context unexplored. Rate note (EXP-0002): the per-frame stream
+  runs at up to ~1/frame when the battle is settled but drops during
+  entry/heavy phases (≈0.23–0.7/frame) — "every frame" was an
+  overgeneralization. Never observed at the title screen or in field/event
+  contexts (≈175k non-battle frames, zero fires).
 - **Callees:** none.
 - **Alternative explanations:** The destination buffer's consumer is
   unidentified; "display/staging data" is inferred from the per-frame
@@ -299,9 +305,12 @@
   ```
 
 - **Evidence:** ROM dump `$C101C0–$C1022F`; return address `$C1:0203` in
-  every exec capture at `$C10DF3`; stack snapshot showing pushed X/Y then a
-  long-call return address `$C2:6429` (so a `JSL $C101FB` at `$C26425`);
-  fires once per frame in battle, never at the title screen.
+  every steady-state exec capture at `$C10DF3`; stack snapshot showing
+  pushed X/Y then a long-call return address `$C2:6429` (so a
+  `JSL $C101FB` at `$C26425`); EXP-0002: zero fires across title and
+  three field/event contexts (≈175k frames), fires within ~30 frames of a
+  random-encounter entry and continuously thereafter (≈0.23–0.87/frame
+  by phase).
 - **Interpretation:** A fixed sequence of per-frame battle subsystem
   updates, entered long from bank `$C2` each frame. CopyCharacterFields is
   its second step.

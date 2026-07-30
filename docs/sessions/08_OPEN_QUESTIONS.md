@@ -49,6 +49,17 @@ Ordered roughly by how much each answer would unlock.
     return carry set?**
     *Experiment:* exec watch at `$C21307` with register capture.
 
+17. **What calls CopyCharacterFields from `ROMCPU:$C11090` at battle
+    entry** (one-shot `JSR`, EXP-0002), and what else does that init path
+    do? *Experiment:* dump around `$C11080–$C110C0`; exec-log the region
+    during an encounter transition.
+
+18. **Why does the per-frame stream skip frames during battle entry/heavy
+    phases** (≈0.23–0.7/frame vs ~0.87 settled, EXP-0002)? Lag frames vs
+    conditional dispatch in the bank-`$C2` driver.
+    *Experiment:* compare fire count against Mesen's lag-frame counter
+    over the same window.
+
 2. **What consumes the `$2EB5` records and the `$61AD` mask?**
    *Experiment:* read breakpoints on `$2EB5` and `$61AD`; classify readers.
 
