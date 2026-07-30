@@ -1,5 +1,6 @@
 # Latest Checkpoint
 
-**[2026-07-30 — Unit 9: formula lead refined](2026-07-30-unit9-formula-lead.md)**
+**[2026-07-30 — Unit 10: formula frame verified](2026-07-30-unit10-frame-verified.md)**
 
-State: Mesen live. Exact next action: EXP-0009 — verify JSR at ~$C23469.
+State: Mesen live; formula body bracketed to ROMCPU $C20B83-$C20C2C.
+Exact next action: EXP-0010 — dump and decode the formula body.
