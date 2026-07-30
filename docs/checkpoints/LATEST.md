@@ -1,6 +1,5 @@
 # Latest Checkpoint
 
-**[2026-07-30 — Unit 8: queued amount = displayed damage](2026-07-30-unit8-amount-correlation.md)**
+**[2026-07-30 — Unit 9: formula lead refined](2026-07-30-unit9-formula-lead.md)**
 
-State: Mesen live; $F0 correlation confirmed on three anchors.
-Exact next action: EXP-0008 — dump ROMCPU:$C26AE0-$C26B60 (formula lead).
+State: Mesen live. Exact next action: EXP-0009 — verify JSR at ~$C23469.

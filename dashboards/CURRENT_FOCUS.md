@@ -7,7 +7,6 @@ correction and a second caller (EXP-0002); the `+$2E78` producer
 identified — full battle HP chain now code-complete (EXP-0003). Mesen
 running (post-"Annihilated" game-over screen).
 
-**Next exact action:** Unit 9 — question #21 continuation: dump
-`ROMCPU:$C26AE0`–`$C26B60` (deeper-return lead `$6B16` from the
-EXP-0007 stacks) and decode toward the damage formula; fall back to a
-full-DP-snapshot exec log at `$C20C76` if the lead is a dead end.
+**Next exact action:** Unit 10 / EXP-0009 — dump
+–; verify the refined formula-path frame
+( at ); decode DP  staging if present.
