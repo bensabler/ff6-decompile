@@ -52,12 +52,16 @@
 
 ### BattleSlotHPArray (candidate authoritative layer) — `WRAM:+$3BF4`
 
-- **Address:** `WRAM:+$3BF4`–`+$3BFB` observed (per-slot 16-bit, stride 2);
-  sibling arrays `+$3C08` (MP candidate), `+$3C1C`/`+$3C30` (max
-  ceilings), `+$3EE4` (status), `+$3C95` (flags) — **code roles Confirmed
-  by EXP-0001**; semantic labels Strong hypothesis.
+- **Address:** `WRAM:+$3BF4` family. **Structural update (EXP-0004):**
+  the four main arrays are each `$14` bytes apart — `+$3BF4` (current
+  HP), `+$3C08` (current MP cand.), `+$3C1C` (max HP), `+$3C30` (max MP
+  cand.) — i.e. **10 entries of 16 bits each** (candidate: 4 party
+  slots + 6 enemy slots; Strong hypothesis — party use confirmed at
+  Y∈{0,2,4,6}, entry-9 write observed only in the pending-delta array).
+  Related: `+$3EE4` (status), `+$3C95` (flags), pending-delta arrays
+  `+$33D0`/`+$33E4` (also 10-entry: sweeper wrote entry 9 at `+$33E2`).
 - **Address space:** WRAM-relative
-- **Kind:** Structure (per-slot array; struct-of-arrays family)
+- **Kind:** Structure (10-entry per-slot arrays; struct-of-arrays family)
 - **Status:** Writers **Confirmed** (raw captures); engine code operating
   the family **Confirmed byte-exact** (EXP-0001); role as authoritative
   current HP **Strong hypothesis** (consumer/propagation path still

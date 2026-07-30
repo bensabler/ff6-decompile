@@ -7,9 +7,9 @@ correction and a second caller (EXP-0002); the `+$2E78` producer
 identified — full battle HP chain now code-complete (EXP-0003). Mesen
 running (post-"Annihilated" game-over screen).
 
-**Next exact action:** Unit 5 — orchestrator pick from: (a) question #19,
-exec-watch `ROMCPU:$C25D26` for its caller/trigger during one attack;
-(b) question #13, write-watch the pending-delta arrays `+$33E4`/`+$33D0`
-to find the damage-formula layer; (c) question #9, live MP observation to
-settle H-BATTLE-0004. All need a fresh battle from
-`checkpoint3-mines.mss` (reload required — party was annihilated).
+**Next exact action:** Unit 6 — test H-BATTLE-0008 (enemy slots 4–9 in
+the same arrays): reload `checkpoint3-mines.mss`, watch
+`WRAM:+$3BFC`–`+$3C07` (candidate enemy-HP entries) through one
+encounter while VICKS attacks; delta-engine stores with Y≥8 would
+confirm. Pair with a dump of `$C20C60`–`$C20CE0` (question #13 formula
+layer) if the session budget allows a seventh unit.

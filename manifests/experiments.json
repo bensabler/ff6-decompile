@@ -51,6 +51,23 @@
       "falsifying_outcome": "no $2E78-region store at $C25D30, or source is not the $3BF4 family",
       "status": "completed",
       "record": "docs/experiments/EXP-0003-2e78-producer.md"
+    },
+    {
+      "schema_version": "1.0",
+      "id": "EXP-0004",
+      "question": "What writes the pending-delta arrays ($33D0/$33E4), and who calls PartyDisplaySourceRefresh?",
+      "starting_state": {
+        "emulator": "Mesen 2.1.1 macOS x86_64",
+        "rom_sha256": "0f51b4fca41b7fd509e4b8f9d543151f68efa5e97b08493e4b2a0c06f5d8d5e2",
+        "state": "checkpoint3-mines.mss reload; random encounter via injected walking; watches injected pre-encounter (code preserved in record)"
+      },
+      "expected_outcomes": [
+        "small set of bank-$C2 writer PCs with identifying stacks (supports)",
+        "no writes during HP-changing attacks (refutes pending-delta model)"
+      ],
+      "falsifying_outcome": "no $33D0-$33EB writes during attacks that change HP",
+      "status": "completed",
+      "record": "docs/experiments/EXP-0004-delta-producers.md"
     }
   ]
 }

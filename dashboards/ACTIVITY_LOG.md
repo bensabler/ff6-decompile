@@ -1,5 +1,15 @@
 # Activity Log
 
+- 2026-07-29 (overnight) — Unit 5 / EXP-0004: pending-delta producers
+  identified at the PC level (setter `ROMCPU:$C20C9B`, sweepers
+  `$C2638E`/`$C26391`); arrays shown transient (`$FFFF` between events);
+  **structural discovery: the battle arrays are 10 entries wide**
+  (`$14` stride family `+$3BF4/+$3C08/+$3C1C/+$3C30`; entry-9 write
+  observed) — 4 party + 6 enemy candidate. Refresh trigger localized to
+  the post-fetch driver (`JSR $069B` at `$C21409` → `$C2069B` → tail
+  path). Questions #13/#19 narrowed; battle.go's 4-slot model flagged as
+  party-view-only pending confirmation.
+
 - 2026-07-29 (overnight) — Unit 4 / EXP-0003: open question #1 **answered**.
   PartyDisplaySourceRefresh (`ROMCPU:$C25D26`) decoded byte-exact: copies
   all six authoritative battle arrays into the `+$2E78` display family.

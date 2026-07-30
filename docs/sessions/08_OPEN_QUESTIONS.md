@@ -27,9 +27,11 @@ Ordered roughly by how much each answer would unlock.
    #2 (records' consumer) unchanged.
 
 19. **Who calls PartyDisplaySourceRefresh (`ROMCPU:$C25D26`) and on what
-    trigger?** Write-count arithmetic says event-driven (~42 calls per
-    battle), not per-frame. *Experiment:* exec watch at `$C25D26` with
-    stack capture during one attack resolution.
+    trigger?** *Partially answered (EXP-0004):* event-driven confirmed
+    (13 calls in ~80 s); every steady stack tops with the `JSR $069B` at
+    `ROMCPU:$C21409` (post-fetch driver) → `$C2069B` → (tail path,
+    unverified) → `$C25D26`. **Still open:** the `$C2069B` code and the
+    non-steady first-call path. *Experiment:* dump `$C20690`–`$C20700`.
 
 20. **What are the routines flanking the copier** — the six-entry
     `Y≤$0C` loop over `+$3388`/`+$200D`/`+$2015` (enemy-side candidate,
@@ -44,9 +46,13 @@ Ordered roughly by how much each answer would unlock.
    follow-ups: 13–16 below.
 
 13. **What writes the pending-delta arrays `WRAM:+$33E4`/`+$33D0`?**
-    The battle-logic layer above the delta engine.
-    *Experiment:* write watch on `+$33E4`–`+$33F3` during one attack
-    command; walk captured stacks.
+    *Partially answered by
+    [EXP-0004](../experiments/EXP-0004-delta-producers.md):* setter
+    `ROMCPU:$C20C9B` (caller returns `$0436`/`$0C2A`), sweepers
+    `$C2638E`/`$C26391`, init `$C22408`. **Still open:** the formula
+    logic upstream of `$C20C9B`. *Experiment:* dump `$C20C60`–`$C20CE0`
+    and the `$C20434`/`$C20C28` caller sites; correlate the written
+    delta values with observed damage numbers.
 
 14. **What does `WRAM:+$11A2` mean** (bit 7 = MP-path selector)?
     *Experiment:* write watch on `+$11A2` around command execution.
