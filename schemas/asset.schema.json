@@ -1,0 +1,53 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "title": "FF6 Asset Manifest",
+  "required": [
+    "schema_version",
+    "id",
+    "class",
+    "local_path",
+    "sha256",
+    "rom_sha256",
+    "provenance",
+    "validation",
+    "confidence"
+  ],
+  "properties": {
+    "schema_version": {
+      "type": "string"
+    },
+    "id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "class": {
+      "type": "string"
+    },
+    "local_path": {
+      "type": "string"
+    },
+    "sha256": {
+      "type": "string",
+      "pattern": "^[0-9a-fA-F]{64}$"
+    },
+    "rom_sha256": {
+      "type": "string",
+      "pattern": "^[0-9a-fA-F]{64}$"
+    },
+    "provenance": {
+      "type": "object"
+    },
+    "validation": {
+      "type": "object"
+    },
+    "confidence": {
+      "enum": [
+        "confirmed",
+        "strong-hypothesis",
+        "tentative-hypothesis",
+        "unknown"
+      ]
+    }
+  }
+}

@@ -1,0 +1,28 @@
+name: CI
+
+on:
+  push:
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-go@v5
+        with:
+          go-version-file: go.mod
+      - run: gofmt -w .
+      - run: git diff --exit-code
+      - run: go test ./...
+      - run: go vet ./...
+      - name: Reject tracked ROM/audio/state files
+        shell: bash
+        run: |
+          if git ls-files | grep -Ei '\.(sfc|smc|fig|spc|srm|sav|state[0-9]*|mss|wav|flac|mp3|ogg)$'; then
+            echo "Tracked ROM-derived or restricted file detected."
+            exit 1
+          fi

@@ -1,0 +1,18 @@
+{
+  "schema_version": "1.0",
+  "rom": {
+    "path": "local_artifacts/rom/ff6.sfc",
+    "sha256": "FILL_LOCALLY"
+  },
+  "emulator": {
+    "name": "Mesen",
+    "version": "FILL_LOCALLY",
+    "path": "FILL_LOCALLY"
+  },
+  "paths": {
+    "captures": "local_artifacts/captures",
+    "states": "local_artifacts/states",
+    "assets": "local_artifacts/assets",
+    "reports": "out/reports"
+  }
+}

@@ -1,0 +1,1 @@
+Use the documentation-curator skill. Produce a factual session summary linked to experiments, discoveries, evidence, code changes, test results, and next action. Do not substitute this for `/checkpoint`.

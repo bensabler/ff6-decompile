@@ -1,0 +1,19 @@
+name: Research question
+description: Propose a bounded reverse-engineering question
+title: "[Research]: "
+labels: ["research"]
+body:
+  - type: textarea
+    id: question
+    attributes:
+      label: Question
+    validations:
+      required: true
+  - type: textarea
+    id: evidence
+    attributes:
+      label: Existing evidence
+  - type: textarea
+    id: stopping
+    attributes:
+      label: Proposed stopping condition

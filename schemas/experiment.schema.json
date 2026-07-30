@@ -1,0 +1,43 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "title": "FF6 Experiment",
+  "required": [
+    "schema_version",
+    "id",
+    "question",
+    "starting_state",
+    "expected_outcomes",
+    "falsifying_outcome",
+    "status"
+  ],
+  "properties": {
+    "schema_version": {
+      "type": "string"
+    },
+    "id": {
+      "type": "string"
+    },
+    "question": {
+      "type": "string"
+    },
+    "starting_state": {
+      "type": "object"
+    },
+    "expected_outcomes": {
+      "type": "array"
+    },
+    "falsifying_outcome": {
+      "type": "string"
+    },
+    "status": {
+      "enum": [
+        "planned",
+        "running",
+        "blocked",
+        "completed",
+        "abandoned"
+      ]
+    }
+  }
+}

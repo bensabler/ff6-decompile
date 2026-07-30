@@ -1,0 +1,36 @@
+# ROMs and commercial-derived material
+local_artifacts/
+*.sfc
+*.smc
+*.fig
+*.spc
+*.srm
+*.sav
+*.state
+*.state*
+*.mss
+*.wav
+*.flac
+*.mp3
+*.ogg
+
+# Generated output
+out/
+dist/
+coverage.out
+*.prof
+*.test
+ff6lab
+ff6lab.exe
+
+# Local settings
+.env
+.env.*
+!.env.example
+.claude/settings.local.json
+
+# Editors / OS
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
