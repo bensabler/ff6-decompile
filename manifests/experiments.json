@@ -136,6 +136,23 @@
       "falsifying_outcome": "no JSR ending at $C26B16 and no DP-$F0-family access in the window",
       "status": "completed",
       "record": "docs/experiments/EXP-0008-formula-frame.md"
+    },
+    {
+      "schema_version": "1.0",
+      "id": "EXP-0009",
+      "question": "Is $C23469 the formula-path caller frame (refined stack model)?",
+      "starting_state": {
+        "emulator": "Mesen 2.1.1 macOS x86_64",
+        "rom_sha256": "0f51b4fca41b7fd509e4b8f9d543151f68efa5e97b08493e4b2a0c06f5d8d5e2",
+        "state": "deterministic ROM read; state-independent"
+      },
+      "expected_outcomes": [
+        "3-byte JSR at $C23469 with formula-relevant surroundings (supports)",
+        "no JSR alignment (refutes; fallback to live DP-snapshot logging)"
+      ],
+      "falsifying_outcome": "bytes at $C23469 do not begin a 3-byte JSR",
+      "status": "completed",
+      "record": "docs/experiments/EXP-0009-formula-frame-2.md"
     }
   ]
 }

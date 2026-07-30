@@ -63,10 +63,13 @@ Ordered roughly by how much each answer would unlock.
     holds the final per-hit number (equals popup and applied delta),
     so the complete formula runs upstream of the `$C20C28` JSR.
     Attacker/target arrive as `X`/`Y` (slot×2). Staging candidates:
-    `$C20420`+ (DP `$F4`–`$FC`), conditional doubling at `$C20C1A`;
-    stack hint: deeper return candidate `$6B16` (bank `$C2` presumed).
-    *Experiment:* dump `ROMCPU:$C26B10`± and walk backward; or
-    exec-log with full DP `$F4`–`$FC` snapshot per invocation.
+    `$C20420`+ (DP `$F4`–`$FC`), conditional doubling at `$C20C1A`.
+    *Progress:* the `$6B16` lead was refuted (EXP-0008); the verified
+    frame is the `JSR $0B83` at `$C23469` (EXP-0009), bracketing the
+    formula body to `ROMCPU:$C20B83`–`$C20C2C` inside a ten-slot
+    target loop gated by `+$3018,Y` bits vs DP `$A4`.
+    *Experiment (EXP-0010):* dump `$C20B83`–`$C20C10` and decode the
+    DP `$F0` computation.
 
 14. **What does `WRAM:+$11A2` mean** (bit 7 = MP-path selector)?
     *Experiment:* write watch on `+$11A2` around command execution.
