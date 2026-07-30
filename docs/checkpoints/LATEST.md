@@ -1,6 +1,6 @@
 # Latest Checkpoint
 
-**[2026-07-29 — Overnight Unit 5: delta producers located](2026-07-29-unit5-delta-producers.md)**
+**[2026-07-30 — Unit 6: enemy slots confirmed; Go unified](2026-07-30-unit6-enemy-slots.md)**
 
-State: Mesen live with injected watches; 10-entry array family discovered.
-Exact next action: EXP-0005 — enemy-slot test (H-BATTLE-0008).
+State: Mesen live; unified 10-slot model implemented and tested.
+Exact next action: EXP-0006 — formula-layer dumps around ROMCPU:$C20C9B.

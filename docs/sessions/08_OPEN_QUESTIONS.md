@@ -33,6 +33,10 @@ Ordered roughly by how much each answer would unlock.
     unverified) → `$C25D26`. **Still open:** the `$C2069B` code and the
     non-steady first-call path. *Experiment:* dump `$C20690`–`$C20700`.
 
+19b. **What is the writer at `ROMCPU:$C22CCE`?** Wrote enemy-HP entries
+    4 times around the EXP-0005 victory (cleanup candidate).
+    *Experiment:* dump `$C22CA0`–`$C22D00`; exec-log during a victory.
+
 20. **What are the routines flanking the copier** — the six-entry
     `Y≤$0C` loop over `+$3388`/`+$200D`/`+$2015` (enemy-side candidate,
     entry before `$C25CC0`) and the `$C25D57`+ zeroer of `+$2E99+X` and

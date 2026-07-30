@@ -1,7 +1,8 @@
-// Package battle reconstructs the party-slot HP/MP delta engine observed in
-// bank 0xC2 of Final Fantasy III (USA): the dispatched routine pair at ROM
-// CPU 0xC21323 (HP) and 0xC21350 (MP), reached via JSR ($131F,X), and the
-// death handler at 0xC21390.
+// Package battle reconstructs the battle-slot HP/MP delta engine observed
+// in bank 0xC2 of Final Fantasy III (USA): the dispatched routine pair at
+// ROM CPU 0xC21323 (HP) and 0xC21350 (MP), reached via JSR ($131F,X), and
+// the death handler at 0xC21390. The engine is slot-uniform: one 10-entry
+// array family serves party entries 0-3 and enemy entries 4-9 (EXP-0005).
 //
 // Provenance: the session that produced this package (Session 003,
 // docs/sessions/SESSION_003.md) was interrupted before documentation and
@@ -26,14 +27,24 @@
 // clearing of 0x3A89.
 package battle
 
-// PartySlotCount is the number of party slots in every battle-scoped
-// per-slot array (all observed loops process four entries).
+// BattleSlotCount is the number of entries in every battle-scoped
+// per-slot array: entries 0-3 are the party slots, 4-9 the enemy slots.
+// Confirmed by EXP-0004/0005: the four main arrays sit exactly 0x14
+// bytes apart (10 x 16-bit entries), enemy HP was observed live at
+// entries 4-5, and the same delta-engine stores operate party and enemy
+// entries alike. Entries 6-9 are stride-bounded but not yet observed in
+// use (no encounter with >2 enemies instrumented).
+const BattleSlotCount = 10
+
+// PartySlotCount is the number of party entries (0-3) — the slice of the
+// arrays that the display copier (ROM CPU 0xC25D26) exposes to the HUD.
 const PartySlotCount = 4
 
 // WRAM-relative offsets (SNES CPU bank 0x7E) of the authoritative
-// battle-scoped arrays, four 16-bit entries each, one per party slot.
-// The whole region is filled with 0xFF at battle teardown and rewritten at
-// battle init, so these values only exist during a battle.
+// battle-scoped arrays, ten 16-bit entries each (0x14-byte stride between
+// the family's base addresses). The whole region is filled with 0xFF at
+// battle teardown and rewritten at battle init, so these values only
+// exist during a battle.
 const (
 	AddrCurrentHP         = 0x3BF4
 	AddrCurrentMP         = 0x3C08
@@ -44,23 +55,27 @@ const (
 	AddrUnknownFlags3C95  = 0x3C95
 )
 
-// PartySlots holds the authoritative per-slot battle values operated on by
-// the delta engine. Layout follows the original struct-of-arrays form.
-type PartySlots struct {
-	CurrentHP [PartySlotCount]uint16 // $3BF4
-	CurrentMP [PartySlotCount]uint16 // $3C08
-	MaxHP     [PartySlotCount]uint16 // $3C1C: heals clamp to this (code-confirmed)
-	MaxMP     [PartySlotCount]uint16 // $3C30: MP heals clamp to this (code-confirmed)
+// BattleSlots holds the authoritative per-slot battle values operated on
+// by the delta engine — party entries 0-3, enemy entries 4-9. Layout
+// follows the original struct-of-arrays form.
+type BattleSlots struct {
+	CurrentHP [BattleSlotCount]uint16 // $3BF4
+	CurrentMP [BattleSlotCount]uint16 // $3C08
+	MaxHP     [BattleSlotCount]uint16 // $3C1C: heals clamp to this (code-confirmed)
+	MaxMP     [BattleSlotCount]uint16 // $3C30: MP heals clamp to this (code-confirmed)
 
-	// UnknownStatus3EE4 is a per-slot 16-bit flags field ($3EE4). Bit 1
-	// suppresses the death event when HP reaches zero ($C2139C: BIT #$0002).
+	// UnknownStatus3EE4 is a per-slot 16-bit flags field ($3EE4; the
+	// family keeps the 0x14 stride: $3EE4+0x14 = $3EF8). Bit 1
+	// suppresses the death event when HP reaches zero ($C2139C:
+	// BIT #$0002); the death handler reads it for enemy entries too.
 	// Other bits unknown. It is also copied (masked) into display records.
-	UnknownStatus3EE4 [PartySlotCount]uint16
+	UnknownStatus3EE4 [BattleSlotCount]uint16
 
 	// DiesAtZeroMP mirrors bit 0 of the per-slot array at $3C95: when set,
 	// current MP reaching zero invokes the death handler ($C21380-$C21386).
-	// The rest of $3C95 is unknown.
-	DiesAtZeroMP [PartySlotCount]bool
+	// The rest of $3C95 is unknown; its width is assumed to match the
+	// family (10) — only party reads are observed so far.
+	DiesAtZeroMP [BattleSlotCount]bool
 }
 
 // ApplyHPDelta reproduces the HP-delta routine at ROM CPU $C21323.
@@ -72,7 +87,7 @@ type PartySlots struct {
 //
 // The returned bool reports that death event. |delta| must fit in 16 bits,
 // matching the original's operand width; larger magnitudes are clamped.
-func (p *PartySlots) ApplyHPDelta(slot int, delta int32) bool {
+func (p *BattleSlots) ApplyHPDelta(slot int, delta int32) bool {
 	if delta >= 0 {
 		p.CurrentHP[slot] = healClamped(p.CurrentHP[slot], clamp16(delta), p.MaxHP[slot])
 		return false
@@ -91,7 +106,7 @@ func (p *PartySlots) ApplyHPDelta(slot int, delta int32) bool {
 // the death handler ($C21386: JSR $1390), which zeroes the slot's HP and
 // fires the death event under the same status-bit-1 suppression rule; the
 // returned bool reports that event.
-func (p *PartySlots) ApplyMPDelta(slot int, delta int32) bool {
+func (p *BattleSlots) ApplyMPDelta(slot int, delta int32) bool {
 	if delta >= 0 {
 		p.CurrentMP[slot] = healClamped(p.CurrentMP[slot], clamp16(delta), p.MaxMP[slot])
 		return false
@@ -110,7 +125,7 @@ func (p *PartySlots) ApplyMPDelta(slot int, delta int32) bool {
 // the event is suppressed when UnknownStatus3EE4 bit 1 is set. The
 // original also clears $3A89 and continues into $C20E32 with A=$0080;
 // neither is modeled yet.
-func (p *PartySlots) deathEvent(slot int) bool {
+func (p *BattleSlots) deathEvent(slot int) bool {
 	p.CurrentHP[slot] = 0
 	return p.UnknownStatus3EE4[slot]&0x0002 == 0
 }

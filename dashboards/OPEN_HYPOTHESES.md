@@ -9,7 +9,7 @@
 | H-BATTLE-0005 | Destination records are display/staging data (not gameplay-authoritative). | Strong hypothesis | Freeze/edit `WRAM:+$2EB5` vs `+$2E78[0]` separately; find the records' consumer — open questions #1/#2 |
 | H-BATTLE-0006 | ~~`WRAM:+$3BF4` is the battle-authoritative current-HP array.~~ | **Resolved: Confirmed (battle-scoped)** — mutations originate there (delta engine) and the display path derives from it via the `$C25D26` copier (EXP-0003) | None for battle scope; out-of-battle persistence is a separate future question |
 | H-BATTLE-0007 | `WRAM:+$3C08`/`+$3C30` are current/max MP; `+$3C1C` is max HP. | Strong hypothesis (code roles Confirmed, EXP-0001; `+$3C1C` effectively settled by EXP-0003's display pairing) | Spend/heal MP live while watching `+$3C08` |
-| H-BATTLE-0008 | The battle per-slot arrays are 10 entries: party slots 0–3 + enemy slots 4–9. | Strong hypothesis (EXP-0004: exact `$14` stride family; entry-9 sweep observed; party half confirmed) | Watch `+$3BF4+8..$13` during enemy damage — enemy HP should live there |
+| H-BATTLE-0008 | ~~The battle per-slot arrays are 10 entries: party slots 0–3 + enemy slots 4–9.~~ | **Resolved: Confirmed** (EXP-0005: enemy HP observed in entries 4–5, damaged and zeroed by the same delta-engine/death-handler stores; entries 6–9 presumed for larger groups) | None for the structure; entries 6–9 usage awaits a larger encounter |
 
 Claims implemented in `battle/battle.go` are deliberately **not** listed
 here: they lack canonical records and cannot be tracked as hypotheses until

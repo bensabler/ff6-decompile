@@ -27,7 +27,7 @@ func TestApplyHPDelta(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			p := PartySlots{}
+			p := BattleSlots{}
 			p.CurrentHP[1] = tt.hp
 			p.MaxHP[1] = tt.max
 			p.UnknownStatus3EE4[1] = tt.status
@@ -66,7 +66,7 @@ func TestApplyMPDelta(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			p := PartySlots{}
+			p := BattleSlots{}
 			p.CurrentMP[2] = tt.mp
 			p.MaxMP[2] = tt.maxMP
 			p.CurrentHP[2] = tt.hp
@@ -90,12 +90,34 @@ func TestApplyMPDelta(t *testing.T) {
 
 // Other slots must never be touched by a delta applied to one slot.
 func TestApplyHPDeltaIsolation(t *testing.T) {
-	p := PartySlots{
-		CurrentHP: [PartySlotCount]uint16{10, 20, 30, 40},
-		MaxHP:     [PartySlotCount]uint16{99, 99, 99, 99},
+	p := BattleSlots{
+		CurrentHP: [BattleSlotCount]uint16{10, 20, 30, 40, 24, 35},
+		MaxHP:     [BattleSlotCount]uint16{99, 99, 99, 99, 99, 99},
 	}
 	p.ApplyHPDelta(0, -10)
-	if p.CurrentHP != [PartySlotCount]uint16{0, 20, 30, 40} {
+	if p.CurrentHP != [BattleSlotCount]uint16{0, 20, 30, 40, 24, 35} {
 		t.Errorf("unexpected cross-slot mutation: %v", p.CurrentHP)
+	}
+}
+
+// Enemy entries (4-9) go through the identical engine paths — observed
+// live in EXP-0005 (enemy HP at entries 4-5 damaged and zeroed by the
+// same stores that serve the party).
+func TestApplyHPDeltaEnemySlots(t *testing.T) {
+	p := BattleSlots{}
+	p.CurrentHP[5] = 35 // EXP-0005 enemy entry 5 initial value
+	p.MaxHP[5] = 35
+
+	if death := p.ApplyHPDelta(5, -10); death {
+		t.Fatal("partial damage must not fire the death event")
+	}
+	if p.CurrentHP[5] != 25 {
+		t.Fatalf("CurrentHP[5] = %d, want 25", p.CurrentHP[5])
+	}
+	if death := p.ApplyHPDelta(5, -25); !death {
+		t.Fatal("reaching zero must fire the death event for enemy entries")
+	}
+	if p.CurrentHP[5] != 0 {
+		t.Fatalf("CurrentHP[5] = %d, want 0", p.CurrentHP[5])
 	}
 }

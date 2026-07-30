@@ -1,5 +1,13 @@
 # Activity Log
 
+- 2026-07-30 (daytime) — Unit 6 / EXP-0005: **enemy slots confirmed** —
+  enemy HP observed at entries 4–5 of the unified arrays (24/35), damaged
+  and zeroed by the same delta-engine stores and death handler while
+  VICKS won the encounter. H-BATTLE-0008 resolved Confirmed. Go model
+  refactored: `battle.PartySlots` → `battle.BattleSlots` (10 entries,
+  slot-uniform engine), tests extended (enemy-slot case). New writer
+  `ROMCPU:$C22CCE` queued as question 19b.
+
 - 2026-07-29 (overnight) — Unit 5 / EXP-0004: pending-delta producers
   identified at the PC level (setter `ROMCPU:$C20C9B`, sweepers
   `$C2638E`/`$C26391`); arrays shown transient (`$FFFF` between events);

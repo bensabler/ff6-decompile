@@ -263,6 +263,11 @@
   `+$327C,Y` and `TRB $3419`; scratch `$EE`.
 - **Alternative explanations:** none remaining for the code; semantic
   labels rest on Session 002/003 battle context and parallel structure.
+- **Slot universality (EXP-0005, 2026-07-29):** the engine is
+  slot-uniform — its damage store (`$C21347`) and death-handler zero
+  (`$C21396`) were observed writing **enemy** entries (indexes 4–5 of the
+  10-entry arrays) when the party attacked, with on-screen defeat
+  matching the zeroed entries. Party and enemies share one engine.
 - **Validation experiment:** live MP observation (spend/heal MP watching
   `+$3C08`); find `$11A2` writers; explore `$C20E32` and the `$464C`
   tail.

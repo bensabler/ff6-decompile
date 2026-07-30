@@ -68,6 +68,23 @@
       "falsifying_outcome": "no $33D0-$33EB writes during attacks that change HP",
       "status": "completed",
       "record": "docs/experiments/EXP-0004-delta-producers.md"
+    },
+    {
+      "schema_version": "1.0",
+      "id": "EXP-0005",
+      "question": "Do enemy HP values live in entries 4-9 of the unified battle arrays (H-BATTLE-0008)?",
+      "starting_state": {
+        "emulator": "Mesen 2.1.1 macOS x86_64",
+        "rom_sha256": "0f51b4fca41b7fd509e4b8f9d543151f68efa5e97b08493e4b2a0c06f5d8d5e2",
+        "state": "checkpoint3-mines.mss reload; encounter via injected walking; VICKS attacking via A presses"
+      },
+      "expected_outcomes": [
+        "delta-engine stores with Y>=8 writing $3BFC-$3C07 as enemies take damage (supports)",
+        "enemy damage on screen with no writes in that range (refutes)"
+      ],
+      "falsifying_outcome": "attack lands with zero writes in $3BFC-$3C07",
+      "status": "completed",
+      "record": "docs/experiments/EXP-0005-enemy-slots.md"
     }
   ]
 }
