@@ -12,7 +12,7 @@ Record filename locally, byte size, copier-header status, region/revision, SHA-2
 | SHA-256 | `0f51b4fca41b7fd509e4b8f9d543151f68efa5e97b08493e4b2a0c06f5d8d5e2` | Confirmed (computed 2026-07-29) |
 | Region/label | Final Fantasy III (USA), SNES | Confirmed (filename/title screen) |
 | Revision | Not yet determined (internal ROM header not inspected) | Unknown |
-| Mapping | HiROM | Strong hypothesis — bank `$C1`/`$C2` code addresses and the 3 MiB size are consistent with HiROM; not yet verified against `ROMFILE:` offsets |
+| Mapping | HiROM (FastROM, Map Mode `$31`) | Confirmed — Mesen ROM-header parse recorded via `getLogWindowLog()` during EXP-0001 ("Type: HiROM, FastROM, Map Mode: $31, Game: FINAL FANTASY 3, code F6"), and the emulator executes it as HiROM |
 
 Session 002 (and the undocumented Session 003 evidence in `mesen/out/`) used
 this file per the session record and launch command. Session 001 predates

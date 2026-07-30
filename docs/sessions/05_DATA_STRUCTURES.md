@@ -50,13 +50,15 @@
 ### BattleSlotHPArray (candidate authoritative layer) — `WRAM:+$3BF4`
 
 - **Address:** `WRAM:+$3BF4`–`+$3BFB` observed (per-slot 16-bit, stride 2);
-  sibling arrays `+$3C08` (MP), `+$3C1C`/`+$3C30` (max HP/MP), `+$3EE4`
-  (status), `+$3C95` (flags) **claimed in `battle.go` only — Unknown**.
+  sibling arrays `+$3C08` (MP candidate), `+$3C1C`/`+$3C30` (max
+  ceilings), `+$3EE4` (status), `+$3C95` (flags) — **code roles Confirmed
+  by EXP-0001**; semantic labels Strong hypothesis.
 - **Address space:** WRAM-relative
-- **Kind:** Structure (per-slot array; candidate struct-of-arrays family)
-- **Status:** Writers **Confirmed** (raw captures); role as authoritative
-  current HP **Strong hypothesis**; sibling arrays **Unknown** pending
-  re-dump/watch.
+- **Kind:** Structure (per-slot array; struct-of-arrays family)
+- **Status:** Writers **Confirmed** (raw captures); engine code operating
+  the family **Confirmed byte-exact** (EXP-0001); role as authoritative
+  current HP **Strong hypothesis** (consumer/propagation path still
+  unidentified); semantic labels Strong hypothesis.
 - **Observed behavior:** Damage/heal/death stores land here with
   `Y = slot×2`; `$FF` fill at boot/teardown by `ROMCPU:$C0567B`; init at
   battle start (`ROMCPU:$C223F6/$C227B4`); slot-0 write of `$0022` was

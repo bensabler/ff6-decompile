@@ -117,38 +117,157 @@
 
 ### Battle HP/MP delta engine (candidate) — `ROMCPU:$C21323` / `$C21350` / `$C21390`
 
-- **Address:** claimed routine entries `ROMCPU:$C21323` (HP),
-  `ROMCPU:$C21350` (MP), `ROMCPU:$C21390` (death handler); evidenced store
-  sites near `ROMCPU:$C21338` (heal clamp), `$C21347` (damage), `$C21396`
-  (death zero); dispatch consistent with a `JSR (abs,X)` at
-  `ROMCPU:$C212FF`
+- **Address:** dispatch wrapper `ROMCPU:$C212F5`–`$C2131E`, table
+  `ROMCPU:$C2131F` (= `$1323, $1350`), HP routine `ROMCPU:$C21323`, MP
+  routine `ROMCPU:$C21350`, death handler `ROMCPU:$C21390`, delta fetch
+  `ROMCPU:$C213A7`–`$C213D2`
 - **Address space:** ROM CPU
 - **Kind:** Function cluster
-- **Status:** Stores into the `WRAM:+$3BF4` array — **Confirmed** (raw
-  write captures). Store-instruction addresses — **Strong hypothesis**
-  (consistent +3 post-instruction PC pattern across three captures). Full
-  disassembly, MP/max arrays, status gates — **Unknown**; claimed only in
-  `internal/game/battle/battle.go`, ROM dumps not preserved.
-- **Previous names:** `ApplyHPDelta`/`ApplyMPDelta`/death handler
-  (battle.go, Session 003, undocumented at the time).
-- **Observed behavior:** During battles, previously-unseen PCs
-  `ROMCPU:$C2134A` (damage, slot 0, wrote `$0022`), `$C2133B` (heal,
-  slot 2, wrote `$005D`), `$C21399` (death, slot 1, wrote `$0000`) wrote
-  the `WRAM:+$3BF4` per-slot array with `Y = slot×2` and 16-bit A
-  (`PS m=0`); stack return `$1302` at each.
-- **Evidence:** `mesen/out/events.log` (SHA-256 `bcfc7f4c…a99d03`);
-  [SESSION_003](SESSION_003.md) raw-observation table.
-- **Interpretation / Alternatives / Validation:** see
-  [SESSION_003](SESSION_003.md) interpretations 1–3; discriminating
-  experiment is the `ROMCPU:$C21300–$C21410` re-dump.
+- **Status:** **Confirmed (code, byte-exact)** —
+  [EXP-0001](../experiments/EXP-0001-c2-delta-engine-dump.md) dumped
+  `ROMCPU:$C212F0`–`$C2141F` and every instruction below was verified
+  arithmetically (branch offsets, operands). Live store captures
+  (Session 003) match the stores at `$C21338`/`$C21347`/`$C21396`
+  (+3 post-instruction callback PCs, now Confirmed). **Semantic labels**
+  (HP vs MP, max, "death") remain Strong hypothesis / per-field — see
+  [05_DATA_STRUCTURES.md](05_DATA_STRUCTURES.md).
+- **Previous names:** `ApplyHPDelta`/`ApplyMPDelta` (battle.go,
+  Session 003); "claimed" entry in this file between Unit 1 and EXP-0001.
+- **Observed behavior:** Verified disassembly (registers per live
+  captures: 16-bit A, 8-bit X/Y, `DB=$7E`, `Y = slot×2`):
+
+  ```asm
+  C212F5  PHX
+  C212F6  PHP
+  C212F7  LDX #$02        ; default: table entry 1 (MP)
+  C212F9  LDA $11A2       ; selector byte: bit 7 set -> MP path
+  C212FC  BMI $C21300
+  C212FE  LDX #$00        ; entry 0 (HP)
+  C21300  JSR ($131F,X)   ; pushed return $1302 = Session 003 stacks
+  C21303  SEP #$20
+  C21305  BCC $C2131C     ; C clear on return -> skip tail
+  C21307  LDA $02,S       ; ---- post-dispatch tail: purpose unknown ----
+  C21309  TAX
+  C2130A  STX $EE
+  C2130C  JSR $362F       ; $C2362F - unexplored
+  C2130F  CPY $EE
+  C21311  BEQ $C2131C
+  C21313  STA $327C,Y
+  C21316  LDA $3018,Y
+  C21319  TRB $3419
+  C2131C  PLP
+  C2131D  PLX
+  C2131E  RTS
+  C2131F  .dw $1323,$1350 ; dispatch table
+  ; ---- HP delta ----
+  C21323  JSR $13A7       ; fetch delta; Z = zero, C = non-negative
+  C21326  BEQ $C2133B     ; zero -> CLC/RTS
+  C21328  BCC $C2133D     ; negative -> damage
+  C2132A  CLC
+  C2132B  ADC $3BF4,Y     ; heal: delta + current
+  C2132E  BCS $C21335     ; 16-bit overflow -> clamp
+  C21330  CMP $3C1C,Y
+  C21333  BCC $C21338     ; sum < max -> keep sum
+  C21335  LDA $3C1C,Y     ; clamp to max
+  C21338  STA $3BF4,Y     ; heal store (capture pc $C2133B)
+  C2133B  CLC
+  C2133C  RTS
+  C2133D  EOR #$FFFF      ; damage: with C=0, SBC below adds the +1
+  C21340  STA $EE
+  C21342  LDA $3BF4,Y
+  C21345  SBC $EE         ; current - magnitude
+  C21347  STA $3BF4,Y     ; damage store (capture pc $C2134A)
+  C2134A  BEQ $C21390     ; exactly zero -> death handler
+  C2134C  BCS $C2133C     ; positive -> RTS
+  C2134E  BRA $C21390     ; underflow -> death handler
+  ; ---- MP delta (same shape over $3C08/$3C30) ----
+  C21350  JSR $13A7
+  C21353  BEQ $C2133B
+  C21355  BCC $C2136B
+  C21357  CLC
+  C21358  ADC $3C08,Y
+  C2135B  BCS $C21362
+  C2135D  CMP $3C30,Y
+  C21360  BCC $C21365
+  C21362  LDA $3C30,Y
+  C21365  STA $3C08,Y
+  C21368  CLC
+  C21369  BRA $C2138A     ; -> exit tail
+  C2136B  EOR #$FFFF
+  C2136E  STA $EE
+  C21370  LDA $3C08,Y
+  C21373  SBC $EE
+  C21375  STA $3C08,Y
+  C21378  BEQ $C2137C
+  C2137A  BCS $C2138A
+  C2137C  TDC
+  C2137D  STA $3C08,Y     ; zero-floor MP
+  C21380  LDA $3C95,Y
+  C21383  LSR             ; bit 0 -> carry
+  C21384  BCC $C21389
+  C21386  JSR $1390       ; dies-at-zero-MP -> death handler
+  C21389  SEC
+  C2138A  LDA #$0080      ; MP exit tail; purpose unknown
+  C2138D  JMP $464C       ; $C2464C - unexplored
+  ; ---- death handler ----
+  C21390  SEC
+  C21391  TDC
+  C21392  TAX
+  C21393  STX $3A89       ; clear $3A89 (8-bit X)
+  C21396  STA $3BF4,Y     ; zero HP (capture pc $C21399)
+  C21399  LDA $3EE4,Y
+  C2139C  BIT #$0002
+  C2139F  BNE $C2133C     ; bit 1 set -> suppress, RTS
+  C213A1  LDA #$0080
+  C213A4  JMP $0E32       ; $C20E32 - death event, unexplored
+  ; ---- delta fetch ----
+  C213A7  LDA $33D0,Y     ; secondary pending delta
+  C213AA  INC
+  C213AB  BEQ $C213BC     ; $FFFF sentinel -> 0
+  C213AD  LDA $3018,Y
+  C213B0  BIT $3A3C
+  C213B3  BEQ $C213B9
+  C213B5  TDC
+  C213B6  STA $33D0,Y     ; gate hit -> cancel secondary
+  C213B9  LDA $33D0,Y
+  C213BC  STA $EE
+  C213BE  LDA $3A81       ; 16-bit, overlapping reads as written
+  C213C1  AND $3A82
+  C213C4  BMI $C213C8
+  C213C6  STZ $EE         ; gate clear -> drop secondary
+  C213C8  LDA $33E4,Y     ; primary pending delta
+  C213CB  INC
+  C213CC  BEQ $C213CF     ; $FFFF sentinel -> 0
+  C213CE  DEC
+  C213CF  SEC
+  C213D0  SBC $EE         ; delta = primary - secondary
+  C213D2  RTS
+  ```
+
+- **Evidence:** EXP-0001 dump `mesen/out/rom_C212F0_304.hex` (SHA-256
+  `2800f34b…d5d56a`); Session 003 live write captures
+  (`mesen/out/session003/events.log`, SHA-256 `bcfc7f4c…a99d03`).
+- **Inputs:** `WRAM:+$11A2` (bit 7 selector), pending-delta arrays
+  `+$33E4`/`+$33D0` (per-slot, `$FFFF` = none), gates `+$3A3C`,
+  `+$3A81`/`+$3A82`, `+$3018,Y`; arrays `+$3BF4`/`+$3C1C` (HP path),
+  `+$3C08`/`+$3C30` (MP path), `+$3C95` bit 0, `+$3EE4` bit 1.
+- **Outputs / modified memory:** `+$3BF4,Y` or `+$3C08,Y`; `+$3A89`
+  cleared and `JMP $C20E32` (A=`$0080`) on unsuppressed death;
+  `+$33D0,Y` cancelled under the `$3A3C` gate; tail may write
+  `+$327C,Y` and `TRB $3419`; scratch `$EE`.
+- **Alternative explanations:** none remaining for the code; semantic
+  labels rest on Session 002/003 battle context and parallel structure.
+- **Validation experiment:** live MP observation (spend/heal MP watching
+  `+$3C08`); find `$11A2` writers; explore `$C20E32` and the `$464C`
+  tail.
 - **Go representation:**
   [internal/game/battle/battle.go](../../internal/game/battle/battle.go) —
-  arithmetic shapes exceed preserved evidence; treat as hypothesis encoding
-  until the re-dump lands.
+  arithmetic now Confirmed byte-exact; delta fetch, `$3A89`, `$C20E32`,
+  and the exit tail deliberately unmodeled.
 - **Related discoveries:** CopyCharacterFields (downstream display copy),
   battle-array lifecycle writers ([04_MEMORY_MAP.md](04_MEMORY_MAP.md))
 - **First observed in session:** [SESSION_003](SESSION_003.md)
-- **Last updated:** 2026-07-29
+- **Last updated:** 2026-07-29 (EXP-0001)
 
 ### PerFrameBattleUpdate (candidate)
 

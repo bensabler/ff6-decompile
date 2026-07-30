@@ -3,18 +3,19 @@
 // CPU 0xC21323 (HP) and 0xC21350 (MP), reached via JSR ($131F,X), and the
 // death handler at 0xC21390.
 //
-// Provenance (see docs/sessions/SESSION_003.md): the session that produced
-// this package was interrupted before documentation, and its ROM dumps were
-// not preserved. What survives as raw evidence (mesen/out/events.log) are
-// write captures of the damage store (near 0xC21347) firing on enemy hits,
-// the heal store (near 0xC21338), and the death zero (near 0xC21396), all
-// into the per-slot array at WRAM 0x3BF4 with Y = slot*2 and a dispatch
-// return consistent with JSR (abs,X) at 0xC212FF. The remaining detail in
-// this file — exact routine entries, the clamp/overflow arithmetic shapes,
-// the MP/max arrays, and the status gates — is a reconstruction pending
-// re-verification against a fresh ROM dump (open question 1b in
-// docs/sessions/08_OPEN_QUESTIONS.md). Evidence records:
-// docs/sessions/02_DISCOVERED_FUNCTIONS.md and
+// Provenance: the session that produced this package (Session 003,
+// docs/sessions/SESSION_003.md) was interrupted before documentation and
+// its original ROM dumps were lost, so the arithmetic here briefly stood
+// as an unverified reconstruction. EXP-0001
+// (docs/experiments/EXP-0001-c2-delta-engine-dump.md) re-dumped
+// ROMCPU $C212F0-$C2141F and verified every instruction this package
+// models byte-exact: dispatch JSR ($131F,X) at 0xC21300 selecting
+// 0xC21323 (HP) or 0xC21350 (MP) via bit 7 of WRAM 0x11A2; heal store
+// 0xC21338 clamped to 0x3C1C,Y; damage store 0xC21347; death handler
+// 0xC21390 with zero store 0xC21396 and the 0x3EE4,Y bit-1 suppression.
+// Semantic labels (HP vs MP, "max", "death") remain strong hypotheses
+// from battle context. Full annotated listing:
+// docs/sessions/02_DISCOVERED_FUNCTIONS.md; structures:
 // docs/sessions/05_DATA_STRUCTURES.md.
 //
 // Not modeled here (insufficient evidence, see

@@ -26,12 +26,28 @@ Ordered roughly by how much each answer would unlock.
    `+$3BF4` → `+$2E78`. *Experiment:* the preserved bridge's `+$2E78`
    write watch during one enemy hit; walk the captured stack.
 
-1b. **Verify the Session 003 disassembly claims** (`ROMCPU:$C21323`,
-   `$C21350`, `$C21390`, `$C213A7`; store sites `$C21338/$C21347/$C21396`;
-   dispatch table at `$131F`; arrays `+$3C08/+$3C1C/+$3C30/+$3EE4/+$3C95`;
-   sentinels `+$33E4/+$33D0`).
-   *Experiment:* bridge ROM dump `$C21300–$C21410`, hand-disassemble,
-   compare against `internal/game/battle/battle.go` claim by claim.
+1b. ~~**Verify the Session 003 disassembly claims.**~~ → Answered by
+   [EXP-0001](../experiments/EXP-0001-c2-delta-engine-dump.md)
+   (2026-07-29): every claim verified byte-exact; full listing in
+   [02_DISCOVERED_FUNCTIONS.md](02_DISCOVERED_FUNCTIONS.md). New
+   follow-ups: 13–16 below.
+
+13. **What writes the pending-delta arrays `WRAM:+$33E4`/`+$33D0`?**
+    The battle-logic layer above the delta engine.
+    *Experiment:* write watch on `+$33E4`–`+$33F3` during one attack
+    command; walk captured stacks.
+
+14. **What does `WRAM:+$11A2` mean** (bit 7 = MP-path selector)?
+    *Experiment:* write watch on `+$11A2` around command execution.
+
+15. **What are the death continuation `ROMCPU:$C20E32` (A=`$0080`) and
+    the MP exit tail `ROMCPU:$C2464C` (A=`$0080`)?**
+    *Experiment:* dump and disassemble both entry regions.
+
+16. **What is the post-dispatch tail** (`$C21307`–`$C2131B`: `$C2362F`
+    call, `+$327C,Y` store, `TRB $3419`) **and when does the engine
+    return carry set?**
+    *Experiment:* exec watch at `$C21307` with register capture.
 
 2. **What consumes the `$2EB5` records and the `$61AD` mask?**
    *Experiment:* read breakpoints on `$2EB5` and `$61AD`; classify readers.

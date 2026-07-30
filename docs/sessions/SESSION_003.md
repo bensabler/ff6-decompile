@@ -96,6 +96,12 @@ was not recorded. Preserved but unusable as evidence.
    pushes `$C21301`). Matches `battle.go`'s claimed `JSR ($131F,X)`
    dispatch. *Alternative:* plain `JSR` at `$C212FF`; indirection table
    address unverified without the dump.
+   > **Corrected by [EXP-0001](../experiments/EXP-0001-c2-delta-engine-dump.md)
+   > (same night):** the pushed-return arithmetic above was off by one —
+   > a 3-byte `JSR` pushing `$1302` sits at `ROMCPU:$C21300`, and the
+   > dump confirms `JSR ($131F,X)` there. Every other claim in
+   > interpretations 1–3 was verified byte-exact; see
+   > [02_DISCOVERED_FUNCTIONS.md](02_DISCOVERED_FUNCTIONS.md).
 4. **Lifecycle writers:** `ROMCPU:$C0567B` (`DB=$00`, large X counters)
    fills both regions with `$FF` — region-fill at battle teardown/boot.
    `ROMCPU:$C223F6`/`$C227B4`/`$C22408` initialize the arrays at battle

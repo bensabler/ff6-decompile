@@ -48,21 +48,26 @@ slot HP values, and a Heal Force cast setting slot 0's current HP to exactly
 the `$2E80` (max HP candidate) value — all mirrored into the records on the
 next frame.
 
-## Authoritative layer (Session 003, partially reconstructed)
+## Authoritative layer (Session 003 + EXP-0001)
 
-**Status: strong hypothesis** for the array's role; store sites strong
-hypothesis; everything else Unknown pending the `ROMCPU:$C21300–$C21410`
-re-dump ([SESSION_003](SESSION_003.md)).
+**Status: engine code Confirmed byte-exact** (EXP-0001 dump); the array's
+authoritative role and the semantic labels remain strong hypotheses;
+pending-delta producers unidentified.
 
 ```text
-delta source (unidentified; battle.go claims $C213A7 fetch, $33E4/$33D0)
-  └─ dispatch JSR (abs,X) @ ~ROMCPU:$C212FF
-       ├─ HP routine (~$C21323): heal clamp @ ~$C21338, damage @ ~$C21347
-       ├─ MP routine (~$C21350): claimed only
-       └─ death handler (~$C21390): zero @ ~$C21396
-            └─ writes WRAM:+$3BF4 per-slot array (Y = slot×2)
-                 └─ propagates (mechanism unidentified) → WRAM:+$2E78
-                      └─ CopyCharacterFields → WRAM:+$2EB5 records
+pending-delta producers (unidentified)
+  └─ WRAM:+$33E4 / +$33D0 per-slot deltas ($FFFF = none)
+       └─ fetch @ ROMCPU:$C213A7 (delta = $33E4 − gated $33D0)
+            └─ dispatch @ ROMCPU:$C21300 JSR ($131F,X);
+               WRAM:+$11A2 bit7 selects entry ($C2131F: $1323 HP / $1350 MP)
+                 ├─ HP @ $C21323: heal clamp→$3C1C @ $C21338, damage @ $C21347
+                 ├─ MP @ $C21350: same over $3C08/$3C30; $3C95 bit0 → death;
+                 │                exits LDA #$0080 / JMP $C2464C (unexplored)
+                 └─ death @ $C21390: clears $3A89, zeroes HP @ $C21396,
+                    $3EE4 bit1 suppresses, else JMP $C20E32 A=$0080 (unexplored)
+                      └─ writes WRAM:+$3BF4 per-slot array (Y = slot×2)
+                           └─ propagates (mechanism unidentified) → WRAM:+$2E78
+                                └─ CopyCharacterFields → WRAM:+$2EB5 records
 Lifecycle: $FF fill @ ROMCPU:$C0567B (boot/teardown);
            init @ $C223F6/$C227B4/$C22408 (battle start)
 ```

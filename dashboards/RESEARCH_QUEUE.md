@@ -6,8 +6,10 @@
   [SESSION_003.md](../docs/sessions/SESSION_003.md) written (reconstructed
   record), promoted to 02/04/05/06/08, `battle` tests added (2026-07-29,
   overnight session)
-- [ ] Re-dump `ROMCPU:$C21300–$C21410` and verify every `battle.go`
-  disassembly claim (open question 1b) — restores FN-0003..0005 provenance
+- [x] Re-dump `ROMCPU:$C21300–$C21410` and verify every `battle.go`
+  disassembly claim —
+  [EXP-0001](../docs/experiments/EXP-0001-c2-delta-engine-dump.md): all
+  claims verified byte-exact; FN-0003..0006 now Confirmed (code)
 
 ## P0 — Environment integrity (completed 2026-07-29)
 

@@ -1,5 +1,12 @@
 # Activity Log
 
+- 2026-07-29 (overnight) — Unit 2 / EXP-0001: launched Mesen 2.1.1 with the
+  bridge, dumped `ROMCPU:$C212F0–$C2141F`, verified every battle.go
+  disassembly claim byte-exact; FN-0003..0006 upgraded to Confirmed
+  (code); new unknowns recorded (`+$11A2` selector, dispatch tail, fetch
+  gates); ROM mapping upgraded to Confirmed HiROM via Mesen header parse;
+  Session 003 evidence archived under `mesen/out/session003/`.
+
 - 2026-07-29 — Sessions 001–002: HP variable discovery, full decode of
   CopyCharacterFields (`ROMCPU:$C10DF3`), caller identification
   (`ROMCPU:$C101FB`), `chardata` Go package with tests. Records in
