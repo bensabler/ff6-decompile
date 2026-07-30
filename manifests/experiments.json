@@ -85,6 +85,23 @@
       "falsifying_outcome": "attack lands with zero writes in $3BFC-$3C07",
       "status": "completed",
       "record": "docs/experiments/EXP-0005-enemy-slots.md"
+    },
+    {
+      "schema_version": "1.0",
+      "id": "EXP-0006",
+      "question": "How is the pending delta computed/stored ($C20C9B write site), and who calls it?",
+      "starting_state": {
+        "emulator": "Mesen 2.1.1 macOS x86_64",
+        "rom_sha256": "0f51b4fca41b7fd509e4b8f9d543151f68efa5e97b08493e4b2a0c06f5d8d5e2",
+        "state": "deterministic ROM reads; state-independent"
+      },
+      "expected_outcomes": [
+        "3-byte store to the pending-delta region at $C20C98 fed by arithmetic (supports)",
+        "no such store (refutes the +3 convention or the model)"
+      ],
+      "falsifying_outcome": "no 3-byte pending-delta store at $C20C98",
+      "status": "completed",
+      "record": "docs/experiments/EXP-0006-delta-setter.md"
     }
   ]
 }

@@ -43,7 +43,10 @@
   `mesen/out/events.log`; screenshot `exp5-battle.png`)
   - **Writer PCs (counts):** `ROMCPU:$C20C9B` ×12 — mid-battle setter
     (first capture: `+$33D4` ← `$0004`, slot 2/VICKS, 16-bit A, deep
-    JSR chain with returns `$0436`/`$0C2A`); `ROMCPU:$C2638E` ×48 and
+    JSR chain with returns `$0436`/`$0C2A`)
+    *(correction, EXP-0006: `$0436` was pushed PHP/PHY data, not a
+    return; the true return is `$0C2A` → `JSR` at `$C20C28`)*;
+    `ROMCPU:$C2638E` ×48 and
     `$C26391` ×120 — bulk `$FFFF` sentinel sweepers (adjacent 3-byte
     stores); `$C22408` ×28 — the known battle-init writer, also
     initializing this region.

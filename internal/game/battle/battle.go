@@ -19,12 +19,13 @@
 // docs/sessions/02_DISCOVERED_FUNCTIONS.md; structures:
 // docs/sessions/05_DATA_STRUCTURES.md.
 //
-// Not modeled here (insufficient evidence, see
-// docs/sessions/08_OPEN_QUESTIONS.md):
-// the delta-fetch routine at 0xC213A7 (pending-delta arrays 0x33E4/0x33D0
-// with 0xFFFF "none" sentinels), the MP routine's exit tail
-// (LDA #$0080 / JMP $464C, purpose unknown), and the death handler's
-// clearing of 0x3A89.
+// The queue side of the pending-delta arrays (0x33E4/0x33D0, 0xFFFF
+// "none" sentinels) is modeled by AccumulatePending (EXP-0006, byte-exact
+// vs ROM CPU 0xC20C76). Not modeled here (insufficient evidence, see
+// docs/sessions/08_OPEN_QUESTIONS.md): the delta-fetch routine at
+// 0xC213A7 (its gate reads are semantically unresolved), the MP routine's
+// exit tail (LDA #$0080 / JMP $464C, purpose unknown), and the death
+// handler's clearing of 0x3A89.
 package battle
 
 // BattleSlotCount is the number of entries in every battle-scoped
@@ -156,4 +157,33 @@ func clamp16(v int32) uint16 {
 		return 0xFFFF
 	}
 	return uint16(v)
+}
+
+// PendingDeltaNone is the "no pending delta" sentinel observed throughout
+// the pending arrays ($33D0/$33E4 families): battle init and the sweepers
+// fill entries with 0xFFFF, and both the accumulator and the fetch treat
+// it as zero.
+const PendingDeltaNone = 0xFFFF
+
+// PendingDeltaCap is the accumulation ceiling enforced by the original
+// (CMP #$2710 / LDA #$270F at ROM CPU 0xC20C90-0xC20C97): 9999, the
+// classic displayed-damage cap, applied at queue time.
+const PendingDeltaCap = 0x270F
+
+// AccumulatePending reproduces the pending-delta accumulator at ROM CPU
+// 0xC20C76 (byte-exact per EXP-0006): the slot's current pending value
+// (0xFFFF sentinel meaning "none") plus a new amount, clamped to 9999.
+// A 16-bit overflow during the add also clamps, matching the BCS path.
+// The caller decides which pending array (damage or heal) the result
+// belongs to; the original retargets +$33D0 to +$33E4 by adding 0x14 to
+// Y before this arithmetic.
+func AccumulatePending(current, amount uint16) uint16 {
+	if current == PendingDeltaNone {
+		current = 0
+	}
+	sum := uint32(current) + uint32(amount)
+	if sum > 0xFFFF || sum >= 0x2710 {
+		return PendingDeltaCap
+	}
+	return uint16(sum)
 }

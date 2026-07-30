@@ -280,6 +280,39 @@
 - **First observed in session:** [SESSION_003](SESSION_003.md)
 - **Last updated:** 2026-07-29 (EXP-0001)
 
+### PendingDeltaAccumulate (candidate) — `ROMCPU:$C20C76`
+
+- **Address:** `ROMCPU:$C20C76`–`$C20C9D` (store `$C20C98`); observed
+  caller path `JSR $0C2D` at `ROMCPU:$C20C28` → `$C20C2D` gate block
+- **Address space:** ROM CPU
+- **Kind:** Function
+- **Status:** **Confirmed (code, byte-exact — EXP-0006)**; polarity/
+  gate semantics and the DP `$F0` amount provenance Unknown.
+- **Observed behavior:** adds the amount in DP `$F0` to the slot's
+  pending delta (`+$33D0,Y`, or `+$33E4,Y` when the prelude's
+  `ROL/EOR $F2/LSR` carry retargets `Y += $14`), treating the `$FFFF`
+  sentinel as 0, **clamping the accumulated total at `$270F` (9999)** —
+  the damage-number cap emerges here. Full listing in
+  [EXP-0006](../experiments/EXP-0006-delta-setter.md).
+- **Evidence:** EXP-0006 dumps (SHA-256s in the record); live store
+  captures (`$C20C9B` ×12, EXP-0004) with matching PHP/Y/return stack
+  bytes.
+- **Interpretation:** the queueing API of the battle formula layer:
+  damage and healing are accumulated per slot into opposing pending
+  arrays, consumed later by the delta-engine fetch (`$C213A7`,
+  delta = `+$33E4` − `+$33D0`).
+- **Alternatives:** which array is "damage" vs "heal" is inferred from
+  the fetch's subtraction direction; unverified live.
+- **Validation experiment:** log DP `$F0`/`$F2` and Y at `$C20C76`
+  during one attack and one heal; compare with displayed numbers.
+- **Go representation:** `battle.AccumulatePending`
+  ([internal/game/battle/battle.go](../../internal/game/battle/battle.go)).
+- **Related discoveries:** Battle HP/MP delta engine (consumer),
+  EXP-0004 writer census.
+- **First observed in session:** EXP-0004 (write PC); decoded 2026-07-30
+  (EXP-0006).
+- **Last updated:** 2026-07-30
+
 ### PartyDisplaySourceRefresh (candidate) — `ROMCPU:$C25D26`
 
 - **Address:** `ROMCPU:$C25D26`–`$C25D56`

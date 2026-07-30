@@ -49,14 +49,22 @@ Ordered roughly by how much each answer would unlock.
    [02_DISCOVERED_FUNCTIONS.md](02_DISCOVERED_FUNCTIONS.md). New
    follow-ups: 13–16 below.
 
-13. **What writes the pending-delta arrays `WRAM:+$33E4`/`+$33D0`?**
-    *Partially answered by
-    [EXP-0004](../experiments/EXP-0004-delta-producers.md):* setter
-    `ROMCPU:$C20C9B` (caller returns `$0436`/`$0C2A`), sweepers
-    `$C2638E`/`$C26391`, init `$C22408`. **Still open:** the formula
-    logic upstream of `$C20C9B`. *Experiment:* dump `$C20C60`–`$C20CE0`
-    and the `$C20434`/`$C20C28` caller sites; correlate the written
-    delta values with observed damage numbers.
+13. ~~**What writes the pending-delta arrays?**~~ → **Answered**
+    (EXP-0004 + [EXP-0006](../experiments/EXP-0006-delta-setter.md)):
+    PendingDeltaAccumulate (`ROMCPU:$C20C76`) accumulates DP `$F0` into
+    the slot's pending array with `$FFFF`-sentinel init and a **9999
+    cap**; sweepers `$C2638E`/`$C26391`; init `$C22408`. (EXP-0004's
+    "`$C20434` caller" was a stack misparse — corrected in EXP-0006.)
+    Remaining piece is #21.
+
+21. **What computes the amount in DP `$F0` before queueing** — the
+    actual damage/heal formula? Upstream of `$C20C28`; staging
+    candidates observed at `$C20420`+ (DP `$F4`–`$FC` from
+    `+$202E`-family and `+$3EE5,X`) and a conditional doubling
+    (`ASL $F0/ROL $F1` at `$C20C1A`).
+    *Experiment:* exec-log `$C20C76` with DP `$F0`/`$F2`, Y, and stack
+    during one attack whose displayed damage is read off the screen;
+    then walk the caller dump backward.
 
 14. **What does `WRAM:+$11A2` mean** (bit 7 = MP-path selector)?
     *Experiment:* write watch on `+$11A2` around command execution.

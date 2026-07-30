@@ -121,3 +121,27 @@ func TestApplyHPDeltaEnemySlots(t *testing.T) {
 		t.Fatalf("CurrentHP[5] = %d, want 0", p.CurrentHP[5])
 	}
 }
+
+func TestAccumulatePending(t *testing.T) {
+	tests := []struct {
+		name            string
+		current, amount uint16
+		want            uint16
+	}{
+		{name: "sentinel starts from zero", current: PendingDeltaNone, amount: 4, want: 4},
+		{name: "accumulates onto existing pending", current: 100, amount: 250, want: 350},
+		{name: "caps at 9999", current: 9000, amount: 1500, want: PendingDeltaCap},
+		{name: "exactly 9999 stays", current: 9998, amount: 1, want: PendingDeltaCap},
+		{name: "exactly 10000 clamps", current: 9999, amount: 1, want: PendingDeltaCap},
+		{name: "16-bit overflow clamps", current: 0xFFFE, amount: 0xFFFE, want: PendingDeltaCap},
+		{name: "sentinel plus zero is zero", current: PendingDeltaNone, amount: 0, want: 0},
+		{name: "EXP-0004 live capture value", current: PendingDeltaNone, amount: 4, want: 4},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			if got := AccumulatePending(tt.current, tt.amount); got != tt.want {
+				t.Errorf("AccumulatePending(%#x, %d) = %d, want %d", tt.current, tt.amount, got, tt.want)
+			}
+		})
+	}
+}

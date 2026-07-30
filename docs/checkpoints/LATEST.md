@@ -1,6 +1,6 @@
 # Latest Checkpoint
 
-**[2026-07-30 — Unit 6: enemy slots confirmed; Go unified](2026-07-30-unit6-enemy-slots.md)**
+**[2026-07-30 — Unit 7: pending-delta accumulator decoded](2026-07-30-unit7-delta-accumulator.md)**
 
-State: Mesen live; unified 10-slot model implemented and tested.
-Exact next action: EXP-0006 — formula-layer dumps around ROMCPU:$C20C9B.
+State: Mesen live; 9999 cap located in code; AccumulatePending implemented.
+Exact next action: EXP-0007 — correlate queued amounts with displayed damage.

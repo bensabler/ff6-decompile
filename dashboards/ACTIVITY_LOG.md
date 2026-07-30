@@ -1,5 +1,14 @@
 # Activity Log
 
+- 2026-07-30 (daytime) — Unit 7 / EXP-0006: **pending-delta accumulator
+  decoded byte-exact** (`ROMCPU:$C20C76`): amounts accumulate per slot
+  with `$FFFF`-sentinel init and a **9999 cap** (`$270F`) — the damage
+  cap located in code. One routine serves both pending arrays via a
+  `Y += $14` retarget. Caller gate block at `$C20C2D` identified;
+  EXP-0004's `$C20434` caller inference corrected (stack misparse).
+  Go: `battle.AccumulatePending` + table tests. FN-0008 pending index.
+  New question #21 (the actual damage formula computing DP `$F0`).
+
 - 2026-07-30 (daytime) — Unit 6 / EXP-0005: **enemy slots confirmed** —
   enemy HP observed at entries 4–5 of the unified arrays (24/35), damaged
   and zeroed by the same delta-engine stores and death handler while

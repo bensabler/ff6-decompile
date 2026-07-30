@@ -7,8 +7,8 @@ correction and a second caller (EXP-0002); the `+$2E78` producer
 identified — full battle HP chain now code-complete (EXP-0003). Mesen
 running (post-"Annihilated" game-over screen).
 
-**Next exact action:** Unit 7 — question #13's formula layer: dump
-`ROMCPU:$C20C60`–`$C20CE0` (around the pending-delta setter `$C20C9B`)
-and the caller-return neighborhoods from the EXP-0004 stack
-(`$C20430`–`$C20440`, `$C20C20`–`$C20C30`); decode how the delta value
-is computed and where it comes from.
+**Next exact action:** Unit 8 — question #21: exec-log
+`ROMCPU:$C20C76` capturing DP `$F0`/`$F2`, Y, and stack during one
+attack whose displayed damage is read from the screen; correlate the
+queued amount with the display and walk the caller chain backward
+toward the damage formula.
