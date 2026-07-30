@@ -1,12 +1,11 @@
 # Current Focus
 
-**State:** Version 4 migration complete (2026-07-29). See
-[V4_MIGRATION_REPORT.md](../docs/migrations/V4_MIGRATION_REPORT.md).
+**State:** Autonomous overnight research session (2026-07-29). Unit 1
+(Session 003 documentation) complete —
+[SESSION_003.md](../docs/sessions/SESSION_003.md).
 
-**Next exact action:** Document Session 003 — write
-`docs/sessions/SESSION_003.md` from the raw evidence in
-`mesen/out/events.log` (NEW-3BF4-WRITER captures) and the interpretation
-embedded in `internal/game/battle/battle.go`, promote records into
-`docs/sessions/02/04/05/06/08`, and add table-driven tests for the `battle`
-package. Until then, `internal/game/battle/battle.go` confidence claims are unverifiable
-(FN-0003..FN-0005 in [FUNCTIONS.md](../indexes/FUNCTIONS.md)).
+**Next exact action:** Unit 2 — launch Mesen with the bridge, verify
+`emu.getVersion()`, dump `ROMCPU:$C21300–$C21410` via the bridge `read`
+command, hand-verify `internal/game/battle/battle.go`'s disassembly claims
+instruction by instruction, and upgrade/downgrade FN-0003..0005 confidence
+accordingly (open question 1b).

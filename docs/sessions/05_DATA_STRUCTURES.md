@@ -47,6 +47,37 @@
 - **First observed in session:** [SESSION_001](SESSION_001.md)
 - **Last updated:** 2026-07-29 ([SESSION_002](SESSION_002.md))
 
+### BattleSlotHPArray (candidate authoritative layer) — `WRAM:+$3BF4`
+
+- **Address:** `WRAM:+$3BF4`–`+$3BFB` observed (per-slot 16-bit, stride 2);
+  sibling arrays `+$3C08` (MP), `+$3C1C`/`+$3C30` (max HP/MP), `+$3EE4`
+  (status), `+$3C95` (flags) **claimed in `battle.go` only — Unknown**.
+- **Address space:** WRAM-relative
+- **Kind:** Structure (per-slot array; candidate struct-of-arrays family)
+- **Status:** Writers **Confirmed** (raw captures); role as authoritative
+  current HP **Strong hypothesis**; sibling arrays **Unknown** pending
+  re-dump/watch.
+- **Observed behavior:** Damage/heal/death stores land here with
+  `Y = slot×2`; `$FF` fill at boot/teardown by `ROMCPU:$C0567B`; init at
+  battle start (`ROMCPU:$C223F6/$C227B4`); slot-0 write of `$0022` was
+  followed by `WRAM:+$2E78[0] = $0022` in the display-source array
+  (propagation mechanism unidentified).
+- **Evidence:** `mesen/out/events.log`; [SESSION_003](SESSION_003.md).
+- **Interpretation / Alternatives:** authoritative battle HP vs. both
+  arrays mirroring a deeper store — unresolved; see SESSION_003
+  interpretation 2.
+- **Validation experiment:** write watch on `WRAM:+$2E78` with stack
+  capture during battle damage (finds the copier); watches on the claimed
+  sibling arrays during MP spend/heal.
+- **Go representation:**
+  [internal/game/battle/battle.go](../../internal/game/battle/battle.go)
+  (`PartySlots`) — encodes claimed siblings; hypothesis encoding until
+  re-verified.
+- **Related discoveries:** Battle HP/MP delta engine, CharacterFieldsSource
+  (downstream), [04_MEMORY_MAP.md](04_MEMORY_MAP.md)
+- **First observed in session:** [SESSION_003](SESSION_003.md)
+- **Last updated:** 2026-07-29
+
 ### PartySlotRecord (destination record, array-of-structs)
 
 - **Address:** records at `$2EB5`, `$2ED5`, `$2EF5`, `$2F15` (stride `$20`)

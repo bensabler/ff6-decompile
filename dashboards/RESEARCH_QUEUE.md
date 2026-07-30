@@ -1,11 +1,13 @@
 # Research Queue
 
-## P0 — Documentation debt
+## P0 — Provenance repair
 
-- [ ] Document Session 003: write `docs/sessions/SESSION_003.md` from
-  `mesen/out/events.log` + `internal/game/battle/battle.go`; promote records into
-  `02/04/05/06/08`; add `battle` package tests. (See
-  [BLOCKERS.md](BLOCKERS.md).)
+- [x] Document Session 003 —
+  [SESSION_003.md](../docs/sessions/SESSION_003.md) written (reconstructed
+  record), promoted to 02/04/05/06/08, `battle` tests added (2026-07-29,
+  overnight session)
+- [ ] Re-dump `ROMCPU:$C21300–$C21410` and verify every `battle.go`
+  disassembly claim (open question 1b) — restores FN-0003..0005 provenance
 
 ## P0 — Environment integrity (completed 2026-07-29)
 

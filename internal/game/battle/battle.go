@@ -3,14 +3,22 @@
 // CPU 0xC21323 (HP) and 0xC21350 (MP), reached via JSR ($131F,X), and the
 // death handler at 0xC21390.
 //
-// All arithmetic below was disassembled byte-exact from ROM dumps and then
-// verified live in Session 003: the damage store (0xC21347) firing on enemy
-// hits, the heal-clamp store (0xC21338) snapping a healed slot to exactly
-// its max HP, and the death cascade (0xC21396 zero-clamp) firing when a
-// party member died. Evidence records live in docs/02_DISCOVERED_FUNCTIONS.md
-// and docs/05_DATA_STRUCTURES.md.
+// Provenance (see docs/sessions/SESSION_003.md): the session that produced
+// this package was interrupted before documentation, and its ROM dumps were
+// not preserved. What survives as raw evidence (mesen/out/events.log) are
+// write captures of the damage store (near 0xC21347) firing on enemy hits,
+// the heal store (near 0xC21338), and the death zero (near 0xC21396), all
+// into the per-slot array at WRAM 0x3BF4 with Y = slot*2 and a dispatch
+// return consistent with JSR (abs,X) at 0xC212FF. The remaining detail in
+// this file — exact routine entries, the clamp/overflow arithmetic shapes,
+// the MP/max arrays, and the status gates — is a reconstruction pending
+// re-verification against a fresh ROM dump (open question 1b in
+// docs/sessions/08_OPEN_QUESTIONS.md). Evidence records:
+// docs/sessions/02_DISCOVERED_FUNCTIONS.md and
+// docs/sessions/05_DATA_STRUCTURES.md.
 //
-// Not modeled here (insufficient evidence, see docs/08_OPEN_QUESTIONS.md):
+// Not modeled here (insufficient evidence, see
+// docs/sessions/08_OPEN_QUESTIONS.md):
 // the delta-fetch routine at 0xC213A7 (pending-delta arrays 0x33E4/0x33D0
 // with 0xFFFF "none" sentinels), the MP routine's exit tail
 // (LDA #$0080 / JMP $464C, purpose unknown), and the death handler's

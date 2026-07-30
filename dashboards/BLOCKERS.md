@@ -1,10 +1,12 @@
 # Blockers
 
-- **Session 003 is undocumented.** `internal/game/battle/battle.go`
-  implements routines (`ROMCPU:$C21323`/`$C21350`/`$C21390`) with no session
-  record, no canonical doc entries, and no tests. Blocks trusting its
-  confidence claims and blocks milestone M4 work. Raw evidence:
-  `mesen/out/events.log`, `mesen/out/checkpoint3-mines.mss`.
+- **Session 003 disassembly claims unverified.** The session is now
+  documented ([SESSION_003.md](../docs/sessions/SESSION_003.md)) and
+  `battle` has tests, but the routine-level detail in
+  `internal/game/battle/battle.go` still rests on lost ROM dumps. M4 work
+  stays gated until the `ROMCPU:$C21300–$C21410` re-dump (open question
+  1b) lands. Downgraded from hard blocker: raw store evidence is preserved
+  and indexed.
 - Mesen exact version relies on the Session 002 live recording (2.1.1); the
   app bundle plist is generic. Re-verify via `eval emu.getVersion()` on next
   launch.

@@ -115,6 +115,41 @@
 - **First observed in session:** [SESSION_001](SESSION_001.md)
 - **Last updated:** 2026-07-29 ([SESSION_002](SESSION_002.md))
 
+### Battle HP/MP delta engine (candidate) — `ROMCPU:$C21323` / `$C21350` / `$C21390`
+
+- **Address:** claimed routine entries `ROMCPU:$C21323` (HP),
+  `ROMCPU:$C21350` (MP), `ROMCPU:$C21390` (death handler); evidenced store
+  sites near `ROMCPU:$C21338` (heal clamp), `$C21347` (damage), `$C21396`
+  (death zero); dispatch consistent with a `JSR (abs,X)` at
+  `ROMCPU:$C212FF`
+- **Address space:** ROM CPU
+- **Kind:** Function cluster
+- **Status:** Stores into the `WRAM:+$3BF4` array — **Confirmed** (raw
+  write captures). Store-instruction addresses — **Strong hypothesis**
+  (consistent +3 post-instruction PC pattern across three captures). Full
+  disassembly, MP/max arrays, status gates — **Unknown**; claimed only in
+  `internal/game/battle/battle.go`, ROM dumps not preserved.
+- **Previous names:** `ApplyHPDelta`/`ApplyMPDelta`/death handler
+  (battle.go, Session 003, undocumented at the time).
+- **Observed behavior:** During battles, previously-unseen PCs
+  `ROMCPU:$C2134A` (damage, slot 0, wrote `$0022`), `$C2133B` (heal,
+  slot 2, wrote `$005D`), `$C21399` (death, slot 1, wrote `$0000`) wrote
+  the `WRAM:+$3BF4` per-slot array with `Y = slot×2` and 16-bit A
+  (`PS m=0`); stack return `$1302` at each.
+- **Evidence:** `mesen/out/events.log` (SHA-256 `bcfc7f4c…a99d03`);
+  [SESSION_003](SESSION_003.md) raw-observation table.
+- **Interpretation / Alternatives / Validation:** see
+  [SESSION_003](SESSION_003.md) interpretations 1–3; discriminating
+  experiment is the `ROMCPU:$C21300–$C21410` re-dump.
+- **Go representation:**
+  [internal/game/battle/battle.go](../../internal/game/battle/battle.go) —
+  arithmetic shapes exceed preserved evidence; treat as hypothesis encoding
+  until the re-dump lands.
+- **Related discoveries:** CopyCharacterFields (downstream display copy),
+  battle-array lifecycle writers ([04_MEMORY_MAP.md](04_MEMORY_MAP.md))
+- **First observed in session:** [SESSION_003](SESSION_003.md)
+- **Last updated:** 2026-07-29
+
 ### PerFrameBattleUpdate (candidate)
 
 - **Address:** `$C101FB`

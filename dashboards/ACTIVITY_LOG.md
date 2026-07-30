@@ -16,6 +16,11 @@
   Mesen capability matrix filled from Session 002 evidence, indexes and
   dashboards initialized from canonical records, quality gates run,
   migration report and checkpoint written.
+- 2026-07-29 (overnight) — Unit 1: SESSION_003 reconstructed record written
+  from raw evidence; battle delta engine promoted to 02/04/05/06/08 with
+  honest confidence split (stores Confirmed, addresses Strong hypothesis,
+  disassembly Unknown); `internal/game/battle` gained table-driven tests;
+  battle.go provenance comment corrected.
 - 2026-07-29 — Post-migration decisions executed: module path restored to
   `github.com/bensabler/ff6-decompile`; `battle`/`chardata` moved under
   `internal/game/`; notation conflict resolved (CONTRA-0001); repository
