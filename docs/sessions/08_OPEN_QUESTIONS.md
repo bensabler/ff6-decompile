@@ -58,13 +58,15 @@ Ordered roughly by how much each answer would unlock.
     Remaining piece is #21.
 
 21. **What computes the amount in DP `$F0` before queueing** — the
-    actual damage/heal formula? Upstream of `$C20C28`; staging
-    candidates observed at `$C20420`+ (DP `$F4`–`$FC` from
-    `+$202E`-family and `+$3EE5,X`) and a conditional doubling
-    (`ASL $F0/ROL $F1` at `$C20C1A`).
-    *Experiment:* exec-log `$C20C76` with DP `$F0`/`$F2`, Y, and stack
-    during one attack whose displayed damage is read off the screen;
-    then walk the caller dump backward.
+    actual damage/heal formula? *Narrowed by
+    [EXP-0007](../experiments/EXP-0007-amount-correlation.md):* `$F0`
+    holds the final per-hit number (equals popup and applied delta),
+    so the complete formula runs upstream of the `$C20C28` JSR.
+    Attacker/target arrive as `X`/`Y` (slot×2). Staging candidates:
+    `$C20420`+ (DP `$F4`–`$FC`), conditional doubling at `$C20C1A`;
+    stack hint: deeper return candidate `$6B16` (bank `$C2` presumed).
+    *Experiment:* dump `ROMCPU:$C26B10`± and walk backward; or
+    exec-log with full DP `$F4`–`$FC` snapshot per invocation.
 
 14. **What does `WRAM:+$11A2` mean** (bit 7 = MP-path selector)?
     *Experiment:* write watch on `+$11A2` around command execution.

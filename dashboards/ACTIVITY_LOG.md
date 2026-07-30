@@ -1,5 +1,12 @@
 # Activity Log
 
+- 2026-07-30 (daytime) — Unit 8 / EXP-0007: **DP `$F0` = final per-hit
+  damage, Confirmed on three anchors** (array arithmetic 9+4+2+6=21;
+  HUD mid-values; captured popup "6"). A 346-damage Fire Beam killed the
+  Were-Rat on camera. X/Y = attacker/target slot×2 (strong); `$F2`
+  direction observation recorded. Question #21 narrowed: the full
+  formula runs upstream of `$C20C28`; deeper-return lead `$6B16`.
+
 - 2026-07-30 (daytime) — Unit 7 / EXP-0006: **pending-delta accumulator
   decoded byte-exact** (`ROMCPU:$C20C76`): amounts accumulate per slot
   with `$FFFF`-sentinel init and a **9999 cap** (`$270F`) — the damage

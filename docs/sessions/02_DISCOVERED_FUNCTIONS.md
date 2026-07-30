@@ -301,10 +301,17 @@
   damage and healing are accumulated per slot into opposing pending
   arrays, consumed later by the delta-engine fetch (`$C213A7`,
   delta = `+$33E4` − `+$33D0`).
+- **Amount semantics (EXP-0007, Confirmed):** DP `$F0` holds the final
+  per-hit amount — it equals both the applied HP delta and the on-screen
+  damage popup (three-anchor correlation: array arithmetic, HUD values,
+  captured popup "6"). At entry, `X` = attacker slot×2 and `Y` = target
+  slot×2 (strong hypothesis, 5/5 captures); DP `$F2` read `$20` on a
+  party→enemy hit vs `$00` on enemy→party (meaning unresolved).
 - **Alternatives:** which array is "damage" vs "heal" is inferred from
-  the fetch's subtraction direction; unverified live.
-- **Validation experiment:** log DP `$F0`/`$F2` and Y at `$C20C76`
-  during one attack and one heal; compare with displayed numbers.
+  the fetch's subtraction direction; unverified live (a Heal Force cast
+  with this watch would settle it).
+- **Validation experiment:** heal-cast logging (polarity); dump around
+  `ROMCPU:$C26B10` (stack hint for the formula frame).
 - **Go representation:** `battle.AccumulatePending`
   ([internal/game/battle/battle.go](../../internal/game/battle/battle.go)).
 - **Related discoveries:** Battle HP/MP delta engine (consumer),

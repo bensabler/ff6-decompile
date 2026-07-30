@@ -1,6 +1,6 @@
 # Latest Checkpoint
 
-**[2026-07-30 — Unit 7: pending-delta accumulator decoded](2026-07-30-unit7-delta-accumulator.md)**
+**[2026-07-30 — Unit 8: queued amount = displayed damage](2026-07-30-unit8-amount-correlation.md)**
 
-State: Mesen live; 9999 cap located in code; AccumulatePending implemented.
-Exact next action: EXP-0007 — correlate queued amounts with displayed damage.
+State: Mesen live; $F0 correlation confirmed on three anchors.
+Exact next action: EXP-0008 — dump ROMCPU:$C26AE0-$C26B60 (formula lead).

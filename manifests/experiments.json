@@ -102,6 +102,23 @@
       "falsifying_outcome": "no 3-byte pending-delta store at $C20C98",
       "status": "completed",
       "record": "docs/experiments/EXP-0006-delta-setter.md"
+    },
+    {
+      "schema_version": "1.0",
+      "id": "EXP-0007",
+      "question": "Does the queued amount (DP $F0) equal the displayed damage number?",
+      "starting_state": {
+        "emulator": "Mesen 2.1.1 macOS x86_64",
+        "rom_sha256": "0f51b4fca41b7fd509e4b8f9d543151f68efa5e97b08493e4b2a0c06f5d8d5e2",
+        "state": "checkpoint3-mines.mss; live encounter; exec watch at $C20C76 reading DP $F0/$F2 (code preserved in record)"
+      },
+      "expected_outcomes": [
+        "logged f0 values equal displayed/applied damage (supports)",
+        "systematic mismatch (refutes; display computed elsewhere)"
+      ],
+      "falsifying_outcome": "a clean attack whose displayed number matches no logged f0",
+      "status": "completed",
+      "record": "docs/experiments/EXP-0007-amount-correlation.md"
     }
   ]
 }
