@@ -119,6 +119,23 @@
       "falsifying_outcome": "a clean attack whose displayed number matches no logged f0",
       "status": "completed",
       "record": "docs/experiments/EXP-0007-amount-correlation.md"
+    },
+    {
+      "schema_version": "1.0",
+      "id": "EXP-0008",
+      "question": "Is ~$C26B13 a caller frame on the damage-formula path (the '16 6B' stack bytes)?",
+      "starting_state": {
+        "emulator": "Mesen 2.1.1 macOS x86_64",
+        "rom_sha256": "0f51b4fca41b7fd509e4b8f9d543151f68efa5e97b08493e4b2a0c06f5d8d5e2",
+        "state": "deterministic ROM read; state-independent"
+      },
+      "expected_outcomes": [
+        "JSR alignment at $C26B14 with parameter staging (supports)",
+        "no JSR alignment / no DP-$F0 access (refutes; fallback to snapshot logging)"
+      ],
+      "falsifying_outcome": "no JSR ending at $C26B16 and no DP-$F0-family access in the window",
+      "status": "completed",
+      "record": "docs/experiments/EXP-0008-formula-frame.md"
     }
   ]
 }
