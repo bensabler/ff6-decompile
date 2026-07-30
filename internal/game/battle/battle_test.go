@@ -145,3 +145,39 @@ func TestAccumulatePending(t *testing.T) {
 		})
 	}
 }
+
+func TestApplyElementResponse(t *testing.T) {
+	r := ElementResponse{FlipToHeal: 0x01, Nullify: 0x02, Halve: 0x04, Double: 0x08}
+	tests := []struct {
+		name       string
+		amount     uint16
+		heal       bool
+		elems      uint8
+		nullified  uint8
+		wantAmount uint16
+		wantHeal   bool
+	}{
+		{name: "non-elemental unchanged", amount: 346, elems: 0x00, wantAmount: 346},
+		{name: "all elements nullified zeroes", amount: 346, elems: 0x10, nullified: 0xFF, wantAmount: 0},
+		{name: "flip-to-heal match", amount: 100, elems: 0x01, wantAmount: 100, wantHeal: true},
+		{name: "flip back to damage when already heal", amount: 100, heal: true, elems: 0x01, wantAmount: 100, wantHeal: false},
+		{name: "nullify match zeroes", amount: 100, elems: 0x02, wantAmount: 0},
+		{name: "halve match floors", amount: 101, elems: 0x04, wantAmount: 50},
+		{name: "double match", amount: 100, elems: 0x08, wantAmount: 200},
+		{name: "double overflow guard", amount: 0x8000, elems: 0x08, wantAmount: 0x8000},
+		{name: "double just under guard", amount: 0x7FFF, elems: 0x08, wantAmount: 0xFFFE},
+		{name: "flip wins over nullify", amount: 100, elems: 0x03, wantAmount: 100, wantHeal: true},
+		{name: "nullify wins over halve", amount: 100, elems: 0x06, wantAmount: 0},
+		{name: "halve wins over double", amount: 100, elems: 0x0C, wantAmount: 50},
+		{name: "masks tested against full elems not nullify-masked", amount: 100, elems: 0x03, nullified: 0x01, wantAmount: 100, wantHeal: true},
+		{name: "no mask match leaves amount", amount: 100, elems: 0x10, wantAmount: 100},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			gotAmount, gotHeal := ApplyElementResponse(tt.amount, tt.heal, tt.elems, tt.nullified, r)
+			if gotAmount != tt.wantAmount || gotHeal != tt.wantHeal {
+				t.Errorf("ApplyElementResponse() = (%d, %v), want (%d, %v)", gotAmount, gotHeal, tt.wantAmount, tt.wantHeal)
+			}
+		})
+	}
+}

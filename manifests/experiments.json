@@ -153,6 +153,23 @@
       "falsifying_outcome": "bytes at $C23469 do not begin a 3-byte JSR",
       "status": "completed",
       "record": "docs/experiments/EXP-0009-formula-frame-2.md"
+    },
+    {
+      "schema_version": "1.0",
+      "id": "EXP-0010",
+      "question": "What does the bracketed formula body at ROMCPU:$C20B83 compute?",
+      "starting_state": {
+        "emulator": "Mesen 2.1.1 macOS x86_64",
+        "rom_sha256": "0f51b4fca41b7fd509e4b8f9d543151f68efa5e97b08493e4b2a0c06f5d8d5e2",
+        "state": "deterministic ROM read; state-independent"
+      },
+      "expected_outcomes": [
+        "arithmetic producing/modifying DP $F0 ahead of the known gate block (supports)",
+        "dispatcher only, arithmetic deeper (alternative; re-bracket)"
+      ],
+      "falsifying_outcome": "no DP $F0-family access and no control flow toward $C20C0B-$C20C2C",
+      "status": "completed",
+      "record": "docs/experiments/EXP-0010-formula-body.md"
     }
   ]
 }

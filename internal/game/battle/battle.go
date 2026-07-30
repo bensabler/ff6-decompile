@@ -187,3 +187,54 @@ func AccumulatePending(current, amount uint16) uint16 {
 	}
 	return uint16(sum)
 }
+
+// ElementResponse holds one slot's per-element response masks, named by
+// their verified effect on the pending amount (ROM CPU 0xC20BE2-0xC20C1D,
+// EXP-0010). Candidate semantic labels, unproven: FlipToHeal=absorb,
+// Nullify=immune, Halve=resist, Double=weak. In WRAM the masks live in
+// two more 0x14-stride 10-entry arrays: FlipToHeal/Nullify are the
+// low/high bytes of the 16-bit entry at 0x3BCC+slot*2, Halve/Double the
+// high/low bytes at 0x3BE0+slot*2.
+type ElementResponse struct {
+	FlipToHeal uint8 // $3BCC,Y: matching element flips damage<->heal
+	Nullify    uint8 // $3BCD,Y: matching element zeroes the amount
+	Halve      uint8 // $3BE1,Y: matching element halves the amount
+	Double     uint8 // $3BE0,Y: matching element doubles the amount
+}
+
+// ApplyElementResponse reproduces the elemental-modifier block at ROM CPU
+// 0xC20BD3-0xC20C1D (byte-exact per EXP-0010): given the running amount,
+// the current heal flag (bit 0 of DP $F2), the attack's element byte
+// ($11A1), and the battle-wide nullified-element byte ($3EC8), apply the
+// target's response masks with first-match-wins priority:
+//
+//	no elements        -> unchanged
+//	all nullified      -> amount 0 (~nullified & elems == 0)
+//	FlipToHeal match   -> heal = !heal
+//	else Nullify match -> amount 0
+//	else Halve match   -> amount >>= 1
+//	else Double match  -> amount <<= 1, only when amount < 0x8000
+//
+// Note the original tests each mask against the full element byte, not
+// the nullify-masked value; this function preserves that exactly.
+func ApplyElementResponse(amount uint16, heal bool, elems, nullified uint8, r ElementResponse) (uint16, bool) {
+	if elems == 0 {
+		return amount, heal
+	}
+	if ^nullified&elems == 0 {
+		return 0, heal
+	}
+	switch {
+	case r.FlipToHeal&elems != 0:
+		heal = !heal
+	case r.Nullify&elems != 0:
+		amount = 0
+	case r.Halve&elems != 0:
+		amount >>= 1
+	case r.Double&elems != 0:
+		if amount < 0x8000 {
+			amount <<= 1
+		}
+	}
+	return amount, heal
+}

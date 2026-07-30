@@ -68,8 +68,17 @@ Ordered roughly by how much each answer would unlock.
     frame is the `JSR $0B83` at `$C23469` (EXP-0009), bracketing the
     formula body to `ROMCPU:$C20B83`–`$C20C2C` inside a ten-slot
     target loop gated by `+$3018,Y` bits vs DP `$A4`.
-    *Experiment (EXP-0010):* dump `$C20B83`–`$C20C10` and decode the
-    DP `$F0` computation.
+    *Progress (EXP-0010):* the post-processing is fully decoded — the
+    elemental-modifier block (`$C20B83`–`$C20C2C`) with per-target
+    response masks (`+$3BCC`/`+$3BE0` family arrays) and status-driven
+    polarity flips. The remaining unknown is #22.
+
+22. **What do the base-amount routines `ROMCPU:$C20C9E` and `$C20D87`
+    compute** (selected by `+$11A4` bit 7 — physical/magical
+    candidates)? This is the innermost damage formula (stats,
+    multipliers, randomness).
+    *Experiment:* dump both routines; correlate with live DP `$F0`
+    values pre-element-block for attacks with known stats.
 
 14. **What does `WRAM:+$11A2` mean** (bit 7 = MP-path selector)?
     *Experiment:* write watch on `+$11A2` around command execution.

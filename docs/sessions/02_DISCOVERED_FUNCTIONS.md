@@ -320,6 +320,45 @@
   (EXP-0006).
 - **Last updated:** 2026-07-30
 
+### DamageAmountPipeline / elemental-modifier block (candidate) — `ROMCPU:$C20B83`
+
+- **Address:** `ROMCPU:$C20B83`–`$C20C2C` (joins the gate block and
+  accumulator); base-amount callees `ROMCPU:$C20C9E` / `$C20D87`
+  (selected by `+$11A4` bit 7) undumped
+- **Address space:** ROM CPU
+- **Kind:** Function (per-target amount post-processing)
+- **Status:** **Confirmed (code, byte-exact — EXP-0010 + EXP-0006 dumps
+  joined)**; semantic labels Strong hypothesis; base formulas Unknown
+  (question #22).
+- **Observed behavior:** full verified listing in
+  [EXP-0010](../experiments/EXP-0010-formula-body.md). Shape: `$11A6`
+  gate → base-amount JSR (variant by `+$11A4` bit 7) → polarity byte
+  DP `$F2` from `+$11A4` with status-driven flips (`+$3EE4` bits,
+  `+$3C95` bit 7, `+$11AA`) → element block vs `+$11A1`:
+  battle-wide nullify (`~+$3EC8 & +$11A1 == 0` → zero), then per-target
+  first-match-wins `+$3BCC,Y` flip-to-heal / `+$3BCD,Y` zero /
+  `+$3BE1,Y` halve / `+$3BE0,Y` double (with `$8000` overflow guard) →
+  falls into the queue gate block.
+- **Evidence:** `rom_C20B83_141.hex` (SHA-256 `3a9034d3…c0a39f`) +
+  `rom_C20C10_48.hex`; entry `PHP` matches the live stack PS byte;
+  called from the `$C23469` target loop (EXP-0009).
+- **Interpretation:** the elemental response system: per-slot 16-bit
+  mask entries at `+$3BCC` (flip|zero packed) and `+$3BE0`
+  (double|halve packed) — two more `$14`-stride 10-entry family arrays.
+  Candidate labels: absorb/immune/weak/resist; `+$11A1` = attack
+  element byte; `+$3EC8` = battle-wide element-nullify byte.
+- **Alternatives:** labels could permute (e.g. `$3BCD` "immune" vs
+  another negation concept); discriminable live with known
+  absorb/resist targets.
+- **Validation experiment:** fight an element-absorbing target and
+  watch the flip; dump `$C20C9E`/`$C20D87` (question #22).
+- **Go representation:** `battle.ApplyElementResponse` +
+  `battle.ElementResponse` (behavior-derived names per naming rules).
+- **Related discoveries:** PendingDeltaAccumulate (downstream),
+  `$C23469` target loop (upstream), unified battle arrays (ST-0003).
+- **First observed in session:** 2026-07-30 (EXP-0010).
+- **Last updated:** 2026-07-30
+
 ### PartyDisplaySourceRefresh (candidate) — `ROMCPU:$C25D26`
 
 - **Address:** `ROMCPU:$C25D26`–`$C25D56`

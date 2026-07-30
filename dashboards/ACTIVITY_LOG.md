@@ -1,5 +1,14 @@
 # Activity Log
 
+- 2026-07-30 (daytime) — Units 10–11 / EXP-0009+0010: formula frame
+  verified (`JSR $0B83` at `$C23469`, ten-slot target loop) and the
+  **elemental-modifier block decoded byte-exact** (`$C20B83`–`$C20C2C`):
+  nullify/flip-to-heal/zero/halve/double transforms over per-target
+  16-bit element masks in two more `$14`-stride family arrays
+  (`+$3BCC`, `+$3BE0`). Go: `battle.ApplyElementResponse` (behavior-
+  derived names) + 14-case table test. Base-amount routines
+  (`$C20C9E`/`$C20D87`) opened as question #22 — the innermost formula.
+
 - 2026-07-30 (daytime) — Unit 8 / EXP-0007: **DP `$F0` = final per-hit
   damage, Confirmed on three anchors** (array arithmetic 9+4+2+6=21;
   HUD mid-values; captured popup "6"). A 346-damage Fire Beam killed the

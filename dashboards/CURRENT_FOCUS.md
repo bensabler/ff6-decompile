@@ -10,8 +10,7 @@ refactored); queued amount proven equal to displayed damage
 Mesen live with bridge + injected watches (code preserved in
 EXP-0002/0004/0005/0007 records).
 
-**Next exact action:** Unit 10 / EXP-0009 — dump
-`ROMCPU:$C23430`–`$C234B0`; verify the refined formula-path frame
-(a `JSR` occupying `$C23469`–`$C2346B`); decode DP `$F0` staging if
-present. Fallback: live full-stack + DP-snapshot logging at
-`ROMCPU:$C20C76`.
+**Next exact action:** Unit 12 / EXP-0011 — dump
+`ROMCPU:$C20C9E`-`$C20D86` and `$C20D87`-`$C20E00` (the two base-amount
+routines selected by `+$11A4` bit 7); decode the innermost damage
+formula (question #22).
