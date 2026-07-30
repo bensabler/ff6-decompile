@@ -84,14 +84,18 @@ Ordered roughly by how much each answer would unlock.
     *Experiment:* write watch on `+$11B0` during one attack; walk the
     stack.
 
-24. **What is the final transform `ROMCPU:$C2370B`** applied to `$F0`
-    (randomness/variance candidate)?
-    *Experiment:* dump `$C23700`–`$C23760`; look for RNG state reads.
+24. ~~**What is the final transform `ROMCPU:$C2370B`?**~~ → **Answered,
+    hypothesis refuted**
+    ([EXP-0012](../experiments/EXP-0012-arithmetic-helpers.md)): it is
+    a ×1.5-per-count chain (count in DP `$BC` from the target loop's
+    `+$3A54` gate, clamped `$FFFF`, consumed on use) — not randomness.
+    Where the damage variance comes from folds into #23/#25.
 
-25. **What is the multiplier helper `ROMCPU:$C247B7`** (used with DP
-    `$E8` operands `255−def` and `$AA`)?
-    *Experiment:* dump `$C247B0`–`$C24800`; expect SNES ALU
-    (`$4202`-family) usage.
+25. **What is the core multiply `ROMCPU:$C24781`?** (EXP-0012 decoded
+    the `$C247B7` wrapper — two calls composing a 16×8 product; the
+    adjacent code reads ALU `$4214`.)
+    *Experiment:* dump `$C24770`–`$C247B0`; expect `$4202`/`$4216`
+    writes/reads.
 
 14. **What does `WRAM:+$11A2` mean** (bit 7 = MP-path selector)?
     *Experiment:* write watch on `+$11A2` around command execution.
