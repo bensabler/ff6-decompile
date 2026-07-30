@@ -10,7 +10,7 @@ refactored); queued amount proven equal to displayed damage
 Mesen live with bridge + injected watches (code preserved in
 EXP-0002/0004/0005/0007 records).
 
-**Next exact action:** question #28 (variance hunt) — repeat the same
-attack from the same savestate with different input timing and diff the
-damage; or #27 (stat operands) via write watches during command
-selection; or #26 (physical-path decode), which is dump-only.
+**Next exact action:** question #26+#28 combined — precise decode of
+the enemy/physical base path (`$C22B9D`-`$C22C10`, dumps in hand plus
+the `$C22C02` miss site) to identify the timing-varying read (the RNG
+state); then a repeat-trial with a write watch on that state.

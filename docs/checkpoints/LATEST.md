@@ -1,6 +1,7 @@
 # Latest Checkpoint
 
-**[2026-07-30 — Unit 16: base formula closed; overnight wrap](2026-07-30-unit16-formula-closed.md)**
+**[2026-07-30 — Unit 17: variance confirmed](2026-07-30-unit17-variance-confirmed.md)**
 
-State: the standard damage pipeline is byte-exact end to end. Mesen live.
-Exact next action: EXP-0016 — variance hunt (question #28).
+State: timing-dependent RNG proven via identical-state trials; local
+battle savestate technique established. Mesen live.
+Exact next action: EXP-0017 — decode the enemy base path, find the RNG state.

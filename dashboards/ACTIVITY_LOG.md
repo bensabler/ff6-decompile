@@ -1,5 +1,12 @@
 # Activity Log
 
+- 2026-07-30 (evening) — Unit 17 / EXP-0016: **variance confirmed,
+  timing-dependent** — identical-savestate trials with different input
+  timing produced miss-vs-hit on the first enemy action and varying
+  bases (7/0/12). RNG consumer narrowed to the enemy/physical base
+  path; miss-path writer `$C22C02` found. Local battle savestate
+  technique established (`createSavestate` via queued exec callback).
+
 - 2026-07-30 (overnight 2) — Units 15–16 / EXP-0014+0015: **the base
   damage formula is decoded and numerically closed** — `base = power×4 +
   (power×$11AE×$11AF)>>5` (live: 60/28/4 → 450 → ×(255−58)/256+1 →

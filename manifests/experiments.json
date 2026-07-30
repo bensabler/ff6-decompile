@@ -255,6 +255,23 @@
       "falsifying_outcome": "store sites not at write-PC minus 3",
       "status": "completed",
       "record": "docs/experiments/EXP-0015-base-computation.md"
+    },
+    {
+      "schema_version": "1.0",
+      "id": "EXP-0016",
+      "question": "Is damage timing-dependent (variance hunt, question #28)?",
+      "starting_state": {
+        "emulator": "Mesen 2.1.1 macOS x86_64",
+        "rom_sha256": "0f51b4fca41b7fd509e4b8f9d543151f68efa5e97b08493e4b2a0c06f5d8d5e2",
+        "state": "local battle savestate exp10-battle.mss; two trials, waits 1.2s vs 4.5s; watch code in transcript"
+      },
+      "expected_outcomes": [
+        "divergent values between trials (variance exists; localizes RNG consumer)",
+        "identical values (refutes timing-driven RNG for this path)"
+      ],
+      "falsifying_outcome": "identical base/queue sequences across trials",
+      "status": "completed",
+      "record": "docs/experiments/EXP-0016-variance-hunt.md"
     }
   ]
 }
