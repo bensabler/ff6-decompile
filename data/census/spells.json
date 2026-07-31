@@ -1,15 +1,72 @@
 {
   "schema_version": "1.0",
   "domain": "MAGIC",
-  "description": "Global spell/ability records: names, MP costs, power, targeting, elements, statuses, animation, sound, effect routines.",
+  "description": "Global spell/ability records. Established by EXP-0026: the $C46AC0 14-byte record table (CEN-BATTLE-0004) doubles as the spell database — records 0-53 are the magic spells, ids shared with the 7-byte name table at ROMFILE:0x26F567 (CEN-MAGIC-0003). Names decode via the fixed-font byte encoding (CEN-MENU-0006). Bulk name text stays in local artifacts per docs/legal/ASSET_POLICY.md; this inventory stores ids, offsets, numbers, flags, and observation-sourced display names only.",
   "expected_record_count": null,
-  "records": [],
-  "unknowns": [
-    "record count",
-    "record size",
-    "ROM location",
-    "format"
+  "structure": {
+    "data_records": {
+      "rom_file_offset": "0x046AC0 + 14*id",
+      "record_size": 14,
+      "fields": {
+        "byte1": "element mask (Confirmed, EXP-0010/0019)",
+        "byte2": "flags: bit0 physical formula, bit7 MP-path dispatch (Confirmed)",
+        "byte3": "bit7 MP retarget (Confirmed); other bits unknown",
+        "byte4": "mode: bit7 base variant, bit1 flip chain, bit0 party halving (Confirmed)",
+        "byte5": "MP cost (Strong hypothesis: single on-screen anchor Cure=5; families coherent)",
+        "byte6": "power (Confirmed, EXP-0014/0015)",
+        "byte9": "flag byte, ASL post-processed (Confirmed loader-side; semantics unknown)",
+        "byte10": "abort bits #$82 (partial, EXP-0010)",
+        "bytes_0_7_8_11_12_13": "unknown"
+      }
+    },
+    "name_records": {
+      "rom_file_offset": "0x26F567 + 7*id",
+      "record_size": 7,
+      "layout": "[class icon byte][6-char name, fixed-font encoding]"
+    },
+    "availability": {
+      "wram": "+$1A6E + 54*character_slot (54 bytes per character, $FF = known; stride beyond slot 0 is a hypothesis)"
+    }
+  },
+  "records": [
+    {
+      "id": 0,
+      "display_name_observed": "Fire",
+      "name_source": "menu tilemap decode + ROM name record 0 (EXP-0026)",
+      "mp_cost_candidate": 4,
+      "mp_cost_status": "inferred from record byte 5 (Strong-hypothesis field); not yet observed on screen — the field menu showed 0 for the dim entry",
+      "known_by": ["character slot 0 ('?????'/Terra) via +$1A6E"],
+      "data_record_bytes_local": "local_artifacts/experiments/EXP-0022/table_C46AC0_3584.hex",
+      "power": 21,
+      "element_mask": 1,
+      "confidence": "strong-hypothesis",
+      "unknowns": ["field castability rule", "targeting", "animation", "sound", "bytes 0/7/8/11-13"]
+    },
+    {
+      "id": 45,
+      "display_name_observed": "Cure",
+      "name_source": "menu screenshot + tilemap decode + ROM name record 45 (EXP-0026)",
+      "mp_cost_observed": 5,
+      "mp_cost_status": "observed on screen; matches record byte 5",
+      "help_text_observed": "Recovers HP",
+      "known_by": ["character slot 0 ('?????'/Terra) via +$1A6E"],
+      "data_record_bytes_local": "local_artifacts/experiments/EXP-0022/table_C46AC0_3584.hex",
+      "power": 10,
+      "element_mask": 0,
+      "confidence": "strong-hypothesis",
+      "unknowns": ["targeting flags", "effect routine", "animation", "sound"]
+    }
   ],
-  "evidence_sources": [],
-  "next_extraction_step": "EXP-0026 magic-menu capture: trace displayed names/costs to their ROM structures."
+  "unknowns": [
+    "true spell count (54 inferred from class-icon structure, Tentative)",
+    "help-text table location",
+    "targeting/animation/sound field linkage",
+    "menu grid ordering rule (Cure renders first despite id 45)"
+  ],
+  "evidence_sources": [
+    "docs/experiments/EXP-0026-magic-census.md",
+    "docs/experiments/EXP-0022-record-crosscheck.md",
+    "local_artifacts/experiments/EXP-0026/ (hashes.sha256)"
+  ],
+  "next_extraction_step": "Verify the name-table end boundary and a second MP-cost anchor (battle menu); then bulk-extract all 54 records to local_artifacts and mirror ids/numbers here."
 }

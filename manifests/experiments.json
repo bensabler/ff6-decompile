@@ -425,6 +425,23 @@
       "falsifying_outcome": "a state fails to load or render",
       "status": "completed",
       "record": "docs/experiments/EXP-0025-opening-recon.md"
+    },
+    {
+      "schema_version": "1.0",
+      "id": "EXP-0026",
+      "question": "What spells does the opening Magic list show (names/order/MP/availability), and where do the displayed names and costs come from, at candidate level?",
+      "starting_state": {
+        "emulator": "Mesen 2.1.1 macOS x86_64 (--testrunner headless, bridge v2)",
+        "rom_sha256": "0f51b4fca41b7fd509e4b8f9d543151f68efa5e97b08493e4b2a0c06f5d8d5e2",
+        "state": "checkpoint2.mss field menu (fallback exp10-battle.mss battle menu); screenshot-guided navigation"
+      },
+      "expected_outcomes": [
+        "spell list rendered; names/costs recorded; name-table or cost/availability source reaches CANDIDATE_LOCATION",
+        "menu locked or text dynamic-composed without affine match (negative result; fallback path queued)"
+      ],
+      "falsifying_outcome": "the Magic command is absent for every opening party member in both field and battle menus",
+      "status": "completed",
+      "record": "docs/experiments/EXP-0026-magic-census.md"
     }
   ]
 }

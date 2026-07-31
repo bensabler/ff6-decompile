@@ -343,6 +343,43 @@
       "overlaps": [],
       "status": "known",
       "notes": ""
+    },
+    {
+      "id": "ROM-0019",
+      "start": 2553191,
+      "size": 378,
+      "bank": "ROMCPU:$E6F567-$E6F6DC",
+      "classification": "TEXT",
+      "owner": "CEN-MAGIC-0003",
+      "format": "7-byte spell-name records: [class icon][6-char name], FF6 glyph encoding",
+      "confidence": "strong-hypothesis",
+      "evidence": [
+        "docs/experiments/EXP-0026-magic-census.md",
+        "local_artifacts/experiments/EXP-0026/ (menu tilemap + ROM decode)"
+      ],
+      "consumers": [
+        "Magic menu list renderer (unlocated)"
+      ],
+      "overlaps": [],
+      "status": "known",
+      "notes": "36 entries decoded contiguously from id 0 (Fire); Cure anchored at id 45 (0x26F6A3, matches the observed menu). 54-entry extent inferred from the class-icon structure \u2014 end boundary unverified."
+    },
+    {
+      "id": "ROM-0020",
+      "start": 220234,
+      "size": 120,
+      "bank": "ROMCPU:$C35C4A-$C35CC1",
+      "classification": "TEXT",
+      "owner": "CEN-MENU-0005",
+      "format": "skills-menu label strings (Espers/Magic/SwdTech/Blitz/Lore/Rage/Dance, two copies)",
+      "confidence": "tentative-hypothesis",
+      "evidence": [
+        "docs/experiments/EXP-0026-magic-census.md"
+      ],
+      "consumers": [],
+      "overlaps": [],
+      "status": "candidate",
+      "notes": "Located by encoded-string search only; stride/structure and exact extent unestablished."
     }
   ]
 }

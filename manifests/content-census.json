@@ -187,8 +187,8 @@
       "id": "CEN-BATTLE-0004",
       "domain": "BATTLE",
       "category": "attack records",
-      "name": "Attack/spell record table ($C46AC0, 14-byte records)",
-      "description": "MVN-loaded per action into WRAM +$11A0-+$11AD; 7 of 14 bytes mapped to verified pipeline fields; bytes 0,5,7,8,11,12,13 unknown.",
+      "name": "Attack/spell record table ($C46AC0) \u2014 the global spell database",
+      "description": "MVN-loaded per action into WRAM +$11A0-+$11AD; records 0-53 are the 54 magic spells (ids match the spell name table, EXP-0026). 8 of 14 bytes mapped: byte 5 = MP cost (Strong hypothesis: Cure record holds the observed cost 5; Cure2/Cure3 ascend 25/40; Fire/Ice/Bolt 4/5/6).",
       "reconstruction_status": "FORMAT_PARTIAL",
       "runtime_status": "NORMAL_PATH_VERIFIED",
       "rom_revision": "0f51b4fca41b7fd509e4b8f9d543151f68efa5e97b08493e4b2a0c06f5d8d5e2",
@@ -211,7 +211,8 @@
       "related_experiments": [
         "EXP-0019",
         "EXP-0021",
-        "EXP-0022"
+        "EXP-0022",
+        "EXP-0026"
       ],
       "related_discoveries": [
         "DISC-0007"
@@ -230,12 +231,13 @@
       ],
       "confidence": "confirmed",
       "unknown_fields": [
-        "record bytes 0, 5, 7, 8, 11, 12, 13",
+        "record bytes 0, 7, 8, 11, 12, 13",
+        "byte 5 = MP cost needs a second on-screen anchor",
         "true table length (>=239 records)"
       ],
       "contradictions": [],
       "next_action": "Map the remaining record bytes via targeted actions; establish the true table length.",
-      "notes": ""
+      "notes": "Category kept under BATTLE as the loader's table; MAGIC entries reference it."
     },
     {
       "schema_version": "1.0",
@@ -1421,12 +1423,14 @@
       "domain": "MAGIC",
       "category": "spell availability",
       "name": "Magic command and Terra's opening spell availability",
-      "description": "Not yet observed (no Magic menu opened in any captured session).",
-      "reconstruction_status": "UNMAPPED",
-      "runtime_status": "NOT_ENCOUNTERED",
+      "description": "Field Skills menu shows Espers+Magic available for Terra ('?????'); the Magic list renders Cure (castable, MP 5, help 'Recovers HP') and Fire (dim, MP readout 0 in field) on a fixed grid with blank unlearned slots. Availability source located: per-character 54-byte arrays at WRAM +$1A6E ($FF = known; Terra = ids {0 Fire, 45 Cure}; next three windows zero for the magicless soldiers).",
+      "reconstruction_status": "LOCATED",
+      "runtime_status": "OUTPUTS_CAPTURED",
       "rom_revision": "0f51b4fca41b7fd509e4b8f9d543151f68efa5e97b08493e4b2a0c06f5d8d5e2",
       "rom_locations": [],
-      "wram_locations": [],
+      "wram_locations": [
+        "WRAM:+$1A6E (54-byte per-character spell-known array, stride hypothesis)"
+      ],
       "cpu_routines": [],
       "spc_locations": [],
       "record_count_expected": null,
@@ -1435,16 +1439,28 @@
       "pointer_tables": [],
       "consumers": [],
       "producers": [],
-      "related_experiments": [],
+      "related_experiments": [
+        "EXP-0026"
+      ],
       "related_discoveries": [],
       "related_implementations": [],
       "related_tests": [],
-      "runtime_scenarios": [],
-      "evidence": [],
-      "confidence": "unknown",
-      "unknown_fields": [],
+      "runtime_scenarios": [
+        "mesen/out/checkpoint2.mss"
+      ],
+      "evidence": [
+        "local_artifacts/experiments/EXP-0026/ (screenshots, tilemap/chr/cgram/wram dumps; hashes.sha256)",
+        "docs/experiments/EXP-0026-magic-census.md"
+      ],
+      "confidence": "strong-hypothesis",
+      "unknown_fields": [
+        "array count/character mapping beyond slot 0",
+        "non-$FF values (esper learning percentages?) unobserved",
+        "field dim/castability rule (Fire MP readout 0)",
+        "menu grid ordering vs id order (Cure rendered first)"
+      ],
       "contradictions": [],
-      "next_action": "EXP-0026: open the Magic list (field menu preferred), capture names/order/MP costs, and trace the availability source.",
+      "next_action": "Observe a second magic-knowing character's array; capture the battle Magic menu for Fire's cost display.",
       "notes": ""
     },
     {
@@ -1485,6 +1501,317 @@
       ],
       "contradictions": [],
       "next_action": "Diff WRAM snapshots across two field states to bound the event-flag region; then SRAM after a save event.",
+      "notes": ""
+    },
+    {
+      "schema_version": "1.0",
+      "id": "CEN-MAGIC-0003",
+      "domain": "MAGIC",
+      "category": "spell names",
+      "name": "Spell name table (0x26F567, 7-byte records)",
+      "description": "[class icon][6-char name] records; Fire=id 0, Cure=id 45; icon byte matches the menu bullet tile ($E8 castable / $E9+ class markers). 36 entries decoded contiguously; 54-entry extent inferred from class structure.",
+      "reconstruction_status": "FORMAT_DECODED",
+      "runtime_status": "OUTPUTS_CAPTURED",
+      "rom_revision": "0f51b4fca41b7fd509e4b8f9d543151f68efa5e97b08493e4b2a0c06f5d8d5e2",
+      "rom_locations": [
+        "ROM-0019"
+      ],
+      "wram_locations": [],
+      "cpu_routines": [],
+      "spc_locations": [],
+      "record_count_expected": 54,
+      "record_count_found": 36,
+      "record_size": 7,
+      "pointer_tables": [],
+      "consumers": [],
+      "producers": [],
+      "related_experiments": [
+        "EXP-0026"
+      ],
+      "related_discoveries": [],
+      "related_implementations": [],
+      "related_tests": [],
+      "runtime_scenarios": [],
+      "evidence": [
+        "local_artifacts/experiments/EXP-0026/ (screenshots, tilemap/chr/cgram/wram dumps; hashes.sha256)",
+        "docs/experiments/EXP-0026-magic-census.md"
+      ],
+      "confidence": "strong-hypothesis",
+      "unknown_fields": [
+        "end boundary",
+        "icon byte full value set",
+        "digit glyphs beyond '2'/'3'"
+      ],
+      "contradictions": [],
+      "next_action": "Verify the table end boundary (entry 53/54 transition) and the icon-class runs; extraction stays local per the asset policy.",
+      "notes": "record_count_expected=54 rests on the class-icon structure and the id-45 Cure anchor (Tentative until the boundary is read)."
+    },
+    {
+      "schema_version": "1.0",
+      "id": "CEN-MENU-0005",
+      "domain": "MENU",
+      "category": "magic menu",
+      "name": "Field Magic menu (grid list, MP readout, help bar)",
+      "description": "Fixed spell grid with blank unlearned slots; leading bullet tile $E8 (castable) vs $E9 (dim); MP cost window and help-text bar track the cursor; scroll indicators present. Cure shows cost 5 + 'Recovers HP'; the dim Fire shows cost 0 and empty help in the field context.",
+      "reconstruction_status": "OBSERVED",
+      "runtime_status": "OUTPUTS_CAPTURED",
+      "rom_revision": "0f51b4fca41b7fd509e4b8f9d543151f68efa5e97b08493e4b2a0c06f5d8d5e2",
+      "rom_locations": [],
+      "wram_locations": [],
+      "cpu_routines": [],
+      "spc_locations": [],
+      "record_count_expected": null,
+      "record_count_found": null,
+      "record_size": null,
+      "pointer_tables": [],
+      "consumers": [],
+      "producers": [],
+      "related_experiments": [
+        "EXP-0026"
+      ],
+      "related_discoveries": [],
+      "related_implementations": [],
+      "related_tests": [],
+      "runtime_scenarios": [
+        "mesen/out/checkpoint2.mss"
+      ],
+      "evidence": [
+        "local_artifacts/experiments/EXP-0026/ (screenshots, tilemap/chr/cgram/wram dumps; hashes.sha256)"
+      ],
+      "confidence": "confirmed",
+      "unknown_fields": [
+        "grid ordering rule",
+        "help-text table location",
+        "castability predicate"
+      ],
+      "contradictions": [],
+      "next_action": "Trace the list renderer's reads (name table + availability array consumers) with a read-watch during menu open.",
+      "notes": ""
+    },
+    {
+      "schema_version": "1.0",
+      "id": "CEN-MENU-0006",
+      "domain": "MENU",
+      "category": "fonts",
+      "name": "Fixed-font text byte encoding (menu + battle HUD surfaces)",
+      "description": "Derived from two independent surfaces: tile index = text byte with A-Z=$80+n, a-z=$9A+n, '-'=$C4 ('X-Zone' in ROM, 'Were-Rat' in the battle HUD), narrow space $FE, digits '2'/'3'=$B6/$B7 observed, blank $FF. ROM name strings use the same byte values (search hits confirm).",
+      "reconstruction_status": "FORMAT_PARTIAL",
+      "runtime_status": "OUTPUTS_CAPTURED",
+      "rom_revision": "0f51b4fca41b7fd509e4b8f9d543151f68efa5e97b08493e4b2a0c06f5d8d5e2",
+      "rom_locations": [],
+      "wram_locations": [],
+      "cpu_routines": [],
+      "spc_locations": [],
+      "record_count_expected": null,
+      "record_count_found": null,
+      "record_size": null,
+      "pointer_tables": [],
+      "consumers": [],
+      "producers": [],
+      "related_experiments": [
+        "EXP-0023",
+        "EXP-0025",
+        "EXP-0026"
+      ],
+      "related_discoveries": [],
+      "related_implementations": [],
+      "related_tests": [],
+      "runtime_scenarios": [],
+      "evidence": [
+        "local_artifacts/experiments/EXP-0026/ (screenshots, tilemap/chr/cgram/wram dumps; hashes.sha256)",
+        "docs/experiments/EXP-0026-magic-census.md"
+      ],
+      "confidence": "confirmed",
+      "unknown_fields": [
+        "digits beyond 2/3",
+        "punctuation set",
+        "VWF dialogue encoding relationship"
+      ],
+      "contradictions": [],
+      "next_action": "Complete the glyph set (digits 0-9, punctuation) by decoding more rendered surfaces; check whether dialogue (VWF) shares the byte encoding.",
+      "notes": ""
+    },
+    {
+      "schema_version": "1.0",
+      "id": "CEN-MAGIC-0004",
+      "domain": "MAGIC",
+      "category": "MP costs",
+      "name": "MP deduction and the cost field",
+      "description": "Display side: the menu cost window reads 5 for Cure (observed). Data side: spell-record byte 5 matches (Strong hypothesis, CEN-BATTLE-0004). The battle-side MP deduction path (+$3C08 pool writes) is decoded code-side from EXP-0001 but never observed live (no MP-consuming action captured).",
+      "reconstruction_status": "CANDIDATE_LOCATION",
+      "runtime_status": "ENCOUNTERED",
+      "rom_revision": "0f51b4fca41b7fd509e4b8f9d543151f68efa5e97b08493e4b2a0c06f5d8d5e2",
+      "rom_locations": [
+        "ROM-0015"
+      ],
+      "wram_locations": [
+        "WRAM:+$3C08 (battle MP pool, Strong hypothesis)"
+      ],
+      "cpu_routines": [],
+      "spc_locations": [],
+      "record_count_expected": null,
+      "record_count_found": null,
+      "record_size": null,
+      "pointer_tables": [],
+      "consumers": [],
+      "producers": [],
+      "related_experiments": [
+        "EXP-0001",
+        "EXP-0026"
+      ],
+      "related_discoveries": [],
+      "related_implementations": [],
+      "related_tests": [],
+      "runtime_scenarios": [],
+      "evidence": [
+        "local_artifacts/experiments/EXP-0026/ (screenshots, tilemap/chr/cgram/wram dumps; hashes.sha256)"
+      ],
+      "confidence": "strong-hypothesis",
+      "unknown_fields": [
+        "field-menu MP store (vs battle array)",
+        "deduction routine"
+      ],
+      "contradictions": [],
+      "next_action": "Cast Cure from the field menu (heal path) while watching +$3C08-family and the menu MP display source.",
+      "notes": ""
+    },
+    {
+      "schema_version": "1.0",
+      "id": "CEN-MAGIC-0005",
+      "domain": "MAGIC",
+      "category": "targeting",
+      "name": "Spell targeting flags and menu targeting behavior",
+      "description": "Not yet observed (no cast initiated); record byte 3/4 flags partially decoded battle-side (MP retarget bit 3.7, party-halving 4.0 from EXP-0011).",
+      "reconstruction_status": "UNMAPPED",
+      "runtime_status": "NOT_ENCOUNTERED",
+      "rom_revision": "0f51b4fca41b7fd509e4b8f9d543151f68efa5e97b08493e4b2a0c06f5d8d5e2",
+      "rom_locations": [],
+      "wram_locations": [],
+      "cpu_routines": [],
+      "spc_locations": [],
+      "record_count_expected": null,
+      "record_count_found": null,
+      "record_size": null,
+      "pointer_tables": [],
+      "consumers": [],
+      "producers": [],
+      "related_experiments": [],
+      "related_discoveries": [],
+      "related_implementations": [],
+      "related_tests": [],
+      "runtime_scenarios": [],
+      "evidence": [],
+      "confidence": "unknown",
+      "unknown_fields": [],
+      "contradictions": [],
+      "next_action": "Initiate a field Cure cast to the character-select stage and record the targeting UI + consumed flags.",
+      "notes": ""
+    },
+    {
+      "schema_version": "1.0",
+      "id": "CEN-MAGIC-0006",
+      "domain": "MAGIC",
+      "category": "effect routines",
+      "name": "Spell effect dispatch",
+      "description": "The battle pipeline dispatches on record flags (formula select bit 2.0, MP path 2.7 \u2014 Confirmed); a fuller effect-routine table (per-spell special effects) is unlocated.",
+      "reconstruction_status": "CANDIDATE_LOCATION",
+      "runtime_status": "NORMAL_PATH_VERIFIED",
+      "rom_revision": "0f51b4fca41b7fd509e4b8f9d543151f68efa5e97b08493e4b2a0c06f5d8d5e2",
+      "rom_locations": [
+        "ROM-0015"
+      ],
+      "wram_locations": [],
+      "cpu_routines": [],
+      "spc_locations": [],
+      "record_count_expected": null,
+      "record_count_found": null,
+      "record_size": null,
+      "pointer_tables": [],
+      "consumers": [],
+      "producers": [],
+      "related_experiments": [
+        "EXP-0010",
+        "EXP-0011",
+        "EXP-0017"
+      ],
+      "related_discoveries": [],
+      "related_implementations": [],
+      "related_tests": [],
+      "runtime_scenarios": [],
+      "evidence": [
+        "docs/experiments/EXP-0011-base-formulas.md"
+      ],
+      "confidence": "strong-hypothesis",
+      "unknown_fields": [
+        "per-spell effect routine linkage",
+        "record bytes 7/8"
+      ],
+      "contradictions": [],
+      "next_action": "Map record bytes 7/8 against effect variety once more spells are castable; hunt an effect-routine pointer table.",
+      "notes": ""
+    },
+    {
+      "schema_version": "1.0",
+      "id": "CEN-MAGIC-0007",
+      "domain": "MAGIC",
+      "category": "animation",
+      "name": "Spell animation data",
+      "description": "Not yet observed (no spell cast captured).",
+      "reconstruction_status": "UNMAPPED",
+      "runtime_status": "NOT_ENCOUNTERED",
+      "rom_revision": "0f51b4fca41b7fd509e4b8f9d543151f68efa5e97b08493e4b2a0c06f5d8d5e2",
+      "rom_locations": [],
+      "wram_locations": [],
+      "cpu_routines": [],
+      "spc_locations": [],
+      "record_count_expected": null,
+      "record_count_found": null,
+      "record_size": null,
+      "pointer_tables": [],
+      "consumers": [],
+      "producers": [],
+      "related_experiments": [],
+      "related_discoveries": [],
+      "related_implementations": [],
+      "related_tests": [],
+      "runtime_scenarios": [],
+      "evidence": [],
+      "confidence": "unknown",
+      "unknown_fields": [],
+      "contradictions": [],
+      "next_action": "Cast Fire in battle (after menu navigation) and capture the animation asset loads (VRAM deltas, DMA).",
+      "notes": ""
+    },
+    {
+      "schema_version": "1.0",
+      "id": "CEN-MAGIC-0008",
+      "domain": "MAGIC",
+      "category": "sound",
+      "name": "Spell audio cues",
+      "description": "Not yet observed; the EXP-0024 port-command technique applies directly.",
+      "reconstruction_status": "UNMAPPED",
+      "runtime_status": "NOT_ENCOUNTERED",
+      "rom_revision": "0f51b4fca41b7fd509e4b8f9d543151f68efa5e97b08493e4b2a0c06f5d8d5e2",
+      "rom_locations": [],
+      "wram_locations": [],
+      "cpu_routines": [],
+      "spc_locations": [],
+      "record_count_expected": null,
+      "record_count_found": null,
+      "record_size": null,
+      "pointer_tables": [],
+      "consumers": [],
+      "producers": [],
+      "related_experiments": [],
+      "related_discoveries": [],
+      "related_implementations": [],
+      "related_tests": [],
+      "runtime_scenarios": [],
+      "evidence": [],
+      "confidence": "unknown",
+      "unknown_fields": [],
+      "contradictions": [],
+      "next_action": "Delta-capture APU port commands during a spell cast (EXP-0024 pattern).",
       "notes": ""
     }
   ]

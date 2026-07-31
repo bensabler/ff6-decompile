@@ -8,12 +8,12 @@ Breadth without pretense: counts are census entries at or above each threshold (
 |---|---|---|---|---|---|---|
 | BATTLE | 5 | 5 | 3 | 3 | 3 | 5 |
 | CHAR | 3 | 1 | 1 | 1 | 1 | 1 |
-| MAGIC | 2 | 0 | 0 | 0 | 0 | 1 |
+| MAGIC | 8 | 2 | 1 | 0 | 0 | 2 |
 | MONSTER | 3 | 0 | 0 | 0 | 0 | 0 |
 | ITEM | 0 | 0 | 0 | 0 | 0 | 0 |
 | WORLD | 5 | 0 | 0 | 0 | 0 | 0 |
 | EVENT | 3 | 0 | 0 | 0 | 0 | 0 |
-| MENU | 4 | 0 | 0 | 0 | 0 | 0 |
+| MENU | 6 | 1 | 0 | 0 | 0 | 0 |
 | GFX | 4 | 1 | 1 | 1 | 1 | 0 |
 | AUDIO | 5 | 3 | 2 | 2 | 1 | 1 |
 | SAVE | 1 | 0 | 0 | 0 | 0 | 0 |
@@ -21,15 +21,15 @@ Breadth without pretense: counts are census entries at or above each threshold (
 
 ## ROM accounting
 
-- Known: 10375 of 3145728 bytes (0.33%) — code 2311 bytes (0.07%), data 8064 bytes (0.26%).
-- Candidate-only: 0 bytes.
-- **Unknown: 3135353 bytes (99.67%)** across 19 gaps.
+- Known: 10753 of 3145728 bytes (0.34%) — code 2311 bytes (0.07%), data 8442 bytes (0.27%).
+- Candidate-only: 120 bytes.
+- **Unknown: 3134855 bytes (99.65%)** across 21 gaps.
 
 ## Census health
 
-- Entries with unresolved fields/formats: 12.
-- Observed but not yet located (breadth backlog): 25.
-- Runtime-only findings (seen live, no location): 18.
+- Entries with unresolved fields/formats: 18.
+- Observed but not yet located (breadth backlog): 30.
+- Runtime-only findings (seen live, no location): 19.
 - Static-only findings (located, never exercised live): 0.
 
 ## Open breadth targets (next_action of unlocated entries)
@@ -45,11 +45,16 @@ Breadth without pretense: counts are census entries at or above each threshold (
 - **CEN-GFX-0003** (Battle background (cave scene)): BG1/BG2 VRAM + tilemap capture during battle; provenance search (EXP-0023 pattern).
 - **CEN-GFX-0004** (Variable-width dialogue font): Capture the dialogue compose region; the fixed-font provenance technique should locate the glyph source.
 - **CEN-MAGIC-0001** (Magitek command and ability set): Disambiguate the Fire Beam record index (menu-navigation press script; watch the MVN X source during the confirm).
-- **CEN-MAGIC-0002** (Magic command and Terra's opening spell availability): EXP-0026: open the Magic list (field menu preferred), capture names/order/MP costs, and trace the availability source.
+- **CEN-MAGIC-0004** (MP deduction and the cost field): Cast Cure from the field menu (heal path) while watching +$3C08-family and the menu MP display source.
+- **CEN-MAGIC-0005** (Spell targeting flags and menu targeting behavior): Initiate a field Cure cast to the character-select stage and record the targeting UI + consumed flags.
+- **CEN-MAGIC-0006** (Spell effect dispatch): Map record bytes 7/8 against effect variety once more spells are castable; hunt an effect-routine pointer table.
+- **CEN-MAGIC-0007** (Spell animation data): Cast Fire in battle (after menu navigation) and capture the animation asset loads (VRAM deltas, DMA).
+- **CEN-MAGIC-0008** (Spell audio cues): Delta-capture APU port commands during a spell cast (EXP-0024 pattern).
 - **CEN-MENU-0001** (Battle command window (Row/Magitek/Item observed)): Capture the full command list per actor and the cursor input loop (press-delta on the command window).
 - **CEN-MENU-0002** (Battle party status window (names, values, ATB arrows, turn highlight)): Trace the window composer that turns +$2E78 values into BG3 compose-region tiles.
 - **CEN-MENU-0003** (Dialogue window system (border, gradient, layout)): Capture window BG layer + palette during a dialogue box; locate the border tile asset.
 - **CEN-MENU-0004** (Field main menu): EXP-0026: open the field menu from checkpoint2 (X press), screenshot, register submenus.
+- **CEN-MENU-0005** (Field Magic menu (grid list, MP readout, help bar)): Trace the list renderer's reads (name table + availability array consumers) with a read-watch during menu open.
 - **CEN-MONSTER-0001** (Enemy stat records (guard battle)): Watch the battle-init writes into the +$3B18-family tables and trace their ROM source (formation loader).
 - **CEN-MONSTER-0002** (Battle formations (opening guard fight composition/layout)): Trace what populates the enemy slots at battle entry (the battle-init writer set from EXP-0002 is the entry thread).
 - **CEN-MONSTER-0003** (Enemy battle sprites and palettes (green guard)): VRAM/OAM capture during battle to register the enemy sprite asset (EXP-0023 pattern).
