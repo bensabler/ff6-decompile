@@ -1,9 +1,16 @@
 -- Shared probe helpers. Loaded by probes via: dofile("mesen/probes/common.lua")
 -- Requires the bridge to be active (uses the same relative output layout).
-local OUT = "mesen/out/"
+local OUT = _G.FF6_OUT_DIR or "mesen/out/"
 do
-  local ok, cfg = pcall(dofile, "mesen/bridge_config.lua")
-  if ok and type(cfg) == "table" and type(cfg.out) == "string" then OUT = cfg.out end
+  if _G.FF6_OUT_DIR then goto done end
+  local ok, info = pcall(debug.getinfo, 1, "S")
+  if ok and type(info) == "table" and type(info.source) == "string" then
+    local dir = info.source:gsub("^@", ""):match("^(.*/)")
+    if dir then OUT = dir .. "../out/" end -- <repo>/mesen/probes/../out/
+  end
+  local env = os.getenv and os.getenv("FF6_OUT")
+  if env then OUT = env end
+  ::done::
 end
 
 -- probelog(tag): append one labeled line with registers and a 24-byte

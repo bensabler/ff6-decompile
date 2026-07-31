@@ -1,5 +1,15 @@
 # Activity Log
 
+- 2026-07-30 (late) — EXP-0020 + bridge v2 validation: **`+$3A70`
+  refuted as the timing-varying state** (identical matched-ordinal
+  reads under divergent timing; it is a per-action flag written just
+  before use). What diverges is the number/timing of actions →
+  scheduling interpretation (Tentative), RNG existence still Unknown;
+  question #30 refined to EXP-0021. Bridge v2 validated live: probe
+  loading, id'd atomic responses, duplicate-id suppression, transcripts;
+  three defects found and fixed during validation (nil-leading candidate
+  list, CWD-relative probe path, probe-to-probe dofile).
+
 - 2026-07-30 (maintenance) — Repository repair unit: **fixed the
   `.gitignore` collision that had silently untracked
   `cmd/ff6lab/main.go` and `local_artifacts/README.md`** (the published

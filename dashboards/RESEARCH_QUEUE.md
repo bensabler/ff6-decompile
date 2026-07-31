@@ -2,9 +2,11 @@
 
 ## P0 — Active frontier
 
-- [ ] **EXP-0020 (question #30):** enemy-AI action-selection layer — the
-  true RNG consumer (watches on the `$C23190` caller chain during
-  identical-state trials from `mesen/out/exp10-battle.mss`).
+- [x] EXP-0020: `+$3A70` refuted as the varying state; question #30
+  refined (scheduling interpretation).
+- [ ] **EXP-0021 (question #30):** capture the attack-record index at
+  `ROMCPU:$C22966` entry + scheduler-adjacent reads across
+  identical-state trials; determine whether any RNG feeds selection.
 
 ## P1 — Semantic debt (next behavior units)
 

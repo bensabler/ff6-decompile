@@ -1,6 +1,7 @@
 # Latest Checkpoint
 
-**[2026-07-30 — Repository repair and state synchronization](2026-07-30-maint-repo-repair.md)**
+**[2026-07-30 — EXP-0020: $3A70 refuted; bridge v2 live](2026-07-30-exp0020-3a70-refuted.md)**
 
-State: infrastructure repaired (gitignore/CI/audit/discoveries/bridge v2).
-Exact next action: EXP-0020 — AI-layer RNG hunt with bridge v2 probes.
+State: RNG candidate refuted, question #30 refined; infrastructure validated.
+Exact next action: EXP-0021 (record-index/scheduler capture), then the
+graphics and audio vertical proofs.

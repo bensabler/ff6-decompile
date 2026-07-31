@@ -17,13 +17,54 @@
 --   press <buttons> <frames>       -> hold buttons (comma list) for N frames
 --   eval <lua>                     -> run lua chunk, result to resp.txt
 
--- Output directory: relative to Mesen's working directory (launch from the
--- repository root), overridable via mesen/bridge_config.lua returning
--- { out = "/abs/path/" }. No personal absolute paths in the script.
-local OUT = "mesen/out/"
+-- Output directory resolution (no personal absolute paths in this
+-- tracked script). Candidates in order, first writable wins:
+--   1. the directory of this script + "out/" (via debug.getinfo),
+--   2. the FF6_OUT environment variable (set by the launcher),
+--   3. sibling config file bridge_config.lua returning { out = ... },
+--   4. "mesen/out/" relative to the emulator's working directory.
+-- Mesen's CWD is not the repository root, so 1/2 are the reliable paths.
+local function writable(dir)
+  if type(dir) ~= "string" or dir == "" then return false end
+  local f = io.open(dir .. ".wtest", "w")
+  if not f then return false end
+  f:close()
+  os.remove(dir .. ".wtest")
+  return true
+end
+
+local function scriptDir()
+  local ok, info = pcall(debug.getinfo, 1, "S")
+  if not ok or type(info) ~= "table" or type(info.source) ~= "string" then return nil end
+  local p = info.source:gsub("^@", "")
+  return p:match("^(.*/)") -- directory containing bridge.lua
+end
+
+local SDIR = scriptDir()
+local OUT
 do
-  local ok, cfg = pcall(dofile, "mesen/bridge_config.lua")
-  if ok and type(cfg) == "table" and type(cfg.out) == "string" then OUT = cfg.out end
+  -- Build candidates with explicit guarded appends: a table constructor
+  -- containing a leading nil would make ipairs stop at index 1 (Mesen's
+  -- sandboxed Lua may not expose the debug library, so sdir can be nil).
+  local candidates = {}
+  local sdir = SDIR
+  if sdir then candidates[#candidates + 1] = sdir .. "out/" end
+  local env = os.getenv and os.getenv("FF6_OUT") or nil
+  if env then candidates[#candidates + 1] = env end
+  if sdir then
+    local okc, cfg = pcall(dofile, sdir .. "bridge_config.lua")
+    if okc and type(cfg) == "table" and type(cfg.out) == "string" then
+      candidates[#candidates + 1] = cfg.out
+    end
+  end
+  candidates[#candidates + 1] = "mesen/out/"
+  for _, c in ipairs(candidates) do
+    if writable(c) then OUT = c break end
+  end
+  if not OUT then
+    OUT = "mesen/out/"
+    pcall(function() emu.displayMessage("bridge", "WARNING: no writable output dir") end)
+  end
 end
 
 local function append(path, text)
@@ -242,8 +283,17 @@ local function handleCommand(line)
   elseif cmd == "probe" then
     local name = rest:match("^(%S+)$")
     if not name or name:find("[^%w%-_]") then return "bad probe name" end
-    local ok2, err2 = pcall(dofile, "mesen/probes/" .. name .. ".lua")
-    return ok2 and ("ok probe " .. name) or ("probe error: " .. tostring(err2))
+    local base = SDIR and (SDIR .. "probes/") or (OUT .. "../probes/")
+    _G.FF6_PROBE_DIR = base   -- probes resolve siblings via this
+    _G.FF6_OUT_DIR = OUT
+    local ok2, err2 = pcall(dofile, base .. name .. ".lua")
+    if not ok2 then
+      -- fall back to a CWD-relative path for unusual launch layouts
+      local ok3, err3 = pcall(dofile, "mesen/probes/" .. name .. ".lua")
+      if ok3 then return "ok probe " .. name end
+      return "probe error: " .. tostring(err2) .. " / " .. tostring(err3)
+    end
+    return "ok probe " .. name
   elseif cmd == "eval" then
     local fn, err = load(rest)
     if not fn then return "load error: " .. tostring(err) end

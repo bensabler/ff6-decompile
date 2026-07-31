@@ -306,6 +306,23 @@
       "falsifying_outcome": "identical +$11A6 write sequences across trials",
       "status": "completed",
       "record": "docs/experiments/EXP-0018-setup-layer.md"
+    },
+    {
+      "schema_version": "1.0",
+      "id": "EXP-0020",
+      "question": "Does WRAM:+$3A70 carry the timing-varying state behind action/damage divergence?",
+      "starting_state": {
+        "emulator": "Mesen 2.1.1 macOS x86_64 (bridge v2)",
+        "rom_sha256": "0f51b4fca41b7fd509e4b8f9d543151f68efa5e97b08493e4b2a0c06f5d8d5e2",
+        "state": "exp10-battle.mss identical-state trials; tracked probe mesen/probes/EXP-0020.lua"
+      },
+      "expected_outcomes": [
+        "matched-ordinal values differ across trials (supports candidate)",
+        "identical values (refutes; state is elsewhere)"
+      ],
+      "falsifying_outcome": "matched-ordinal $3A70 values identical across trials while action choices diverge",
+      "status": "completed",
+      "record": "docs/experiments/EXP-0020-ai-rng.md"
     }
   ]
 }

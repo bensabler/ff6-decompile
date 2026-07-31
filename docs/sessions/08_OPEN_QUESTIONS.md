@@ -99,11 +99,18 @@ Ordered roughly by how much each answer would unlock.
     deterministic); identical-state divergence = **enemy AI action
     selection**. See #30.
 
-30. **Decode the enemy-AI action-selection layer** (above `$C23190`;
-    reads `+$3A70`+1 bit 0 and DP `$B5` before `JSR $299F`) — the
-    true RNG consumer. *Experiment:* exec/write watches on the
-    `$C23190` caller chain during identical-state trials; find the
-    timing-varying read.
+30. **Decode the enemy-AI action-selection layer.** *Refined by
+    [EXP-0020](../experiments/EXP-0020-ai-rng.md):* `+$3A70` is
+    **refuted** as the varying state (identical matched-ordinal reads
+    `$01`/`$00` across divergent-timing trials; it is written
+    immediately before use by `$C21629`/`$C2328C`/`$C22640` — a
+    per-action flag shape). What diverged was the *number and timing of
+    actions* (2 vs 6 in matched windows), suggesting scheduling
+    (ATB-style) rather than a draw inside this path. Whether any RNG is
+    consumed at all remains Unknown.
+    *Experiment (EXP-0021):* capture the record index at
+    `ROMCPU:$C22966` entry plus scheduler-adjacent reads across
+    identical-state trials.
 
 27. **What are `+$11AE`/`+$11AF`** (28 and 4 for VICKS's Fire Beam —
     stat candidates) **and what writes them?** *Lead (EXP-0017):* the
