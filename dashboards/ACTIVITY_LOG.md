@@ -1,5 +1,17 @@
 # Activity Log
 
+- 2026-07-30 (resume, late) — Unit 23 / EXP-0023 + GFX-0001: **first
+  graphics vertical proof complete — the battle HUD font is a raw ROM
+  copy.** Atomic capture at anchor+120 (probe `EXP-0023.lua`; bridge
+  `read` extended with vram/cgram/oam/aram/rom/dsp types): mode 1, BG3
+  chr word $5000, 37 HUD tiles all in $180-$1FF, BG palette 0. ROM
+  search: 15 distinctive tiles, one hit each, unanimous base
+  **ROMFILE 0x046FC0**; identical run = tiles $FF-$1FF (257 tiles).
+  Go: `internal/graphics/tile2bpp` (tests+fuzz) +
+  `ff6lab tiles decode2bpp`; decoded VRAM == decoded ROM on sampled
+  glyphs. M2 complete; M6 in progress. Load path/glyph semantics
+  queued.
+
 - 2026-07-30 (resume, late) — Unit 22 / EXP-0022: **attack-record table
   cross-checked against the live ROM.** 256 records dumped from
   `ROMCPU:$C46AC0` and decoded via the new `ff6lab attackdata scan`

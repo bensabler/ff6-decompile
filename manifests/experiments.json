@@ -374,6 +374,23 @@
       "falsifying_outcome": "record 238 power byte != 0",
       "status": "completed",
       "record": "docs/experiments/EXP-0022-record-crosscheck.md"
+    },
+    {
+      "schema_version": "1.0",
+      "id": "EXP-0023",
+      "question": "Where do the battle HUD text tiles live at runtime (VRAM base, layer, bit depth), and does a contiguous ROM region hold those bytes verbatim?",
+      "starting_state": {
+        "emulator": "Mesen 2.1.1 macOS x86_64 (--testrunner headless, bridge v2 + vram/cgram/oam/aram/rom read types)",
+        "rom_sha256": "0f51b4fca41b7fd509e4b8f9d543151f68efa5e97b08493e4b2a0c06f5d8d5e2",
+        "state": "exp10-battle.mss reloaded, capture at anchor+120 with no input (schedule-deterministic per EXP-0021)"
+      },
+      "expected_outcomes": [
+        "all searched tile spans found at one consistent ROM base (raw-copy provenance Confirmed; decoder proof closes the vertical)",
+        "spans absent (transformed/compressed storage; negative result recorded, decoder + VRAM goldens still delivered)"
+      ],
+      "falsifying_outcome": "any searched span missing from ROM, or inconsistent relative offsets across spans",
+      "status": "completed",
+      "record": "docs/experiments/EXP-0023-hud-font.md"
     }
   ]
 }

@@ -232,6 +232,20 @@ local function hexDump(memType, base, len)
   return table.concat(parts, " ")
 end
 
+-- Memory types the read command accepts. wram/cpu are the historical
+-- pair; the rest were added for the graphics/audio verticals
+-- (2026-07-30, EXP-0023+).
+local READ_MEMTYPES = {
+  wram = emu.memType.snesWorkRam,
+  cpu = emu.memType.snesMemory,
+  vram = emu.memType.snesVideoRam,
+  cgram = emu.memType.snesCgRam,
+  oam = emu.memType.snesSpriteRam,
+  aram = emu.memType.spcRam,
+  rom = emu.memType.snesPrgRom,
+  dsp = emu.memType.spcDspRegisters,
+}
+
 local function doState()
   local st = emu.getState()
   local out = { "frame=" .. tostring(st.frameCount), "cpu=" .. serialize(st.cpu or st, 1) }
@@ -252,7 +266,8 @@ local function handleCommand(line)
     return doState()
   elseif cmd == "read" then
     local mt, addr, len = rest:match("^(%S+)%s+(%S+)%s+(%S+)$")
-    local memType = (mt == "wram") and emu.memType.snesWorkRam or emu.memType.snesMemory
+    local memType = READ_MEMTYPES[mt]
+    if not memType then return "unknown memtype " .. tostring(mt) end
     return hexDump(memType, tonumber(addr, 16), tonumber(len))
   elseif cmd == "press" then
     local spec, frames = rest:match("^(%S+)%s+(%S+)$")

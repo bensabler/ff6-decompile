@@ -26,3 +26,4 @@
 | EXP-0020 | ai-rng | completed | see record | [EXP-0020-ai-rng](../docs/experiments/EXP-0020-ai-rng.md) |
 | EXP-0021 | record-index | completed | see record | [EXP-0021-record-index](../docs/experiments/EXP-0021-record-index.md) |
 | EXP-0022 | record-crosscheck | completed | see record | [EXP-0022-record-crosscheck](../docs/experiments/EXP-0022-record-crosscheck.md) |
+| EXP-0023 | hud-font | completed | see record | [EXP-0023-hud-font](../docs/experiments/EXP-0023-hud-font.md) |

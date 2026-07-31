@@ -8,6 +8,7 @@ import (
 
 	"github.com/bensabler/ff6-decompile/internal/audit"
 	"github.com/bensabler/ff6-decompile/internal/game/attackdata"
+	"github.com/bensabler/ff6-decompile/internal/graphics/tile2bpp"
 	"github.com/bensabler/ff6-decompile/internal/project"
 )
 
@@ -58,6 +59,11 @@ func run(args []string) error {
 			return scanAttackTable(args[2], os.Stdout)
 		}
 		return fmt.Errorf("usage: ff6lab attackdata scan <hexdump-file>")
+	case "tiles":
+		if len(args) > 3 && args[1] == "decode2bpp" {
+			return decodeTile2bpp(args[2], args[3], os.Stdout)
+		}
+		return fmt.Errorf("usage: ff6lab tiles decode2bpp <hexdump-file> <tile-index>")
 	case "help", "-h", "--help":
 		fmt.Print(project.Help())
 		return nil
@@ -88,6 +94,40 @@ func scanAttackTable(path string, w *os.File) error {
 		}
 		fmt.Fprintf(w, "idx=%3d raw=% X elem=%02X flags2=%02X mode=%02X power=%3d mp=%t phys=%t\n",
 			i, r[:], r.Element(), r.Flags2(), r.Mode(), r.Power(), r.TargetsMP(), r.PhysicalFormula())
+	}
+	return nil
+}
+
+// decodeTile2bpp prints one 8x8 tile from a hex dump as palette-index
+// digits, one row per line. index counts 16-byte tiles from the dump
+// start (e.g., a BG3 chr or ROM font dump).
+func decodeTile2bpp(path, indexArg string, w *os.File) error {
+	data, err := os.ReadFile(path)
+	if err != nil {
+		return err
+	}
+	raw, err := parseHexBytes(string(data))
+	if err != nil {
+		return fmt.Errorf("parse %s: %w", path, err)
+	}
+	index, err := strconv.Atoi(indexArg)
+	if err != nil || index < 0 {
+		return fmt.Errorf("tile index %q must be a non-negative integer", indexArg)
+	}
+	off := index * tile2bpp.EncodedSize
+	if off+tile2bpp.EncodedSize > len(raw) {
+		return fmt.Errorf("tile %d out of range (dump holds %d tiles)", index, len(raw)/tile2bpp.EncodedSize)
+	}
+	t, err := tile2bpp.Decode(raw[off:])
+	if err != nil {
+		return err
+	}
+	fmt.Fprintf(w, "tile %d (bytes %d-%d)\n", index, off, off+tile2bpp.EncodedSize-1)
+	for _, row := range t {
+		for _, px := range row {
+			fmt.Fprintf(w, "%d", px)
+		}
+		fmt.Fprintln(w)
 	}
 	return nil
 }

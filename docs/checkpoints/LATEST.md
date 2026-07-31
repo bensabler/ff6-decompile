@@ -1,8 +1,8 @@
 # Latest Checkpoint
 
-**[2026-07-30 — EXP-0022: attack-record ROM cross-check](2026-07-30-exp0022-crosscheck.md)**
+**[2026-07-30 — EXP-0023/GFX-0001: graphics vertical proof](2026-07-30-exp0023-hud-font.md)**
 
-State: record 238 Confirmed (power 0 + physical flag); Fire Beam
-candidates 5/131 Tentative; headless lab live.
-Exact next action: Unit 4 graphics vertical proof (EXP-0023: HUD/font
-tiles runtime → ROM → decoder → comparison), then Unit 5 audio.
+State: battle HUD font raw-copy provenance Confirmed
+(ROMFILE 0x046FC0, tiles $FF-$1FF); tile2bpp decoder proof; M2
+complete. Exact next action: Unit 5 audio vertical (EXP-0024 cursor
+SFX trigger→APU→driver), then final synchronization.

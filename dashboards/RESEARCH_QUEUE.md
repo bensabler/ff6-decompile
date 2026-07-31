@@ -29,8 +29,10 @@
 
 ## P1 — Phase-1 vertical proofs (rebalance targets)
 
-- [ ] Graphics: one bounded FF6 target (menu font / battle HUD tiles)
-  runtime→ROM→decoder→comparison.
+- [x] EXP-0023 / GFX-0001: battle HUD font — ROM provenance Confirmed
+  (raw copy at ROMFILE 0x046FC0+16·N, tiles $FF-$1FF), `tile2bpp`
+  decoder + `ff6lab tiles decode2bpp` proof. Follow-ups queued: load
+  path, glyph semantics, the $00-$FE compose region.
 - [ ] Audio: one short sound effect trigger→APU→sequence/sample→decode.
 
 ## Completed (see ACTIVITY_LOG and indexes/EXPERIMENTS.md)
