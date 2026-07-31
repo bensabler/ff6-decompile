@@ -6,8 +6,9 @@ As of 2026-07-30 (post-EXP-0020 maintenance; regenerate via `/weekly-review`):
 |---|---|
 | Documented sessions | 3 (SES-001..003; SES-003 reconstructed post-hoc) |
 | Function records | 9 (FN-0001..0009; FN-0003..0009 Confirmed code via EXP-0001/0003/0006/0009/0010) |
-| Experiment records | 23 completed (EXP-0001..0023; EXP-0008 negative-result, EXP-0012 and EXP-0020 refuted hypotheses) |
+| Experiment records | 24 completed (EXP-0001..0024; EXP-0008 negative-result, EXP-0012 and EXP-0020 refuted hypotheses) |
 | Graphics asset records | 1 (GFX-0001, ROM provenance Confirmed) |
+| Audio asset records | 1 (AUD-0001, trigger chain + ROM provenance Confirmed) |
 | Variable records | 4 (VAR-0001..0004) |
 | Structure records | 4 (ST-0001..0004) |
 | Contradiction records | 1 resolved (CONTRA-0001, notation standards) |

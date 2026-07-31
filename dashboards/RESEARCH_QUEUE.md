@@ -33,7 +33,12 @@
   (raw copy at ROMFILE 0x046FC0+16·N, tiles $FF-$1FF), `tile2bpp`
   decoder + `ff6lab tiles decode2bpp` proof. Follow-ups queued: load
   path, glyph semantics, the $00-$FE compose region.
-- [ ] Audio: one short sound effect trigger→APU→sequence/sample→decode.
+- [x] EXP-0024 / AUD-0001: battle confirm SFX — trigger chain Confirmed
+  (press → `$21`@`$2140` from `$C117CC` → DSP voice 7 → SRCN 5 →
+  `ARAM:$48D8`); SFX pack `ARAM:$4800-$491F` byte-identical to
+  `ROMFILE:0x051EC9` (288 B); `brr.Decode` + `ff6lab brr info` proof.
+  Follow-ups queued: SPC dispatch, `$E4/id/$18` background protocol,
+  remaining pack cues.
 
 ## Completed (see ACTIVITY_LOG and indexes/EXPERIMENTS.md)
 Battle damage pipeline end to end (EXP-0001..0019): engine, display

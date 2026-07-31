@@ -391,6 +391,23 @@
       "falsifying_outcome": "any searched span missing from ROM, or inconsistent relative offsets across spans",
       "status": "completed",
       "record": "docs/experiments/EXP-0023-hud-font.md"
+    },
+    {
+      "schema_version": "1.0",
+      "id": "EXP-0024",
+      "question": "What do the APU ports carry when the battle confirm SFX triggers, which DSP voice keys on, and which ARAM sample plays (with ROM provenance if raw-stored)?",
+      "starting_state": {
+        "emulator": "Mesen 2.1.1 macOS x86_64 (--testrunner headless, bridge v2)",
+        "rom_sha256": "0f51b4fca41b7fd509e4b8f9d543151f68efa5e97b08493e4b2a0c06f5d8d5e2",
+        "state": "exp10-battle.mss per trial; press trial (A at anchor+72) vs no-press trial, delta-compared"
+      },
+      "expected_outcomes": [
+        "port-write burst + new voice activation in the press trial only; SRCN->directory->BRR resolves; ROM search hits (full vertical)",
+        "trigger/voice isolate but sample bytes miss in ROM (negative provenance recorded)"
+      ],
+      "falsifying_outcome": "no port-write or voice-activation delta between press and no-press trials",
+      "status": "completed",
+      "record": "docs/experiments/EXP-0024-cursor-sfx.md"
     }
   ]
 }

@@ -1,8 +1,8 @@
 # Latest Checkpoint
 
-**[2026-07-30 — EXP-0023/GFX-0001: graphics vertical proof](2026-07-30-exp0023-hud-font.md)**
+**[2026-07-30 — EXP-0024/AUD-0001: audio vertical proof](2026-07-30-exp0024-confirm-sfx.md)**
 
-State: battle HUD font raw-copy provenance Confirmed
-(ROMFILE 0x046FC0, tiles $FF-$1FF); tile2bpp decoder proof; M2
-complete. Exact next action: Unit 5 audio vertical (EXP-0024 cursor
-SFX trigger→APU→driver), then final synchronization.
+State: confirm-SFX chain Confirmed press→port→voice→sample→ROM; M3
+complete. All five operator rebalance units done.
+Exact next action: final project-state synchronization (clean-checkout
+gate run, dashboard sweep, closing checkpoint).

@@ -6,6 +6,7 @@ import (
 	"strconv"
 	"strings"
 
+	"github.com/bensabler/ff6-decompile/internal/audio/brr"
 	"github.com/bensabler/ff6-decompile/internal/audit"
 	"github.com/bensabler/ff6-decompile/internal/game/attackdata"
 	"github.com/bensabler/ff6-decompile/internal/graphics/tile2bpp"
@@ -64,6 +65,11 @@ func run(args []string) error {
 			return decodeTile2bpp(args[2], args[3], os.Stdout)
 		}
 		return fmt.Errorf("usage: ff6lab tiles decode2bpp <hexdump-file> <tile-index>")
+	case "brr":
+		if len(args) > 2 && args[1] == "info" {
+			return brrInfo(args[2], os.Stdout)
+		}
+		return fmt.Errorf("usage: ff6lab brr info <hexdump-file>")
 	case "help", "-h", "--help":
 		fmt.Print(project.Help())
 		return nil
@@ -129,6 +135,47 @@ func decodeTile2bpp(path, indexArg string, w *os.File) error {
 		}
 		fmt.Fprintln(w)
 	}
+	return nil
+}
+
+// brrInfo decodes a BRR stream from a hex dump and prints its block
+// headers and PCM shape (count, min/max, leading samples).
+func brrInfo(path string, w *os.File) error {
+	data, err := os.ReadFile(path)
+	if err != nil {
+		return err
+	}
+	raw, err := parseHexBytes(string(data))
+	if err != nil {
+		return fmt.Errorf("parse %s: %w", path, err)
+	}
+	pcm, err := brr.Decode(raw)
+	if err != nil {
+		return err
+	}
+	blocks := len(pcm) / 16
+	for i := 0; i < blocks; i++ {
+		h, err := brr.ParseHeader(raw[i*brr.BlockSize])
+		if err != nil {
+			return err
+		}
+		fmt.Fprintf(w, "block %d: range=%d filter=%d loop=%t end=%t\n", i, h.Range, h.Filter, h.Loop, h.End)
+	}
+	lo, hi := pcm[0], pcm[0]
+	for _, s := range pcm {
+		if s < lo {
+			lo = s
+		}
+		if s > hi {
+			hi = s
+		}
+	}
+	fmt.Fprintf(w, "samples=%d min=%d max=%d\n", len(pcm), lo, hi)
+	n := len(pcm)
+	if n > 8 {
+		n = 8
+	}
+	fmt.Fprintf(w, "pcm[0:%d]=%v\n", n, pcm[:n])
 	return nil
 }
 

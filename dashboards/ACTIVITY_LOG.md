@@ -1,5 +1,17 @@
 # Activity Log
 
+- 2026-07-30 (resume, late) — Unit 24 / EXP-0024 + AUD-0001: **first
+  audio vertical proof complete — the battle confirm SFX chain is
+  Confirmed end to end.** Press-vs-no-press delta trials: exactly one
+  port write in P (`$21`→`$2140` from `ROMCPU:$C117CC`, press+2), zero
+  in N; voice bitmap XOR isolates **DSP voice 7** (rel 76-79);
+  eval-armed DSP snapshot: SRCN=$05 → directory $1B00 → sample at
+  `ARAM:$48D8` (2 BRR blocks). **SFX pack `$4800-$491F` byte-identical
+  to `ROMFILE:0x051EC9-0x051FE8`.** Go: `brr.Decode` (S-DSP
+  semantics, tests+fuzz) + `ff6lab brr info`. M3 complete; M7 in
+  progress. Music replay determinism across trials confirmed on the
+  APU side too.
+
 - 2026-07-30 (resume, late) — Unit 23 / EXP-0023 + GFX-0001: **first
   graphics vertical proof complete — the battle HUD font is a raw ROM
   copy.** Atomic capture at anchor+120 (probe `EXP-0023.lua`; bridge
