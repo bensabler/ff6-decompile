@@ -33,3 +33,4 @@
 | EXP-0027 | spell-extraction | completed | see record | [EXP-0027-spell-extraction](../docs/experiments/EXP-0027-spell-extraction.md) |
 | EXP-0028 | monster-source | completed | see record | [EXP-0028-monster-source](../docs/experiments/EXP-0028-monster-source.md) |
 | EXP-0029 | formation-map | completed | see record | [EXP-0029-formation-map](../docs/experiments/EXP-0029-formation-map.md) |
+| EXP-0030 | formation-table | completed | see record | [EXP-0030-formation-table](../docs/experiments/EXP-0030-formation-table.md) |

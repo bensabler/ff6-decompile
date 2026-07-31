@@ -44,7 +44,7 @@
 | CEN-MENU-0005 | MENU | magic menu | Field Magic menu (grid list, MP readout, help bar) | OBSERVED | OUTPUTS_CAPTURED | confirmed |
 | CEN-MENU-0006 | MENU | fonts | Fixed-font text byte encoding (menu + battle HUD surfaces) | FORMAT_PARTIAL | OUTPUTS_CAPTURED | confirmed |
 | CEN-MONSTER-0001 | MONSTER | stats | Monster stat records ($CF0000, 32-byte stride) | FORMAT_PARTIAL | OUTPUTS_CAPTURED | confirmed |
-| CEN-MONSTER-0002 | MONSTER | formations | Battle formations (opening guard fight composition/layout) | CANDIDATE_LOCATION | OUTPUTS_CAPTURED | strong-hypothesis |
+| CEN-MONSTER-0002 | MONSTER | formations | Battle formations (opening guard fight composition/layout) | FORMAT_PARTIAL | OUTPUTS_CAPTURED | confirmed |
 | CEN-MONSTER-0003 | MONSTER | graphics | Enemy battle sprites and palettes (green guard) | OBSERVED | ENCOUNTERED | confirmed |
 | CEN-SAVE-0001 | SAVE | global state | Opening-relevant persistent state (event progress, party, names) | OBSERVED | ENCOUNTERED | tentative-hypothesis |
 | CEN-WORLD-0001 | WORLD | interior/exterior maps | Narshe exterior map (tileset, tilemap, palettes, animated tiles) | OBSERVED | ENCOUNTERED | confirmed |

@@ -1061,7 +1061,7 @@
       "domain": "MONSTER",
       "category": "stats",
       "name": "Monster stat records ($CF0000, 32-byte stride)",
-      "description": "Battle-init populate routine ($C22CA3-$C22D8C) reads LDA $CF0000+off,X into the Confirmed battle arrays: +$08 HP (current+max), +$0A MP, +$01 battle power (records 77/78 hold 19/13 \u2014 the exact EXP-0018 live powers), +$02/+$10/+$00 staging pairs, ten further mapped offsets. X=$09A0 observed (record 77); stride 32 Confirmed by the dual power cross-check. Closes EXP-0004 question 19b ($C22CCE = max-HP store). Five aux bank-$CF tables surfaced (semantics Unknown). EXP-0029: loader entry $C22C30 (A=id, Y=slot); $CF8400 = per-monster 16-bit attribute table (-> $3254,Y); aux x4/x8 tables id-scaled.",
+      "description": "Battle-init populate routine ($C22CA3-$C22D8C) reads LDA $CF0000+off,X into the Confirmed battle arrays: +$08 HP (current+max), +$0A MP, +$01 battle power (formation 44 = monsters {19,77} with powers {13,19} \u2014 the exact EXP-0018 live pair (EXP-0030 correction: 78 was a coincidental match)), +$02/+$10/+$00 staging pairs, ten further mapped offsets. X=$09A0 observed (record 77); stride 32 Confirmed by the dual power cross-check. Closes EXP-0004 question 19b ($C22CCE = max-HP store). Five aux bank-$CF tables surfaced (semantics Unknown). EXP-0029: loader entry $C22C30 (A=id, Y=slot); $CF8400 = per-monster 16-bit attribute table (-> $3254,Y); aux x4/x8 tables id-scaled.",
       "reconstruction_status": "FORMAT_PARTIAL",
       "runtime_status": "OUTPUTS_CAPTURED",
       "rom_revision": "0f51b4fca41b7fd509e4b8f9d543151f68efa5e97b08493e4b2a0c06f5d8d5e2",
@@ -1090,7 +1090,8 @@
         "EXP-0019",
         "EXP-0025",
         "EXP-0028",
-        "EXP-0029"
+        "EXP-0029",
+        "EXP-0030"
       ],
       "related_discoveries": [],
       "related_implementations": [],
@@ -1120,11 +1121,14 @@
       "domain": "MONSTER",
       "category": "formations",
       "name": "Battle formations (opening guard fight composition/layout)",
-      "description": "One green guard on-screen; EXP-0021 selection events addressed slots via X=$0008/$000A. Formation source unlocated. Defeat screen names the formation: Were-Rat + Repo Man (EXP-0027) \u2014 matches the battle-HUD tilemap decode. Monster ids for the mines pair anchored: records 77/78 (powers 19/13). EXP-0029: the formation's monster ids stage in WRAM +$3F46 (6 slots, $FF=empty; alternate source $0206 under an event-battle flag); the ROM formation record is one producer-hop upstream.",
-      "reconstruction_status": "CANDIDATE_LOCATION",
+      "description": "Formation records: 15 bytes at ROMCPU:$CF6200 + 15*id ([word][6 monster-id bytes, $FF empty][...]), staged to WRAM +$3F44-+$3F53 by $C2315C (id from +$11E0); parallel 4-byte flags table at $CF5900. Mines encounter = formation 44 = monsters {19, 77} \u2014 CORRECTION: not 77/78; EXP-0028's record-78 power match was coincidental. Verified against EXP-0018 live powers {13,19}.",
+      "reconstruction_status": "FORMAT_PARTIAL",
       "runtime_status": "OUTPUTS_CAPTURED",
       "rom_revision": "0f51b4fca41b7fd509e4b8f9d543151f68efa5e97b08493e4b2a0c06f5d8d5e2",
-      "rom_locations": [],
+      "rom_locations": [
+        "ROM-0024",
+        "ROM-0025"
+      ],
       "wram_locations": [
         "WRAM:+$3F46 (6-byte formation monster-id staging, $FF empty sentinel)",
         "WRAM:+$3F52 (second formation field, x4-scaled)"
@@ -1136,7 +1140,7 @@
       "spc_locations": [],
       "record_count_expected": null,
       "record_count_found": null,
-      "record_size": null,
+      "record_size": 15,
       "pointer_tables": [],
       "consumers": [],
       "producers": [],
@@ -1145,7 +1149,8 @@
         "EXP-0021",
         "EXP-0025",
         "EXP-0027",
-        "EXP-0029"
+        "EXP-0029",
+        "EXP-0030"
       ],
       "related_discoveries": [],
       "related_implementations": [],
@@ -1155,15 +1160,18 @@
       ],
       "evidence": [
         "local_artifacts/experiments/EXP-0025/ (screenshots; hashes.sha256)",
-        "local_artifacts/experiments/EXP-0029/decode-notes.txt"
+        "local_artifacts/experiments/EXP-0029/decode-notes.txt",
+        "local_artifacts/experiments/EXP-0030/ (events-slice.log; hashes.sha256)"
       ],
-      "confidence": "strong-hypothesis",
+      "confidence": "confirmed",
       "unknown_fields": [
-        "formation record location/format",
-        "encounter selection"
+        "record bytes +$00/01 and +$08..+$0E semantics",
+        "flags-table fields",
+        "table length",
+        "+$11E0 producer (encounter roll)"
       ],
       "contradictions": [],
-      "next_action": "Write-watch +$3F46/+$3F52 at the next encounter entry to capture the ROM formation-record reader.",
+      "next_action": "Trace +$11E0's producer (encounter roll: zone data + step state).",
       "notes": ""
     },
     {

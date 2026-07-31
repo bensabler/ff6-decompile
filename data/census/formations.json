@@ -1,18 +1,33 @@
 {
   "schema_version": "1.0",
   "domain": "MONSTER",
-  "description": "Battle formation records: monster composition, layout, flags. EXP-0029: ids stage at WRAM +$3F46 (6 slots, $FF empty) consumed by the $C22F22 loop; the ROM formation record is the staging producer (unlocated).",
+  "description": "Battle formation records: monster composition, layout, flags. Located by EXP-0029/0030: 15-byte records at ROMFILE:0x0F6200 (id x15), monster ids at bytes +2..+7 ($FF empty), staged to WRAM +$3F44; flags at 0x0F5900 (4-byte).",
   "expected_record_count": null,
-  "records": [],
+  "records": [
+    {
+      "id": 44,
+      "monsters": [
+        19,
+        77
+      ],
+      "first_word": 944,
+      "flags_word": 3,
+      "sources": [
+        "docs/experiments/EXP-0030-formation-table.md"
+      ],
+      "confidence": "confirmed",
+      "note": "the opening mines encounter"
+    }
+  ],
   "unknowns": [
-    "ROM formation record location/format",
-    "+$3F52 field meaning",
-    "$0206 event-battle source",
-    "slot-position layout data"
+    "record tail bytes",
+    "flags semantics",
+    "table length",
+    "encounter-roll producer (+$11E0)"
   ],
   "evidence_sources": [
-    "docs/experiments/EXP-0029-formation-map.md",
-    "local_artifacts/experiments/EXP-0029/decode-notes.txt"
+    "docs/experiments/EXP-0030-formation-table.md",
+    "local_artifacts/experiments/EXP-0030/ (events-slice.log; hashes.sha256)"
   ],
-  "next_extraction_step": "Write-watch +$3F46 at encounter entry; decode the writer's ROM source (the formation table)."
+  "next_extraction_step": "Trace the +$11E0 encounter roll; then bulk-extract formation records."
 }

@@ -437,6 +437,63 @@
       "overlaps": [],
       "status": "known",
       "notes": "Loader chain decoded: caller $C22F22 loop reads WRAM +$3F46 staging ids; $C22C30 scales id x4/x8/x32 into per-monster bank-$CF tables incl. the $CF0000 records. $CF8400 = 16-bit per-monster attribute table. Span starts where ROM-0008 ends; the $C22C00-$C22C2E helpers are inside ROM-0008."
+    },
+    {
+      "id": "ROM-0024",
+      "start": 1008128,
+      "size": 675,
+      "bank": "ROMCPU:$CF6200-$CF64A2",
+      "classification": "DATA_TABLE",
+      "owner": "CEN-MONSTER-0002",
+      "format": "15-byte formation records: [word][6 monster-id bytes, $FF empty][...]",
+      "confidence": "confirmed",
+      "evidence": [
+        "docs/experiments/EXP-0030-formation-table.md",
+        "local_artifacts/experiments/EXP-0030/ (events-slice.log; hashes.sha256)"
+      ],
+      "consumers": [
+        "staging copy ROMCPU:$C2315C -> WRAM +$3F44"
+      ],
+      "overlaps": [],
+      "status": "known",
+      "notes": "Span covers records 0-44 (record 44 verified = mines encounter {19,77}); true length unknown."
+    },
+    {
+      "id": "ROM-0025",
+      "start": 1005824,
+      "size": 180,
+      "bank": "ROMCPU:$CF5900-$CF59B3",
+      "classification": "DATA_TABLE",
+      "owner": "CEN-MONSTER-0002",
+      "format": "4-byte formation flag records",
+      "confidence": "confirmed",
+      "evidence": [
+        "docs/experiments/EXP-0030-formation-table.md"
+      ],
+      "consumers": [
+        "ROMCPU:$C23139/$C23140 -> $2F48/$2F4A"
+      ],
+      "overlaps": [],
+      "status": "known",
+      "notes": "Location confirmed by code decode; field semantics Unknown. Span through record 44."
+    },
+    {
+      "id": "ROM-0026",
+      "start": 143632,
+      "size": 128,
+      "bank": "ROMCPU:$C23110-$C2318F",
+      "classification": "CODE",
+      "owner": "formation staging routine",
+      "format": "65816 code",
+      "confidence": "confirmed",
+      "evidence": [
+        "docs/experiments/EXP-0030-formation-table.md",
+        "local_artifacts/experiments/EXP-0030/ (events-slice.log; hashes.sha256)"
+      ],
+      "consumers": [],
+      "overlaps": [],
+      "status": "known",
+      "notes": "id x15 addressing + $CF6200/$CF5900 reads; adjacent to ROM-0009."
     }
   ]
 }

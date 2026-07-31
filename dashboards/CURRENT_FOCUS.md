@@ -18,8 +18,9 @@ censused the magic system (spell name table located, $C46AC0 shown to
 be the spell database, availability array at +$1A6E). 43 census
 entries, 10 of 12 domains; ROM known 0.34%.
 
-**Next exact action:** EXP-0029 done (loader chain decoded; formation
-ids stage at WRAM:+$3F46). Next: **EXP-0030 — write-watch
-+$3F46/+$3F52 at an encounter entry** to capture the ROM
-formation-record reader (one hop to the formation table). Rotation
-alternates: HUD font load-path (GFX), SPC dispatch (AUDIO).
+**Next exact action:** EXP-0030 done — the formation table is
+Confirmed (0x0F6200, 15-byte; mines = formation 44 = monsters
+{19,77}). Next candidates: the +$11E0 encounter-roll producer
+(closes the walk->battle chain, CEN-WORLD-0006), or rotate to the
+HUD font load-path (GFX) / SPC dispatch (AUDIO) after four
+consecutive monster-adjacent units.

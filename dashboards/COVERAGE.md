@@ -9,7 +9,7 @@ Breadth without pretense: counts are census entries at or above each threshold (
 | BATTLE | 6 | 5 | 3 | 3 | 3 | 5 |
 | CHAR | 4 | 1 | 1 | 1 | 1 | 1 |
 | MAGIC | 9 | 4 | 2 | 1 | 0 | 3 |
-| MONSTER | 3 | 1 | 0 | 0 | 0 | 0 |
+| MONSTER | 3 | 2 | 0 | 0 | 0 | 0 |
 | ITEM | 0 | 0 | 0 | 0 | 0 | 0 |
 | WORLD | 6 | 0 | 0 | 0 | 0 | 0 |
 | EVENT | 3 | 0 | 0 | 0 | 0 | 0 |
@@ -21,14 +21,14 @@ Breadth without pretense: counts are census entries at or above each threshold (
 
 ## ROM accounting
 
-- Known: 13902 of 3145728 bytes (0.44%) — code 2716 bytes (0.09%), data 11186 bytes (0.36%).
+- Known: 14885 of 3145728 bytes (0.47%) — code 2844 bytes (0.09%), data 12041 bytes (0.38%).
 - Candidate-only: 120 bytes.
-- **Unknown: 3131706 bytes (99.55%)** across 22 gaps.
+- **Unknown: 3130723 bytes (99.52%)** across 24 gaps.
 
 ## Census health
 
 - Entries with unresolved fields/formats: 18.
-- Observed but not yet located (breadth backlog): 31.
+- Observed but not yet located (breadth backlog): 30.
 - Runtime-only findings (seen live, no location): 21.
 - Static-only findings (located, never exercised live): 1.
 
@@ -56,7 +56,6 @@ Breadth without pretense: counts are census entries at or above each threshold (
 - **CEN-MENU-0003** (Dialogue window system (border, gradient, layout)): Capture window BG layer + palette during a dialogue box; locate the border tile asset.
 - **CEN-MENU-0004** (Field main menu): EXP-0026: open the field menu from checkpoint2 (X press), screenshot, register submenus.
 - **CEN-MENU-0005** (Field Magic menu (grid list, MP readout, help bar)): Trace the list renderer's reads (name table + availability array consumers) with a read-watch during menu open.
-- **CEN-MONSTER-0002** (Battle formations (opening guard fight composition/layout)): Write-watch +$3F46/+$3F52 at the next encounter entry to capture the ROM formation-record reader.
 - **CEN-MONSTER-0003** (Enemy battle sprites and palettes (green guard)): VRAM/OAM capture during battle to register the enemy sprite asset (EXP-0023 pattern).
 - **CEN-SAVE-0001** (Opening-relevant persistent state (event progress, party, names)): Diff WRAM snapshots across two field states to bound the event-flag region; then SRAM after a save event.
 - **CEN-WORLD-0001** (Narshe exterior map (tileset, tilemap, palettes, animated tiles)): Capture PPU + VRAM for the field state (EXP-0023 pattern) and register the map layer assets.

@@ -10,31 +10,27 @@
       "hp": 35,
       "mp": 0,
       "sources": [
-        "EXP-0028 live read (X=$09A0) + ROM record",
-        "power matches an EXP-0018 live capture"
+        "EXP-0028 live read + ROM record",
+        "formation 44 member (EXP-0030)"
       ],
-      "confidence": "confirmed",
-      "name": "one of the mines pair (Were-Rat/Repo Man); which is unresolved"
+      "confidence": "confirmed"
     },
     {
-      "id": 78,
+      "id": 19,
       "power": 13,
-      "hp": 428,
-      "mp": 85,
+      "hp": 24,
+      "mp": 0,
       "sources": [
-        "ROM record cross-check",
-        "power matches the other EXP-0018 live capture"
+        "formation 44 member (EXP-0030); power matches the second EXP-0018 live value"
       ],
-      "confidence": "strong-hypothesis",
-      "name": "the other of the mines pair"
+      "confidence": "confirmed"
     }
   ],
   "unknowns": [
     "table length",
     "remaining field offsets",
     "aux bank-$CF tables",
-    "formation->id mapping",
-    "name table location"
+    "name-table location"
   ],
   "evidence_sources": [
     "docs/experiments/EXP-0028-monster-source.md",

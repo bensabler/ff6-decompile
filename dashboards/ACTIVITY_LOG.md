@@ -1,5 +1,16 @@
 # Activity Log
 
+- 2026-07-31 (autonomous) — Unit 30 / EXP-0030: **the formation table
+  is located and verified — ROMFILE:0x0F6200, 15-byte records
+  (id x15 via the ASLx4-minus-id idiom), monster ids at bytes +2..+7,
+  staged to +$3F44 by $C2315C; flags table at 0x0F5900 (4-byte).**
+  Formation 44 = the mines encounter = monsters **{19, 77}** —
+  correcting EXP-0028's coincidental record-78 match; powers {13,19}
+  reconcile exactly with EXP-0018's live captures (monster 19: power
+  13, HP 24). Encounter-roll output identified at +$11E0 (producer =
+  next hop). MONSTER domain now has its three core tables (stats,
+  formations, flags) located and cross-verified.
+
 - 2026-07-31 (autonomous) — Unit 29 / EXP-0029 (static): **the
   formation loader chain is decoded.** Per-slot loader $C22C30
   (A=id, Y=slot) scales the monster id x4/x8/x32 into the bank-$CF

@@ -493,6 +493,23 @@
       "falsifying_outcome": "the X computation is not a *32 scaling of a monster id",
       "status": "completed",
       "record": "docs/experiments/EXP-0029-formation-map.md"
+    },
+    {
+      "schema_version": "1.0",
+      "id": "EXP-0030",
+      "question": "Which code writes the +$3F46 staged formation ids at encounter entry, and from which ROM structure?",
+      "starting_state": {
+        "emulator": "Mesen 2.1.1 macOS x86_64 (--testrunner headless, bridge v2)",
+        "rom_sha256": "0f51b4fca41b7fd509e4b8f9d543151f68efa5e97b08493e4b2a0c06f5d8d5e2",
+        "state": "write-watch +$3F40-+$3F5F; mines encounter walk"
+      },
+      "expected_outcomes": [
+        "writer decoded to a ROM formation-table read, verified against ids 77/78",
+        "a deeper staging chain (bounded out, recorded)"
+      ],
+      "falsifying_outcome": "no writes to +$3F46 at encounter entry",
+      "status": "completed",
+      "record": "docs/experiments/EXP-0030-formation-table.md"
     }
   ]
 }
