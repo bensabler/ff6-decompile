@@ -18,11 +18,8 @@ censused the magic system (spell name table located, $C46AC0 shown to
 be the spell database, availability array at +$1A6E). 43 census
 entries, 10 of 12 domains; ROM known 0.34%.
 
-**Next exact action:** EXP-0028 done — the monster database is
-located and Confirmed (ROMFILE:0x0F0000, 32-byte records, field map
-anchored to the battle arrays; formation pair = ids 77/78). Next
-selection candidates, in leverage order: **decode the populate
-routine's X-computation** (the formation→monster-id mapping — it
-unlocks formations AND encounter packs together), the HUD font
-load-path trace (GFX), or the SPC dispatch trace (AUDIO). MAGIC
-rests per the rotation rule.
+**Next exact action:** EXP-0029 done (loader chain decoded; formation
+ids stage at WRAM:+$3F46). Next: **EXP-0030 — write-watch
++$3F46/+$3F52 at an encounter entry** to capture the ROM
+formation-record reader (one hop to the formation table). Rotation
+alternates: HUD font load-path (GFX), SPC dispatch (AUDIO).

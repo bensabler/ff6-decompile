@@ -1,15 +1,18 @@
 {
   "schema_version": "1.0",
   "domain": "MONSTER",
-  "description": "Battle formation records: monster composition, layout, flags.",
+  "description": "Battle formation records: monster composition, layout, flags. EXP-0029: ids stage at WRAM +$3F46 (6 slots, $FF empty) consumed by the $C22F22 loop; the ROM formation record is the staging producer (unlocated).",
   "expected_record_count": null,
   "records": [],
   "unknowns": [
-    "record count",
-    "record size",
-    "ROM location",
-    "format"
+    "ROM formation record location/format",
+    "+$3F52 field meaning",
+    "$0206 event-battle source",
+    "slot-position layout data"
   ],
-  "evidence_sources": [],
-  "next_extraction_step": "Trace what selects and populates the opening guard battles' enemy slots at battle init."
+  "evidence_sources": [
+    "docs/experiments/EXP-0029-formation-map.md",
+    "local_artifacts/experiments/EXP-0029/decode-notes.txt"
+  ],
+  "next_extraction_step": "Write-watch +$3F46 at encounter entry; decode the writer's ROM source (the formation table)."
 }

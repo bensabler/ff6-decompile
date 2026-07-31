@@ -476,6 +476,23 @@
       "falsifying_outcome": "no writes to the family during a fresh battle entry",
       "status": "completed",
       "record": "docs/experiments/EXP-0028-monster-source.md"
+    },
+    {
+      "schema_version": "1.0",
+      "id": "EXP-0029",
+      "question": "How is the monster-record offset computed, and where are the formation records that supply the monster id?",
+      "starting_state": {
+        "emulator": "none (static: archived EXP-0028 stacks + local ROM file)",
+        "rom_sha256": "0f51b4fca41b7fd509e4b8f9d543151f68efa5e97b08493e4b2a0c06f5d8d5e2",
+        "state": "EXP-0028 evidence + ROM code bytes"
+      },
+      "expected_outcomes": [
+        "id*32 computation decoded; formation structure located (candidate or better)",
+        "computation is not id*32 (stride claim corrected)"
+      ],
+      "falsifying_outcome": "the X computation is not a *32 scaling of a monster id",
+      "status": "completed",
+      "record": "docs/experiments/EXP-0029-formation-map.md"
     }
   ]
 }

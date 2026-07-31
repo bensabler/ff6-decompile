@@ -421,21 +421,22 @@
     },
     {
       "id": "ROM-0023",
-      "start": 142400,
-      "size": 340,
-      "bank": "ROMCPU:$C22C40-$C22D93",
+      "start": 142383,
+      "size": 405,
+      "bank": "ROMCPU:$C22C2F-$C22DC3",
       "classification": "CODE",
-      "owner": "battle-init enemy populate routine",
+      "owner": "battle-init loaders: per-slot monster loader $C22C30 + populate + id-fetch helpers",
       "format": "65816 code",
       "confidence": "confirmed",
       "evidence": [
         "local_artifacts/experiments/EXP-0028/ (probe slice, routine dumps; hashes.sha256)",
-        "live write-watch hits at every store site (EXP-0028)"
+        "live write-watch hits at every store site (EXP-0028)",
+        "local_artifacts/experiments/EXP-0029/decode-notes.txt (EXP-0029)"
       ],
       "consumers": [],
       "overlaps": [],
       "status": "known",
-      "notes": "Reads $CF0000,X monster records + five aux bank-$CF tables; closes EXP-0004 question 19b ($C22CCE = max-HP store)."
+      "notes": "Loader chain decoded: caller $C22F22 loop reads WRAM +$3F46 staging ids; $C22C30 scales id x4/x8/x32 into per-monster bank-$CF tables incl. the $CF0000 records. $CF8400 = 16-bit per-monster attribute table. Span starts where ROM-0008 ends; the $C22C00-$C22C2E helpers are inside ROM-0008."
     }
   ]
 }

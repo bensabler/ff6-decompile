@@ -1061,7 +1061,7 @@
       "domain": "MONSTER",
       "category": "stats",
       "name": "Monster stat records ($CF0000, 32-byte stride)",
-      "description": "Battle-init populate routine ($C22CA3-$C22D8C) reads LDA $CF0000+off,X into the Confirmed battle arrays: +$08 HP (current+max), +$0A MP, +$01 battle power (records 77/78 hold 19/13 \u2014 the exact EXP-0018 live powers), +$02/+$10/+$00 staging pairs, ten further mapped offsets. X=$09A0 observed (record 77); stride 32 Confirmed by the dual power cross-check. Closes EXP-0004 question 19b ($C22CCE = max-HP store). Five aux bank-$CF tables surfaced (semantics Unknown).",
+      "description": "Battle-init populate routine ($C22CA3-$C22D8C) reads LDA $CF0000+off,X into the Confirmed battle arrays: +$08 HP (current+max), +$0A MP, +$01 battle power (records 77/78 hold 19/13 \u2014 the exact EXP-0018 live powers), +$02/+$10/+$00 staging pairs, ten further mapped offsets. X=$09A0 observed (record 77); stride 32 Confirmed by the dual power cross-check. Closes EXP-0004 question 19b ($C22CCE = max-HP store). Five aux bank-$CF tables surfaced (semantics Unknown). EXP-0029: loader entry $C22C30 (A=id, Y=slot); $CF8400 = per-monster 16-bit attribute table (-> $3254,Y); aux x4/x8 tables id-scaled.",
       "reconstruction_status": "FORMAT_PARTIAL",
       "runtime_status": "OUTPUTS_CAPTURED",
       "rom_revision": "0f51b4fca41b7fd509e4b8f9d543151f68efa5e97b08493e4b2a0c06f5d8d5e2",
@@ -1089,7 +1089,8 @@
         "EXP-0018",
         "EXP-0019",
         "EXP-0025",
-        "EXP-0028"
+        "EXP-0028",
+        "EXP-0029"
       ],
       "related_discoveries": [],
       "related_implementations": [],
@@ -1119,13 +1120,19 @@
       "domain": "MONSTER",
       "category": "formations",
       "name": "Battle formations (opening guard fight composition/layout)",
-      "description": "One green guard on-screen; EXP-0021 selection events addressed slots via X=$0008/$000A. Formation source unlocated. Defeat screen names the formation: Were-Rat + Repo Man (EXP-0027) \u2014 matches the battle-HUD tilemap decode. Monster ids for the mines pair anchored: records 77/78 (powers 19/13).",
-      "reconstruction_status": "OBSERVED",
+      "description": "One green guard on-screen; EXP-0021 selection events addressed slots via X=$0008/$000A. Formation source unlocated. Defeat screen names the formation: Were-Rat + Repo Man (EXP-0027) \u2014 matches the battle-HUD tilemap decode. Monster ids for the mines pair anchored: records 77/78 (powers 19/13). EXP-0029: the formation's monster ids stage in WRAM +$3F46 (6 slots, $FF=empty; alternate source $0206 under an event-battle flag); the ROM formation record is one producer-hop upstream.",
+      "reconstruction_status": "CANDIDATE_LOCATION",
       "runtime_status": "OUTPUTS_CAPTURED",
       "rom_revision": "0f51b4fca41b7fd509e4b8f9d543151f68efa5e97b08493e4b2a0c06f5d8d5e2",
       "rom_locations": [],
-      "wram_locations": [],
-      "cpu_routines": [],
+      "wram_locations": [
+        "WRAM:+$3F46 (6-byte formation monster-id staging, $FF empty sentinel)",
+        "WRAM:+$3F52 (second formation field, x4-scaled)"
+      ],
+      "cpu_routines": [
+        "ROMCPU:$C22F22 caller loop",
+        "ROMCPU:$C22C30 per-slot loader"
+      ],
       "spc_locations": [],
       "record_count_expected": null,
       "record_count_found": null,
@@ -1137,7 +1144,8 @@
         "EXP-0002",
         "EXP-0021",
         "EXP-0025",
-        "EXP-0027"
+        "EXP-0027",
+        "EXP-0029"
       ],
       "related_discoveries": [],
       "related_implementations": [],
@@ -1146,7 +1154,8 @@
         "mesen/out/exp10-battle.mss"
       ],
       "evidence": [
-        "local_artifacts/experiments/EXP-0025/ (screenshots; hashes.sha256)"
+        "local_artifacts/experiments/EXP-0025/ (screenshots; hashes.sha256)",
+        "local_artifacts/experiments/EXP-0029/decode-notes.txt"
       ],
       "confidence": "strong-hypothesis",
       "unknown_fields": [
@@ -1154,7 +1163,7 @@
         "encounter selection"
       ],
       "contradictions": [],
-      "next_action": "Decode the X=$09A0 computation upstream of the populate routine \u2014 it is the formation->monster mapping.",
+      "next_action": "Write-watch +$3F46/+$3F52 at the next encounter entry to capture the ROM formation-record reader.",
       "notes": ""
     },
     {

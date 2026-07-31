@@ -1,5 +1,16 @@
 # Activity Log
 
+- 2026-07-31 (autonomous) — Unit 29 / EXP-0029 (static): **the
+  formation loader chain is decoded.** Per-slot loader $C22C30
+  (A=id, Y=slot) scales the monster id x4/x8/x32 into the bank-$CF
+  tables ($CF8400 = per-monster 16-bit attribute table -> $3254,Y);
+  the sole caller $C22F22 loops six enemy slots reading ids from
+  **WRAM:+$3F46 (the staged formation id list, $FF sentinel)** with
+  an event-battle alternate source ($0206). The ROM formation record
+  is one write-watch away (+$3F46's producer). The census overlap
+  audit caught and corrected a region-boundary mistake in the same
+  unit.
+
 - 2026-07-31 (autonomous) — Unit 28 / EXP-0028: **the monster database
   is located — ROMFILE:0x0F0000, 32-byte records, Confirmed.** A mines
   free-walk triggered a live encounter; the battle-init write-watch

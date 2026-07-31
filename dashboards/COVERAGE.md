@@ -21,15 +21,15 @@ Breadth without pretense: counts are census entries at or above each threshold (
 
 ## ROM accounting
 
-- Known: 13837 of 3145728 bytes (0.44%) — code 2651 bytes (0.08%), data 11186 bytes (0.36%).
+- Known: 13902 of 3145728 bytes (0.44%) — code 2716 bytes (0.09%), data 11186 bytes (0.36%).
 - Candidate-only: 120 bytes.
-- **Unknown: 3131771 bytes (99.56%)** across 23 gaps.
+- **Unknown: 3131706 bytes (99.55%)** across 22 gaps.
 
 ## Census health
 
 - Entries with unresolved fields/formats: 18.
 - Observed but not yet located (breadth backlog): 31.
-- Runtime-only findings (seen live, no location): 22.
+- Runtime-only findings (seen live, no location): 21.
 - Static-only findings (located, never exercised live): 1.
 
 ## Open breadth targets (next_action of unlocated entries)
@@ -56,7 +56,7 @@ Breadth without pretense: counts are census entries at or above each threshold (
 - **CEN-MENU-0003** (Dialogue window system (border, gradient, layout)): Capture window BG layer + palette during a dialogue box; locate the border tile asset.
 - **CEN-MENU-0004** (Field main menu): EXP-0026: open the field menu from checkpoint2 (X press), screenshot, register submenus.
 - **CEN-MENU-0005** (Field Magic menu (grid list, MP readout, help bar)): Trace the list renderer's reads (name table + availability array consumers) with a read-watch during menu open.
-- **CEN-MONSTER-0002** (Battle formations (opening guard fight composition/layout)): Decode the X=$09A0 computation upstream of the populate routine — it is the formation->monster mapping.
+- **CEN-MONSTER-0002** (Battle formations (opening guard fight composition/layout)): Write-watch +$3F46/+$3F52 at the next encounter entry to capture the ROM formation-record reader.
 - **CEN-MONSTER-0003** (Enemy battle sprites and palettes (green guard)): VRAM/OAM capture during battle to register the enemy sprite asset (EXP-0023 pattern).
 - **CEN-SAVE-0001** (Opening-relevant persistent state (event progress, party, names)): Diff WRAM snapshots across two field states to bound the event-flag region; then SRAM after a save event.
 - **CEN-WORLD-0001** (Narshe exterior map (tileset, tilemap, palettes, animated tiles)): Capture PPU + VRAM for the field state (EXP-0023 pattern) and register the map layer assets.

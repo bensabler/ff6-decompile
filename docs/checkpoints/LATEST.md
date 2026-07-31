@@ -1,8 +1,8 @@
 # Latest Checkpoint
 
-**[2026-07-31 — EXP-0028: monster database located](2026-07-31-exp0028-monster-db.md)**
+**[2026-07-31 — EXP-0029: formation loader chain decoded](2026-07-31-exp0029-formation-chain.md)**
 
-State: monster records Confirmed at ROMFILE:0x0F0000 (32-byte stride,
-field map anchored to the battle arrays; mines pair = ids 77/78);
-question 19b closed. Exact next action: EXP-0029 — decode the
-X-computation upstream (formation→monster mapping).
+State: monster-id staging at WRAM:+$3F46 Confirmed consumer-side;
+$CF8400 attribute table identified; ROM formation record one hop
+away. Exact next action: EXP-0030 write-watch +$3F46 at encounter
+entry.

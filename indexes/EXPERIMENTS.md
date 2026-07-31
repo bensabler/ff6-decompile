@@ -31,4 +31,5 @@
 | EXP-0025 | opening-recon | completed | see record | [EXP-0025-opening-recon](../docs/experiments/EXP-0025-opening-recon.md) |
 | EXP-0026 | magic-census | completed | see record | [EXP-0026-magic-census](../docs/experiments/EXP-0026-magic-census.md) |
 | EXP-0027 | spell-extraction | completed | see record | [EXP-0027-spell-extraction](../docs/experiments/EXP-0027-spell-extraction.md) |
-| EXP-0028 | monster-source | running | see record | [EXP-0028-monster-source](../docs/experiments/EXP-0028-monster-source.md) |
+| EXP-0028 | monster-source | completed | see record | [EXP-0028-monster-source](../docs/experiments/EXP-0028-monster-source.md) |
+| EXP-0029 | formation-map | completed | see record | [EXP-0029-formation-map](../docs/experiments/EXP-0029-formation-map.md) |
