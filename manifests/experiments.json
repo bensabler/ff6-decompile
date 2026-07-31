@@ -340,6 +340,23 @@
       "falsifying_outcome": "matched-ordinal $3A70 values identical across trials while action choices diverge",
       "status": "completed",
       "record": "docs/experiments/EXP-0020-ai-rng.md"
+    },
+    {
+      "schema_version": "1.0",
+      "id": "EXP-0021",
+      "question": "At matched action ordinals under identical starting state, is the attack-record index sequence identical across differently-timed trials (EXP-0020 scheduling interpretation)?",
+      "starting_state": {
+        "emulator": "Mesen 2.1.1 macOS x86_64 (bridge v2, fresh launch)",
+        "rom_sha256": "0f51b4fca41b7fd509e4b8f9d543151f68efa5e97b08493e4b2a0c06f5d8d5e2",
+        "state": "exp10-battle.mss identical-state trials, first press 1.2s vs 4.5s; tracked probe mesen/probes/EXP-0021.lua"
+      },
+      "expected_outcomes": [
+        "matched-ordinal indices identical (supports scheduling interpretation; RNG question moves to scheduler cadence)",
+        "indices differ (refutes; the varying selection-window value points at the state to trace)"
+      ],
+      "falsifying_outcome": "matched-ordinal record indices differ across trials",
+      "status": "completed",
+      "record": "docs/experiments/EXP-0021-record-index.md"
     }
   ]
 }

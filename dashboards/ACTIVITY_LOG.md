@@ -1,5 +1,21 @@
 # Activity Log
 
+- 2026-07-30 (resume, late) — EXP-0021: **question #30 resolved for the
+  tested window — the action layer is deterministic given the input
+  frame schedule.** Two frame-exact trials (first press anchor+72 vs
+  +270) produced byte-identical matched-ordinal content: all 8 record
+  loads index 238, enemy powers 13/0/19/0 with the miss at the same
+  ordinal; only cluster timing (+2/+69 frames) and two outcome-neutral
+  press residues (`+$3A71` $04-vs-$00, POP3 carry) varied. GUI-era
+  variance (EXP-0016/0018/0020) attributed to wall-clock harness jitter
+  (Strong hypothesis). Operationally: the lab now runs **headless**
+  (`Mesen --testrunner --timeout=7200` + `FF6_OUT` env + frame-scheduled
+  input in `mesen/probes/EXP-0021.lua`) because the locked display
+  breaks GUI Mesen (Avalonia RenderTimer −6661 / script window never
+  opens); testrunner default ~2-min timeout discovered and overridden.
+  Battle path pauses at this natural boundary per the operator's
+  rebalance directive.
+
 - 2026-07-30 (resume) — Manifest-completeness repair: EXP-0019 was
   missing from `manifests/experiments.json` (and therefore from the
   generated index); entry added from the record, index regenerated,

@@ -4,9 +4,14 @@
 
 - [x] EXP-0020: `+$3A70` refuted as the varying state; question #30
   refined (scheduling interpretation).
-- [ ] **EXP-0021 (question #30):** capture the attack-record index at
-  `ROMCPU:$C22966` entry + scheduler-adjacent reads across
-  identical-state trials; determine whether any RNG feeds selection.
+- [x] **EXP-0021 (question #30, resolved for this window):**
+  matched-ordinal action content is identical across frame-exact
+  schedules — indices all 238, powers 13/0/19/0, the miss at the same
+  ordinal; only timing (+2/+69-frame shifts) and two outcome-neutral
+  press residues (`+$3A71`, a carry bit) vary. GUI-era variance
+  attributed to harness wall-clock jitter (Strong hypothesis). The
+  "free RNG" framing is retired; battle path pauses here
+  (operator rebalance to graphics/audio verticals).
 
 ## P1 — Semantic debt (next behavior units)
 

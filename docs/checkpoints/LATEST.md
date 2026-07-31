@@ -1,7 +1,8 @@
 # Latest Checkpoint
 
-**[2026-07-30 — EXP-0020: $3A70 refuted; bridge v2 live](2026-07-30-exp0020-3a70-refuted.md)**
+**[2026-07-30 — EXP-0021: action layer deterministic; battle path pauses](2026-07-30-exp0021-deterministic.md)**
 
-State: RNG candidate refuted, question #30 refined; infrastructure validated.
-Exact next action: EXP-0021 (record-index/scheduler capture), then the
-graphics and audio vertical proofs.
+State: question #30 resolved for the tested window (content is
+schedule-deterministic); lab runs headless testrunner now.
+Exact next action: EXP-0022 attack-record ROM cross-check (Unit 3),
+then the graphics and audio vertical proofs (Units 4–5).

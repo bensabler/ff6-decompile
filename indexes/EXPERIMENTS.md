@@ -24,3 +24,4 @@
 | EXP-0018 | setup-layer | completed | see record | [EXP-0018-setup-layer](../docs/experiments/EXP-0018-setup-layer.md) |
 | EXP-0019 | rng-state | completed | see record | [EXP-0019-rng-state](../docs/experiments/EXP-0019-rng-state.md) |
 | EXP-0020 | ai-rng | completed | see record | [EXP-0020-ai-rng](../docs/experiments/EXP-0020-ai-rng.md) |
+| EXP-0021 | record-index | completed | see record | [EXP-0021-record-index](../docs/experiments/EXP-0021-record-index.md) |

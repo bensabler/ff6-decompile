@@ -7,7 +7,7 @@
 | M2 | First provenance-complete sprite/tile asset | Not started |
 | M3 | First provenance-complete audio sample/cue | Not started |
 | M4 | Party battle record | In progress — unified 10-slot arrays, battler stat tables, and the full damage pipeline decoded/implemented (EXP-0003..0019); remaining: MP verification, records' consumer, status semantics |
-| M5 | Battle subsystem vertical slice | In progress — damage subsystem byte-exact formula-to-HUD; AI/RNG layer open (#30) |
+| M5 | Battle subsystem vertical slice | In progress — damage subsystem byte-exact formula-to-HUD; #30 resolved for the tested window (EXP-0021: action layer deterministic given the input frame schedule); remaining: press-coupled state semantics (`+$3A71`), GUI/testrunner parity |
 | M6 | Graphics subsystem vertical slice | Not started |
 | M7 | Audio subsystem vertical slice | Not started |
 | M8 | Public clean release | Not started |
