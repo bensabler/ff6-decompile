@@ -42,7 +42,10 @@ Write the falsifiable plan (question, starting state, expected
 outcomes, falsifier) in `docs/experiments/EXP-NNNN-*.md` **before**
 operating Mesen. Preserve raw evidence (and injected instrumentation
 code) before interpreting. Stop per `.claude/skills/_shared/STOPPING_RULES.md`.
-Negative results are results.
+Negative results are results. Before closing, register newly observed
+systems in the content census (`/census-observations`;
+`docs/research/CONTENT_TAXONOMY.md`): observe broadly, register
+briefly, investigate narrowly.
 
 ## Workflow
 

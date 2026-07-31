@@ -10,11 +10,18 @@ jitter (Strong hypothesis). The lab now runs headless
 (`--testrunner --timeout=7200`, `FF6_OUT` env, frame-scheduled input)
 because the locked display breaks GUI Mesen.
 
-**Next exact action:** final project-state synchronization (operator
-plan item 6), then choose the next bounded unit from the queue. All
-five rebalance units are done — the session delivered EXP-0021
-(determinism), EXP-0022 (record cross-check), EXP-0023/GFX-0001
-(graphics vertical, M2), EXP-0024/AUD-0001 (audio vertical, M3).
-High-value queued follow-ups: HUD font load-path trace, SPC dispatch
-trace, Fire Beam index disambiguation, MP-capable savestate, GUI/
-testrunner parity check.
+**State:** the content census system is live (2026-07-31): taxonomy,
+dual status ladders, ROM ownership ledger, coverage tooling in
+`ff6lab`, and the observe-register-return workflow wired into the
+stopping rules. EXP-0025/0026 registered the opening sequence and
+censused the magic system (spell name table located, $C46AC0 shown to
+be the spell database, availability array at +$1A6E). 43 census
+entries, 10 of 12 domains; ROM known 0.34%.
+
+**Next exact action:** highest-leverage breadth target — **verify the
+spell name-table boundary and a second MP-cost anchor** (battle Magic
+menu), which upgrades the spell database toward EXTRACTED and
+unlocks bulk extraction of all 54 records. Alternates per
+`ff6lab coverage gaps`: monster stat-record source trace (battle-init
+writes into the +$3B18 family), or the HUD font load-path trace.
+Depth follow-ups queued in BLOCKERS/RESEARCH_QUEUE remain valid.

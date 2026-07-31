@@ -11,3 +11,8 @@ Stop the active unit when any condition occurs:
 - context or time requires a checkpoint.
 
 Do not expand scope silently.
+
+Before closing any experiment, run the census observation pass
+(census-observer skill / `/census-observations`): register newly
+visible systems briefly in the content census, then return to the
+question. Registration is not investigation.

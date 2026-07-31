@@ -1,5 +1,27 @@
 # Activity Log
 
+- 2026-07-31 (census unit) — **Content census system established**
+  (5 commits): 12-domain taxonomy with separate reconstruction and
+  runtime status ladders; content-census + ROM-ownership manifests
+  with schemas; `internal/census` validation/coverage/gap tooling
+  wired into `ff6lab` (census validate|sync, coverage
+  summary|gaps|domain, rom gaps) and the audit; 19 data-family
+  inventories. **EXP-0025** registered 25 opening-sequence systems
+  from a headless screenshot sweep (field menu, dialogue, maps,
+  collision, '?????' pre-naming state, sprites, formations).
+  **EXP-0026** censused the magic system: field-menu navigation to
+  Terra's Magic list; text encoding derived from the tilemap
+  (A-Z=$80+n, a-z=$9A+n); spell name table located
+  (ROMFILE:0x26F567, 7-byte records, Fire=0, Cure=45); the $C46AC0
+  table shown to be the global spell database with byte 5 = MP cost
+  (Strong hypothesis); spell availability located at WRAM:+$1A6E
+  (unique 128 KB search hit, $FF-marked ids {0,45} for Terra).
+  Workflow: census-observer skill + /census-observations,
+  /register-system, /update-coverage; stopping rules and the
+  orchestrator's prioritization updated (observe broadly, register
+  briefly, investigate narrowly). Coverage after the unit: 43 census
+  entries across 10 of 12 domains; ROM known 10,753 bytes (0.34%).
+
 - 2026-07-30 (resume, late) — Unit 24 / EXP-0024 + AUD-0001: **first
   audio vertical proof complete — the battle confirm SFX chain is
   Confirmed end to end.** Press-vs-no-press delta trials: exactly one
