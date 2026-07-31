@@ -459,6 +459,23 @@
       "falsifying_outcome": "clean icon-classed magic-style entries at ids 54+ or a break before id 53",
       "status": "completed",
       "record": "docs/experiments/EXP-0027-spell-extraction.md"
+    },
+    {
+      "schema_version": "1.0",
+      "id": "EXP-0028",
+      "question": "Which code populates the per-slot enemy stat tables (+$3B18 family) at battle entry, and from which ROM records does it read?",
+      "starting_state": {
+        "emulator": "Mesen 2.1.1 macOS x86_64 (--testrunner headless, bridge v2)",
+        "rom_sha256": "0f51b4fca41b7fd509e4b8f9d543151f68efa5e97b08493e4b2a0c06f5d8d5e2",
+        "state": "write-watch armed, then checkpoint3-mines encounter walk (fallback: checkpoint1 scripted-battle entry)"
+      },
+      "expected_outcomes": [
+        "writer set + ROM source addressing decoded (monster-record base at candidate/located)",
+        "writers read WRAM staging (staging producer captured or queued)"
+      ],
+      "falsifying_outcome": "no writes to the family during a fresh battle entry",
+      "status": "completed",
+      "record": "docs/experiments/EXP-0028-monster-source.md"
     }
   ]
 }

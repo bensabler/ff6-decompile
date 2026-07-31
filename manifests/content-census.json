@@ -986,7 +986,9 @@
       "rom_revision": "0f51b4fca41b7fd509e4b8f9d543151f68efa5e97b08493e4b2a0c06f5d8d5e2",
       "rom_locations": [],
       "wram_locations": [],
-      "cpu_routines": [],
+      "cpu_routines": [
+        "ROMCPU:$C22899-$C2290F (party battle-stat init cluster, EXP-0028)"
+      ],
       "spc_locations": [],
       "record_count_expected": null,
       "record_count_found": null,
@@ -996,7 +998,8 @@
       "producers": [],
       "related_experiments": [
         "EXP-0018",
-        "EXP-0025"
+        "EXP-0025",
+        "EXP-0028"
       ],
       "related_discoveries": [],
       "related_implementations": [],
@@ -1057,22 +1060,27 @@
       "id": "CEN-MONSTER-0001",
       "domain": "MONSTER",
       "category": "stats",
-      "name": "Enemy stat records (guard battle)",
-      "description": "Per-slot enemy stats are staged from tables (+$3B18/+$3B2C/+$3B68 reads Confirmed in EXP-0017/0019; observed powers 13/19); the ROM source records feeding those tables are unlocated.",
-      "reconstruction_status": "CANDIDATE_LOCATION",
+      "name": "Monster stat records ($CF0000, 32-byte stride)",
+      "description": "Battle-init populate routine ($C22CA3-$C22D8C) reads LDA $CF0000+off,X into the Confirmed battle arrays: +$08 HP (current+max), +$0A MP, +$01 battle power (records 77/78 hold 19/13 \u2014 the exact EXP-0018 live powers), +$02/+$10/+$00 staging pairs, ten further mapped offsets. X=$09A0 observed (record 77); stride 32 Confirmed by the dual power cross-check. Closes EXP-0004 question 19b ($C22CCE = max-HP store). Five aux bank-$CF tables surfaced (semantics Unknown).",
+      "reconstruction_status": "FORMAT_PARTIAL",
       "runtime_status": "OUTPUTS_CAPTURED",
       "rom_revision": "0f51b4fca41b7fd509e4b8f9d543151f68efa5e97b08493e4b2a0c06f5d8d5e2",
-      "rom_locations": [],
+      "rom_locations": [
+        "ROM-0022"
+      ],
       "wram_locations": [
         "WRAM:+$3B18,X",
         "WRAM:+$3B2C,X",
         "WRAM:+$3B68,X"
       ],
-      "cpu_routines": [],
+      "cpu_routines": [
+        "ROMCPU:$C22CA3-$C22D8C populate",
+        "ROMCPU:$C22899-$C2290F party-side init"
+      ],
       "spc_locations": [],
       "record_count_expected": null,
       "record_count_found": null,
-      "record_size": null,
+      "record_size": 32,
       "pointer_tables": [],
       "consumers": [],
       "producers": [],
@@ -1080,7 +1088,8 @@
         "EXP-0017",
         "EXP-0018",
         "EXP-0019",
-        "EXP-0025"
+        "EXP-0025",
+        "EXP-0028"
       ],
       "related_discoveries": [],
       "related_implementations": [],
@@ -1090,16 +1099,18 @@
       ],
       "evidence": [
         "local_artifacts/experiments/EXP-0025/ (screenshots; hashes.sha256)",
-        "docs/experiments/EXP-0019-rng-state.md"
+        "docs/experiments/EXP-0019-rng-state.md",
+        "local_artifacts/experiments/EXP-0028/ (probe slice, routine dumps; hashes.sha256)"
       ],
-      "confidence": "strong-hypothesis",
+      "confidence": "confirmed",
       "unknown_fields": [
-        "ROM record location",
-        "record format",
-        "monster id mapping"
+        "offsets +$06,+$0D,+$12,+$14-+$19,+$1B-+$1D,+$1F",
+        "aux tables $CF3000/$CF37C0/$CF8400/$CF8700/$CFC050",
+        "table length beyond 79 records",
+        "X-computation (formation->monster-id mapping)"
       ],
       "contradictions": [],
-      "next_action": "Watch the battle-init writes into the +$3B18-family tables and trace their ROM source (formation loader).",
+      "next_action": "Decode the X-computation upstream (formation consumer); bulk-extract records with the mapped fields.",
       "notes": ""
     },
     {
@@ -1108,7 +1119,7 @@
       "domain": "MONSTER",
       "category": "formations",
       "name": "Battle formations (opening guard fight composition/layout)",
-      "description": "One green guard on-screen; EXP-0021 selection events addressed slots via X=$0008/$000A. Formation source unlocated. Defeat screen names the formation: Were-Rat + Repo Man (EXP-0027) \u2014 matches the battle-HUD tilemap decode.",
+      "description": "One green guard on-screen; EXP-0021 selection events addressed slots via X=$0008/$000A. Formation source unlocated. Defeat screen names the formation: Were-Rat + Repo Man (EXP-0027) \u2014 matches the battle-HUD tilemap decode. Monster ids for the mines pair anchored: records 77/78 (powers 19/13).",
       "reconstruction_status": "OBSERVED",
       "runtime_status": "OUTPUTS_CAPTURED",
       "rom_revision": "0f51b4fca41b7fd509e4b8f9d543151f68efa5e97b08493e4b2a0c06f5d8d5e2",
@@ -1143,7 +1154,7 @@
         "encounter selection"
       ],
       "contradictions": [],
-      "next_action": "Trace what populates the enemy slots at battle entry (the battle-init writer set from EXP-0002 is the entry thread).",
+      "next_action": "Decode the X=$09A0 computation upstream of the populate routine \u2014 it is the formation->monster mapping.",
       "notes": ""
     },
     {
@@ -1939,6 +1950,45 @@
       "unknown_fields": [],
       "contradictions": [],
       "next_action": "Capture the post-defeat transition (game over vs retry) in a dedicated run.",
+      "notes": ""
+    },
+    {
+      "schema_version": "1.0",
+      "id": "CEN-WORLD-0006",
+      "domain": "WORLD",
+      "category": "encounter zones",
+      "name": "Random encounter triggering (mines)",
+      "description": "Walking ~4 back-and-forth passes in the mines triggered a battle (steps-based encounter check). The check's state and zone data are unlocated.",
+      "reconstruction_status": "OBSERVED",
+      "runtime_status": "INPUTS_CAPTURED",
+      "rom_revision": "0f51b4fca41b7fd509e4b8f9d543151f68efa5e97b08493e4b2a0c06f5d8d5e2",
+      "rom_locations": [],
+      "wram_locations": [],
+      "cpu_routines": [],
+      "spc_locations": [],
+      "record_count_expected": null,
+      "record_count_found": null,
+      "record_size": null,
+      "pointer_tables": [],
+      "consumers": [],
+      "producers": [],
+      "related_experiments": [
+        "EXP-0028"
+      ],
+      "related_discoveries": [],
+      "related_implementations": [],
+      "related_tests": [],
+      "runtime_scenarios": [
+        "mesen/out/checkpoint3-mines.mss"
+      ],
+      "evidence": [
+        "local_artifacts/experiments/EXP-0028/ (probe slice, routine dumps; hashes.sha256)",
+        "docs/experiments/EXP-0028-monster-source.md"
+      ],
+      "confidence": "confirmed",
+      "unknown_fields": [],
+      "contradictions": [],
+      "next_action": "Watch the step counter and encounter-check reads during a walk to locate the zone/rate data.",
       "notes": ""
     }
   ]

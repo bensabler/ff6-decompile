@@ -1,5 +1,17 @@
 # Activity Log
 
+- 2026-07-31 (autonomous) — Unit 28 / EXP-0028: **the monster database
+  is located — ROMFILE:0x0F0000, 32-byte records, Confirmed.** A mines
+  free-walk triggered a live encounter; the battle-init write-watch
+  burst named the populate routine ($C22CA3-$C22D8C), which reads
+  `LDA $CF0000+off,X` straight into the Confirmed battle arrays
+  (+$08 HP, +$0A MP, +$01 battle power, +$02/+$10 staging, 13 mapped
+  offsets total). Stride 32 Confirmed by a dual cross-check: records
+  77/78 hold powers 19/13 — exactly the EXP-0018 live values — so the
+  mines formation is ids 77+78. EXP-0004's question 19b closed
+  ($C22CCE = the max-HP store). Five aux bank-$CF tables registered
+  as leads; random-encounter triggering registered (CEN-WORLD-0006).
+
 - 2026-07-31 (resume) — Unit 27 / EXP-0027: **spell database
   extraction complete.** Name-table boundary Confirmed at exactly 54
   entries (class icons $E9x24/$EAx21/$E8x9; the menu bullet IS the

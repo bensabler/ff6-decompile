@@ -1,15 +1,44 @@
 {
   "schema_version": "1.0",
   "domain": "MONSTER",
-  "description": "Monster records: stats, resistances, AI linkage, rewards, graphics linkage.",
+  "description": "Monster records: stats, resistances, AI linkage, rewards, graphics linkage. Located by EXP-0028: 32-byte records at ROMFILE:0x0F0000 (ROMCPU:$CF0000), populated into the battle arrays at init. Field map (Confirmed where the destination array is Confirmed): +$01 battle power, +$08/09 HP, +$0A/0B MP, +$02/+$03/+$04/+$05/+$07/+$0C/+$0E/+$10/+$13/+$1A/+$1E staged per-slot.",
   "expected_record_count": null,
-  "records": [],
-  "unknowns": [
-    "record count",
-    "record size",
-    "ROM location",
-    "format"
+  "records": [
+    {
+      "id": 77,
+      "power": 19,
+      "hp": 35,
+      "mp": 0,
+      "sources": [
+        "EXP-0028 live read (X=$09A0) + ROM record",
+        "power matches an EXP-0018 live capture"
+      ],
+      "confidence": "confirmed",
+      "name": "one of the mines pair (Were-Rat/Repo Man); which is unresolved"
+    },
+    {
+      "id": 78,
+      "power": 13,
+      "hp": 428,
+      "mp": 85,
+      "sources": [
+        "ROM record cross-check",
+        "power matches the other EXP-0018 live capture"
+      ],
+      "confidence": "strong-hypothesis",
+      "name": "the other of the mines pair"
+    }
   ],
-  "evidence_sources": [],
-  "next_extraction_step": "From the opening battles, trace the enemy stat reads (+$3B18/+$3B2C/+$3B68 per-slot staging) back to their ROM source records."
+  "unknowns": [
+    "table length",
+    "remaining field offsets",
+    "aux bank-$CF tables",
+    "formation->id mapping",
+    "name table location"
+  ],
+  "evidence_sources": [
+    "docs/experiments/EXP-0028-monster-source.md",
+    "local_artifacts/experiments/EXP-0028/ (probe slice, routine dumps; hashes.sha256)"
+  ],
+  "next_extraction_step": "Decode the X-computation (formation consumer), then bulk-extract records with mapped fields."
 }

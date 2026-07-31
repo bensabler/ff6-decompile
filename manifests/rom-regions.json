@@ -398,6 +398,44 @@
       "overlaps": [],
       "status": "known",
       "notes": "All 27 decode cleanly at stride 8; boundary at 0x26F7B9 where a stride-~10 ability-name table begins (candidate, unregistered pending decode)."
+    },
+    {
+      "id": "ROM-0022",
+      "start": 983040,
+      "size": 2528,
+      "bank": "ROMCPU:$CF0000-$CF09DF",
+      "classification": "DATA_TABLE",
+      "owner": "CEN-MONSTER-0001",
+      "format": "32-byte monster records (stride Confirmed via records 77/78 power cross-check)",
+      "confidence": "confirmed",
+      "evidence": [
+        "docs/experiments/EXP-0028-monster-source.md",
+        "local_artifacts/experiments/EXP-0028/ (probe slice, routine dumps; hashes.sha256)"
+      ],
+      "consumers": [
+        "battle-init populate routine ROMCPU:$C22CA3-$C22D8C"
+      ],
+      "overlaps": [],
+      "status": "known",
+      "notes": "Span covers records 0-78 (observed reads anchor record 77; record 78 cross-checked). True table length unknown beyond 79 records."
+    },
+    {
+      "id": "ROM-0023",
+      "start": 142400,
+      "size": 340,
+      "bank": "ROMCPU:$C22C40-$C22D93",
+      "classification": "CODE",
+      "owner": "battle-init enemy populate routine",
+      "format": "65816 code",
+      "confidence": "confirmed",
+      "evidence": [
+        "local_artifacts/experiments/EXP-0028/ (probe slice, routine dumps; hashes.sha256)",
+        "live write-watch hits at every store site (EXP-0028)"
+      ],
+      "consumers": [],
+      "overlaps": [],
+      "status": "known",
+      "notes": "Reads $CF0000,X monster records + five aux bank-$CF tables; closes EXP-0004 question 19b ($C22CCE = max-HP store)."
     }
   ]
 }

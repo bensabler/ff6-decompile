@@ -18,12 +18,11 @@ censused the magic system (spell name table located, $C46AC0 shown to
 be the spell database, availability array at +$1A6E). 43 census
 entries, 10 of 12 domains; ROM known 0.34%.
 
-**Next exact action:** EXP-0027 done (spell database extracted: 54
-records Confirmed, cost field Confirmed, esper name table found,
-field character-record block located). Per the prioritization rules,
-three consecutive magic-adjacent units have now run (EXP-0025/26/27)
-— **review `ff6lab coverage summary` and rotate domains.** Top
-candidates: monster stat-record source trace (battle-init writes into
-the +$3B18 family — unlocks the monster database the way EXP-0026
-unlocked spells), the HUD font load-path trace (completes GFX-0001),
-or the SPC dispatch trace (completes AUD-0001).
+**Next exact action:** EXP-0028 done — the monster database is
+located and Confirmed (ROMFILE:0x0F0000, 32-byte records, field map
+anchored to the battle arrays; formation pair = ids 77/78). Next
+selection candidates, in leverage order: **decode the populate
+routine's X-computation** (the formation→monster-id mapping — it
+unlocks formations AND encounter packs together), the HUD font
+load-path trace (GFX), or the SPC dispatch trace (AUDIO). MAGIC
+rests per the rotation rule.

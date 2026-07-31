@@ -9,9 +9,9 @@ Breadth without pretense: counts are census entries at or above each threshold (
 | BATTLE | 6 | 5 | 3 | 3 | 3 | 5 |
 | CHAR | 4 | 1 | 1 | 1 | 1 | 1 |
 | MAGIC | 9 | 4 | 2 | 1 | 0 | 3 |
-| MONSTER | 3 | 0 | 0 | 0 | 0 | 0 |
+| MONSTER | 3 | 1 | 0 | 0 | 0 | 0 |
 | ITEM | 0 | 0 | 0 | 0 | 0 | 0 |
-| WORLD | 5 | 0 | 0 | 0 | 0 | 0 |
+| WORLD | 6 | 0 | 0 | 0 | 0 | 0 |
 | EVENT | 3 | 0 | 0 | 0 | 0 | 0 |
 | MENU | 6 | 1 | 0 | 0 | 0 | 0 |
 | GFX | 4 | 1 | 1 | 1 | 1 | 0 |
@@ -21,15 +21,15 @@ Breadth without pretense: counts are census entries at or above each threshold (
 
 ## ROM accounting
 
-- Known: 10969 of 3145728 bytes (0.35%) — code 2311 bytes (0.07%), data 8658 bytes (0.28%).
+- Known: 13837 of 3145728 bytes (0.44%) — code 2651 bytes (0.08%), data 11186 bytes (0.36%).
 - Candidate-only: 120 bytes.
-- **Unknown: 3134639 bytes (99.65%)** across 21 gaps.
+- **Unknown: 3131771 bytes (99.56%)** across 23 gaps.
 
 ## Census health
 
 - Entries with unresolved fields/formats: 18.
 - Observed but not yet located (breadth backlog): 31.
-- Runtime-only findings (seen live, no location): 21.
+- Runtime-only findings (seen live, no location): 22.
 - Static-only findings (located, never exercised live): 1.
 
 ## Open breadth targets (next_action of unlocated entries)
@@ -56,8 +56,7 @@ Breadth without pretense: counts are census entries at or above each threshold (
 - **CEN-MENU-0003** (Dialogue window system (border, gradient, layout)): Capture window BG layer + palette during a dialogue box; locate the border tile asset.
 - **CEN-MENU-0004** (Field main menu): EXP-0026: open the field menu from checkpoint2 (X press), screenshot, register submenus.
 - **CEN-MENU-0005** (Field Magic menu (grid list, MP readout, help bar)): Trace the list renderer's reads (name table + availability array consumers) with a read-watch during menu open.
-- **CEN-MONSTER-0001** (Enemy stat records (guard battle)): Watch the battle-init writes into the +$3B18-family tables and trace their ROM source (formation loader).
-- **CEN-MONSTER-0002** (Battle formations (opening guard fight composition/layout)): Trace what populates the enemy slots at battle entry (the battle-init writer set from EXP-0002 is the entry thread).
+- **CEN-MONSTER-0002** (Battle formations (opening guard fight composition/layout)): Decode the X=$09A0 computation upstream of the populate routine — it is the formation->monster mapping.
 - **CEN-MONSTER-0003** (Enemy battle sprites and palettes (green guard)): VRAM/OAM capture during battle to register the enemy sprite asset (EXP-0023 pattern).
 - **CEN-SAVE-0001** (Opening-relevant persistent state (event progress, party, names)): Diff WRAM snapshots across two field states to bound the event-flag region; then SRAM after a save event.
 - **CEN-WORLD-0001** (Narshe exterior map (tileset, tilemap, palettes, animated tiles)): Capture PPU + VRAM for the field state (EXP-0023 pattern) and register the map layer assets.
@@ -65,3 +64,4 @@ Breadth without pretense: counts are census entries at or above each threshold (
 - **CEN-WORLD-0003** (Field movement and collision): Watch the per-step tile lookup: exec/read census while walking one tile.
 - **CEN-WORLD-0004** (Map transitions (exits/entrances)): Walk through one Narshe doorway and capture the transition inputs (map id, target position).
 - **CEN-WORLD-0005** (Treasure/chest state): Find a chest in the mines path; open it; watch the flag write.
+- **CEN-WORLD-0006** (Random encounter triggering (mines)): Watch the step counter and encounter-check reads during a walk to locate the zone/rate data.
