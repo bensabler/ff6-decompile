@@ -1,5 +1,12 @@
 # Activity Log
 
+- 2026-07-30 (resume) — Manifest-completeness repair: EXP-0019 was
+  missing from `manifests/experiments.json` (and therefore from the
+  generated index); entry added from the record, index regenerated,
+  and `ff6lab audit` gained the reverse-completeness check
+  (`CheckExperimentRecordsInManifest`) that would have caught it.
+  STATISTICS refreshed (20 experiments, 7 test-bearing packages).
+
 - 2026-07-30 (late) — EXP-0020 + bridge v2 validation: **`+$3A70`
   refuted as the timing-varying state** (identical matched-ordinal
   reads under divergent timing; it is a per-action flag written just

@@ -61,6 +61,21 @@ func TestCheckManifestsBadJSONAndMissingRecord(t *testing.T) {
 	}
 }
 
+func TestCheckExperimentRecordsInManifest(t *testing.T) {
+	root := fixture(t)
+	if fs, err := CheckExperimentRecordsInManifest(root); err != nil || len(fs) != 0 {
+		t.Fatalf("clean fixture: want no findings, got %v, %v", fs, err)
+	}
+	writeFile(t, root, "docs/experiments/EXP-0002-orphan.md", "# EXP-0002\n")
+	fs, err := CheckExperimentRecordsInManifest(root)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if len(fs) != 1 || !strings.Contains(fs[0].Message, "EXP-0002-orphan.md") {
+		t.Fatalf("want one orphan-record finding, got %v", fs)
+	}
+}
+
 func TestCheckExperimentIndexSync(t *testing.T) {
 	root := fixture(t)
 	writeFile(t, root, "indexes/EXPERIMENTS.md", "# empty\n")

@@ -22,4 +22,5 @@
 | EXP-0016 | variance-hunt | completed | see record | [EXP-0016-variance-hunt](../docs/experiments/EXP-0016-variance-hunt.md) |
 | EXP-0017 | physical-path | completed | see record | [EXP-0017-physical-path](../docs/experiments/EXP-0017-physical-path.md) |
 | EXP-0018 | setup-layer | completed | see record | [EXP-0018-setup-layer](../docs/experiments/EXP-0018-setup-layer.md) |
+| EXP-0019 | rng-state | completed | see record | [EXP-0019-rng-state](../docs/experiments/EXP-0019-rng-state.md) |
 | EXP-0020 | ai-rng | completed | see record | [EXP-0020-ai-rng](../docs/experiments/EXP-0020-ai-rng.md) |

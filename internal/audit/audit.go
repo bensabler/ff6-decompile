@@ -29,6 +29,7 @@ func Run(root string) ([]Finding, error) {
 	var all []Finding
 	for _, fn := range []func(string) ([]Finding, error){
 		CheckManifests,
+		CheckExperimentRecordsInManifest,
 		CheckExperimentIndexSync,
 		CheckMarkdownLinks,
 		CheckRestrictedTracked,
@@ -102,6 +103,35 @@ func loadExperiments(root string) (experimentsManifest, error) {
 		return em, fmt.Errorf("experiments.json invalid: %w", err)
 	}
 	return em, nil
+}
+
+var expRecordIDRe = regexp.MustCompile(`^EXP-\d{4}`)
+
+// CheckExperimentRecordsInManifest verifies every record file under
+// docs/experiments/EXP-*.md has a manifest entry — the reverse of
+// CheckManifests' record-exists check, catching records committed
+// without manifest registration.
+func CheckExperimentRecordsInManifest(root string) ([]Finding, error) {
+	em, err := loadExperiments(root)
+	if err != nil {
+		return []Finding{{"manifests", err.Error()}}, nil
+	}
+	known := make(map[string]bool, len(em.Experiments))
+	for _, e := range em.Experiments {
+		known[e.ID] = true
+	}
+	paths, err := filepath.Glob(filepath.Join(root, "docs", "experiments", "EXP-*.md"))
+	if err != nil {
+		return nil, err
+	}
+	var fs []Finding
+	for _, p := range paths {
+		id := expRecordIDRe.FindString(filepath.Base(p))
+		if id != "" && !known[id] {
+			fs = append(fs, Finding{"manifests", fmt.Sprintf("record %s has no experiments.json entry", rel(root, p))})
+		}
+	}
+	return fs, nil
 }
 
 // CheckExperimentIndexSync verifies indexes/EXPERIMENTS.md lists every

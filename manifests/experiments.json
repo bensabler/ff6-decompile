@@ -309,6 +309,23 @@
     },
     {
       "schema_version": "1.0",
+      "id": "EXP-0019",
+      "question": "What sits between the action-block clear ($C2297D) and populate ($C229D4), and which read is the timing-varying RNG state?",
+      "starting_state": {
+        "emulator": "Mesen 2.1.1 macOS x86_64",
+        "rom_sha256": "0f51b4fca41b7fd509e4b8f9d543151f68efa5e97b08493e4b2a0c06f5d8d5e2",
+        "state": "deterministic ROM reads (bridge read cpu C22950 160, C23190 48); state-independent"
+      },
+      "expected_outcomes": [
+        "a conditional between clear and populate reading a WRAM state cell (RNG candidate) or a known random helper call",
+        "the gate lives in the $C2319D caller (bracket refined upward)"
+      ],
+      "falsifying_outcome": "no conditional path between clear and populate in the dumped window (bracket error)",
+      "status": "completed",
+      "record": "docs/experiments/EXP-0019-rng-state.md"
+    },
+    {
+      "schema_version": "1.0",
       "id": "EXP-0020",
       "question": "Does WRAM:+$3A70 carry the timing-varying state behind action/damage divergence?",
       "starting_state": {
