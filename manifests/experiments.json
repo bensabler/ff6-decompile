@@ -408,6 +408,23 @@
       "falsifying_outcome": "no port-write or voice-activation delta between press and no-press trials",
       "status": "completed",
       "record": "docs/experiments/EXP-0024-cursor-sfx.md"
+    },
+    {
+      "schema_version": "1.0",
+      "id": "EXP-0025",
+      "question": "Which subsystems are visibly exercised by the four opening-area savestates, and what census entries do they warrant?",
+      "starting_state": {
+        "emulator": "Mesen 2.1.1 macOS x86_64 (--testrunner headless, bridge v2)",
+        "rom_sha256": "0f51b4fca41b7fd509e4b8f9d543151f68efa5e97b08493e4b2a0c06f5d8d5e2",
+        "state": "each savestate loaded in turn; screenshots + already-confirmed reads only"
+      },
+      "expected_outcomes": [
+        "screenshot + system list per state; new census entries registered",
+        "a state fails to load/render (negative result for that state)"
+      ],
+      "falsifying_outcome": "a state fails to load or render",
+      "status": "completed",
+      "record": "docs/experiments/EXP-0025-opening-recon.md"
     }
   ]
 }

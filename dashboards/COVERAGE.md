@@ -7,16 +7,16 @@ Breadth without pretense: counts are census entries at or above each threshold (
 | Domain | Registered | Located | Decoded | Extracted | Implemented | Runtime verified |
 |---|---|---|---|---|---|---|
 | BATTLE | 5 | 5 | 3 | 3 | 3 | 5 |
-| CHAR | 1 | 1 | 1 | 1 | 1 | 1 |
-| MAGIC | 0 | 0 | 0 | 0 | 0 | 0 |
-| MONSTER | 0 | 0 | 0 | 0 | 0 | 0 |
+| CHAR | 3 | 1 | 1 | 1 | 1 | 1 |
+| MAGIC | 2 | 0 | 0 | 0 | 0 | 1 |
+| MONSTER | 3 | 0 | 0 | 0 | 0 | 0 |
 | ITEM | 0 | 0 | 0 | 0 | 0 | 0 |
-| WORLD | 0 | 0 | 0 | 0 | 0 | 0 |
-| EVENT | 0 | 0 | 0 | 0 | 0 | 0 |
-| MENU | 0 | 0 | 0 | 0 | 0 | 0 |
-| GFX | 1 | 1 | 1 | 1 | 1 | 0 |
-| AUDIO | 3 | 3 | 2 | 2 | 1 | 1 |
-| SAVE | 0 | 0 | 0 | 0 | 0 | 0 |
+| WORLD | 5 | 0 | 0 | 0 | 0 | 0 |
+| EVENT | 3 | 0 | 0 | 0 | 0 | 0 |
+| MENU | 4 | 0 | 0 | 0 | 0 | 0 |
+| GFX | 4 | 1 | 1 | 1 | 1 | 0 |
+| AUDIO | 5 | 3 | 2 | 2 | 1 | 1 |
+| SAVE | 1 | 0 | 0 | 0 | 0 | 0 |
 | QUIRK | 0 | 0 | 0 | 0 | 0 | 0 |
 
 ## ROM accounting
@@ -27,11 +27,35 @@ Breadth without pretense: counts are census entries at or above each threshold (
 
 ## Census health
 
-- Entries with unresolved fields/formats: 5.
-- Observed but not yet located (breadth backlog): 0.
-- Runtime-only findings (seen live, no location): 0.
+- Entries with unresolved fields/formats: 12.
+- Observed but not yet located (breadth backlog): 25.
+- Runtime-only findings (seen live, no location): 18.
 - Static-only findings (located, never exercised live): 0.
 
 ## Open breadth targets (next_action of unlocated entries)
 
-- none — every registered entry is at least LOCATED.
+- **CEN-AUDIO-0004** (Battle music track (opening guard fight)): Delta-map the music-start APU command at a field-to-battle transition; locate the sequence pointer in ARAM.
+- **CEN-AUDIO-0005** (Field/event music selection): DSP snapshot on checkpoint2; compare voice/SRCN set against the battle snapshot.
+- **CEN-CHAR-0002** (Party formation and follower chain): Locate the party-composition store consumed at battle init (slot staging producers from EXP-0018 are the thread).
+- **CEN-CHAR-0003** (Field player/NPC objects (Magitek armor walker, guards, townsfolk)): OAM capture on the field state to register the sprite composition (tiles, palettes, OAM layout).
+- **CEN-EVENT-0001** (Event scripting engine (opening scripted sequence)): Exec-census a dialogue advance (A press) to find the event dispatcher loop PC.
+- **CEN-EVENT-0002** (Dialogue text content and encoding): Capture the dialogue compose region + derive the glyph-to-byte mapping via the tilemap-affine technique (EXP-0023 pattern).
+- **CEN-EVENT-0003** (Character naming state (Terra as '?????')): Locate the character-name store: WRAM search for the rendered name tile sequence source when the status window composes.
+- **CEN-GFX-0002** (Field sprite assets (armor walker, NPCs, townsfolk)): OAM + chr capture on a field state; register the sprite sheet region.
+- **CEN-GFX-0003** (Battle background (cave scene)): BG1/BG2 VRAM + tilemap capture during battle; provenance search (EXP-0023 pattern).
+- **CEN-GFX-0004** (Variable-width dialogue font): Capture the dialogue compose region; the fixed-font provenance technique should locate the glyph source.
+- **CEN-MAGIC-0001** (Magitek command and ability set): Disambiguate the Fire Beam record index (menu-navigation press script; watch the MVN X source during the confirm).
+- **CEN-MAGIC-0002** (Magic command and Terra's opening spell availability): EXP-0026: open the Magic list (field menu preferred), capture names/order/MP costs, and trace the availability source.
+- **CEN-MENU-0001** (Battle command window (Row/Magitek/Item observed)): Capture the full command list per actor and the cursor input loop (press-delta on the command window).
+- **CEN-MENU-0002** (Battle party status window (names, values, ATB arrows, turn highlight)): Trace the window composer that turns +$2E78 values into BG3 compose-region tiles.
+- **CEN-MENU-0003** (Dialogue window system (border, gradient, layout)): Capture window BG layer + palette during a dialogue box; locate the border tile asset.
+- **CEN-MENU-0004** (Field main menu): EXP-0026: open the field menu from checkpoint2 (X press), screenshot, register submenus.
+- **CEN-MONSTER-0001** (Enemy stat records (guard battle)): Watch the battle-init writes into the +$3B18-family tables and trace their ROM source (formation loader).
+- **CEN-MONSTER-0002** (Battle formations (opening guard fight composition/layout)): Trace what populates the enemy slots at battle entry (the battle-init writer set from EXP-0002 is the entry thread).
+- **CEN-MONSTER-0003** (Enemy battle sprites and palettes (green guard)): VRAM/OAM capture during battle to register the enemy sprite asset (EXP-0023 pattern).
+- **CEN-SAVE-0001** (Opening-relevant persistent state (event progress, party, names)): Diff WRAM snapshots across two field states to bound the event-flag region; then SRAM after a save event.
+- **CEN-WORLD-0001** (Narshe exterior map (tileset, tilemap, palettes, animated tiles)): Capture PPU + VRAM for the field state (EXP-0023 pattern) and register the map layer assets.
+- **CEN-WORLD-0002** (Narshe mines interior map (cave tileset, rails, light effects)): Same capture pattern as the exterior; compare tileset bases to test per-map chr swapping.
+- **CEN-WORLD-0003** (Field movement and collision): Watch the per-step tile lookup: exec/read census while walking one tile.
+- **CEN-WORLD-0004** (Map transitions (exits/entrances)): Walk through one Narshe doorway and capture the transition inputs (map id, target position).
+- **CEN-WORLD-0005** (Treasure/chest state): Find a chest in the mines path; open it; watch the flag write.
