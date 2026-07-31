@@ -1,0 +1,15 @@
+{
+  "schema_version": "1.0",
+  "domain": "ITEM",
+  "description": "Shop inventories and prices.",
+  "expected_record_count": null,
+  "records": [],
+  "unknowns": [
+    "record count",
+    "record size",
+    "ROM location",
+    "format"
+  ],
+  "evidence_sources": [],
+  "next_extraction_step": "No shop reachable in the opening states; register when one is."
+}

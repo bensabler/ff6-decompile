@@ -1,0 +1,81 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "title": "FF6 Content Census",
+  "required": ["schema_version", "entries"],
+  "properties": {
+    "schema_version": { "type": "string" },
+    "entries": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "schema_version",
+          "id",
+          "domain",
+          "category",
+          "name",
+          "description",
+          "reconstruction_status",
+          "runtime_status",
+          "confidence",
+          "next_action"
+        ],
+        "properties": {
+          "schema_version": { "type": "string" },
+          "id": { "type": "string", "pattern": "^CEN-[A-Z]+-[0-9]{4}$" },
+          "domain": {
+            "enum": [
+              "BATTLE", "CHAR", "MAGIC", "MONSTER", "ITEM", "WORLD",
+              "EVENT", "MENU", "GFX", "AUDIO", "SAVE", "QUIRK"
+            ]
+          },
+          "category": { "type": "string" },
+          "name": { "type": "string" },
+          "description": { "type": "string" },
+          "reconstruction_status": {
+            "enum": [
+              "UNMAPPED", "OBSERVED", "CANDIDATE_LOCATION", "LOCATED",
+              "FORMAT_PARTIAL", "FORMAT_DECODED", "EXTRACTED_PARTIAL",
+              "EXTRACTED_COMPLETE", "IMPLEMENTED_PARTIAL",
+              "IMPLEMENTED_COMPLETE", "REGRESSION_TESTED",
+              "DIFFERENTIALLY_VERIFIED"
+            ]
+          },
+          "runtime_status": {
+            "enum": [
+              "NOT_ENCOUNTERED", "ENCOUNTERED", "INPUTS_CAPTURED",
+              "OUTPUTS_CAPTURED", "NORMAL_PATH_VERIFIED",
+              "ALTERNATE_PATH_VERIFIED", "EDGE_CASES_PARTIAL",
+              "EDGE_CASES_COMPLETE", "EXHAUSTIVELY_VERIFIED"
+            ]
+          },
+          "rom_revision": { "type": "string" },
+          "rom_locations": { "type": "array", "items": { "type": "string" } },
+          "wram_locations": { "type": "array", "items": { "type": "string" } },
+          "cpu_routines": { "type": "array", "items": { "type": "string" } },
+          "spc_locations": { "type": "array", "items": { "type": "string" } },
+          "record_count_expected": { "type": ["integer", "null"] },
+          "record_count_found": { "type": ["integer", "null"] },
+          "record_size": { "type": ["integer", "null"] },
+          "pointer_tables": { "type": "array", "items": { "type": "string" } },
+          "consumers": { "type": "array", "items": { "type": "string" } },
+          "producers": { "type": "array", "items": { "type": "string" } },
+          "related_experiments": { "type": "array", "items": { "type": "string" } },
+          "related_discoveries": { "type": "array", "items": { "type": "string" } },
+          "related_implementations": { "type": "array", "items": { "type": "string" } },
+          "related_tests": { "type": "array", "items": { "type": "string" } },
+          "runtime_scenarios": { "type": "array", "items": { "type": "string" } },
+          "evidence": { "type": "array", "items": { "type": "string" } },
+          "confidence": {
+            "enum": ["confirmed", "strong-hypothesis", "tentative-hypothesis", "unknown"]
+          },
+          "unknown_fields": { "type": "array", "items": { "type": "string" } },
+          "contradictions": { "type": "array", "items": { "type": "string" } },
+          "next_action": { "type": "string" },
+          "notes": { "type": "string" }
+        }
+      }
+    }
+  }
+}

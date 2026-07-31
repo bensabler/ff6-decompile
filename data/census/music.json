@@ -1,0 +1,15 @@
+{
+  "schema_version": "1.0",
+  "domain": "AUDIO",
+  "description": "Music track inventory: sequences, instruments, selection tables.",
+  "expected_record_count": null,
+  "records": [],
+  "unknowns": [
+    "record count",
+    "record size",
+    "ROM location",
+    "format"
+  ],
+  "evidence_sources": [],
+  "next_extraction_step": "Delta-map the music-change APU command at a track transition (field->battle)."
+}

@@ -1,0 +1,15 @@
+{
+  "schema_version": "1.0",
+  "domain": "AUDIO",
+  "description": "Sound-effect inventory: cue ids, samples, trigger sites (links AUD-* records).",
+  "expected_record_count": null,
+  "records": [],
+  "unknowns": [
+    "record count",
+    "record size",
+    "ROM location",
+    "format"
+  ],
+  "evidence_sources": [],
+  "next_extraction_step": "Map more cues via press-delta trials (cursor move, cancel, error)."
+}

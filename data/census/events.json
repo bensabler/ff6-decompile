@@ -1,0 +1,15 @@
+{
+  "schema_version": "1.0",
+  "domain": "EVENT",
+  "description": "Event bytecode scripts and opcode set.",
+  "expected_record_count": null,
+  "records": [],
+  "unknowns": [
+    "record count",
+    "record size",
+    "ROM location",
+    "format"
+  ],
+  "evidence_sources": [],
+  "next_extraction_step": "Capture the opening scripted sequence's dispatcher (candidate: the $C0 bank event loop) with an exec census."
+}

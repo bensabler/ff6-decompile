@@ -1,0 +1,15 @@
+{
+  "schema_version": "1.0",
+  "domain": "MAGIC",
+  "description": "Global spell/ability records: names, MP costs, power, targeting, elements, statuses, animation, sound, effect routines.",
+  "expected_record_count": null,
+  "records": [],
+  "unknowns": [
+    "record count",
+    "record size",
+    "ROM location",
+    "format"
+  ],
+  "evidence_sources": [],
+  "next_extraction_step": "EXP-0026 magic-menu capture: trace displayed names/costs to their ROM structures."
+}

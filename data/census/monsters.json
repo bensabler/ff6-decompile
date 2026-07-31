@@ -1,0 +1,15 @@
+{
+  "schema_version": "1.0",
+  "domain": "MONSTER",
+  "description": "Monster records: stats, resistances, AI linkage, rewards, graphics linkage.",
+  "expected_record_count": null,
+  "records": [],
+  "unknowns": [
+    "record count",
+    "record size",
+    "ROM location",
+    "format"
+  ],
+  "evidence_sources": [],
+  "next_extraction_step": "From the opening battles, trace the enemy stat reads (+$3B18/+$3B2C/+$3B68 per-slot staging) back to their ROM source records."
+}

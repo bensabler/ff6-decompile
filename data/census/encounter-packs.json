@@ -1,0 +1,15 @@
+{
+  "schema_version": "1.0",
+  "domain": "WORLD",
+  "description": "Encounter pack/zone records binding map areas to formation sets.",
+  "expected_record_count": null,
+  "records": [],
+  "unknowns": [
+    "record count",
+    "record size",
+    "ROM location",
+    "format"
+  ],
+  "evidence_sources": [],
+  "next_extraction_step": "Capture encounter triggers while walking in Narshe mines (checkpoint3 state)."
+}

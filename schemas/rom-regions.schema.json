@@ -1,0 +1,43 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "title": "FF6 ROM Ownership Ledger",
+  "required": ["schema_version", "rom_size", "rom_sha256", "regions"],
+  "properties": {
+    "schema_version": { "type": "string" },
+    "rom_size": { "type": "integer" },
+    "rom_sha256": { "type": "string" },
+    "regions": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "id", "start", "size", "classification", "status", "confidence"
+        ],
+        "properties": {
+          "id": { "type": "string", "pattern": "^ROM-[0-9]{4}$" },
+          "start": { "type": "integer", "minimum": 0 },
+          "size": { "type": "integer", "minimum": 1 },
+          "bank": { "type": "string" },
+          "classification": {
+            "enum": [
+              "CODE", "POINTER_TABLE", "DATA_TABLE", "TEXT", "GRAPHICS",
+              "PALETTE", "TILEMAP", "ANIMATION", "MUSIC", "SOUND", "BRR",
+              "EVENT_SCRIPT", "AI_SCRIPT", "HEADER", "PADDING", "UNKNOWN"
+            ]
+          },
+          "owner": { "type": "string" },
+          "format": { "type": "string" },
+          "confidence": {
+            "enum": ["confirmed", "strong-hypothesis", "tentative-hypothesis", "unknown"]
+          },
+          "evidence": { "type": "array", "items": { "type": "string" } },
+          "consumers": { "type": "array", "items": { "type": "string" } },
+          "overlaps": { "type": "array", "items": { "type": "string" } },
+          "status": { "enum": ["known", "candidate"] },
+          "notes": { "type": "string" }
+        }
+      }
+    }
+  }
+}

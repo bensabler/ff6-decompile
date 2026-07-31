@@ -1,0 +1,15 @@
+{
+  "schema_version": "1.0",
+  "domain": "CHAR",
+  "description": "Battle command set and per-character command lists.",
+  "expected_record_count": null,
+  "records": [],
+  "unknowns": [
+    "record count",
+    "record size",
+    "ROM location",
+    "format"
+  ],
+  "evidence_sources": [],
+  "next_extraction_step": "Capture the battle command menu state for Terra (Magitek armor) vs a plain member."
+}

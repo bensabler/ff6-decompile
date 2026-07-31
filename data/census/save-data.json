@@ -1,0 +1,15 @@
+{
+  "schema_version": "1.0",
+  "domain": "SAVE",
+  "description": "SRAM layout: slots, checksums, persisted state.",
+  "expected_record_count": null,
+  "records": [],
+  "unknowns": [
+    "record count",
+    "record size",
+    "ROM location",
+    "format"
+  ],
+  "evidence_sources": [],
+  "next_extraction_step": "Read SRAM after the opening (Saves/ dir exists); diff two snapshots around a save event."
+}

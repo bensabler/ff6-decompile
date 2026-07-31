@@ -1,0 +1,15 @@
+{
+  "schema_version": "1.0",
+  "domain": "ITEM",
+  "description": "Consumable and key-item records: effects, prices, use behavior.",
+  "expected_record_count": null,
+  "records": [],
+  "unknowns": [
+    "record count",
+    "record size",
+    "ROM location",
+    "format"
+  ],
+  "evidence_sources": [],
+  "next_extraction_step": "Open the field Item menu; capture displayed inventory and trace the item name/record source."
+}

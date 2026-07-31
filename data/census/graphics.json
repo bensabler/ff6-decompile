@@ -1,0 +1,15 @@
+{
+  "schema_version": "1.0",
+  "domain": "GFX",
+  "description": "Graphics asset inventory: sprites, portraits, backgrounds, effects (links GFX-* records).",
+  "expected_record_count": null,
+  "records": [],
+  "unknowns": [
+    "record count",
+    "record size",
+    "ROM location",
+    "format"
+  ],
+  "evidence_sources": [],
+  "next_extraction_step": "Registered per-asset via docs/graphics records; next: character battle sprite provenance."
+}

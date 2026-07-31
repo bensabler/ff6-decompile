@@ -1,0 +1,15 @@
+{
+  "schema_version": "1.0",
+  "domain": "WORLD",
+  "description": "Exit/entrance/transition records.",
+  "expected_record_count": null,
+  "records": [],
+  "unknowns": [
+    "record count",
+    "record size",
+    "ROM location",
+    "format"
+  ],
+  "evidence_sources": [],
+  "next_extraction_step": "Trigger one Narshe interior transition and watch the loader inputs."
+}

@@ -1,0 +1,15 @@
+{
+  "schema_version": "1.0",
+  "domain": "ITEM",
+  "description": "Weapons, shields, helmets, armor, relics: stats, permissions, elements, procs, special flags.",
+  "expected_record_count": null,
+  "records": [],
+  "unknowns": [
+    "record count",
+    "record size",
+    "ROM location",
+    "format"
+  ],
+  "evidence_sources": [],
+  "next_extraction_step": "Capture the field Equipment menu for one character; trace stat-delta sources."
+}

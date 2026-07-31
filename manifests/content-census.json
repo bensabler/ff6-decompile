@@ -1,0 +1,524 @@
+{
+  "schema_version": "1.0",
+  "entries": [
+    {
+      "schema_version": "1.0",
+      "id": "CEN-BATTLE-0001",
+      "domain": "BATTLE",
+      "category": "damage formulas",
+      "name": "Damage pipeline (base formulas, defense scaling, element response)",
+      "description": "Standard and physical base formulas, hardware-multiply defense scaling, elemental-modifier block, x1.5 chain; byte-exact from formula to HUD for the standard path.",
+      "reconstruction_status": "REGRESSION_TESTED",
+      "runtime_status": "ALTERNATE_PATH_VERIFIED",
+      "rom_revision": "0f51b4fca41b7fd509e4b8f9d543151f68efa5e97b08493e4b2a0c06f5d8d5e2",
+      "rom_locations": [
+        "ROM-0004",
+        "ROM-0005",
+        "ROM-0010",
+        "ROM-0011",
+        "ROM-0012",
+        "ROM-0014"
+      ],
+      "wram_locations": [],
+      "cpu_routines": [
+        "ROMCPU:$C20B83-$C20C2C",
+        "ROMCPU:$C24781",
+        "ROMCPU:$C2370B",
+        "ROMCPU:$C26AE0 block"
+      ],
+      "spc_locations": [],
+      "record_count_expected": null,
+      "record_count_found": null,
+      "record_size": null,
+      "pointer_tables": [],
+      "consumers": [],
+      "producers": [],
+      "related_experiments": [
+        "EXP-0008",
+        "EXP-0009",
+        "EXP-0010",
+        "EXP-0011",
+        "EXP-0012",
+        "EXP-0013",
+        "EXP-0014",
+        "EXP-0015",
+        "EXP-0016",
+        "EXP-0017"
+      ],
+      "related_discoveries": [
+        "DISC-0003",
+        "DISC-0004",
+        "DISC-0005",
+        "DISC-0006"
+      ],
+      "related_implementations": [
+        "internal/game/battle (BaseAmountStandard, BaseAmountPhysical, ApplyDefense, Scale256, ChainBoost)"
+      ],
+      "related_tests": [
+        "battle package golden chain test (exact 347)",
+        "composition fuzz target"
+      ],
+      "runtime_scenarios": [
+        "mesen/out/exp10-battle.mss"
+      ],
+      "evidence": [
+        "docs/experiments/EXP-0015-base-computation.md",
+        "docs/experiments/EXP-0017-physical-path.md"
+      ],
+      "confidence": "confirmed",
+      "unknown_fields": [],
+      "contradictions": [],
+      "next_action": "Differential verification harness (replay captured battles against the Go pipeline).",
+      "notes": ""
+    },
+    {
+      "schema_version": "1.0",
+      "id": "CEN-BATTLE-0002",
+      "domain": "BATTLE",
+      "category": "battle state arrays",
+      "name": "Unified ten-slot battle arrays (HP/MP pools, ceilings, deltas)",
+      "description": "The $14-stride per-slot array family (+$3BF4/+$3C08/+$3C1C/+$3C30), delta engine, pending-delta accumulator with the 9999 cap.",
+      "reconstruction_status": "REGRESSION_TESTED",
+      "runtime_status": "NORMAL_PATH_VERIFIED",
+      "rom_revision": "0f51b4fca41b7fd509e4b8f9d543151f68efa5e97b08493e4b2a0c06f5d8d5e2",
+      "rom_locations": [
+        "ROM-0006"
+      ],
+      "wram_locations": [
+        "WRAM:+$3BF4",
+        "WRAM:+$3C08",
+        "WRAM:+$3C1C",
+        "WRAM:+$3C30"
+      ],
+      "cpu_routines": [],
+      "spc_locations": [],
+      "record_count_expected": null,
+      "record_count_found": null,
+      "record_size": null,
+      "pointer_tables": [],
+      "consumers": [],
+      "producers": [],
+      "related_experiments": [
+        "EXP-0001",
+        "EXP-0003",
+        "EXP-0004",
+        "EXP-0005",
+        "EXP-0006",
+        "EXP-0007"
+      ],
+      "related_discoveries": [
+        "DISC-0001",
+        "DISC-0002"
+      ],
+      "related_implementations": [
+        "internal/game/battle (BattleSlots, ApplyHPDelta)"
+      ],
+      "related_tests": [
+        "TestApplyHPDeltaEnemySlots",
+        "TestApplyHPDeltaIsolation"
+      ],
+      "runtime_scenarios": [
+        "mesen/out/exp10-battle.mss"
+      ],
+      "evidence": [
+        "docs/discoveries/DISC-0001-unified-battle-arrays.md"
+      ],
+      "confidence": "confirmed",
+      "unknown_fields": [],
+      "contradictions": [],
+      "next_action": "Live MP spend/heal verification once an MP-capable savestate exists (BLOCKERS).",
+      "notes": ""
+    },
+    {
+      "schema_version": "1.0",
+      "id": "CEN-BATTLE-0003",
+      "domain": "BATTLE",
+      "category": "battle scripts",
+      "name": "Enemy action selection and scheduling",
+      "description": "The selection window before action setup; deterministic given the input frame schedule (matched-ordinal content identical across frame-exact trials); scheduler state and any PRNG stepping unidentified.",
+      "reconstruction_status": "LOCATED",
+      "runtime_status": "ALTERNATE_PATH_VERIFIED",
+      "rom_revision": "0f51b4fca41b7fd509e4b8f9d543151f68efa5e97b08493e4b2a0c06f5d8d5e2",
+      "rom_locations": [
+        "ROM-0009"
+      ],
+      "wram_locations": [
+        "WRAM:+$3A70",
+        "WRAM:+$3A71"
+      ],
+      "cpu_routines": [
+        "ROMCPU:$C23190-$C231BF",
+        "ROMCPU:$C23198 read site"
+      ],
+      "spc_locations": [],
+      "record_count_expected": null,
+      "record_count_found": null,
+      "record_size": null,
+      "pointer_tables": [],
+      "consumers": [],
+      "producers": [],
+      "related_experiments": [
+        "EXP-0016",
+        "EXP-0018",
+        "EXP-0020",
+        "EXP-0021"
+      ],
+      "related_discoveries": [],
+      "related_implementations": [],
+      "related_tests": [],
+      "runtime_scenarios": [
+        "mesen/out/exp10-battle.mss"
+      ],
+      "evidence": [
+        "docs/experiments/EXP-0021-record-index.md"
+      ],
+      "confidence": "strong-hypothesis",
+      "unknown_fields": [
+        "scheduler state cells",
+        "whether any PRNG exists in this path",
+        "+$3A71 semantics"
+      ],
+      "contradictions": [],
+      "next_action": "Trace +$3A71 writers during presses; WRAM diff at matched ordinals to hunt a frame-stepped PRNG cell.",
+      "notes": ""
+    },
+    {
+      "schema_version": "1.0",
+      "id": "CEN-BATTLE-0004",
+      "domain": "BATTLE",
+      "category": "attack records",
+      "name": "Attack/spell record table ($C46AC0, 14-byte records)",
+      "description": "MVN-loaded per action into WRAM +$11A0-+$11AD; 7 of 14 bytes mapped to verified pipeline fields; bytes 0,5,7,8,11,12,13 unknown.",
+      "reconstruction_status": "FORMAT_PARTIAL",
+      "runtime_status": "NORMAL_PATH_VERIFIED",
+      "rom_revision": "0f51b4fca41b7fd509e4b8f9d543151f68efa5e97b08493e4b2a0c06f5d8d5e2",
+      "rom_locations": [
+        "ROM-0015"
+      ],
+      "wram_locations": [
+        "WRAM:+$11A0-+$11AD"
+      ],
+      "cpu_routines": [
+        "ROMCPU:$C22966 MVN loader"
+      ],
+      "spc_locations": [],
+      "record_count_expected": null,
+      "record_count_found": 256,
+      "record_size": 14,
+      "pointer_tables": [],
+      "consumers": [],
+      "producers": [],
+      "related_experiments": [
+        "EXP-0019",
+        "EXP-0021",
+        "EXP-0022"
+      ],
+      "related_discoveries": [
+        "DISC-0007"
+      ],
+      "related_implementations": [
+        "internal/game/attackdata"
+      ],
+      "related_tests": [
+        "attackdata synthetic fixtures + fuzz"
+      ],
+      "runtime_scenarios": [
+        "mesen/out/exp10-battle.mss"
+      ],
+      "evidence": [
+        "docs/experiments/EXP-0022-record-crosscheck.md"
+      ],
+      "confidence": "confirmed",
+      "unknown_fields": [
+        "record bytes 0, 5, 7, 8, 11, 12, 13",
+        "true table length (>=239 records)"
+      ],
+      "contradictions": [],
+      "next_action": "Map the remaining record bytes via targeted actions; establish the true table length.",
+      "notes": ""
+    },
+    {
+      "schema_version": "1.0",
+      "id": "CEN-BATTLE-0005",
+      "domain": "BATTLE",
+      "category": "battle UI",
+      "name": "Battle HUD display pipeline (delta -> display copy -> text)",
+      "description": "Authoritative arrays copied to the +$2E78 display family by the $C25D26 copier; queued amounts equal displayed damage.",
+      "reconstruction_status": "IMPLEMENTED_PARTIAL",
+      "runtime_status": "NORMAL_PATH_VERIFIED",
+      "rom_revision": "0f51b4fca41b7fd509e4b8f9d543151f68efa5e97b08493e4b2a0c06f5d8d5e2",
+      "rom_locations": [
+        "ROM-0013"
+      ],
+      "wram_locations": [
+        "WRAM:+$2E78 family"
+      ],
+      "cpu_routines": [
+        "ROMCPU:$C25D26"
+      ],
+      "spc_locations": [],
+      "record_count_expected": null,
+      "record_count_found": null,
+      "record_size": null,
+      "pointer_tables": [],
+      "consumers": [],
+      "producers": [],
+      "related_experiments": [
+        "EXP-0003",
+        "EXP-0005",
+        "EXP-0007"
+      ],
+      "related_discoveries": [
+        "DISC-0002"
+      ],
+      "related_implementations": [
+        "internal/game/battle (display copy model)"
+      ],
+      "related_tests": [],
+      "runtime_scenarios": [
+        "mesen/out/exp10-battle.mss"
+      ],
+      "evidence": [
+        "docs/experiments/EXP-0003-2e78-producer.md"
+      ],
+      "confidence": "confirmed",
+      "unknown_fields": [],
+      "contradictions": [],
+      "next_action": "Trace HUD text composition (digits from values) into the BG3 compose region.",
+      "notes": ""
+    },
+    {
+      "schema_version": "1.0",
+      "id": "CEN-CHAR-0001",
+      "domain": "CHAR",
+      "category": "character records",
+      "name": "Character field-copy records ($20 stride) and CopyCharacterFields",
+      "description": "The $C10DF3 copy loop and its record layout; first confirmed Go behavior.",
+      "reconstruction_status": "REGRESSION_TESTED",
+      "runtime_status": "NORMAL_PATH_VERIFIED",
+      "rom_revision": "0f51b4fca41b7fd509e4b8f9d543151f68efa5e97b08493e4b2a0c06f5d8d5e2",
+      "rom_locations": [
+        "ROM-0002"
+      ],
+      "wram_locations": [],
+      "cpu_routines": [
+        "ROMCPU:$C10DF3",
+        "ROMCPU:$C101FB caller"
+      ],
+      "spc_locations": [],
+      "record_count_expected": null,
+      "record_count_found": null,
+      "record_size": null,
+      "pointer_tables": [],
+      "consumers": [],
+      "producers": [],
+      "related_experiments": [
+        "EXP-0002"
+      ],
+      "related_discoveries": [],
+      "related_implementations": [
+        "internal/game/chardata.CopyCharacterFields"
+      ],
+      "related_tests": [
+        "chardata tests"
+      ],
+      "runtime_scenarios": [],
+      "evidence": [
+        "docs/sessions/02_DISCOVERED_FUNCTIONS.md"
+      ],
+      "confidence": "confirmed",
+      "unknown_fields": [],
+      "contradictions": [],
+      "next_action": "Identify the full source character record layout beyond the copied fields.",
+      "notes": ""
+    },
+    {
+      "schema_version": "1.0",
+      "id": "CEN-GFX-0001",
+      "domain": "GFX",
+      "category": "fonts",
+      "name": "Battle HUD fixed 8x8 text tile block",
+      "description": "257-tile 2bpp block, raw ROM copy; all HUD-referenced tiles inside; glyph semantics unassigned.",
+      "reconstruction_status": "REGRESSION_TESTED",
+      "runtime_status": "OUTPUTS_CAPTURED",
+      "rom_revision": "0f51b4fca41b7fd509e4b8f9d543151f68efa5e97b08493e4b2a0c06f5d8d5e2",
+      "rom_locations": [
+        "ROM-0016"
+      ],
+      "wram_locations": [],
+      "cpu_routines": [],
+      "spc_locations": [],
+      "record_count_expected": null,
+      "record_count_found": null,
+      "record_size": null,
+      "pointer_tables": [],
+      "consumers": [],
+      "producers": [],
+      "related_experiments": [
+        "EXP-0023"
+      ],
+      "related_discoveries": [],
+      "related_implementations": [
+        "internal/graphics/tile2bpp",
+        "ff6lab tiles decode2bpp"
+      ],
+      "related_tests": [
+        "tile2bpp synthetic vectors + fuzz"
+      ],
+      "runtime_scenarios": [
+        "mesen/out/exp10-battle.mss"
+      ],
+      "evidence": [
+        "docs/graphics/GFX-0001-battle-hud-font.md"
+      ],
+      "confidence": "confirmed",
+      "unknown_fields": [
+        "glyph-to-character mapping",
+        "load path",
+        "tiles $00-$FE compose region"
+      ],
+      "contradictions": [],
+      "next_action": "Trace the ROM->VRAM load path (DMA watch at battle entry); name glyphs empirically.",
+      "notes": ""
+    },
+    {
+      "schema_version": "1.0",
+      "id": "CEN-AUDIO-0001",
+      "domain": "AUDIO",
+      "category": "sound effects",
+      "name": "Battle-menu confirm SFX cue",
+      "description": "Press -> $21 to $2140 from $C117CC -> DSP voice 7 -> SRCN 5 -> ARAM $48D8 click.",
+      "reconstruction_status": "REGRESSION_TESTED",
+      "runtime_status": "NORMAL_PATH_VERIFIED",
+      "rom_revision": "0f51b4fca41b7fd509e4b8f9d543151f68efa5e97b08493e4b2a0c06f5d8d5e2",
+      "rom_locations": [
+        "ROM-0017"
+      ],
+      "wram_locations": [],
+      "cpu_routines": [
+        "ROMCPU:$C117CC"
+      ],
+      "spc_locations": [
+        "ARAM:$48D8",
+        "DSP voice 7"
+      ],
+      "record_count_expected": null,
+      "record_count_found": null,
+      "record_size": null,
+      "pointer_tables": [],
+      "consumers": [],
+      "producers": [],
+      "related_experiments": [
+        "EXP-0024"
+      ],
+      "related_discoveries": [],
+      "related_implementations": [
+        "internal/audio/brr.Decode",
+        "ff6lab brr info"
+      ],
+      "related_tests": [
+        "brr hand-computed vectors + fuzz"
+      ],
+      "runtime_scenarios": [
+        "mesen/out/exp10-battle.mss"
+      ],
+      "evidence": [
+        "docs/audio/AUD-0001-battle-confirm-sfx.md"
+      ],
+      "confidence": "confirmed",
+      "unknown_fields": [],
+      "contradictions": [],
+      "next_action": "SPC-side dispatch trace for port-0 command $21.",
+      "notes": ""
+    },
+    {
+      "schema_version": "1.0",
+      "id": "CEN-AUDIO-0002",
+      "domain": "AUDIO",
+      "category": "BRR samples",
+      "name": "SFX BRR sample pack and sample directory",
+      "description": "Directory at ARAM $1B00 (DIR=$1B); contiguous SFX pack at ARAM $4800 == ROM 0x051EC9 (288 bytes verified).",
+      "reconstruction_status": "EXTRACTED_PARTIAL",
+      "runtime_status": "OUTPUTS_CAPTURED",
+      "rom_revision": "0f51b4fca41b7fd509e4b8f9d543151f68efa5e97b08493e4b2a0c06f5d8d5e2",
+      "rom_locations": [
+        "ROM-0017"
+      ],
+      "wram_locations": [],
+      "cpu_routines": [],
+      "spc_locations": [
+        "ARAM:$1B00 directory",
+        "ARAM:$4800-$491F verified"
+      ],
+      "record_count_expected": null,
+      "record_count_found": null,
+      "record_size": null,
+      "pointer_tables": [],
+      "consumers": [],
+      "producers": [],
+      "related_experiments": [
+        "EXP-0024"
+      ],
+      "related_discoveries": [],
+      "related_implementations": [],
+      "related_tests": [],
+      "runtime_scenarios": [],
+      "evidence": [
+        "docs/audio/AUD-0001-battle-confirm-sfx.md"
+      ],
+      "confidence": "confirmed",
+      "unknown_fields": [
+        "full pack extent",
+        "samples 0-4,6,7+ cue assignments",
+        "music sample provenance"
+      ],
+      "contradictions": [],
+      "next_action": "Bound the full pack extent and per-sample cues; map remaining directory entries.",
+      "notes": ""
+    },
+    {
+      "schema_version": "1.0",
+      "id": "CEN-AUDIO-0003",
+      "domain": "AUDIO",
+      "category": "CPU/APU communication",
+      "name": "Main-CPU to SPC port command protocol",
+      "description": "Confirm SFX command $21 on port 0; periodic background triples ($E4/id/$18) and $28 heartbeat observed, uninterpreted.",
+      "reconstruction_status": "LOCATED",
+      "runtime_status": "OUTPUTS_CAPTURED",
+      "rom_revision": "0f51b4fca41b7fd509e4b8f9d543151f68efa5e97b08493e4b2a0c06f5d8d5e2",
+      "rom_locations": [],
+      "wram_locations": [],
+      "cpu_routines": [
+        "ROMCPU:$C117CC",
+        "ROMCPU:$C117E8",
+        "ROMCPU:$C11811-$C1181F"
+      ],
+      "spc_locations": [],
+      "record_count_expected": null,
+      "record_count_found": null,
+      "record_size": null,
+      "pointer_tables": [],
+      "consumers": [],
+      "producers": [],
+      "related_experiments": [
+        "EXP-0024"
+      ],
+      "related_discoveries": [],
+      "related_implementations": [],
+      "related_tests": [],
+      "runtime_scenarios": [],
+      "evidence": [
+        "local_artifacts/experiments/EXP-0024/exp24-ports.log (hashes in AUD-0001)"
+      ],
+      "confidence": "tentative-hypothesis",
+      "unknown_fields": [
+        "command encoding",
+        "background triple semantics",
+        "port 1-3 roles"
+      ],
+      "contradictions": [],
+      "next_action": "Delta-map more commands (different SFX/music events) before touching the SPC driver.",
+      "notes": ""
+    }
+  ]
+}

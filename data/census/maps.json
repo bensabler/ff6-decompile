@@ -1,0 +1,15 @@
+{
+  "schema_version": "1.0",
+  "domain": "WORLD",
+  "description": "Map headers: tileset/palette/music/collision/exit linkage.",
+  "expected_record_count": null,
+  "records": [],
+  "unknowns": [
+    "record count",
+    "record size",
+    "ROM location",
+    "format"
+  ],
+  "evidence_sources": [],
+  "next_extraction_step": "Capture the field state's map id and trace header reads at map load."
+}

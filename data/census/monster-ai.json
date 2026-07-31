@@ -1,0 +1,15 @@
+{
+  "schema_version": "1.0",
+  "domain": "MONSTER",
+  "description": "Per-monster AI scripts (battle scripts).",
+  "expected_record_count": null,
+  "records": [],
+  "unknowns": [
+    "record count",
+    "record size",
+    "ROM location",
+    "format"
+  ],
+  "evidence_sources": [],
+  "next_extraction_step": "After formations are located: find the script pointer per monster; the EXP-0021 selection window is the consumer side."
+}

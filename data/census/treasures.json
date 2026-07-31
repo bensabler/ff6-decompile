@@ -1,0 +1,15 @@
+{
+  "schema_version": "1.0",
+  "domain": "WORLD",
+  "description": "Treasure/chest records and their collected flags.",
+  "expected_record_count": null,
+  "records": [],
+  "unknowns": [
+    "record count",
+    "record size",
+    "ROM location",
+    "format"
+  ],
+  "evidence_sources": [],
+  "next_extraction_step": "Identify chest interactions in Narshe mines; watch the flag write."
+}

@@ -1,0 +1,348 @@
+{
+  "schema_version": "1.0",
+  "rom_size": 3145728,
+  "rom_sha256": "0f51b4fca41b7fd509e4b8f9d543151f68efa5e97b08493e4b2a0c06f5d8d5e2",
+  "regions": [
+    {
+      "id": "ROM-0001",
+      "start": 65984,
+      "size": 112,
+      "bank": "ROMCPU:$C101C0-$C1022F",
+      "classification": "CODE",
+      "owner": "battle/character engine (bank C1/C2 decodes)",
+      "format": "65816 code",
+      "confidence": "confirmed",
+      "evidence": [
+        "mesen/out/caller_C101C0.hex",
+        "Session 002 (caller $C101FB context)"
+      ],
+      "consumers": [],
+      "overlaps": [],
+      "status": "known",
+      "notes": "Merged from byte-exact dump spans archived in mesen/out; decodes in the cited experiment records."
+    },
+    {
+      "id": "ROM-0002",
+      "start": 69107,
+      "size": 116,
+      "bank": "ROMCPU:$C10DF3-$C10E66",
+      "classification": "CODE",
+      "owner": "battle/character engine (bank C1/C2 decodes)",
+      "format": "65816 code",
+      "confidence": "confirmed",
+      "evidence": [
+        "mesen/out/routine_C10DF3.hex",
+        "Sessions 001-002 (CopyCharacterFields full decode)"
+      ],
+      "consumers": [],
+      "overlaps": [],
+      "status": "known",
+      "notes": "Merged from byte-exact dump spans archived in mesen/out; decodes in the cited experiment records."
+    },
+    {
+      "id": "ROM-0003",
+      "start": 132128,
+      "size": 48,
+      "bank": "ROMCPU:$C20420-$C2044F",
+      "classification": "CODE",
+      "owner": "battle/character engine (bank C1/C2 decodes)",
+      "format": "65816 code",
+      "confidence": "confirmed",
+      "evidence": [
+        "mesen/out/rom_C20420_48.hex",
+        "EXP-0011 family decode"
+      ],
+      "consumers": [],
+      "overlaps": [],
+      "status": "known",
+      "notes": "Merged from byte-exact dump spans archived in mesen/out; decodes in the cited experiment records."
+    },
+    {
+      "id": "ROM-0004",
+      "start": 134019,
+      "size": 189,
+      "bank": "ROMCPU:$C20B83-$C20C3F",
+      "classification": "CODE",
+      "owner": "battle/character engine (bank C1/C2 decodes)",
+      "format": "65816 code",
+      "confidence": "confirmed",
+      "evidence": [
+        "mesen/out/rom_C20B83_141.hex",
+        "mesen/out/rom_C20C10_48.hex",
+        "EXP-0010 (formula frame body)",
+        "EXP-0011 family decode"
+      ],
+      "consumers": [],
+      "overlaps": [],
+      "status": "known",
+      "notes": "Merged from byte-exact dump spans archived in mesen/out; decodes in the cited experiment records."
+    },
+    {
+      "id": "ROM-0005",
+      "start": 134240,
+      "size": 423,
+      "bank": "ROMCPU:$C20C60-$C20E06",
+      "classification": "CODE",
+      "owner": "battle/character engine (bank C1/C2 decodes)",
+      "format": "65816 code",
+      "confidence": "confirmed",
+      "evidence": [
+        "mesen/out/rom_C20C60_128.hex",
+        "mesen/out/rom_C20C9E_233.hex",
+        "mesen/out/rom_C20D87_128.hex",
+        "mesen/out/rom_C20DD1_32.hex",
+        "EXP-0011/0012 (base-amount routines)",
+        "EXP-0014/0015 (base producer)",
+        "EXP-0015 (24-bit shift helper)"
+      ],
+      "consumers": [],
+      "overlaps": [],
+      "status": "known",
+      "notes": "Merged from byte-exact dump spans archived in mesen/out; decodes in the cited experiment records."
+    },
+    {
+      "id": "ROM-0006",
+      "start": 135920,
+      "size": 304,
+      "bank": "ROMCPU:$C212F0-$C2141F",
+      "classification": "CODE",
+      "owner": "battle/character engine (bank C1/C2 decodes)",
+      "format": "65816 code",
+      "confidence": "confirmed",
+      "evidence": [
+        "mesen/out/rom_C212F0_304.hex",
+        "EXP-0001 (dispatcher + delta routines, byte-exact verified)"
+      ],
+      "consumers": [],
+      "overlaps": [],
+      "status": "known",
+      "notes": "Merged from byte-exact dump spans archived in mesen/out; decodes in the cited experiment records."
+    },
+    {
+      "id": "ROM-0007",
+      "start": 141648,
+      "size": 160,
+      "bank": "ROMCPU:$C22950-$C229EF",
+      "classification": "CODE",
+      "owner": "battle/character engine (bank C1/C2 decodes)",
+      "format": "65816 code",
+      "confidence": "confirmed",
+      "evidence": [
+        "mesen/out/rom_C22950_160.hex",
+        "EXP-0019 (MVN record loader + fight populate)"
+      ],
+      "consumers": [],
+      "overlaps": [],
+      "status": "known",
+      "notes": "Merged from byte-exact dump spans archived in mesen/out; decodes in the cited experiment records."
+    },
+    {
+      "id": "ROM-0008",
+      "start": 142144,
+      "size": 239,
+      "bank": "ROMCPU:$C22B40-$C22C2E",
+      "classification": "CODE",
+      "owner": "battle/character engine (bank C1/C2 decodes)",
+      "format": "65816 code",
+      "confidence": "confirmed",
+      "evidence": [
+        "mesen/out/rom_C22B40_192.hex",
+        "mesen/out/rom_C22BFF_48.hex",
+        "EXP-0016 (miss-path writer)",
+        "EXP-0017 (physical path)"
+      ],
+      "consumers": [],
+      "overlaps": [],
+      "status": "known",
+      "notes": "Merged from byte-exact dump spans archived in mesen/out; decodes in the cited experiment records."
+    },
+    {
+      "id": "ROM-0009",
+      "start": 143760,
+      "size": 48,
+      "bank": "ROMCPU:$C23190-$C231BF",
+      "classification": "CODE",
+      "owner": "battle/character engine (bank C1/C2 decodes)",
+      "format": "65816 code",
+      "confidence": "confirmed",
+      "evidence": [
+        "mesen/out/rom_C23190_48.hex",
+        "EXP-0019/0021 (selection window)"
+      ],
+      "consumers": [],
+      "overlaps": [],
+      "status": "known",
+      "notes": "Merged from byte-exact dump spans archived in mesen/out; decodes in the cited experiment records."
+    },
+    {
+      "id": "ROM-0010",
+      "start": 144432,
+      "size": 128,
+      "bank": "ROMCPU:$C23430-$C234AF",
+      "classification": "CODE",
+      "owner": "battle/character engine (bank C1/C2 decodes)",
+      "format": "65816 code",
+      "confidence": "confirmed",
+      "evidence": [
+        "mesen/out/rom_C23430_128.hex",
+        "EXP-0012 decode"
+      ],
+      "consumers": [],
+      "overlaps": [],
+      "status": "known",
+      "notes": "Merged from byte-exact dump spans archived in mesen/out; decodes in the cited experiment records."
+    },
+    {
+      "id": "ROM-0011",
+      "start": 145152,
+      "size": 96,
+      "bank": "ROMCPU:$C23700-$C2375F",
+      "classification": "CODE",
+      "owner": "battle/character engine (bank C1/C2 decodes)",
+      "format": "65816 code",
+      "confidence": "confirmed",
+      "evidence": [
+        "mesen/out/rom_C23700_96.hex",
+        "EXP-0012/0013 (x1.5 chain)"
+      ],
+      "consumers": [],
+      "overlaps": [],
+      "status": "known",
+      "notes": "Merged from byte-exact dump spans archived in mesen/out; decodes in the cited experiment records."
+    },
+    {
+      "id": "ROM-0012",
+      "start": 149360,
+      "size": 144,
+      "bank": "ROMCPU:$C24770-$C247FF",
+      "classification": "CODE",
+      "owner": "battle/character engine (bank C1/C2 decodes)",
+      "format": "65816 code",
+      "confidence": "confirmed",
+      "evidence": [
+        "mesen/out/rom_C24770_80.hex",
+        "mesen/out/rom_C247B0_80.hex",
+        "EXP-0013 (hardware multiply helper)",
+        "EXP-0014 (wrapper)"
+      ],
+      "consumers": [],
+      "overlaps": [],
+      "status": "known",
+      "notes": "Merged from byte-exact dump spans archived in mesen/out; decodes in the cited experiment records."
+    },
+    {
+      "id": "ROM-0013",
+      "start": 154816,
+      "size": 176,
+      "bank": "ROMCPU:$C25CC0-$C25D6F",
+      "classification": "CODE",
+      "owner": "battle/character engine (bank C1/C2 decodes)",
+      "format": "65816 code",
+      "confidence": "confirmed",
+      "evidence": [
+        "mesen/out/rom_C25CC0_176.hex",
+        "EXP-0003 (display copier $C25D26)"
+      ],
+      "consumers": [],
+      "overlaps": [],
+      "status": "known",
+      "notes": "Merged from byte-exact dump spans archived in mesen/out; decodes in the cited experiment records."
+    },
+    {
+      "id": "ROM-0014",
+      "start": 158432,
+      "size": 128,
+      "bank": "ROMCPU:$C26AE0-$C26B5F",
+      "classification": "CODE",
+      "owner": "battle/character engine (bank C1/C2 decodes)",
+      "format": "65816 code",
+      "confidence": "confirmed",
+      "evidence": [
+        "mesen/out/rom_C26AE0_128.hex",
+        "EXP-0011 (elemental-modifier block)"
+      ],
+      "consumers": [],
+      "overlaps": [],
+      "status": "known",
+      "notes": "Merged from byte-exact dump spans archived in mesen/out; decodes in the cited experiment records."
+    },
+    {
+      "id": "ROM-0015",
+      "start": 289472,
+      "size": 3584,
+      "bank": "ROMCPU:$C46AC0-$C478BF",
+      "classification": "DATA_TABLE",
+      "owner": "CEN-BATTLE-0004",
+      "format": "14-byte attack/spell records",
+      "confidence": "confirmed",
+      "evidence": [
+        "docs/experiments/EXP-0019-rng-state.md",
+        "docs/experiments/EXP-0022-record-crosscheck.md",
+        "local_artifacts/experiments/EXP-0022/table_C46AC0_3584.hex"
+      ],
+      "consumers": [
+        "ROMCPU:$C22966 MVN loader"
+      ],
+      "overlaps": [],
+      "status": "known",
+      "notes": "Span = the dumped 256 records; true table length unknown (>=239 records: index 238 observed loaded live in EXP-0021)."
+    },
+    {
+      "id": "ROM-0016",
+      "start": 294832,
+      "size": 4112,
+      "bank": "ROMCPU:$C47FB0-$C48FBF",
+      "classification": "GRAPHICS",
+      "owner": "CEN-GFX-0001",
+      "format": "SNES 2bpp planar tiles (257 tiles)",
+      "confidence": "confirmed",
+      "evidence": [
+        "docs/experiments/EXP-0023-hud-font.md",
+        "docs/graphics/GFX-0001-battle-hud-font.md"
+      ],
+      "consumers": [
+        "battle BG3 chr $A000 (tiles $FF-$1FF)"
+      ],
+      "overlaps": [],
+      "status": "known",
+      "notes": "Byte-identical to the live BG3 chr upper half; chr tile-index origin back-projects to 0x046FC0 inside the attack-table region (arithmetic anchor only, no data overlap)."
+    },
+    {
+      "id": "ROM-0017",
+      "start": 335561,
+      "size": 288,
+      "bank": "ROMCPU:$C51EC9-$C51FE8",
+      "classification": "BRR",
+      "owner": "CEN-AUDIO-0002",
+      "format": "BRR sample pack (SFX samples 0-7)",
+      "confidence": "confirmed",
+      "evidence": [
+        "docs/experiments/EXP-0024-cursor-sfx.md",
+        "docs/audio/AUD-0001-battle-confirm-sfx.md"
+      ],
+      "consumers": [
+        "ARAM $4800 SFX sample region; DSP voice 7 (confirm SFX, SRCN 5)"
+      ],
+      "overlaps": [],
+      "status": "known",
+      "notes": "Verified span only; the pack likely extends (directory has further entries), unverified."
+    },
+    {
+      "id": "ROM-0018",
+      "start": 65456,
+      "size": 80,
+      "bank": "ROMCPU:$C0FFB0-$C0FFFF",
+      "classification": "HEADER",
+      "owner": "SNES internal cartridge header",
+      "format": "SNES header (HiROM)",
+      "confidence": "confirmed",
+      "evidence": [
+        "docs/experiments/EXP-0001-c2-delta-engine-dump.md (Mesen header parse; HiROM mapping Confirmed)"
+      ],
+      "consumers": [],
+      "overlaps": [],
+      "status": "known",
+      "notes": ""
+    }
+  ]
+}

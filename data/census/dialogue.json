@@ -1,0 +1,15 @@
+{
+  "schema_version": "1.0",
+  "domain": "EVENT",
+  "description": "Dialogue text and windowing.",
+  "expected_record_count": null,
+  "records": [],
+  "unknowns": [
+    "record count",
+    "record size",
+    "ROM location",
+    "format"
+  ],
+  "evidence_sources": [],
+  "next_extraction_step": "Capture one dialogue box: tilemap + composed text region + source pointer. Text extraction stays local (asset policy)."
+}
