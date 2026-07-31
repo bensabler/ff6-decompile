@@ -19,8 +19,13 @@
   (H-BATTLE-0004/0007; justifies the published Go names).
 - [ ] `+$11AE`/`+$11AF` producers and meanings (question #27; `+$3B18,X`
   lead in EXP-0017/0019).
-- [ ] Cross-check attack records against the local ROM via
-  `attackdata.RecordAt` (Fire Beam entry: power 60, element bit 0).
+- [x] EXP-0022: attack records cross-checked against the local ROM via
+  `ff6lab attackdata scan` — record 238 power=0 + physical flag
+  (Confirmed, converges with EXP-0017/0018/0021); Fire Beam candidates
+  narrowed to indices 5 and 131 (Tentative — value coincidence).
+- [ ] Disambiguate the Fire Beam record index: capture `+$11A0`–`+$11AD`
+  (or the MVN X source) during an actual Magitek Fire Beam confirm
+  (needs a menu-navigation press script).
 
 ## P1 — Phase-1 vertical proofs (rebalance targets)
 

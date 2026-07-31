@@ -357,6 +357,23 @@
       "falsifying_outcome": "matched-ordinal record indices differ across trials",
       "status": "completed",
       "record": "docs/experiments/EXP-0021-record-index.md"
+    },
+    {
+      "schema_version": "1.0",
+      "id": "EXP-0022",
+      "question": "Does the $C46AC0 attack-record table contain the observed Fire Beam signature (power 60, element bit 0) and a zero power byte for record 238 (enemy Fight)?",
+      "starting_state": {
+        "emulator": "Mesen 2.1.1 macOS x86_64 (--testrunner headless, bridge v2)",
+        "rom_sha256": "0f51b4fca41b7fd509e4b8f9d543151f68efa5e97b08493e4b2a0c06f5d8d5e2",
+        "state": "ROM reads, state-independent; records 0-255 dumped via bridge"
+      },
+      "expected_outcomes": [
+        "power-60 element-bit0 entry exists (Fire Beam index candidate) and record 238 power=0 (supports table reading)",
+        "no such entry in 0-255 or record 238 power!=0 (narrows or refutes the table reading)"
+      ],
+      "falsifying_outcome": "record 238 power byte != 0",
+      "status": "completed",
+      "record": "docs/experiments/EXP-0022-record-crosscheck.md"
     }
   ]
 }

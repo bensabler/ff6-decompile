@@ -1,5 +1,16 @@
 # Activity Log
 
+- 2026-07-30 (resume, late) — Unit 22 / EXP-0022: **attack-record table
+  cross-checked against the live ROM.** 256 records dumped from
+  `ROMCPU:$C46AC0` and decoded via the new `ff6lab attackdata scan`
+  (first real-ROM use of the package). Record 238 (the enemy Fight
+  record EXP-0021 saw loaded 8×): power byte 0 ✓ (matches EXP-0018's
+  `v=0` MVN writes) and **physical-formula flag set** ✓ (matches
+  EXP-0017's decoded path). Fire Beam (power 60, fire element,
+  standard formula) narrowed to two candidates: indices 5 and 131
+  (Tentative). CLI help text synchronized with the actual commands.
+  MP verification recorded as savestate-blocked (BLOCKERS).
+
 - 2026-07-30 (resume, late) — EXP-0021: **question #30 resolved for the
   tested window — the action layer is deterministic given the input
   frame schedule.** Two frame-exact trials (first press anchor+72 vs

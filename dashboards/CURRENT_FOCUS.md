@@ -10,11 +10,10 @@ jitter (Strong hypothesis). The lab now runs headless
 (`--testrunner --timeout=7200`, `FF6_OUT` env, frame-scheduled input)
 because the locked display breaks GUI Mesen.
 
-**Next exact action (operator rebalance order):** Unit 3 — one
-semantic-debt item: cross-check attack records against the local ROM
-via `attackdata.RecordAt` (dump the `$C46AC0` table live, locate the
-Fire Beam entry, verify power 60 / element bit 0). Live MP
-verification stays queued: the only battle savestate (Magitek intro)
-has no MP-consuming action, so it needs a new state first. Then
-Unit 4 (graphics vertical: menu font / HUD tiles) and Unit 5 (audio
-vertical: cursor SFX).
+**Next exact action (operator rebalance order):** Unit 4 — graphics
+vertical proof (menu font / battle HUD tiles: runtime → DMA → ROM →
+decoder → comparison), then Unit 5 — audio vertical proof (cursor
+SFX). Unit 3 done: EXP-0022 cross-checked the attack-record table
+against the live ROM (record 238 power 0 + physical flag Confirmed;
+Fire Beam candidates 5/131 Tentative). Live MP verification stays
+queued behind a savestate with an MP-consuming action (BLOCKERS).
