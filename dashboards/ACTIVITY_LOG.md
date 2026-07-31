@@ -1,5 +1,13 @@
 # Activity Log
 
+- 2026-07-30 (evening) — Unit 19 / EXP-0018: **the hit/act gate
+  localized** — `$C2297D` clears the action block, `$C229D4` populates
+  power (values deterministic: 13/19 per enemy); identical-state trials
+  diverge only in *which* clears get populated. A miss =
+  cleared-but-never-populated. The RNG consumer sits between the two,
+  caller bracket `JSR` at `~$C2319D`. Question #29 → dump bracket
+  (EXP-0019).
+
 - 2026-07-30 (evening) — Unit 18 / EXP-0017: **physical base formula
   fully decoded — and the entire damage arithmetic is RNG-free.**
   Vigor²-shaped: t=power(×4 enemy)(×1.75 gated)+statA, ×statB²/256;

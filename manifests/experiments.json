@@ -289,6 +289,23 @@
       "falsifying_outcome": "for RNG-in-path: all reads are known action-state bytes",
       "status": "completed",
       "record": "docs/experiments/EXP-0017-physical-path.md"
+    },
+    {
+      "schema_version": "1.0",
+      "id": "EXP-0018",
+      "question": "What writes +$11A6 per action, and where do identical-state trials diverge?",
+      "starting_state": {
+        "emulator": "Mesen 2.1.1 macOS x86_64",
+        "rom_sha256": "0f51b4fca41b7fd509e4b8f9d543151f68efa5e97b08493e4b2a0c06f5d8d5e2",
+        "state": "exp10-battle.mss identical-state trials, waits 1.2s vs 4.5s; watch code in transcript"
+      },
+      "expected_outcomes": [
+        "writer set + divergent setup between trials (locates the hit/act gate)",
+        "identical setup despite divergent outcomes (gate elsewhere)"
+      ],
+      "falsifying_outcome": "identical +$11A6 write sequences across trials",
+      "status": "completed",
+      "record": "docs/experiments/EXP-0018-setup-layer.md"
     }
   ]
 }
