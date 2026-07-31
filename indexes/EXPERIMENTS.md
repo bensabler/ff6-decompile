@@ -30,3 +30,4 @@
 | EXP-0024 | cursor-sfx | completed | see record | [EXP-0024-cursor-sfx](../docs/experiments/EXP-0024-cursor-sfx.md) |
 | EXP-0025 | opening-recon | completed | see record | [EXP-0025-opening-recon](../docs/experiments/EXP-0025-opening-recon.md) |
 | EXP-0026 | magic-census | completed | see record | [EXP-0026-magic-census](../docs/experiments/EXP-0026-magic-census.md) |
+| EXP-0027 | spell-extraction | running | see record | [EXP-0027-spell-extraction](../docs/experiments/EXP-0027-spell-extraction.md) |

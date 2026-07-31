@@ -188,7 +188,7 @@
       "domain": "BATTLE",
       "category": "attack records",
       "name": "Attack/spell record table ($C46AC0) \u2014 the global spell database",
-      "description": "MVN-loaded per action into WRAM +$11A0-+$11AD; records 0-53 are the 54 magic spells (ids match the spell name table, EXP-0026). 8 of 14 bytes mapped: byte 5 = MP cost (Strong hypothesis: Cure record holds the observed cost 5; Cure2/Cure3 ascend 25/40; Fire/Ice/Bolt 4/5/6).",
+      "description": "MVN-loaded per action into WRAM +$11A0-+$11AD; records 0-53 are the 54 magic spells (ids match the spell name table, EXP-0026). 8 of 14 bytes mapped: byte 5 = MP cost (Confirmed for id 45: menu readout + targeting gate text + live deduction, EXP-0027; families coherent).",
       "reconstruction_status": "FORMAT_PARTIAL",
       "runtime_status": "NORMAL_PATH_VERIFIED",
       "rom_revision": "0f51b4fca41b7fd509e4b8f9d543151f68efa5e97b08493e4b2a0c06f5d8d5e2",
@@ -212,7 +212,8 @@
         "EXP-0019",
         "EXP-0021",
         "EXP-0022",
-        "EXP-0026"
+        "EXP-0026",
+        "EXP-0027"
       ],
       "related_discoveries": [
         "DISC-0007"
@@ -232,12 +233,11 @@
       "confidence": "confirmed",
       "unknown_fields": [
         "record bytes 0, 7, 8, 11, 12, 13",
-        "byte 5 = MP cost needs a second on-screen anchor",
         "true table length (>=239 records)"
       ],
       "contradictions": [],
       "next_action": "Map the remaining record bytes via targeted actions; establish the true table length.",
-      "notes": "Category kept under BATTLE as the loader's table; MAGIC entries reference it."
+      "notes": "Category kept under BATTLE as the loader's table; MAGIC entries reference it. Records 0-53 bulk-extracted (EXP-0027, local)."
     },
     {
       "schema_version": "1.0",
@@ -1108,7 +1108,7 @@
       "domain": "MONSTER",
       "category": "formations",
       "name": "Battle formations (opening guard fight composition/layout)",
-      "description": "One green guard on-screen; EXP-0021 selection events addressed slots via X=$0008/$000A. Formation source unlocated.",
+      "description": "One green guard on-screen; EXP-0021 selection events addressed slots via X=$0008/$000A. Formation source unlocated. Defeat screen names the formation: Were-Rat + Repo Man (EXP-0027) \u2014 matches the battle-HUD tilemap decode.",
       "reconstruction_status": "OBSERVED",
       "runtime_status": "OUTPUTS_CAPTURED",
       "rom_revision": "0f51b4fca41b7fd509e4b8f9d543151f68efa5e97b08493e4b2a0c06f5d8d5e2",
@@ -1125,7 +1125,8 @@
       "related_experiments": [
         "EXP-0002",
         "EXP-0021",
-        "EXP-0025"
+        "EXP-0025",
+        "EXP-0027"
       ],
       "related_discoveries": [],
       "related_implementations": [],
@@ -1509,8 +1510,8 @@
       "domain": "MAGIC",
       "category": "spell names",
       "name": "Spell name table (0x26F567, 7-byte records)",
-      "description": "[class icon][6-char name] records; Fire=id 0, Cure=id 45; icon byte matches the menu bullet tile ($E8 castable / $E9+ class markers). 36 entries decoded contiguously; 54-entry extent inferred from class structure.",
-      "reconstruction_status": "FORMAT_DECODED",
+      "description": "[class icon][6-char name] records; boundary Confirmed: exactly 54 entries (icons $E9 x24 black, $EA x21 grey, $E8 x9 white), the esper name table begins at 0x26F6E1. All 54 extracted to local artifacts (EXP-0027).",
+      "reconstruction_status": "EXTRACTED_COMPLETE",
       "runtime_status": "OUTPUTS_CAPTURED",
       "rom_revision": "0f51b4fca41b7fd509e4b8f9d543151f68efa5e97b08493e4b2a0c06f5d8d5e2",
       "rom_locations": [
@@ -1520,13 +1521,14 @@
       "cpu_routines": [],
       "spc_locations": [],
       "record_count_expected": 54,
-      "record_count_found": 36,
+      "record_count_found": 54,
       "record_size": 7,
       "pointer_tables": [],
       "consumers": [],
       "producers": [],
       "related_experiments": [
-        "EXP-0026"
+        "EXP-0026",
+        "EXP-0027"
       ],
       "related_discoveries": [],
       "related_implementations": [],
@@ -1534,16 +1536,16 @@
       "runtime_scenarios": [],
       "evidence": [
         "local_artifacts/experiments/EXP-0026/ (screenshots, tilemap/chr/cgram/wram dumps; hashes.sha256)",
-        "docs/experiments/EXP-0026-magic-census.md"
+        "docs/experiments/EXP-0026-magic-census.md",
+        "local_artifacts/experiments/EXP-0027/ (boundary/esper decodes, cast screenshots, WRAM diff; hashes.sha256)"
       ],
-      "confidence": "strong-hypothesis",
+      "confidence": "confirmed",
       "unknown_fields": [
-        "end boundary",
-        "icon byte full value set",
-        "digit glyphs beyond '2'/'3'"
+        "digit glyphs beyond observed",
+        "icon rendering vs castability dimming"
       ],
       "contradictions": [],
-      "next_action": "Verify the table end boundary (entry 53/54 transition) and the icon-class runs; extraction stays local per the asset policy.",
+      "next_action": "Name-table consumers (menu renderer read-watch) when the menu system unit runs.",
       "notes": "record_count_expected=54 rests on the class-icon structure and the id-45 Cure anchor (Tentative until the boundary is read)."
     },
     {
@@ -1637,14 +1639,16 @@
       "domain": "MAGIC",
       "category": "MP costs",
       "name": "MP deduction and the cost field",
-      "description": "Display side: the menu cost window reads 5 for Cure (observed). Data side: spell-record byte 5 matches (Strong hypothesis, CEN-BATTLE-0004). The battle-side MP deduction path (+$3C08 pool writes) is decoded code-side from EXP-0001 but never observed live (no MP-consuming action captured).",
-      "reconstruction_status": "CANDIDATE_LOCATION",
-      "runtime_status": "ENCOUNTERED",
+      "description": "Field cast verified: Cure deducts exactly 5 MP (24->19) and heals to max (34->77/77). WRAM diff isolates single bytes: field current MP slot0 at +$160D, current HP at +$1609 (the field character-record block ~+$1600). Battle-side +$3C08 pool still unverified live.",
+      "reconstruction_status": "LOCATED",
+      "runtime_status": "NORMAL_PATH_VERIFIED",
       "rom_revision": "0f51b4fca41b7fd509e4b8f9d543151f68efa5e97b08493e4b2a0c06f5d8d5e2",
       "rom_locations": [
         "ROM-0015"
       ],
       "wram_locations": [
+        "WRAM:+$160D (field MP slot 0, Strong hypothesis)",
+        "WRAM:+$1609 (field HP slot 0, Strong hypothesis)",
         "WRAM:+$3C08 (battle MP pool, Strong hypothesis)"
       ],
       "cpu_routines": [],
@@ -1657,22 +1661,25 @@
       "producers": [],
       "related_experiments": [
         "EXP-0001",
-        "EXP-0026"
+        "EXP-0026",
+        "EXP-0027"
       ],
       "related_discoveries": [],
       "related_implementations": [],
       "related_tests": [],
       "runtime_scenarios": [],
       "evidence": [
-        "local_artifacts/experiments/EXP-0026/ (screenshots, tilemap/chr/cgram/wram dumps; hashes.sha256)"
+        "local_artifacts/experiments/EXP-0026/ (screenshots, tilemap/chr/cgram/wram dumps; hashes.sha256)",
+        "local_artifacts/experiments/EXP-0027/ (boundary/esper decodes, cast screenshots, WRAM diff; hashes.sha256)"
       ],
       "confidence": "strong-hypothesis",
       "unknown_fields": [
-        "field-menu MP store (vs battle array)",
-        "deduction routine"
+        "field record stride/full layout",
+        "deduction routine PC",
+        "battle-side deduction"
       ],
       "contradictions": [],
-      "next_action": "Cast Cure from the field menu (heal path) while watching +$3C08-family and the menu MP display source.",
+      "next_action": "Watch the +$160D writer during a second cast to name the deduction routine.",
       "notes": ""
     },
     {
@@ -1681,9 +1688,9 @@
       "domain": "MAGIC",
       "category": "targeting",
       "name": "Spell targeting flags and menu targeting behavior",
-      "description": "Not yet observed (no cast initiated); record byte 3/4 flags partially decoded battle-side (MP retarget bit 3.7, party-halving 4.0 from EXP-0011).",
-      "reconstruction_status": "UNMAPPED",
-      "runtime_status": "NOT_ENCOUNTERED",
+      "description": "Field targeting observed: party-member list with portraits, cursor default on the caster's slot, a '5 MP Needed' gating window naming the cost. Flags-to-behavior mapping unstarted.",
+      "reconstruction_status": "OBSERVED",
+      "runtime_status": "OUTPUTS_CAPTURED",
       "rom_revision": "0f51b4fca41b7fd509e4b8f9d543151f68efa5e97b08493e4b2a0c06f5d8d5e2",
       "rom_locations": [],
       "wram_locations": [],
@@ -1695,16 +1702,20 @@
       "pointer_tables": [],
       "consumers": [],
       "producers": [],
-      "related_experiments": [],
+      "related_experiments": [
+        "EXP-0027"
+      ],
       "related_discoveries": [],
       "related_implementations": [],
       "related_tests": [],
       "runtime_scenarios": [],
-      "evidence": [],
-      "confidence": "unknown",
+      "evidence": [
+        "local_artifacts/experiments/EXP-0027/ (boundary/esper decodes, cast screenshots, WRAM diff; hashes.sha256)"
+      ],
+      "confidence": "confirmed",
       "unknown_fields": [],
       "contradictions": [],
-      "next_action": "Initiate a field Cure cast to the character-select stage and record the targeting UI + consumed flags.",
+      "next_action": "Correlate record byte 3/4 bits against multi-target spells once more are castable.",
       "notes": ""
     },
     {
@@ -1812,6 +1823,122 @@
       "unknown_fields": [],
       "contradictions": [],
       "next_action": "Delta-capture APU port commands during a spell cast (EXP-0024 pattern).",
+      "notes": ""
+    },
+    {
+      "schema_version": "1.0",
+      "id": "CEN-MAGIC-0009",
+      "domain": "MAGIC",
+      "category": "summons",
+      "name": "Esper name table (0x26F6E1, 8-byte records)",
+      "description": "27 esper names decode cleanly at stride 8 immediately after the spell name table; a further ability-name table (stride ~10) begins at 0x26F7B9 (candidate).",
+      "reconstruction_status": "FORMAT_DECODED",
+      "runtime_status": "NOT_ENCOUNTERED",
+      "rom_revision": "0f51b4fca41b7fd509e4b8f9d543151f68efa5e97b08493e4b2a0c06f5d8d5e2",
+      "rom_locations": [
+        "ROM-0021"
+      ],
+      "wram_locations": [],
+      "cpu_routines": [],
+      "spc_locations": [],
+      "record_count_expected": 27,
+      "record_count_found": 27,
+      "record_size": 8,
+      "pointer_tables": [],
+      "consumers": [],
+      "producers": [],
+      "related_experiments": [
+        "EXP-0027"
+      ],
+      "related_discoveries": [],
+      "related_implementations": [],
+      "related_tests": [],
+      "runtime_scenarios": [],
+      "evidence": [
+        "local_artifacts/experiments/EXP-0027/ (boundary/esper decodes, cast screenshots, WRAM diff; hashes.sha256)",
+        "docs/experiments/EXP-0027-spell-extraction.md"
+      ],
+      "confidence": "confirmed",
+      "unknown_fields": [],
+      "contradictions": [],
+      "next_action": "Extract the 27 records; bound the stride-10 ability-name table that follows.",
+      "notes": ""
+    },
+    {
+      "schema_version": "1.0",
+      "id": "CEN-CHAR-0004",
+      "domain": "CHAR",
+      "category": "character records",
+      "name": "Field character-record block (~WRAM:+$1600)",
+      "description": "Single-byte WRAM diff across the Cure cast isolates slot-0 current HP at +$1609 and current MP at +$160D \u2014 a field-side character record block distinct from the battle arrays.",
+      "reconstruction_status": "CANDIDATE_LOCATION",
+      "runtime_status": "OUTPUTS_CAPTURED",
+      "rom_revision": "0f51b4fca41b7fd509e4b8f9d543151f68efa5e97b08493e4b2a0c06f5d8d5e2",
+      "rom_locations": [],
+      "wram_locations": [
+        "WRAM:+$1609",
+        "WRAM:+$160D"
+      ],
+      "cpu_routines": [],
+      "spc_locations": [],
+      "record_count_expected": null,
+      "record_count_found": null,
+      "record_size": null,
+      "pointer_tables": [],
+      "consumers": [],
+      "producers": [],
+      "related_experiments": [
+        "EXP-0027"
+      ],
+      "related_discoveries": [],
+      "related_implementations": [],
+      "related_tests": [],
+      "runtime_scenarios": [],
+      "evidence": [
+        "local_artifacts/experiments/EXP-0027/ (boundary/esper decodes, cast screenshots, WRAM diff; hashes.sha256)"
+      ],
+      "confidence": "strong-hypothesis",
+      "unknown_fields": [],
+      "contradictions": [],
+      "next_action": "Map the record stride via a second character's values; relate to the $C10DF3 copy-loop source.",
+      "notes": ""
+    },
+    {
+      "schema_version": "1.0",
+      "id": "CEN-BATTLE-0007",
+      "domain": "BATTLE",
+      "category": "death",
+      "name": "Defeat flow ('Annihilated')",
+      "description": "Party wipe produces an 'Annihilated' banner and an enemy-name window listing the formation (Were-Rat, Repo Man) before the battle ends.",
+      "reconstruction_status": "OBSERVED",
+      "runtime_status": "ENCOUNTERED",
+      "rom_revision": "0f51b4fca41b7fd509e4b8f9d543151f68efa5e97b08493e4b2a0c06f5d8d5e2",
+      "rom_locations": [],
+      "wram_locations": [],
+      "cpu_routines": [],
+      "spc_locations": [],
+      "record_count_expected": null,
+      "record_count_found": null,
+      "record_size": null,
+      "pointer_tables": [],
+      "consumers": [],
+      "producers": [],
+      "related_experiments": [
+        "EXP-0027"
+      ],
+      "related_discoveries": [],
+      "related_implementations": [],
+      "related_tests": [],
+      "runtime_scenarios": [
+        "mesen/out/exp10-battle.mss"
+      ],
+      "evidence": [
+        "local_artifacts/experiments/EXP-0027/ (boundary/esper decodes, cast screenshots, WRAM diff; hashes.sha256)"
+      ],
+      "confidence": "confirmed",
+      "unknown_fields": [],
+      "contradictions": [],
+      "next_action": "Capture the post-defeat transition (game over vs retry) in a dedicated run.",
       "notes": ""
     }
   ]

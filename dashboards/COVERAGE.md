@@ -6,9 +6,9 @@ Breadth without pretense: counts are census entries at or above each threshold (
 
 | Domain | Registered | Located | Decoded | Extracted | Implemented | Runtime verified |
 |---|---|---|---|---|---|---|
-| BATTLE | 5 | 5 | 3 | 3 | 3 | 5 |
-| CHAR | 3 | 1 | 1 | 1 | 1 | 1 |
-| MAGIC | 8 | 2 | 1 | 0 | 0 | 2 |
+| BATTLE | 6 | 5 | 3 | 3 | 3 | 5 |
+| CHAR | 4 | 1 | 1 | 1 | 1 | 1 |
+| MAGIC | 9 | 4 | 2 | 1 | 0 | 3 |
 | MONSTER | 3 | 0 | 0 | 0 | 0 | 0 |
 | ITEM | 0 | 0 | 0 | 0 | 0 | 0 |
 | WORLD | 5 | 0 | 0 | 0 | 0 | 0 |
@@ -21,23 +21,25 @@ Breadth without pretense: counts are census entries at or above each threshold (
 
 ## ROM accounting
 
-- Known: 10753 of 3145728 bytes (0.34%) — code 2311 bytes (0.07%), data 8442 bytes (0.27%).
+- Known: 10969 of 3145728 bytes (0.35%) — code 2311 bytes (0.07%), data 8658 bytes (0.28%).
 - Candidate-only: 120 bytes.
-- **Unknown: 3134855 bytes (99.65%)** across 21 gaps.
+- **Unknown: 3134639 bytes (99.65%)** across 21 gaps.
 
 ## Census health
 
 - Entries with unresolved fields/formats: 18.
-- Observed but not yet located (breadth backlog): 30.
-- Runtime-only findings (seen live, no location): 19.
-- Static-only findings (located, never exercised live): 0.
+- Observed but not yet located (breadth backlog): 31.
+- Runtime-only findings (seen live, no location): 21.
+- Static-only findings (located, never exercised live): 1.
 
 ## Open breadth targets (next_action of unlocated entries)
 
 - **CEN-AUDIO-0004** (Battle music track (opening guard fight)): Delta-map the music-start APU command at a field-to-battle transition; locate the sequence pointer in ARAM.
 - **CEN-AUDIO-0005** (Field/event music selection): DSP snapshot on checkpoint2; compare voice/SRCN set against the battle snapshot.
+- **CEN-BATTLE-0007** (Defeat flow ('Annihilated')): Capture the post-defeat transition (game over vs retry) in a dedicated run.
 - **CEN-CHAR-0002** (Party formation and follower chain): Locate the party-composition store consumed at battle init (slot staging producers from EXP-0018 are the thread).
 - **CEN-CHAR-0003** (Field player/NPC objects (Magitek armor walker, guards, townsfolk)): OAM capture on the field state to register the sprite composition (tiles, palettes, OAM layout).
+- **CEN-CHAR-0004** (Field character-record block (~WRAM:+$1600)): Map the record stride via a second character's values; relate to the $C10DF3 copy-loop source.
 - **CEN-EVENT-0001** (Event scripting engine (opening scripted sequence)): Exec-census a dialogue advance (A press) to find the event dispatcher loop PC.
 - **CEN-EVENT-0002** (Dialogue text content and encoding): Capture the dialogue compose region + derive the glyph-to-byte mapping via the tilemap-affine technique (EXP-0023 pattern).
 - **CEN-EVENT-0003** (Character naming state (Terra as '?????')): Locate the character-name store: WRAM search for the rendered name tile sequence source when the status window composes.
@@ -45,8 +47,7 @@ Breadth without pretense: counts are census entries at or above each threshold (
 - **CEN-GFX-0003** (Battle background (cave scene)): BG1/BG2 VRAM + tilemap capture during battle; provenance search (EXP-0023 pattern).
 - **CEN-GFX-0004** (Variable-width dialogue font): Capture the dialogue compose region; the fixed-font provenance technique should locate the glyph source.
 - **CEN-MAGIC-0001** (Magitek command and ability set): Disambiguate the Fire Beam record index (menu-navigation press script; watch the MVN X source during the confirm).
-- **CEN-MAGIC-0004** (MP deduction and the cost field): Cast Cure from the field menu (heal path) while watching +$3C08-family and the menu MP display source.
-- **CEN-MAGIC-0005** (Spell targeting flags and menu targeting behavior): Initiate a field Cure cast to the character-select stage and record the targeting UI + consumed flags.
+- **CEN-MAGIC-0005** (Spell targeting flags and menu targeting behavior): Correlate record byte 3/4 bits against multi-target spells once more are castable.
 - **CEN-MAGIC-0006** (Spell effect dispatch): Map record bytes 7/8 against effect variety once more spells are castable; hunt an effect-routine pointer table.
 - **CEN-MAGIC-0007** (Spell animation data): Cast Fire in battle (after menu navigation) and capture the animation asset loads (VRAM deltas, DMA).
 - **CEN-MAGIC-0008** (Spell audio cues): Delta-capture APU port commands during a spell cast (EXP-0024 pattern).

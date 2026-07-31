@@ -18,10 +18,12 @@ censused the magic system (spell name table located, $C46AC0 shown to
 be the spell database, availability array at +$1A6E). 43 census
 entries, 10 of 12 domains; ROM known 0.34%.
 
-**Next exact action:** highest-leverage breadth target — **verify the
-spell name-table boundary and a second MP-cost anchor** (battle Magic
-menu), which upgrades the spell database toward EXTRACTED and
-unlocks bulk extraction of all 54 records. Alternates per
-`ff6lab coverage gaps`: monster stat-record source trace (battle-init
-writes into the +$3B18 family), or the HUD font load-path trace.
-Depth follow-ups queued in BLOCKERS/RESEARCH_QUEUE remain valid.
+**Next exact action:** EXP-0027 done (spell database extracted: 54
+records Confirmed, cost field Confirmed, esper name table found,
+field character-record block located). Per the prioritization rules,
+three consecutive magic-adjacent units have now run (EXP-0025/26/27)
+— **review `ff6lab coverage summary` and rotate domains.** Top
+candidates: monster stat-record source trace (battle-init writes into
+the +$3B18 family — unlocks the monster database the way EXP-0026
+unlocked spells), the HUD font load-path trace (completes GFX-0001),
+or the SPC dispatch trace (completes AUD-0001).

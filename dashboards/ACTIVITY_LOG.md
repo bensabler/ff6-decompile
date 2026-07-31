@@ -1,5 +1,20 @@
 # Activity Log
 
+- 2026-07-31 (resume) — Unit 27 / EXP-0027: **spell database
+  extraction complete.** Name-table boundary Confirmed at exactly 54
+  entries (class icons $E9x24/$EAx21/$E8x9; the menu bullet IS the
+  record's class icon); the **esper name table** found at 0x26F6E1
+  (27x8, clean stride decode) with a stride-~10 ability-name table
+  following (candidate). Battle-menu cost anchor unreachable (party
+  at 0 HP; the wait produced the 'Annihilated' defeat flow + on-screen
+  formation names Were-Rat/Repo Man — both registered); the **field
+  Cure cast** anchored the cost behaviorally: '5 MP Needed' gate,
+  heal 34→77/77, deduction 24→19 — **record byte 5 = MP cost
+  Confirmed** for id 45. Single-byte WRAM diffs located the field
+  character-record block (HP +$1609, MP +$160D slot 0). All 54
+  records extracted locally; ids+numbers mirrored into
+  data/census/spells.json. First EXTRACTED_COMPLETE census entry.
+
 - 2026-07-31 (census unit) — **Content census system established**
   (5 commits): 12-domain taxonomy with separate reconstruction and
   runtime status ladders; content-census + ROM-ownership manifests

@@ -352,7 +352,7 @@
       "classification": "TEXT",
       "owner": "CEN-MAGIC-0003",
       "format": "7-byte spell-name records: [class icon][6-char name], FF6 glyph encoding",
-      "confidence": "strong-hypothesis",
+      "confidence": "confirmed",
       "evidence": [
         "docs/experiments/EXP-0026-magic-census.md",
         "local_artifacts/experiments/EXP-0026/ (menu tilemap + ROM decode)"
@@ -362,7 +362,7 @@
       ],
       "overlaps": [],
       "status": "known",
-      "notes": "36 entries decoded contiguously from id 0 (Fire); Cure anchored at id 45 (0x26F6A3, matches the observed menu). 54-entry extent inferred from the class-icon structure \u2014 end boundary unverified."
+      "notes": "Exactly 54 entries (boundary Confirmed by EXP-0027: class-icon runs E9 x24 / EA x21 / E8 x9; the esper name table begins immediately after)."
     },
     {
       "id": "ROM-0020",
@@ -380,6 +380,24 @@
       "overlaps": [],
       "status": "candidate",
       "notes": "Located by encoded-string search only; stride/structure and exact extent unestablished."
+    },
+    {
+      "id": "ROM-0021",
+      "start": 2553569,
+      "size": 216,
+      "bank": "ROMCPU:$E6F6E1-$E6F7B8",
+      "classification": "TEXT",
+      "owner": "CEN-MAGIC-0009",
+      "format": "8-byte esper-name records (27 entries)",
+      "confidence": "confirmed",
+      "evidence": [
+        "docs/experiments/EXP-0027-spell-extraction.md",
+        "local_artifacts/experiments/EXP-0027/ (boundary/esper decodes, cast screenshots, WRAM diff; hashes.sha256)"
+      ],
+      "consumers": [],
+      "overlaps": [],
+      "status": "known",
+      "notes": "All 27 decode cleanly at stride 8; boundary at 0x26F7B9 where a stride-~10 ability-name table begins (candidate, unregistered pending decode)."
     }
   ]
 }

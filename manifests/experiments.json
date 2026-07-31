@@ -442,6 +442,23 @@
       "falsifying_outcome": "the Magic command is absent for every opening party member in both field and battle menus",
       "status": "completed",
       "record": "docs/experiments/EXP-0026-magic-census.md"
+    },
+    {
+      "schema_version": "1.0",
+      "id": "EXP-0027",
+      "question": "Where does the spell name table end, does a second on-screen MP cost match record byte 5, and can all spell records be extracted with defensible counts?",
+      "starting_state": {
+        "emulator": "static ROM analysis; optional headless battle-menu capture (Mesen 2.1.1 --testrunner)",
+        "rom_sha256": "0f51b4fca41b7fd509e4b8f9d543151f68efa5e97b08493e4b2a0c06f5d8d5e2",
+        "state": "local ROM file; exp10-battle.mss for the bounded live attempt"
+      },
+      "expected_outcomes": [
+        "icon-classed entries end after entry 53 (54-count Confirmed; extraction complete)",
+        "pattern continues past 53 or breaks earlier (count corrected; census updated)"
+      ],
+      "falsifying_outcome": "clean icon-classed magic-style entries at ids 54+ or a break before id 53",
+      "status": "completed",
+      "record": "docs/experiments/EXP-0027-spell-extraction.md"
     }
   ]
 }

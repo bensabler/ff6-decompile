@@ -1,8 +1,8 @@
 {
   "schema_version": "1.0",
   "domain": "MAGIC",
-  "description": "Global spell/ability records. Established by EXP-0026: the $C46AC0 14-byte record table (CEN-BATTLE-0004) doubles as the spell database — records 0-53 are the magic spells, ids shared with the 7-byte name table at ROMFILE:0x26F567 (CEN-MAGIC-0003). Names decode via the fixed-font byte encoding (CEN-MENU-0006). Bulk name text stays in local artifacts per docs/legal/ASSET_POLICY.md; this inventory stores ids, offsets, numbers, flags, and observation-sourced display names only.",
-  "expected_record_count": null,
+  "description": "Global spell/ability records. Established by EXP-0026: the $C46AC0 14-byte record table (CEN-BATTLE-0004) doubles as the spell database \u2014 records 0-53 are the 54 magic spells (count Confirmed by the name-table boundary, EXP-0027), ids shared with the 7-byte name table at ROMFILE:0x26F567 (CEN-MAGIC-0003). Names decode via the fixed-font byte encoding (CEN-MENU-0006). Bulk name text stays in local artifacts per docs/legal/ASSET_POLICY.md; this inventory stores ids, offsets, numbers, flags, and observation-sourced display names only.",
+  "expected_record_count": 54,
   "structure": {
     "data_records": {
       "rom_file_offset": "0x046AC0 + 14*id",
@@ -12,7 +12,7 @@
         "byte2": "flags: bit0 physical formula, bit7 MP-path dispatch (Confirmed)",
         "byte3": "bit7 MP retarget (Confirmed); other bits unknown",
         "byte4": "mode: bit7 base variant, bit1 flip chain, bit0 party halving (Confirmed)",
-        "byte5": "MP cost (Strong hypothesis: single on-screen anchor Cure=5; families coherent)",
+        "byte5": "MP cost (Confirmed for id 45: menu readout + '5 MP Needed' targeting text + live deduction 24->19, EXP-0026/0027; other ids extracted, per-id on-screen verification pending)",
         "byte6": "power (Confirmed, EXP-0014/0015)",
         "byte9": "flag byte, ASL post-processed (Confirmed loader-side; semantics unknown)",
         "byte10": "abort bits #$82 (partial, EXP-0010)",
@@ -31,42 +31,892 @@
   "records": [
     {
       "id": 0,
-      "display_name_observed": "Fire",
-      "name_source": "menu tilemap decode + ROM name record 0 (EXP-0026)",
-      "mp_cost_candidate": 4,
-      "mp_cost_status": "inferred from record byte 5 (Strong-hypothesis field); not yet observed on screen — the field menu showed 0 for the dim entry",
-      "known_by": ["character slot 0 ('?????'/Terra) via +$1A6E"],
-      "data_record_bytes_local": "local_artifacts/experiments/EXP-0022/table_C46AC0_3584.hex",
+      "class_icon": 233,
+      "mp_cost": 4,
       "power": 21,
       "element_mask": 1,
-      "confidence": "strong-hypothesis",
-      "unknowns": ["field castability rule", "targeting", "animation", "sound", "bytes 0/7/8/11-13"]
+      "flags2": 0,
+      "byte3": 40,
+      "mode": 0,
+      "byte9": 255,
+      "abort_bits": 0,
+      "name": "see local extraction (asset policy)",
+      "sources": [
+        "EXP-0027 bulk extraction (local_artifacts/experiments/EXP-0027/spell-records.json)",
+        "EXP-0026 on-screen observation"
+      ],
+      "display_name_observed": "Fire",
+      "known_by": [
+        "character slot 0 ('?????'/Terra) via +$1A6E"
+      ]
+    },
+    {
+      "id": 1,
+      "class_icon": 233,
+      "mp_cost": 5,
+      "power": 22,
+      "element_mask": 2,
+      "flags2": 0,
+      "byte3": 40,
+      "mode": 0,
+      "byte9": 255,
+      "abort_bits": 0,
+      "name": "see local extraction (asset policy)",
+      "sources": [
+        "EXP-0027 bulk extraction (local_artifacts/experiments/EXP-0027/spell-records.json)"
+      ]
+    },
+    {
+      "id": 2,
+      "class_icon": 233,
+      "mp_cost": 6,
+      "power": 20,
+      "element_mask": 4,
+      "flags2": 0,
+      "byte3": 40,
+      "mode": 0,
+      "byte9": 255,
+      "abort_bits": 0,
+      "name": "see local extraction (asset policy)",
+      "sources": [
+        "EXP-0027 bulk extraction (local_artifacts/experiments/EXP-0027/spell-records.json)"
+      ]
+    },
+    {
+      "id": 3,
+      "class_icon": 233,
+      "mp_cost": 3,
+      "power": 25,
+      "element_mask": 8,
+      "flags2": 8,
+      "byte3": 40,
+      "mode": 0,
+      "byte9": 255,
+      "abort_bits": 4,
+      "name": "see local extraction (asset policy)",
+      "sources": [
+        "EXP-0027 bulk extraction (local_artifacts/experiments/EXP-0027/spell-records.json)"
+      ]
+    },
+    {
+      "id": 4,
+      "class_icon": 233,
+      "mp_cost": 15,
+      "power": 38,
+      "element_mask": 0,
+      "flags2": 8,
+      "byte3": 42,
+      "mode": 2,
+      "byte9": 255,
+      "abort_bits": 0,
+      "name": "see local extraction (asset policy)",
+      "sources": [
+        "EXP-0027 bulk extraction (local_artifacts/experiments/EXP-0027/spell-records.json)"
+      ]
+    },
+    {
+      "id": 5,
+      "class_icon": 233,
+      "mp_cost": 20,
+      "power": 60,
+      "element_mask": 1,
+      "flags2": 0,
+      "byte3": 40,
+      "mode": 0,
+      "byte9": 255,
+      "abort_bits": 0,
+      "name": "see local extraction (asset policy)",
+      "sources": [
+        "EXP-0027 bulk extraction (local_artifacts/experiments/EXP-0027/spell-records.json)"
+      ]
+    },
+    {
+      "id": 6,
+      "class_icon": 233,
+      "mp_cost": 21,
+      "power": 62,
+      "element_mask": 2,
+      "flags2": 0,
+      "byte3": 40,
+      "mode": 0,
+      "byte9": 255,
+      "abort_bits": 0,
+      "name": "see local extraction (asset policy)",
+      "sources": [
+        "EXP-0027 bulk extraction (local_artifacts/experiments/EXP-0027/spell-records.json)"
+      ]
+    },
+    {
+      "id": 7,
+      "class_icon": 233,
+      "mp_cost": 22,
+      "power": 61,
+      "element_mask": 4,
+      "flags2": 0,
+      "byte3": 40,
+      "mode": 0,
+      "byte9": 255,
+      "abort_bits": 0,
+      "name": "see local extraction (asset policy)",
+      "sources": [
+        "EXP-0027 bulk extraction (local_artifacts/experiments/EXP-0027/spell-records.json)"
+      ]
+    },
+    {
+      "id": 8,
+      "class_icon": 233,
+      "mp_cost": 26,
+      "power": 53,
+      "element_mask": 8,
+      "flags2": 8,
+      "byte3": 40,
+      "mode": 0,
+      "byte9": 255,
+      "abort_bits": 4,
+      "name": "see local extraction (asset policy)",
+      "sources": [
+        "EXP-0027 bulk extraction (local_artifacts/experiments/EXP-0027/spell-records.json)"
+      ]
+    },
+    {
+      "id": 9,
+      "class_icon": 233,
+      "mp_cost": 51,
+      "power": 121,
+      "element_mask": 1,
+      "flags2": 0,
+      "byte3": 40,
+      "mode": 0,
+      "byte9": 255,
+      "abort_bits": 0,
+      "name": "see local extraction (asset policy)",
+      "sources": [
+        "EXP-0027 bulk extraction (local_artifacts/experiments/EXP-0027/spell-records.json)"
+      ]
+    },
+    {
+      "id": 10,
+      "class_icon": 233,
+      "mp_cost": 52,
+      "power": 122,
+      "element_mask": 2,
+      "flags2": 0,
+      "byte3": 40,
+      "mode": 0,
+      "byte9": 255,
+      "abort_bits": 0,
+      "name": "see local extraction (asset policy)",
+      "sources": [
+        "EXP-0027 bulk extraction (local_artifacts/experiments/EXP-0027/spell-records.json)"
+      ]
+    },
+    {
+      "id": 11,
+      "class_icon": 233,
+      "mp_cost": 53,
+      "power": 120,
+      "element_mask": 4,
+      "flags2": 0,
+      "byte3": 40,
+      "mode": 0,
+      "byte9": 255,
+      "abort_bits": 0,
+      "name": "see local extraction (asset policy)",
+      "sources": [
+        "EXP-0027 bulk extraction (local_artifacts/experiments/EXP-0027/spell-records.json)"
+      ]
+    },
+    {
+      "id": 12,
+      "class_icon": 233,
+      "mp_cost": 25,
+      "power": 0,
+      "element_mask": 0,
+      "flags2": 2,
+      "byte3": 40,
+      "mode": 16,
+      "byte9": 255,
+      "abort_bits": 64,
+      "name": "see local extraction (asset policy)",
+      "sources": [
+        "EXP-0027 bulk extraction (local_artifacts/experiments/EXP-0027/spell-records.json)"
+      ]
+    },
+    {
+      "id": 13,
+      "class_icon": 233,
+      "mp_cost": 35,
+      "power": 0,
+      "element_mask": 0,
+      "flags2": 2,
+      "byte3": 40,
+      "mode": 16,
+      "byte9": 53,
+      "abort_bits": 128,
+      "name": "see local extraction (asset policy)",
+      "sources": [
+        "EXP-0027 bulk extraction (local_artifacts/experiments/EXP-0027/spell-records.json)"
+      ]
+    },
+    {
+      "id": 14,
+      "class_icon": 233,
+      "mp_cost": 40,
+      "power": 108,
+      "element_mask": 32,
+      "flags2": 0,
+      "byte3": 40,
+      "mode": 0,
+      "byte9": 255,
+      "abort_bits": 0,
+      "name": "see local extraction (asset policy)",
+      "sources": [
+        "EXP-0027 bulk extraction (local_artifacts/experiments/EXP-0027/spell-records.json)"
+      ]
+    },
+    {
+      "id": 15,
+      "class_icon": 233,
+      "mp_cost": 45,
+      "power": 60,
+      "element_mask": 0,
+      "flags2": 32,
+      "byte3": 40,
+      "mode": 0,
+      "byte9": 255,
+      "abort_bits": 0,
+      "name": "see local extraction (asset policy)",
+      "sources": [
+        "EXP-0027 bulk extraction (local_artifacts/experiments/EXP-0027/spell-records.json)"
+      ]
+    },
+    {
+      "id": 16,
+      "class_icon": 233,
+      "mp_cost": 33,
+      "power": 8,
+      "element_mask": 0,
+      "flags2": 66,
+      "byte3": 42,
+      "mode": 144,
+      "byte9": 255,
+      "abort_bits": 0,
+      "name": "see local extraction (asset policy)",
+      "sources": [
+        "EXP-0027 bulk extraction (local_artifacts/experiments/EXP-0027/spell-records.json)"
+      ]
+    },
+    {
+      "id": 17,
+      "class_icon": 233,
+      "mp_cost": 48,
+      "power": 12,
+      "element_mask": 0,
+      "flags2": 66,
+      "byte3": 42,
+      "mode": 144,
+      "byte9": 255,
+      "abort_bits": 0,
+      "name": "see local extraction (asset policy)",
+      "sources": [
+        "EXP-0027 bulk extraction (local_artifacts/experiments/EXP-0027/spell-records.json)"
+      ]
+    },
+    {
+      "id": 18,
+      "class_icon": 233,
+      "mp_cost": 53,
+      "power": 0,
+      "element_mask": 0,
+      "flags2": 2,
+      "byte3": 42,
+      "mode": 16,
+      "byte9": 35,
+      "abort_bits": 128,
+      "name": "see local extraction (asset policy)",
+      "sources": [
+        "EXP-0027 bulk extraction (local_artifacts/experiments/EXP-0027/spell-records.json)"
+      ]
+    },
+    {
+      "id": 19,
+      "class_icon": 233,
+      "mp_cost": 62,
+      "power": 36,
+      "element_mask": 0,
+      "flags2": 96,
+      "byte3": 34,
+      "mode": 32,
+      "byte9": 255,
+      "abort_bits": 0,
+      "name": "see local extraction (asset policy)",
+      "sources": [
+        "EXP-0027 bulk extraction (local_artifacts/experiments/EXP-0027/spell-records.json)"
+      ]
+    },
+    {
+      "id": 20,
+      "class_icon": 233,
+      "mp_cost": 80,
+      "power": 150,
+      "element_mask": 0,
+      "flags2": 32,
+      "byte3": 42,
+      "mode": 32,
+      "byte9": 255,
+      "abort_bits": 0,
+      "name": "see local extraction (asset policy)",
+      "sources": [
+        "EXP-0027 bulk extraction (local_artifacts/experiments/EXP-0027/spell-records.json)"
+      ]
+    },
+    {
+      "id": 21,
+      "class_icon": 233,
+      "mp_cost": 50,
+      "power": 111,
+      "element_mask": 64,
+      "flags2": 48,
+      "byte3": 2,
+      "mode": 32,
+      "byte9": 37,
+      "abort_bits": 0,
+      "name": "see local extraction (asset policy)",
+      "sources": [
+        "EXP-0027 bulk extraction (local_artifacts/experiments/EXP-0027/spell-records.json)"
+      ]
+    },
+    {
+      "id": 22,
+      "class_icon": 233,
+      "mp_cost": 75,
+      "power": 15,
+      "element_mask": 0,
+      "flags2": 82,
+      "byte3": 2,
+      "mode": 144,
+      "byte9": 255,
+      "abort_bits": 0,
+      "name": "see local extraction (asset policy)",
+      "sources": [
+        "EXP-0027 bulk extraction (local_artifacts/experiments/EXP-0027/spell-records.json)"
+      ]
+    },
+    {
+      "id": 23,
+      "class_icon": 233,
+      "mp_cost": 85,
+      "power": 138,
+      "element_mask": 17,
+      "flags2": 48,
+      "byte3": 2,
+      "mode": 32,
+      "byte9": 255,
+      "abort_bits": 0,
+      "name": "see local extraction (asset policy)",
+      "sources": [
+        "EXP-0027 bulk extraction (local_artifacts/experiments/EXP-0027/spell-records.json)"
+      ]
+    },
+    {
+      "id": 24,
+      "class_icon": 234,
+      "mp_cost": 3,
+      "power": 0,
+      "element_mask": 0,
+      "flags2": 0,
+      "byte3": 8,
+      "mode": 0,
+      "byte9": 16,
+      "abort_bits": 0,
+      "name": "see local extraction (asset policy)",
+      "sources": [
+        "EXP-0027 bulk extraction (local_artifacts/experiments/EXP-0027/spell-records.json)"
+      ]
+    },
+    {
+      "id": 25,
+      "class_icon": 234,
+      "mp_cost": 5,
+      "power": 0,
+      "element_mask": 0,
+      "flags2": 0,
+      "byte3": 8,
+      "mode": 0,
+      "byte9": 255,
+      "abort_bits": 0,
+      "name": "see local extraction (asset policy)",
+      "sources": [
+        "EXP-0027 bulk extraction (local_artifacts/experiments/EXP-0027/spell-records.json)"
+      ]
+    },
+    {
+      "id": 26,
+      "class_icon": 234,
+      "mp_cost": 12,
+      "power": 10,
+      "element_mask": 0,
+      "flags2": 8,
+      "byte3": 168,
+      "mode": 0,
+      "byte9": 255,
+      "abort_bits": 0,
+      "name": "see local extraction (asset policy)",
+      "sources": [
+        "EXP-0027 bulk extraction (local_artifacts/experiments/EXP-0027/spell-records.json)"
+      ]
+    },
+    {
+      "id": 27,
+      "class_icon": 234,
+      "mp_cost": 8,
+      "power": 0,
+      "element_mask": 0,
+      "flags2": 0,
+      "byte3": 8,
+      "mode": 0,
+      "byte9": 255,
+      "abort_bits": 0,
+      "name": "see local extraction (asset policy)",
+      "sources": [
+        "EXP-0027 bulk extraction (local_artifacts/experiments/EXP-0027/spell-records.json)"
+      ]
+    },
+    {
+      "id": 28,
+      "class_icon": 234,
+      "mp_cost": 12,
+      "power": 0,
+      "element_mask": 0,
+      "flags2": 0,
+      "byte3": 8,
+      "mode": 32,
+      "byte9": 255,
+      "abort_bits": 0,
+      "name": "see local extraction (asset policy)",
+      "sources": [
+        "EXP-0027 bulk extraction (local_artifacts/experiments/EXP-0027/spell-records.json)"
+      ]
+    },
+    {
+      "id": 29,
+      "class_icon": 234,
+      "mp_cost": 5,
+      "power": 0,
+      "element_mask": 0,
+      "flags2": 0,
+      "byte3": 8,
+      "mode": 0,
+      "byte9": 255,
+      "abort_bits": 0,
+      "name": "see local extraction (asset policy)",
+      "sources": [
+        "EXP-0027 bulk extraction (local_artifacts/experiments/EXP-0027/spell-records.json)"
+      ]
+    },
+    {
+      "id": 30,
+      "class_icon": 234,
+      "mp_cost": 8,
+      "power": 0,
+      "element_mask": 0,
+      "flags2": 0,
+      "byte3": 8,
+      "mode": 0,
+      "byte9": 255,
+      "abort_bits": 0,
+      "name": "see local extraction (asset policy)",
+      "sources": [
+        "EXP-0027 bulk extraction (local_artifacts/experiments/EXP-0027/spell-records.json)"
+      ]
+    },
+    {
+      "id": 31,
+      "class_icon": 234,
+      "mp_cost": 10,
+      "power": 0,
+      "element_mask": 0,
+      "flags2": 0,
+      "byte3": 8,
+      "mode": 32,
+      "byte9": 255,
+      "abort_bits": 0,
+      "name": "see local extraction (asset policy)",
+      "sources": [
+        "EXP-0027 bulk extraction (local_artifacts/experiments/EXP-0027/spell-records.json)"
+      ]
+    },
+    {
+      "id": 32,
+      "class_icon": 234,
+      "mp_cost": 10,
+      "power": 0,
+      "element_mask": 0,
+      "flags2": 0,
+      "byte3": 8,
+      "mode": 0,
+      "byte9": 255,
+      "abort_bits": 0,
+      "name": "see local extraction (asset policy)",
+      "sources": [
+        "EXP-0027 bulk extraction (local_artifacts/experiments/EXP-0027/spell-records.json)"
+      ]
+    },
+    {
+      "id": 33,
+      "class_icon": 234,
+      "mp_cost": 16,
+      "power": 0,
+      "element_mask": 0,
+      "flags2": 0,
+      "byte3": 8,
+      "mode": 0,
+      "byte9": 255,
+      "abort_bits": 0,
+      "name": "see local extraction (asset policy)",
+      "sources": [
+        "EXP-0027 bulk extraction (local_artifacts/experiments/EXP-0027/spell-records.json)"
+      ]
+    },
+    {
+      "id": 34,
+      "class_icon": 234,
+      "mp_cost": 17,
+      "power": 0,
+      "element_mask": 0,
+      "flags2": 0,
+      "byte3": 11,
+      "mode": 32,
+      "byte9": 255,
+      "abort_bits": 0,
+      "name": "see local extraction (asset policy)",
+      "sources": [
+        "EXP-0027 bulk extraction (local_artifacts/experiments/EXP-0027/spell-records.json)"
+      ]
+    },
+    {
+      "id": 35,
+      "class_icon": 234,
+      "mp_cost": 10,
+      "power": 0,
+      "element_mask": 0,
+      "flags2": 0,
+      "byte3": 9,
+      "mode": 8,
+      "byte9": 255,
+      "abort_bits": 32,
+      "name": "see local extraction (asset policy)",
+      "sources": [
+        "EXP-0027 bulk extraction (local_artifacts/experiments/EXP-0027/spell-records.json)"
+      ]
+    },
+    {
+      "id": 36,
+      "class_icon": 234,
+      "mp_cost": 22,
+      "power": 0,
+      "element_mask": 0,
+      "flags2": 0,
+      "byte3": 8,
+      "mode": 32,
+      "byte9": 255,
+      "abort_bits": 0,
+      "name": "see local extraction (asset policy)",
+      "sources": [
+        "EXP-0027 bulk extraction (local_artifacts/experiments/EXP-0027/spell-records.json)"
+      ]
+    },
+    {
+      "id": 37,
+      "class_icon": 234,
+      "mp_cost": 15,
+      "power": 0,
+      "element_mask": 0,
+      "flags2": 0,
+      "byte3": 8,
+      "mode": 32,
+      "byte9": 255,
+      "abort_bits": 0,
+      "name": "see local extraction (asset policy)",
+      "sources": [
+        "EXP-0027 bulk extraction (local_artifacts/experiments/EXP-0027/spell-records.json)"
+      ]
+    },
+    {
+      "id": 38,
+      "class_icon": 234,
+      "mp_cost": 18,
+      "power": 0,
+      "element_mask": 0,
+      "flags2": 0,
+      "byte3": 10,
+      "mode": 40,
+      "byte9": 255,
+      "abort_bits": 16,
+      "name": "see local extraction (asset policy)",
+      "sources": [
+        "EXP-0027 bulk extraction (local_artifacts/experiments/EXP-0027/spell-records.json)"
+      ]
+    },
+    {
+      "id": 39,
+      "class_icon": 234,
+      "mp_cost": 38,
+      "power": 0,
+      "element_mask": 0,
+      "flags2": 0,
+      "byte3": 8,
+      "mode": 32,
+      "byte9": 255,
+      "abort_bits": 0,
+      "name": "see local extraction (asset policy)",
+      "sources": [
+        "EXP-0027 bulk extraction (local_artifacts/experiments/EXP-0027/spell-records.json)"
+      ]
+    },
+    {
+      "id": 40,
+      "class_icon": 234,
+      "mp_cost": 26,
+      "power": 0,
+      "element_mask": 0,
+      "flags2": 0,
+      "byte3": 8,
+      "mode": 0,
+      "byte9": 255,
+      "abort_bits": 0,
+      "name": "see local extraction (asset policy)",
+      "sources": [
+        "EXP-0027 bulk extraction (local_artifacts/experiments/EXP-0027/spell-records.json)"
+      ]
+    },
+    {
+      "id": 41,
+      "class_icon": 234,
+      "mp_cost": 1,
+      "power": 26,
+      "element_mask": 0,
+      "flags2": 8,
+      "byte3": 170,
+      "mode": 2,
+      "byte9": 255,
+      "abort_bits": 0,
+      "name": "see local extraction (asset policy)",
+      "sources": [
+        "EXP-0027 bulk extraction (local_artifacts/experiments/EXP-0027/spell-records.json)"
+      ]
+    },
+    {
+      "id": 42,
+      "class_icon": 234,
+      "mp_cost": 20,
+      "power": 0,
+      "element_mask": 0,
+      "flags2": 16,
+      "byte3": 19,
+      "mode": 32,
+      "byte9": 24,
+      "abort_bits": 0,
+      "name": "see local extraction (asset policy)",
+      "sources": [
+        "EXP-0027 bulk extraction (local_artifacts/experiments/EXP-0027/spell-records.json)"
+      ]
+    },
+    {
+      "id": 43,
+      "class_icon": 234,
+      "mp_cost": 99,
+      "power": 0,
+      "element_mask": 0,
+      "flags2": 0,
+      "byte3": 18,
+      "mode": 32,
+      "byte9": 67,
+      "abort_bits": 0,
+      "name": "see local extraction (asset policy)",
+      "sources": [
+        "EXP-0027 bulk extraction (local_artifacts/experiments/EXP-0027/spell-records.json)"
+      ]
+    },
+    {
+      "id": 44,
+      "class_icon": 234,
+      "mp_cost": 25,
+      "power": 0,
+      "element_mask": 0,
+      "flags2": 0,
+      "byte3": 11,
+      "mode": 36,
+      "byte9": 255,
+      "abort_bits": 16,
+      "name": "see local extraction (asset policy)",
+      "sources": [
+        "EXP-0027 bulk extraction (local_artifacts/experiments/EXP-0027/spell-records.json)"
+      ]
     },
     {
       "id": 45,
-      "display_name_observed": "Cure",
-      "name_source": "menu screenshot + tilemap decode + ROM name record 45 (EXP-0026)",
-      "mp_cost_observed": 5,
-      "mp_cost_status": "observed on screen; matches record byte 5",
-      "help_text_observed": "Recovers HP",
-      "known_by": ["character slot 0 ('?????'/Terra) via +$1A6E"],
-      "data_record_bytes_local": "local_artifacts/experiments/EXP-0022/table_C46AC0_3584.hex",
+      "class_icon": 232,
+      "mp_cost": 5,
       "power": 10,
       "element_mask": 0,
-      "confidence": "strong-hypothesis",
-      "unknowns": ["targeting flags", "effect routine", "animation", "sound"]
+      "flags2": 40,
+      "byte3": 9,
+      "mode": 33,
+      "byte9": 255,
+      "abort_bits": 0,
+      "name": "see local extraction (asset policy)",
+      "sources": [
+        "EXP-0027 bulk extraction (local_artifacts/experiments/EXP-0027/spell-records.json)",
+        "EXP-0026 on-screen observation"
+      ],
+      "display_name_observed": "Cure",
+      "mp_cost_observed": 5,
+      "help_text_observed": "Recovers HP",
+      "known_by": [
+        "character slot 0 ('?????'/Terra) via +$1A6E"
+      ]
+    },
+    {
+      "id": 46,
+      "class_icon": 232,
+      "mp_cost": 25,
+      "power": 28,
+      "element_mask": 0,
+      "flags2": 40,
+      "byte3": 9,
+      "mode": 33,
+      "byte9": 255,
+      "abort_bits": 0,
+      "name": "see local extraction (asset policy)",
+      "sources": [
+        "EXP-0027 bulk extraction (local_artifacts/experiments/EXP-0027/spell-records.json)"
+      ]
+    },
+    {
+      "id": 47,
+      "class_icon": 232,
+      "mp_cost": 40,
+      "power": 66,
+      "element_mask": 0,
+      "flags2": 40,
+      "byte3": 9,
+      "mode": 33,
+      "byte9": 255,
+      "abort_bits": 0,
+      "name": "see local extraction (asset policy)",
+      "sources": [
+        "EXP-0027 bulk extraction (local_artifacts/experiments/EXP-0027/spell-records.json)"
+      ]
+    },
+    {
+      "id": 48,
+      "class_icon": 232,
+      "mp_cost": 30,
+      "power": 2,
+      "element_mask": 0,
+      "flags2": 44,
+      "byte3": 11,
+      "mode": 165,
+      "byte9": 255,
+      "abort_bits": 128,
+      "name": "see local extraction (asset policy)",
+      "sources": [
+        "EXP-0027 bulk extraction (local_artifacts/experiments/EXP-0027/spell-records.json)"
+      ]
+    },
+    {
+      "id": 49,
+      "class_icon": 232,
+      "mp_cost": 60,
+      "power": 16,
+      "element_mask": 0,
+      "flags2": 44,
+      "byte3": 11,
+      "mode": 165,
+      "byte9": 255,
+      "abort_bits": 128,
+      "name": "see local extraction (asset policy)",
+      "sources": [
+        "EXP-0027 bulk extraction (local_artifacts/experiments/EXP-0027/spell-records.json)"
+      ]
+    },
+    {
+      "id": 50,
+      "class_icon": 232,
+      "mp_cost": 3,
+      "power": 0,
+      "element_mask": 0,
+      "flags2": 0,
+      "byte3": 11,
+      "mode": 36,
+      "byte9": 255,
+      "abort_bits": 4,
+      "name": "see local extraction (asset policy)",
+      "sources": [
+        "EXP-0027 bulk extraction (local_artifacts/experiments/EXP-0027/spell-records.json)"
+      ]
+    },
+    {
+      "id": 51,
+      "class_icon": 232,
+      "mp_cost": 15,
+      "power": 0,
+      "element_mask": 0,
+      "flags2": 0,
+      "byte3": 11,
+      "mode": 36,
+      "byte9": 255,
+      "abort_bits": 69,
+      "name": "see local extraction (asset policy)",
+      "sources": [
+        "EXP-0027 bulk extraction (local_artifacts/experiments/EXP-0027/spell-records.json)"
+      ]
+    },
+    {
+      "id": 52,
+      "class_icon": 232,
+      "mp_cost": 10,
+      "power": 0,
+      "element_mask": 0,
+      "flags2": 8,
+      "byte3": 8,
+      "mode": 32,
+      "byte9": 255,
+      "abort_bits": 0,
+      "name": "see local extraction (asset policy)",
+      "sources": [
+        "EXP-0027 bulk extraction (local_artifacts/experiments/EXP-0027/spell-records.json)"
+      ]
+    },
+    {
+      "id": 53,
+      "class_icon": 232,
+      "mp_cost": 50,
+      "power": 0,
+      "element_mask": 0,
+      "flags2": 0,
+      "byte3": 10,
+      "mode": 32,
+      "byte9": 255,
+      "abort_bits": 0,
+      "name": "see local extraction (asset policy)",
+      "sources": [
+        "EXP-0027 bulk extraction (local_artifacts/experiments/EXP-0027/spell-records.json)"
+      ]
     }
   ],
   "unknowns": [
-    "true spell count (54 inferred from class-icon structure, Tentative)",
     "help-text table location",
-    "targeting/animation/sound field linkage",
-    "menu grid ordering rule (Cure renders first despite id 45)"
+    "targeting/animation/sound field linkage (bytes 0/7/8/11-13)",
+    "menu grid ordering rule",
+    "field castability rule (dim entries)"
   ],
   "evidence_sources": [
     "docs/experiments/EXP-0026-magic-census.md",
     "docs/experiments/EXP-0022-record-crosscheck.md",
-    "local_artifacts/experiments/EXP-0026/ (hashes.sha256)"
+    "local_artifacts/experiments/EXP-0026/ (hashes.sha256)",
+    "docs/experiments/EXP-0027-spell-extraction.md"
   ],
-  "next_extraction_step": "Verify the name-table end boundary and a second MP-cost anchor (battle menu); then bulk-extract all 54 records to local_artifacts and mirror ids/numbers here."
+  "next_extraction_step": "Map record bytes 0/7/8/11-13 (targeting/animation/sound candidates) via varied casts; hunt the help-text table."
 }
