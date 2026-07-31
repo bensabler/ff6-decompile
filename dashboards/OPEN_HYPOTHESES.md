@@ -11,6 +11,7 @@
 | H-BATTLE-0007 | `WRAM:+$3C08`/`+$3C30` are current/max MP; `+$3C1C` is max HP. | Strong hypothesis (code roles Confirmed, EXP-0001; `+$3C1C` effectively settled by EXP-0003's display pairing) | Spend/heal MP live while watching `+$3C08` |
 | H-BATTLE-0008 | ~~The battle per-slot arrays are 10 entries: party slots 0–3 + enemy slots 4–9.~~ | **Resolved: Confirmed** (EXP-0005: enemy HP observed in entries 4–5, damaged and zeroed by the same delta-engine/death-handler stores; entries 6–9 presumed for larger groups) | None for the structure; entries 6–9 usage awaits a larger encounter |
 
-Claims implemented in `battle/battle.go` are deliberately **not** listed
-here: they lack canonical records and cannot be tracked as hypotheses until
-Session 003 is documented (see [BLOCKERS.md](BLOCKERS.md)).
+Battle-implementation claims are tracked through canonical records
+rather than this table: SESSION_003 was reconstructed 2026-07-29 and
+the experiment→discovery→implementation chain is closed by
+DISC-0001..0007 ([indexes/DISCOVERIES.md](../indexes/DISCOVERIES.md)).
