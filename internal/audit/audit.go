@@ -14,6 +14,8 @@ import (
 	"path/filepath"
 	"regexp"
 	"strings"
+
+	"github.com/bensabler/ff6-decompile/internal/census"
 )
 
 // Finding is one audit defect.
@@ -31,6 +33,7 @@ func Run(root string) ([]Finding, error) {
 		CheckManifests,
 		CheckExperimentRecordsInManifest,
 		CheckExperimentIndexSync,
+		CheckCensus,
 		CheckMarkdownLinks,
 		CheckRestrictedTracked,
 		CheckRequiredTracked,
@@ -150,6 +153,24 @@ func CheckExperimentIndexSync(root string) ([]Finding, error) {
 		if !strings.Contains(string(idx), e.ID) {
 			fs = append(fs, Finding{"index-sync", "indexes/EXPERIMENTS.md missing " + e.ID})
 		}
+	}
+	return fs, nil
+}
+
+// CheckCensus wraps the content-census and ROM-ledger validation
+// (internal/census) into audit findings, and skips cleanly when the
+// census manifests do not exist yet (pre-census fixture trees).
+func CheckCensus(root string) ([]Finding, error) {
+	if _, err := os.Stat(filepath.Join(root, "manifests", "content-census.json")); err != nil {
+		return nil, nil
+	}
+	issues, err := census.Validate(root)
+	if err != nil {
+		return nil, err
+	}
+	fs := make([]Finding, 0, len(issues))
+	for _, i := range issues {
+		fs = append(fs, Finding{i.Check, i.Message})
 	}
 	return fs, nil
 }

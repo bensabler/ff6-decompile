@@ -8,6 +8,7 @@ import (
 
 	"github.com/bensabler/ff6-decompile/internal/audio/brr"
 	"github.com/bensabler/ff6-decompile/internal/audit"
+	"github.com/bensabler/ff6-decompile/internal/census"
 	"github.com/bensabler/ff6-decompile/internal/game/attackdata"
 	"github.com/bensabler/ff6-decompile/internal/graphics/tile2bpp"
 	"github.com/bensabler/ff6-decompile/internal/project"
@@ -52,9 +53,27 @@ func run(args []string) error {
 				return err
 			}
 			fmt.Println("indexes/EXPERIMENTS.md regenerated")
-			return nil
+			return censusSync(".")
 		}
 		return fmt.Errorf("usage: ff6lab indexes generate")
+	case "census":
+		if len(args) > 1 && args[1] == "validate" {
+			return censusValidate(".")
+		}
+		if len(args) > 1 && args[1] == "sync" {
+			if err := censusSync("."); err != nil {
+				return err
+			}
+			return censusValidate(".")
+		}
+		return fmt.Errorf("usage: ff6lab census validate|sync")
+	case "coverage":
+		return coverageCmd(args[1:])
+	case "rom":
+		if len(args) > 1 && args[1] == "gaps" {
+			return romGaps(".")
+		}
+		return fmt.Errorf("usage: ff6lab rom gaps")
 	case "attackdata":
 		if len(args) > 2 && args[1] == "scan" {
 			return scanAttackTable(args[2], os.Stdout)
@@ -134,6 +153,96 @@ func decodeTile2bpp(path, indexArg string, w *os.File) error {
 			fmt.Fprintf(w, "%d", px)
 		}
 		fmt.Fprintln(w)
+	}
+	return nil
+}
+
+// censusSync regenerates every census-derived file.
+func censusSync(root string) error {
+	c, r, err := census.Load(root)
+	if err != nil {
+		return err
+	}
+	for name, content := range map[string]string{
+		"indexes/CONTENT_CENSUS.md": census.GenerateCensusIndex(c),
+		"indexes/ROM_REGIONS.md":    census.GenerateRegionIndex(r),
+		"dashboards/COVERAGE.md":    census.GenerateCoverageDashboard(c, r),
+	} {
+		if err := os.WriteFile(root+"/"+name, []byte(content), 0o644); err != nil {
+			return err
+		}
+		fmt.Println(name, "regenerated")
+	}
+	return nil
+}
+
+func censusValidate(root string) error {
+	issues, err := census.Validate(root)
+	if err != nil {
+		return err
+	}
+	for _, i := range issues {
+		fmt.Println(i)
+	}
+	if len(issues) > 0 {
+		return fmt.Errorf("census: %d issue(s)", len(issues))
+	}
+	fmt.Println("census: clean")
+	return nil
+}
+
+func coverageCmd(args []string) error {
+	c, _, err := census.Load(".")
+	if err != nil {
+		return err
+	}
+	sub := "summary"
+	if len(args) > 0 {
+		sub = args[0]
+	}
+	switch sub {
+	case "summary":
+		fmt.Println("Domain      Registered  Located  Decoded  Extracted  Implemented  RuntimeVerified")
+		for _, d := range census.Summary(c) {
+			fmt.Printf("%-11s %10d %8d %8d %10d %12d %16d\n",
+				d.Domain, d.Registered, d.Located, d.Decoded, d.Extracted, d.Implemented, d.RuntimeVerified)
+		}
+		return nil
+	case "gaps":
+		for _, e := range c.Entries {
+			if !census.AtLeast(census.ReconstructionLadder, e.ReconstructionStatus, "LOCATED") {
+				fmt.Printf("%s [%s/%s] %s — next: %s\n",
+					e.ID, e.ReconstructionStatus, e.RuntimeStatus, e.Name, e.NextAction)
+			}
+		}
+		return nil
+	case "domain":
+		if len(args) < 2 {
+			return fmt.Errorf("usage: ff6lab coverage domain <name>")
+		}
+		for _, e := range c.Entries {
+			if !strings.EqualFold(e.Domain, args[1]) {
+				continue
+			}
+			fmt.Printf("%s [%s/%s] %s\n  next: %s\n", e.ID, e.ReconstructionStatus, e.RuntimeStatus, e.Name, e.NextAction)
+		}
+		return nil
+	}
+	return fmt.Errorf("usage: ff6lab coverage summary|gaps|domain <name>")
+}
+
+func romGaps(root string) error {
+	_, r, err := census.Load(root)
+	if err != nil {
+		return err
+	}
+	st := census.Analyze(r)
+	known := st.KnownBytes
+	fmt.Printf("ROM %d bytes; known %d (%.2f%%); candidate-only %d; %d gaps\n",
+		st.RomSize, known, float64(known)*100/float64(st.RomSize), st.CandidateBytes, len(st.Gaps))
+	fmt.Println("largest unknown spans:")
+	for _, g := range census.TopGaps(st, 10) {
+		fmt.Printf("  0x%06X-0x%06X (%d bytes)\n", g.Start, g.Start+g.Size-1, g.Size)
 	}
 	return nil
 }
