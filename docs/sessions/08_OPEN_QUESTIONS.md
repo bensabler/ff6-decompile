@@ -93,14 +93,17 @@ Ordered roughly by how much each answer would unlock.
     (halve/three-quarters). **No RNG read anywhere in the damage
     arithmetic** — misses arrive as power=0. See #29.
 
-29. **Where is the RNG actually consumed?** The entire damage
-    arithmetic (both base paths + all post-processing) is
-    deterministic; EXP-0016 proved timing-dependent variance. The
-    consumer must live in the action-setup/hit-roll layer that
-    populates `+$11A1`–`+$11B0` per action (misses → power 0).
-    *Experiment:* write watch on `+$11A6` during identical-state
-    trials from `exp10-battle.mss`; the writer's routine is the
-    hit/setup layer; its timing-varying read is the RNG state.
+29. ~~**Where is the RNG actually consumed?**~~ → **Refined twice**
+    (EXP-0018 + [EXP-0019](../experiments/EXP-0019-rng-state.md)): the
+    setup layer is fully decoded (MVN table load + fight staging, both
+    deterministic); identical-state divergence = **enemy AI action
+    selection**. See #30.
+
+30. **Decode the enemy-AI action-selection layer** (above `$C23190`;
+    reads `+$3A70`+1 bit 0 and DP `$B5` before `JSR $299F`) — the
+    true RNG consumer. *Experiment:* exec/write watches on the
+    `$C23190` caller chain during identical-state trials; find the
+    timing-varying read.
 
 27. **What are `+$11AE`/`+$11AF`** (28 and 4 for VICKS's Fire Beam —
     stat candidates) **and what writes them?** *Lead (EXP-0017):* the

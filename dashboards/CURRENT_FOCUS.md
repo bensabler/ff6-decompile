@@ -10,7 +10,9 @@ refactored); queued amount proven equal to displayed damage
 Mesen live with bridge + injected watches (code preserved in
 EXP-0002/0004/0005/0007 records).
 
-**Next exact action:** EXP-0019 — dump `ROMCPU:$C22950`-`$C229E0`
-(clear/populate routine) and `$C23190`-`$C231C0` (caller); enumerate
-reads; verify the timing-varying one (the RNG state) with a write
-watch during identical-state trials.
+**Next exact action:** question #30 — the enemy-AI selection layer
+(the true RNG consumer): exec/write watches on the `$C23190` caller
+chain during identical-state trials from `exp10-battle.mss`.
+Alternative high-value units: dump attack records from the local ROM
+and cross-check known entries (Fire Beam power 60) via `attackdata`;
+or wire a `ff6lab battle simulate` demo command.

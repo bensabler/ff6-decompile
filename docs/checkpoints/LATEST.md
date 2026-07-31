@@ -1,6 +1,6 @@
 # Latest Checkpoint
 
-**[2026-07-30 — Unit 19: hit/act gate localized](2026-07-30-unit19-hit-gate.md)**
+**[2026-07-30 — Unit 20: attack-data table discovered](2026-07-30-unit20-attack-table.md)**
 
-State: miss = cleared-but-never-populated action; RNG gate bracketed.
-Exact next action: EXP-0019 — dump and decode the clear/populate routine.
+State: first ROM data format implemented (attackdata). Mesen live.
+Exact next action: #30 AI-layer hunt, or ROM cross-check of attack records.

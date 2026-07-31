@@ -1,5 +1,14 @@
 # Activity Log
 
+- 2026-07-30 (late) — Unit 20 / EXP-0019: **the attack/spell data table
+  discovered** — MVN loads 14-byte records from `ROMCPU:$C46AC0`
+  (`ROMFILE:0x046AC0`) into the action block; every decoded `$11Ax`
+  meaning becomes a record field. Fight-command staging decoded (six
+  more per-slot stat tables; family ≈19). Miss/variance reinterpreted:
+  divergence is enemy-AI action selection (#30). Go:
+  `internal/game/attackdata` (Decode/RecordAt + typed accessors,
+  synthetic fixtures, fuzz). First ROM data format implemented.
+
 - 2026-07-30 (evening) — Unit 19 / EXP-0018: **the hit/act gate
   localized** — `$C2297D` clears the action block, `$C229D4` populates
   power (values deterministic: 13/19 per enemy); identical-state trials
