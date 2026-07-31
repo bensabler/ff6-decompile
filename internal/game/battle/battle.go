@@ -59,6 +59,11 @@ const (
 // BattleSlots holds the authoritative per-slot battle values operated on
 // by the delta engine — party entries 0-3, enemy entries 4-9. Layout
 // follows the original struct-of-arrays form.
+//
+// Slot indexes are plain ints matching the hardware's unchecked Y=slot*2
+// indexing; out-of-range slots panic via the array bounds check, which is
+// the intended programmer-error behavior (assessed 2026-07-30; a slot
+// type would add ceremony without evidence of misuse).
 type BattleSlots struct {
 	CurrentHP [BattleSlotCount]uint16 // $3BF4
 	CurrentMP [BattleSlotCount]uint16 // $3C08
@@ -93,7 +98,7 @@ func (p *BattleSlots) ApplyHPDelta(slot int, delta int32) bool {
 		p.CurrentHP[slot] = healClamped(p.CurrentHP[slot], clamp16(delta), p.MaxHP[slot])
 		return false
 	}
-	remaining, hitZero := damageFloored(p.CurrentHP[slot], clamp16(-delta))
+	remaining, hitZero := damageFloored(p.CurrentHP[slot], magnitude16(delta))
 	p.CurrentHP[slot] = remaining
 	if !hitZero {
 		return false
@@ -112,7 +117,7 @@ func (p *BattleSlots) ApplyMPDelta(slot int, delta int32) bool {
 		p.CurrentMP[slot] = healClamped(p.CurrentMP[slot], clamp16(delta), p.MaxMP[slot])
 		return false
 	}
-	remaining, hitZero := damageFloored(p.CurrentMP[slot], clamp16(-delta))
+	remaining, hitZero := damageFloored(p.CurrentMP[slot], magnitude16(delta))
 	p.CurrentMP[slot] = remaining
 	if !hitZero || !p.DiesAtZeroMP[slot] {
 		return false
@@ -157,6 +162,20 @@ func clamp16(v int32) uint16 {
 		return 0xFFFF
 	}
 	return uint16(v)
+}
+
+// magnitude16 is the negative-delta magnitude, computed in int64 so
+// math.MinInt32 cannot overflow during negation, clamped to the 16-bit
+// operand width like clamp16.
+func magnitude16(delta int32) uint16 {
+	m := int64(delta)
+	if m < 0 {
+		m = -m
+	}
+	if m > 0xFFFF {
+		return 0xFFFF
+	}
+	return uint16(m)
 }
 
 // PendingDeltaNone is the "no pending delta" sentinel observed throughout

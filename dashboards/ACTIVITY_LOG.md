@@ -1,5 +1,22 @@
 # Activity Log
 
+- 2026-07-30 (maintenance) — Repository repair unit: **fixed the
+  `.gitignore` collision that had silently untracked
+  `cmd/ff6lab/main.go` and `local_artifacts/README.md`** (the published
+  repo could not build the CLI from a clean clone); CI now builds the
+  CLI, checks required tracked sources, and runs `ff6lab audit`; root
+  `CLAUDE.md` constitution added; `internal/audit` package +
+  `ff6lab audit`/`ff6lab indexes generate` implemented with tests;
+  `indexes/EXPERIMENTS.md` generated from the manifest; seven discovery
+  records created (DISC-0001..0007) closing the experiment→discovery→
+  implementation gap; SESSION_003 citations repointed to the immutable
+  archive; PACKAGE_MANIFEST/BUILD_VERIFICATION labeled historical;
+  per-experiment evidence layout adopted (EVIDENCE_LAYOUT.md); bridge
+  v2 (relative paths, id'd atomic responses, probe files, fixed
+  loadstate logging); `math.MinInt32` delta overflow fixed with
+  regression tests; golden damage test tightened to the exact 347;
+  dashboards/indexes/06_BATTLE_SYSTEM synchronized through EXP-0019.
+
 - 2026-07-30 (late) — Unit 20 / EXP-0019: **the attack/spell data table
   discovered** — MVN loads 14-byte records from `ROMCPU:$C46AC0`
   (`ROMFILE:0x046AC0`) into the action block; every decoded `$11Ax`

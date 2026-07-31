@@ -1,4 +1,97 @@
 {
   "schema_version": "1.0",
-  "discoveries": []
+  "discoveries": [
+    {
+      "schema_version": "1.0",
+      "id": "DISC-0001",
+      "title": "Unified ten-slot battle arrays",
+      "status": "implemented",
+      "experiments": [
+        "EXP-0003",
+        "EXP-0004",
+        "EXP-0005"
+      ],
+      "record": "docs/discoveries/DISC-0001-unified-battle-arrays.md",
+      "go_symbols": "battle.BattleSlots, battle.BattleSlotCount, battle.PartySlotCount",
+      "tests": "TestApplyHPDeltaEnemySlots, TestApplyHPDeltaIsolation"
+    },
+    {
+      "schema_version": "1.0",
+      "id": "DISC-0002",
+      "title": "Pending-delta accumulator with the 9999 cap",
+      "status": "implemented",
+      "experiments": [
+        "EXP-0004",
+        "EXP-0006",
+        "EXP-0007"
+      ],
+      "record": "docs/discoveries/DISC-0002-pending-delta-accumulator.md",
+      "go_symbols": "battle.AccumulatePending, battle.PendingDeltaNone, battle.PendingDeltaCap",
+      "tests": "TestAccumulatePending"
+    },
+    {
+      "schema_version": "1.0",
+      "id": "DISC-0003",
+      "title": "Element-response transform",
+      "status": "implemented",
+      "experiments": [
+        "EXP-0010"
+      ],
+      "record": "docs/discoveries/DISC-0003-element-response-transform.md",
+      "go_symbols": "battle.ElementResponse, battle.ApplyElementResponse",
+      "tests": "TestApplyElementResponse"
+    },
+    {
+      "schema_version": "1.0",
+      "id": "DISC-0004",
+      "title": "Defense scaling",
+      "status": "implemented",
+      "experiments": [
+        "EXP-0011",
+        "EXP-0013"
+      ],
+      "record": "docs/discoveries/DISC-0004-defense-scaling.md",
+      "go_symbols": "battle.Scale256, battle.ApplyDefense, battle.NoDefense",
+      "tests": "TestScale256, FuzzScale256Composition, TestApplyDefense, TestDamageChainGolden"
+    },
+    {
+      "schema_version": "1.0",
+      "id": "DISC-0005",
+      "title": "Standard base-damage calculation",
+      "status": "implemented",
+      "experiments": [
+        "EXP-0014",
+        "EXP-0015"
+      ],
+      "record": "docs/discoveries/DISC-0005-standard-base-damage.md",
+      "go_symbols": "battle.BaseAmountStandard",
+      "tests": "TestBaseAmountStandard, TestDamageChainGolden"
+    },
+    {
+      "schema_version": "1.0",
+      "id": "DISC-0006",
+      "title": "Physical base-damage calculation",
+      "status": "implemented",
+      "experiments": [
+        "EXP-0016",
+        "EXP-0017"
+      ],
+      "record": "docs/discoveries/DISC-0006-physical-base-damage.md",
+      "go_symbols": "battle.BaseAmountPhysical, battle.PhysicalFlags",
+      "tests": "TestBaseAmountPhysical"
+    },
+    {
+      "schema_version": "1.0",
+      "id": "DISC-0007",
+      "title": "Attack/spell record format (14 bytes)",
+      "status": "implemented",
+      "experiments": [
+        "EXP-0018",
+        "EXP-0019"
+      ],
+      "record": "docs/discoveries/DISC-0007-attack-record-format.md",
+      "go_symbols": "attackdata.Record, attackdata.Decode, attackdata.RecordAt, attackdata.TableFileOffset",
+      "tests": "TestDecodeAndAccessors, TestRecordAt, FuzzDecode (attackdata)"
+    }
+  ]
 }

@@ -1,5 +1,6 @@
 # ROMs and commercial-derived material
-local_artifacts/
+/local_artifacts/*
+!/local_artifacts/README.md
 *.sfc
 *.smc
 *.fig
@@ -20,8 +21,8 @@ dist/
 coverage.out
 *.prof
 *.test
-ff6lab
-ff6lab.exe
+/ff6lab
+/ff6lab.exe
 
 # Local settings
 .env

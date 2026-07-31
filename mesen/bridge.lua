@@ -17,7 +17,14 @@
 --   press <buttons> <frames>       -> hold buttons (comma list) for N frames
 --   eval <lua>                     -> run lua chunk, result to resp.txt
 
-local OUT = "/Users/benjaminsabler/Learning/GitHub/ff6-decompile/mesen/out/"
+-- Output directory: relative to Mesen's working directory (launch from the
+-- repository root), overridable via mesen/bridge_config.lua returning
+-- { out = "/abs/path/" }. No personal absolute paths in the script.
+local OUT = "mesen/out/"
+do
+  local ok, cfg = pcall(dofile, "mesen/bridge_config.lua")
+  if ok and type(cfg) == "table" and type(cfg.out) == "string" then OUT = cfg.out end
+end
 
 local function append(path, text)
   local f = io.open(path, "a")
@@ -229,9 +236,14 @@ local function handleCommand(line)
     ref = emu.addMemoryCallback(function()
       emu.removeMemoryCallback(ref, emu.callbackType.exec, 0, 0xFFFFFF, emu.cpuType.snes, emu.memType.snesMemory)
       local ok, err = pcall(emu.loadSavestate, data)
-      append(OUT .. "events.log", "loadstate applied ok=" .. tostring(ok) .. " err=" .. tostring(err) .. "\n")
+      append(OUT .. "events.log", "loadstate applied ok=" .. tostring(ok) .. " detail=" .. tostring(err) .. "\n")
     end, emu.callbackType.exec, 0, 0xFFFFFF, emu.cpuType.snes, emu.memType.snesMemory)
     return "ok loadstate queued " .. tostring(#data) .. " bytes"
+  elseif cmd == "probe" then
+    local name = rest:match("^(%S+)$")
+    if not name or name:find("[^%w%-_]") then return "bad probe name" end
+    local ok2, err2 = pcall(dofile, "mesen/probes/" .. name .. ".lua")
+    return ok2 and ("ok probe " .. name) or ("probe error: " .. tostring(err2))
   elseif cmd == "eval" then
     local fn, err = load(rest)
     if not fn then return "load error: " .. tostring(err) end
@@ -241,7 +253,14 @@ local function handleCommand(line)
   return "unknown command: " .. tostring(line)
 end
 
+-- Command protocol v2: cmd.txt holds "<id> <command...>" (id = any token;
+-- clients should increase it per command). resp.txt is written atomically
+-- (tmp + rename) as "<id> ok|error\n<payload>". A bare command with no id
+-- is accepted with id "-" for backward compatibility. Repeated delivery of
+-- the same id is ignored (duplicate-command prevention). Every command and
+-- response line is appended to commands.log for the experiment transcript.
 local frameTick = 0
+local lastId = nil
 local function onEndFrame()
   frameTick = frameTick + 1
   if frameTick % 10 ~= 0 then return end
@@ -251,8 +270,22 @@ local function onEndFrame()
   f:close()
   os.remove(OUT .. "cmd.txt")
   if not line or line == "" then return end
-  local ok, res = pcall(handleCommand, line)
-  writeFile(OUT .. "resp.txt", (ok and res or ("command error: " .. tostring(res))) .. "\n")
+  local id, restLine = line:match("^(%S+)%s+(.*)$")
+  if id and restLine and restLine ~= "" and not restLine:match("^%s*$") and id:match("^[%w%-%.]+$") and (id:match("%d") or id == "-") then
+    -- id'd form
+  else
+    id, restLine = "-", line
+  end
+  if id ~= "-" and id == lastId then return end
+  lastId = id
+  append(OUT .. "commands.log", os.date("%H:%M:%S") .. " > " .. line .. "\n")
+  local ok, res = pcall(handleCommand, restLine)
+  local status = ok and "ok" or "error"
+  local payload = ok and res or ("command error: " .. tostring(res))
+  writeFile(OUT .. "resp.txt.tmp", id .. " " .. status .. "\n" .. payload .. "\n")
+  os.remove(OUT .. "resp.txt")
+  os.rename(OUT .. "resp.txt.tmp", OUT .. "resp.txt")
+  append(OUT .. "commands.log", os.date("%H:%M:%S") .. " < " .. id .. " " .. status .. "\n")
 end
 
 -- ---------------------------------------------------------------------------

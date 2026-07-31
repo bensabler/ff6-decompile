@@ -91,3 +91,35 @@ Lifecycle: $FF fill @ ROMCPU:$C0567B (boot/teardown);
 - Whether PerFrameBattleUpdate also runs outside battles.
 
 See [08_OPEN_QUESTIONS.md](08_OPEN_QUESTIONS.md).
+
+
+## Damage pipeline (EXP-0006..0019, 2026-07-30)
+
+**Status: Confirmed byte-exact** for every stage below; semantic labels
+at their recorded hypothesis levels; RNG consumption localized to the
+AI/action-selection layer (question #30, open).
+
+```text
+AI / action selection (RNG consumer - undecoded, #30)
+  └─ action setup: 14-byte attack record MVN'd from ROMCPU:$C46AC0+14×n
+     into WRAM:+$11A0-+$11AD (spells), or fight populate from per-slot
+     stat tables (+$3B18/+$3B2C/+$3B68/+$3B7C/+$3B90/+$3BA4) @ $C2299F
+       └─ target loop @ ~$C23442 (Y=$12→0, +$3018,Y bits vs DP $A4)
+            └─ base amount @ $C20B83: standard ($C22B69:
+               power×4 + power×$11AE×$11AF>>5) or physical ($C22BA6:
+               vigor² shape) per $11A2 bit 0; +$11B0 staging
+                 └─ defense (255−def)/256+1 · halvings · party-vs-party
+                    halving · element response (+$3BCC/+$3BE0 masks)
+                    · ×1.5 chain ($BC) → DP $F0
+                      └─ accumulator @ $C20C76 → pending arrays
+                         (+$33D0/+$33E4, $FFFF none, cap 9999)
+                           └─ delta engine @ $C21300 dispatch →
+                              +$3BF4-family arrays (10 slots)
+                                └─ display copier @ $C25D26 →
+                                   +$2E78 family → CopyCharacterFields
+                                   @ $C10DF3 → +$2EB5 records → HUD
+```
+
+Numeric closure: power 60 / stats 28,4 → base 450 → defense ≈58 →
+346-observed Fire Beam (EXP-0007/0014/0015). Misses arrive as power 0
+(cleared-but-never-populated action blocks, EXP-0018/0019).

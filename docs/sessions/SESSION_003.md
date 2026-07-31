@@ -20,8 +20,8 @@
 > 1. The `NEW-3BF4-WRITER` write watch that produced the central log lines
 >    is **not** in the preserved `mesen/bridge.lua` (which watches
 >    `WRAM:+$2E78`–`+$2E7F`); it was injected at runtime, almost certainly
->    via the bridge `eval` command (`mesen/out/resp.txt` still holds an
->    `eval` acknowledgment). Its exact code and watch range are lost.
+>    via the bridge `eval` command (`mesen/out/session003/resp.txt`, the
+>    archived copy, holds the `eval` acknowledgment). Its exact code and watch range are lost.
 > 2. The byte-exact disassembly claims embedded in
 >    `internal/game/battle/battle.go` (routines `ROMCPU:$C21323`,
 >    `$C21350`, `$C21390`, `$C213A7`) have **no preserved ROM dumps**.
@@ -44,10 +44,12 @@ display HP `$2A` = 42), then later loads continuing into the Narshe mines
 deaths) while every previously-unseen writing PC was logged with registers
 and a stack snapshot.
 
-## Raw observations (verbatim from `mesen/out/events.log`)
+## Raw observations
 
-All lines preserved in the log (SHA-256
-`bcfc7f4c…a99d03`). Selected, with `WRAM:` addresses decoded:
+Verbatim from `mesen/out/session003/events.log` — the immutable archive
+whose SHA-256 matches the recorded hash (`bcfc7f4c…a99d03`); the live
+`mesen/out/events.log` has since been appended to by later sessions.
+Selected lines, with `WRAM:` addresses decoded:
 
 | Frame | Logged PC | Wrote | Value | Registers of note |
 |---|---|---|---|---|

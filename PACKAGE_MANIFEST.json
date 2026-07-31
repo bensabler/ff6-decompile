@@ -214,5 +214,6 @@
     "schemas/project.schema.json",
     "scripts/README.md",
     "testdata/README.md"
-  ]
+  ],
+  "status": "historical: V4 scaffold installation inventory (2026-07-29); not live project state"
 }

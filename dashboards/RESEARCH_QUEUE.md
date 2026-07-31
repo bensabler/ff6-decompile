@@ -1,54 +1,27 @@
 # Research Queue
 
-## P0 — Provenance repair
+## P0 — Active frontier
 
-- [x] Document Session 003 —
-  [SESSION_003.md](../docs/sessions/SESSION_003.md) written (reconstructed
-  record), promoted to 02/04/05/06/08, `battle` tests added (2026-07-29,
-  overnight session)
-- [x] Re-dump `ROMCPU:$C21300–$C21410` and verify every `battle.go`
-  disassembly claim —
-  [EXP-0001](../docs/experiments/EXP-0001-c2-delta-engine-dump.md): all
-  claims verified byte-exact; FN-0003..0006 now Confirmed (code)
+- [ ] **EXP-0020 (question #30):** enemy-AI action-selection layer — the
+  true RNG consumer (watches on the `$C23190` caller chain during
+  identical-state trials from `mesen/out/exp10-battle.mss`).
 
-## P0 — Environment integrity (completed 2026-07-29)
+## P1 — Semantic debt (next behavior units)
 
-- [x] Complete Version 4 migration —
-  [V4_MIGRATION_REPORT.md](../docs/migrations/V4_MIGRATION_REPORT.md)
-- [x] Record exact Mesen capability matrix (verified rows only) —
-  [MESEN_CAPABILITY_MATRIX.md](../docs/research/MESEN_CAPABILITY_MATRIX.md)
-- [x] Record ROM identity and local paths —
-  [ROM_IDENTITY.md](../docs/research/ROM_IDENTITY.md)
-- [x] Confirm latest checkpoint from the prior active Claude session —
-  no prior checkpoint existed; Session 003 was interrupted without one
-  (recorded in [SESSIONS.md](../indexes/SESSIONS.md) as SES-003)
+- [ ] Live MP spend/heal verification for `WRAM:+$3C08`/`+$3C30`
+  (H-BATTLE-0004/0007; justifies the published Go names).
+- [ ] `+$11AE`/`+$11AF` producers and meanings (question #27; `+$3B18,X`
+  lead in EXP-0017/0019).
+- [ ] Cross-check attack records against the local ROM via
+  `attackdata.RecordAt` (Fire Beam entry: power 60, element bit 0).
 
-## P1 — Battle lead
+## P1 — Phase-1 vertical proofs (rebalance targets)
 
-- [x] Identify callers of `ROMCPU:$C10DF3` — Confirmed in
-  [SESSION_002](../docs/sessions/SESSION_002.md): `JSR $0DF3` at
-  `ROMCPU:$C10200` inside PerFrameBattleUpdate (`ROMCPU:$C101FB`)
-- [x] Reproduce `WRAM:+$2EB5` HP match across slots and values — Confirmed
-  for slots 0–2 in [SESSION_002](../docs/sessions/SESSION_002.md)
-- [x] Test the candidate `$20` record stride — Confirmed in
-  [SESSION_002](../docs/sessions/SESSION_002.md) (iterations Y=0/$20/$40;
-  records at `WRAM:+$2EB5/+$2ED5/+$2EF5/+$2F15`)
-- [ ] Identify source region ownership around `WRAM:+$2E78` (open question
-  #1 in [08_OPEN_QUESTIONS.md](../docs/sessions/08_OPEN_QUESTIONS.md);
-  partially advanced by undocumented Session 003 evidence — resolve SES-003
-  first)
+- [ ] Graphics: one bounded FF6 target (menu font / battle HUD tiles)
+  runtime→ROM→decoder→comparison.
+- [ ] Audio: one short sound effect trigger→APU→sequence/sample→decode.
 
-## P1 — End-to-end vertical proofs
-
-- [ ] Reconstruct one small graphics target from runtime state to Go validation.
-- [ ] Reconstruct one short sound effect from CPU trigger to sequence/sample validation.
-- [x] Implement one confirmed behavior in Go with tests —
-  `chardata.CopyCharacterFields`
-  ([02_DISCOVERED_FUNCTIONS.md](../docs/sessions/02_DISCOVERED_FUNCTIONS.md),
-  tests in `internal/game/chardata/chardata_test.go`)
-
-## P2
-
-- [ ] Recover party battle record.
-- [ ] Recover a menu font/tilemap path.
-- [ ] Recover sample directory and one BRR sample.
+## Completed (see ACTIVITY_LOG and indexes/EXPERIMENTS.md)
+Battle damage pipeline end to end (EXP-0001..0019): engine, display
+chain, accumulator, element response, defense scaling, both base
+formulas, attack-record format, variance localization.

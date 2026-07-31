@@ -1,6 +1,9 @@
 package battle
 
-import "testing"
+import (
+	"math"
+	"testing"
+)
 
 func TestApplyHPDelta(t *testing.T) {
 	tests := []struct {
@@ -289,9 +292,11 @@ func TestDamageChainGolden(t *testing.T) {
 	if base != 450 {
 		t.Fatalf("base = %d, want 450", base)
 	}
-	got := ApplyDefense(base, 58)
-	if got != 347 && got != 346 {
-		t.Fatalf("ApplyDefense(450, 58) = %d, want ~346", got)
+	// Exact arithmetic: floor(450*197/256)+1 = 347. The live popup read
+	// 346, implying the real defense operand differed slightly from the
+	// def=58 estimate; the formula itself is byte-exact (EXP-0013/0015).
+	if got := ApplyDefense(base, 58); got != 347 {
+		t.Fatalf("ApplyDefense(450, 58) = %d, want exactly 347", got)
 	}
 }
 
@@ -320,5 +325,25 @@ func TestBaseAmountPhysical(t *testing.T) {
 				t.Errorf("BaseAmountPhysical = %d, want %d", got, tt.want)
 			}
 		})
+	}
+}
+
+// math.MinInt32's magnitude must not overflow during negation
+// (regression: clamp16(-delta) wrapped to a negative value).
+func TestApplyDeltaMinInt32(t *testing.T) {
+	p := BattleSlots{}
+	p.CurrentHP[0] = 0xFFFF
+	p.MaxHP[0] = 0xFFFF
+	if death := p.ApplyHPDelta(0, math.MinInt32); !death {
+		t.Fatal("MinInt32 damage on max HP must clamp to 0xFFFF magnitude and kill")
+	}
+	if p.CurrentHP[0] != 0 {
+		t.Fatalf("CurrentHP = %d, want 0", p.CurrentHP[0])
+	}
+	p.CurrentMP[1] = 0xFFFF
+	p.MaxMP[1] = 0xFFFF
+	p.ApplyMPDelta(1, math.MinInt32)
+	if p.CurrentMP[1] != 0 {
+		t.Fatalf("CurrentMP = %d, want 0", p.CurrentMP[1])
 	}
 }

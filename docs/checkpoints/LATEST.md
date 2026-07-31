@@ -1,6 +1,6 @@
 # Latest Checkpoint
 
-**[2026-07-30 — Unit 20: attack-data table discovered](2026-07-30-unit20-attack-table.md)**
+**[2026-07-30 — Repository repair and state synchronization](2026-07-30-maint-repo-repair.md)**
 
-State: first ROM data format implemented (attackdata). Mesen live.
-Exact next action: #30 AI-layer hunt, or ROM cross-check of attack records.
+State: infrastructure repaired (gitignore/CI/audit/discoveries/bridge v2).
+Exact next action: EXP-0020 — AI-layer RNG hunt with bridge v2 probes.
