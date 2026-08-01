@@ -1,16 +1,18 @@
 # Latest Checkpoint
 
-**[2026-08-01 — EXP-0038: mines encounter, milestone 06](2026-08-01-exp0038-mines-encounter.md)**
+**[2026-08-01 — EXP-0039: Whelk reached (breadth pass)](2026-08-01-exp0039-whelk-breadth-recon.md)**
 
-State: SCN-0001 reaches **milestone `06-random-encounter`**. Two
-scheduled power-on runs reproduce the mines random encounter at frame
-51 307 — formation 14 (three of monster record 19), leg 19, near tile
-`(26,0B)` — with byte-identical milestone WRAM (`c6e69ad7…`) and
-identical event-flag timelines. Corridor `(26,1C)→(26,0B)→(28,0B)→
-(28,09)` mapped; scripted event at ~`(2A,09)` registered
-(CEN-EVENT-0009) and not entered; seventh verification of the
-formation table; traversal and encounters write no event flags. No
-background processes running. Exact next action: **EXP-0039 —
-mines-to-Whelk breadth reconnaissance in visible GUI Mesen** from
-`05-mines-entry.mss`: explore widely, register briefly, continue
-forward, and advance toward Whelk.
+State: **Whelk has been reached, entered and observed** — the
+scenario's furthest point to date. A deliberate breadth-first GUI pass
+mapped the mines corridor (branches, dead ends, a **bidirectional**
+exterior transition), **refuted fixed-tile encounter triggering**,
+captured the **Magitek ability list**, and made first contact with
+Whelk: formation 432, contact-triggered from `(2A,07)`, with its
+introduction dialogue and **shell counterattack** observed. The first
+attempt **ended in defeat**, capturing the defeat flow. New bounded
+question: the formation record's monster-id field needs a high-bit
+extension decode (Whelk's ids read implausibly as record 0). No
+background processes running. Exact next action: **EXP-0040 — Whelk
+victory attempt (branch A)**: reload the pre-Whelk savestate, Heal
+Force first, strike only while the head is extended, and capture
+milestone `10-whelk-victory` plus the first stable post-battle state.

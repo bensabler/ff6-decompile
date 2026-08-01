@@ -661,7 +661,7 @@
         "partial: progress blocked at a specific fact, recorded with the smallest resolving experiment"
       ],
       "falsifying_outcome": "observations left unregistered, claims without captured evidence, or inline depth-decoding (scope violation)",
-      "status": "planned",
+      "status": "completed",
       "record": "docs/experiments/EXP-0039-mines-to-whelk-breadth-recon.md"
     }
   ]

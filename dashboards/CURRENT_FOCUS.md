@@ -65,20 +65,31 @@ non-byte-stable frame capture.
 `local_artifacts/backups/`. Unattended sessions use headless Mesen
 (`--testrunner`, `FF6_OUT`, frame-scheduled input); see BLOCKERS.md.
 
+## Whelk reached (EXP-0039 breadth pass)
+
+The scenario's furthest point to date. The mines-to-Whelk stretch is
+short and linear: one corridor with a single turn, one dead-end nub, a
+**bidirectional** exterior transition, a random-encounter zone drawing
+formation 14, and two scripted beats bracketing the fight. Whelk is
+**formation 432**, contact-triggered from `(2A,07)` after a scripted
+beat at `(2A,09)`; its introduction/warning dialogue and **shell
+counterattack** were observed, and the first attempt **ended in
+defeat** (which captured the defeat flow, CEN-BATTLE-0007). A
+pre-Whelk savestate is preserved.
+
+Nothing in this stretch is gated behind an unsolved system — the only
+obstacle to a victory is party HP management (entering at 26/19/56).
+
 ## Next exact action
 
-**EXP-0039 — mines-to-Whelk breadth reconnaissance** (deliberate mode
-change: breadth-first, not another deep subsystem unit). In
-**operator-visible GUI Mesen** from `05-mines-entry.mss`: sweep the
-mines branches and dead ends, register every visible system and
-content family in the census with one bounded future question each,
-and advance toward Whelk — preserving a pre-Whelk savestate, fighting
-head-only, and capturing the first stable post-battle state if it is
-defeated. Operating rule: **explore widely, register briefly, continue
-forward.**
-
-Milestone 06 (`06-random-encounter`, frame 51 307, formation 14) is
-established over two byte-identical scheduled runs (EXP-0038).
+**EXP-0040 — Whelk victory attempt (branch A).** Reload
+`local_artifacts/scenarios/SCN-0001/07-pre-whelk/pre-whelk-recon.mss`,
+use **Heal Force** before engaging, then strike **only while the head
+is extended**, verifying head state from a screenshot between actions
+rather than mashing A. On victory capture milestone
+`10-whelk-victory` and the first stable post-battle state (B19).
+Branch B (deliberate shell attack) is already partly recorded by this
+pass's defeat and should be re-run cleanly afterwards.
 
 Also newly available, not chosen: static-decode of the event
 interpreter from its first concrete anchor (`ROMCPU:$C09B5C`,

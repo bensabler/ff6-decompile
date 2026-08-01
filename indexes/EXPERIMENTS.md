@@ -42,4 +42,4 @@
 | EXP-0036 | scheduled-route-to-mines | completed | see record | [EXP-0036-scheduled-route-to-mines](../docs/experiments/EXP-0036-scheduled-route-to-mines.md) |
 | EXP-0037 | opening-event-flags | completed | see record | [EXP-0037-opening-event-flags](../docs/experiments/EXP-0037-opening-event-flags.md) |
 | EXP-0038 | mines-route-to-encounter | completed | see record | [EXP-0038-mines-route-to-encounter](../docs/experiments/EXP-0038-mines-route-to-encounter.md) |
-| EXP-0039 | mines-to-whelk-breadth-recon | planned | see record | [EXP-0039-mines-to-whelk-breadth-recon](../docs/experiments/EXP-0039-mines-to-whelk-breadth-recon.md) |
+| EXP-0039 | mines-to-whelk-breadth-recon | completed | see record | [EXP-0039-mines-to-whelk-breadth-recon](../docs/experiments/EXP-0039-mines-to-whelk-breadth-recon.md) |

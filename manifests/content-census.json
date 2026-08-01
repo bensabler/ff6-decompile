@@ -546,7 +546,8 @@
       "consumers": [],
       "producers": [],
       "related_experiments": [
-        "EXP-0025"
+        "EXP-0025",
+        "EXP-0039"
       ],
       "related_discoveries": [],
       "related_implementations": [],
@@ -561,7 +562,7 @@
       "unknown_fields": [],
       "contradictions": [],
       "next_action": "Capture the full command list per actor and the cursor input loop (press-delta on the command window).",
-      "notes": ""
+      "notes": "EXP-0039: battle commands are character-specific - the leader shows MagiTek/Magic/Item, another member shows MagiTek/Item only (no Magic)."
     },
     {
       "schema_version": "1.0",
@@ -866,7 +867,8 @@
       "producers": [],
       "related_experiments": [
         "EXP-0025",
-        "EXP-0038"
+        "EXP-0038",
+        "EXP-0039"
       ],
       "related_discoveries": [],
       "related_implementations": [],
@@ -881,7 +883,7 @@
       "unknown_fields": [],
       "contradictions": [],
       "next_action": "Same capture pattern as the exterior; compare tileset bases to test per-map chr swapping.",
-      "notes": "EXP-0038 recon mapped the entry corridor: (26,1C) north to (26,0B), east to (28,0B) across a rail trestle, north to (28,09), east toward (2A,09); junction screenshots archived under local_artifacts/experiments/EXP-0038/."
+      "notes": "EXP-0038 recon mapped the entry corridor: (26,1C) north to (26,0B), east to (28,0B) across a rail trestle, north to (28,09), east toward (2A,09); junction screenshots archived under local_artifacts/experiments/EXP-0038/. EXP-0039 breadth pass: entry corridor is linear with one turn; branches/dead ends enumerated ((26,0B) west+north blocked, (28,0C) one-tile dead-end nub, (28,08) east blocked). Cave tileset with rail trestles, animated hanging-lamp glow, dark ambient palette."
     },
     {
       "schema_version": "1.0",
@@ -943,7 +945,8 @@
       "producers": [],
       "related_experiments": [
         "EXP-0035",
-        "EXP-0036"
+        "EXP-0036",
+        "EXP-0039"
       ],
       "related_discoveries": [],
       "related_implementations": [],
@@ -954,7 +957,7 @@
       "unknown_fields": [],
       "contradictions": [],
       "next_action": "Write-watch ROMCPU:$C0B5B6 across the reproducible mines transition and follow it to the map header / tileset load path.",
-      "notes": "EXP-0036: the Narshe-exterior -> mines transition is now reproducible three times from power-on (milestone 05). The transition is observable as a player-position jump to ($26,$1C); +$1EA5 moves to $0D before it is visible. The map records/loading path themselves remain unlocated - that is this entry's target."
+      "notes": "EXP-0036: the Narshe-exterior -> mines transition is now reproducible three times from power-on (milestone 05). The transition is observable as a player-position jump to ($26,$1C); +$1EA5 moves to $0D before it is visible. The map records/loading path themselves remain unlocated - that is this entry's target. EXP-0039: the mines<->exterior transition is BIDIRECTIONAL - south from (26,1C) through (26,22) returns to the Narshe exterior at (1F,18); north from (1F,14) re-enters at (26,1F). Re-entry produced no shaft dialogue (one-time, flag-gated), corroborating EVF-1EA0-$2B."
     },
     {
       "schema_version": "1.0",
@@ -1439,7 +1442,8 @@
         "EXP-0011",
         "EXP-0015",
         "EXP-0022",
-        "EXP-0025"
+        "EXP-0025",
+        "EXP-0039"
       ],
       "related_discoveries": [],
       "related_implementations": [],
@@ -1458,7 +1462,7 @@
       ],
       "contradictions": [],
       "next_action": "Disambiguate the Fire Beam record index (menu-navigation press script; watch the MVN X source during the confirm).",
-      "notes": ""
+      "notes": "EXP-0039 CAPTURED the Magitek ability list on screen: Fire Beam, Bolt Beam, Ice Beam, Heal Force (two-column list). Observation only - the attack-record index for Fire Beam remains ambiguous (EXP-0022 indices 5/131)."
     },
     {
       "schema_version": "1.0",
@@ -1973,7 +1977,8 @@
       "consumers": [],
       "producers": [],
       "related_experiments": [
-        "EXP-0027"
+        "EXP-0027",
+        "EXP-0039"
       ],
       "related_discoveries": [],
       "related_implementations": [],
@@ -1988,7 +1993,7 @@
       "unknown_fields": [],
       "contradictions": [],
       "next_action": "Capture the post-defeat transition (game over vs retry) in a dedicated run.",
-      "notes": ""
+      "notes": "EXP-0039 OBSERVED the defeat flow live: the Whelk shell counter killed one member outright and then wiped the party; the screen went black (game-over transition) with party HP reading 0. First capture of this flow."
     },
     {
       "schema_version": "1.0",
@@ -2012,7 +2017,8 @@
       "producers": [],
       "related_experiments": [
         "EXP-0028",
-        "EXP-0038"
+        "EXP-0038",
+        "EXP-0039"
       ],
       "related_discoveries": [],
       "related_implementations": [],
@@ -2028,7 +2034,7 @@
       "unknown_fields": [],
       "contradictions": [],
       "next_action": "Watch the step counter and encounter-check reads during a walk to locate the zone/rate data.",
-      "notes": "EXP-0038 recon: a mines random encounter fired at trigger tile (26,0B) walking north from milestone 05; +$11E0=$000E (formation 14) - second observed mines formation after 44 (EXP-0030). Scheduled-run determinism of the encounter is the EXP-0038 question. EXP-0038: the scheduled route reproduced a mines random encounter at frame 51307 (formation 14) while walking the corridor near tile (26,0B); the GUI recon independently triggered formation 14 in the same one-tile neighbourhood walking the same stretch. Both fired after a comparable number of steps from the milestone-05 tile, consistent with a step-counter check - recorded as an observation, not a mechanism claim."
+      "notes": "EXP-0038 recon: a mines random encounter fired at trigger tile (26,0B) walking north from milestone 05; +$11E0=$000E (formation 14) - second observed mines formation after 44 (EXP-0030). Scheduled-run determinism of the encounter is the EXP-0038 question. EXP-0038: the scheduled route reproduced a mines random encounter at frame 51307 (formation 14) while walking the corridor near tile (26,0B); the GUI recon independently triggered formation 14 in the same one-tile neighbourhood walking the same stretch. Both fired after a comparable number of steps from the milestone-05 tile, consistent with a step-counter check - recorded as an observation, not a mechanism claim. EXP-0039 DISCRIMINATOR: a third mines encounter (formation 14 again) fired at (26,15), nine tiles from the (26,0B) tile of the two scheduled runs, after a different step count (exterior round-trip). Fixed-tile triggering is REFUTED; step/zone counting survives. Producer still unlocated."
     },
     {
       "schema_version": "1.0",
@@ -2331,7 +2337,8 @@
         "EXP-0033",
         "EXP-0034",
         "EXP-0036",
-        "EXP-0038"
+        "EXP-0038",
+        "EXP-0039"
       ],
       "related_discoveries": [],
       "related_implementations": [],
@@ -2349,7 +2356,7 @@
         "the remaining 30 fields of each record"
       ],
       "contradictions": [],
-      "notes": "EXP-0038: formation 14 = three of monster record 19 (ROM record: HP 24, MP 0). Monster 19 was already known from the EXP-0030 mines encounter (formation 44), so the mines interior yields at least two distinct formations (14 and 44) - a B13 datum.",
+      "notes": "EXP-0038: formation 14 = three of monster record 19 (ROM record: HP 24, MP 0). Monster 19 was already known from the EXP-0030 mines encounter (formation 44), so the mines interior yields at least two distinct formations (14 and 44) - a B13 datum. EXP-0039: the Whelk formation (432) stages monster-id bytes 00 34 FF FF FF FF. Reading byte 2 as an id gives record 0 - the opening guard - which is implausible for a boss, so the formation record's monster-id field must carry a high-bit/extension not yet decoded (FF6 exceeds 256 monsters). Whelk's monster ids are Unknown pending that decode. On-screen enemy name 'Whelk' observed; the name table remains unlocated.",
       "id": "CEN-MONSTER-0004",
       "domain": "MONSTER",
       "category": "monster records",
@@ -2566,6 +2573,95 @@
       "runtime_status": "ENCOUNTERED",
       "confidence": "confirmed",
       "next_action": "When SCN-0001 advances past milestone 06: scheduled approach to the trigger with the event-flag watch armed and position/frame capture (serves B17)."
+    },
+    {
+      "schema_version": "1.0",
+      "rom_revision": "0f51b4fca41b7fd509e4b8f9d543151f68efa5e97b08493e4b2a0c06f5d8d5e2",
+      "rom_locations": [],
+      "wram_locations": [],
+      "cpu_routines": [],
+      "spc_locations": [],
+      "record_count_expected": null,
+      "record_count_found": null,
+      "record_size": null,
+      "pointer_tables": [],
+      "consumers": [],
+      "producers": [],
+      "related_experiments": [
+        "EXP-0039"
+      ],
+      "related_discoveries": [],
+      "related_implementations": [],
+      "related_tests": [],
+      "runtime_scenarios": [
+        "EXP-0039 GUI breadth pass from 05-mines-entry.mss"
+      ],
+      "evidence": [
+        "local_artifacts/experiments/EXP-0039/whelk-battle-entry.png",
+        "local_artifacts/experiments/EXP-0039/whelk-intro-3.png",
+        "local_artifacts/experiments/EXP-0039/recon.log",
+        "local_artifacts/scenarios/SCN-0001/07-pre-whelk/pre-whelk-recon.mss"
+      ],
+      "unknown_fields": [
+        "the formation record's monster-id extension (Whelk's actual monster ids)",
+        "head vs shell target modelling",
+        "counterattack selection and damage",
+        "the battle-invocation opcode (shared with CEN-EVENT-0005)"
+      ],
+      "contradictions": [],
+      "notes": "Reached for the first time in the project by EXP-0039. First attempt ended in defeat via the shell counter; a pre-Whelk savestate is preserved for the victory attempt.",
+      "id": "CEN-EVENT-0010",
+      "domain": "EVENT",
+      "category": "scripted event",
+      "name": "Whelk encounter beat and boss battle invocation",
+      "description": "A scripted beat fires on arriving at mines tile (2A,09): a party member steps forward and movement input is consumed. After it resolves, the Whelk boss battle is CONTACT-triggered by pushing north from (2A,07) - the same walk-into-it pattern EXP-0036 found for the fifth scripted battle. The battle is formation 432 ($01B0), staged record 80 03 00 34 FF FF FF FF 48 AB 00 00 00 00 3F, preceded by a multi-box introduction/warning dialogue. Enemy name window renders 'Whelk' (observational; name table unlocated).",
+      "reconstruction_status": "OBSERVED",
+      "runtime_status": "ENCOUNTERED",
+      "confidence": "confirmed",
+      "next_action": "EXP-0040: reload the pre-Whelk state, heal with Heal Force, attack only while the head is extended, and capture a first victory plus the post-battle state (B18/B19)."
+    },
+    {
+      "schema_version": "1.0",
+      "rom_revision": "0f51b4fca41b7fd509e4b8f9d543151f68efa5e97b08493e4b2a0c06f5d8d5e2",
+      "rom_locations": [],
+      "wram_locations": [],
+      "cpu_routines": [],
+      "spc_locations": [],
+      "record_count_expected": null,
+      "record_count_found": null,
+      "record_size": null,
+      "pointer_tables": [],
+      "consumers": [],
+      "producers": [],
+      "related_experiments": [
+        "EXP-0039"
+      ],
+      "related_discoveries": [],
+      "related_implementations": [],
+      "related_tests": [],
+      "runtime_scenarios": [
+        "EXP-0039 GUI breadth pass"
+      ],
+      "evidence": [
+        "local_artifacts/experiments/EXP-0039/guard-esper-beat-2A07.png",
+        "local_artifacts/experiments/EXP-0039/post-whelk-guard-beat.mss"
+      ],
+      "unknown_fields": [
+        "position in the scenario sequence",
+        "whether it gates or follows the Whelk victory",
+        "event script location"
+      ],
+      "contradictions": [],
+      "notes": "Registered from one observation; not pursued (breadth-pass bounds).",
+      "id": "CEN-EVENT-0011",
+      "domain": "EVENT",
+      "category": "scripted event",
+      "name": "Post-Whelk guard/Esper scripted beat",
+      "description": "A further scripted beat observed at mines tile (2A,07) after the Whelk encounter point: a guard dialogue about not handing over the Esper. Its true position in the sequence is Unknown - EXP-0039 reached it after a defeat-and-reload, so whether it is the normal post-Whelk progression or an alternate path is unresolved.",
+      "reconstruction_status": "OBSERVED",
+      "runtime_status": "ENCOUNTERED",
+      "confidence": "tentative-hypothesis",
+      "next_action": "Re-reach it on a clean run (no defeat/reload) to establish its true sequence position."
     }
   ]
 }

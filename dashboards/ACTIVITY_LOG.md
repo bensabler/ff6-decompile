@@ -1,5 +1,23 @@
 # Activity Log
 
+- 2026-08-01 (autonomous, breadth) — **EXP-0039: Whelk reached.** A
+  deliberate breadth-first GUI pass explored the mines from milestone
+  05 to the Whelk battle. Findings registered without decoding: the
+  mines↔exterior transition is **bidirectional**; the entry corridor
+  is linear with one turn plus a one-tile dead-end nub; a third
+  encounter (formation 14 again) fired at `(26,15)` rather than
+  `(26,0B)`, **refuting fixed-tile encounter triggering**; the
+  **Magitek ability list** was captured (Fire Beam, Bolt Beam, Ice
+  Beam, Heal Force) and battle commands proved character-specific;
+  **Whelk** is formation 432, contact-triggered from `(2A,07)` after a
+  scripted beat, with its introduction dialogue and **shell
+  counterattack** observed. The first attempt **ended in defeat**,
+  capturing the defeat flow (CEN-BATTLE-0007). New bounded question:
+  the formation record's monster-id field needs a high-bit extension
+  decode (Whelk's ids read as record 0, implausibly). New census
+  entries CEN-EVENT-0010/0011; pre-Whelk savestate preserved. Next:
+  EXP-0040, the branch-A victory attempt.
+
 - 2026-08-01 (autonomous) — **EXP-0038: milestone `06-random-encounter`
   established.** Two scheduled power-on runs reproduce the mines random
   encounter at frame 51 307 (formation 14 = three of monster record 19,

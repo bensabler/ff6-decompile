@@ -50,14 +50,23 @@ Ordered next units (reorder when evidence exposes a better chain):
   19 near tile `(26,0B)`); corridor mapped; seventh verification of
   the formation table; traversal and encounters write no event flags
   ([record](../docs/experiments/EXP-0038-mines-route-to-encounter.md)).
-- [ ] **EXP-0039 (next, breadth-first): mines-to-Whelk
-  reconnaissance.** Visible GUI pass — sweep mines branches/dead ends,
-  register every visible system and content family, advance toward
-  Whelk and attempt a first visible victory. Explore widely, register
-  briefly, continue forward
+- [x] **EXP-0039: mines-to-Whelk breadth reconnaissance** — done:
+  **Whelk reached, entered and observed** (formation 432,
+  contact-triggered from `(2A,07)`); corridor branches/dead ends
+  mapped; mines transition found **bidirectional**; fixed-tile
+  encounter triggering **refuted**; Magitek ability list captured;
+  first attempt lost to the shell counter, capturing the defeat flow
   ([record](../docs/experiments/EXP-0039-mines-to-whelk-breadth-recon.md)).
-- [ ] `(2A,09)` mines scripted event (CEN-EVENT-0009) — candidate
-  pre-Whelk beat (B17); observed once, uninvestigated.
+- [ ] **EXP-0040 (next): Whelk victory attempt, branch A.** Reload the
+  pre-Whelk savestate, Heal Force first, strike only while the head is
+  extended; capture milestone `10-whelk-victory` and the first stable
+  post-battle state (B19).
+- [ ] Whelk formation monster-id extension: reading formation 432's
+  record bytes 2-7 as ids yields record 0 (the opening guard), so the
+  id field must carry a high-bit/extension not yet decoded (FF6
+  exceeds 256 monsters). Blocks Whelk's monster records (B18/B14).
+- [ ] Post-Whelk guard/Esper beat (CEN-EVENT-0011) — sequence position
+  unresolved; re-reach on a clean run.
 - [ ] **Map header / tileset load path** (CEN-WORLD-0004) — still open
   and now genuinely unstarted; `+$1EA5` was a false lead. Needs its own
   discriminator (candidate: VRAM/DMA watch across the mines transition,

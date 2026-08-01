@@ -293,22 +293,51 @@ chest/NPC interaction, and correspondingly no additional
 scripted beats.
 
 ### B17 — Whelk introduction
-**All rows PARTIAL: never reached in any archived state.** Warning
-dialogue/event behavior unknown.
+- identified/runtime PARTIAL→**REACHED** (EXP-0039, first time in the
+  project): a scripted beat fires on arriving at mines tile
+  `(2A,09)` (a party member steps forward; movement input is
+  consumed), after which Whelk is **contact-triggered** by pushing
+  north from `(2A,07)` — the same walk-into-it pattern EXP-0036 found
+  for the fifth scripted battle. A multi-box introduction/warning
+  dialogue precedes the fight, and the enemy name window renders
+  "Whelk" on screen (observational only; the monster name table is
+  still unlocated). Registered as CEN-EVENT-0010.
+- Remaining rows PARTIAL: event script, graphics and audio provenance
+  all untraced (breadth-pass bounds).
 
 ### B18 — Whelk battle
 Head state, shell state, retreat/reappearance, warning behavior, head
 attacks, deliberate shell attacks, counterattack, AI timing, victory,
-rewards. **All rows PARTIAL: never reached.** Downstream systems
-(formation load, monster records, damage) are Confirmed and will
-carry over; boss AI interpreter is unlocated.
+rewards.
+- identified/runtime PARTIAL→**FIRST CONTACT** (EXP-0039): the battle
+  was entered and observed. **Formation 432 (`$01B0`)**, staged
+  `+$3F44` record `80 03 00 34 FF FF FF FF 48 AB 00 00 00 00 3F`.
+- behavior PARTIAL: the **shell counterattack is confirmed
+  behaviorally** — with the head retracted, continued attacks drew a
+  counter that killed one party member outright and then wiped the
+  party. The first attempt therefore **ended in defeat**, which
+  incidentally captured the defeat flow (CEN-BATTLE-0007).
+- data-records PARTIAL: **Whelk's monster ids are Unknown.** Reading
+  formation record bytes 2-7 as ids gives `00` — the opening guard
+  record — which is implausible for a boss, so the id field must carry
+  a high-bit/extension not yet decoded (FF6 exceeds 256 monsters).
+  This is a new bounded question, not a decoded fact.
+- A pre-Whelk savestate is preserved, so the victory attempt
+  (branch A: heal first, strike only while the head is extended)
+  costs nothing to set up. Downstream systems (formation load,
+  monster records, damage) remain Confirmed and carry over; the boss
+  AI interpreter is unlocated.
 
 ### B19 — Stable post-Whelk state
-**All rows PARTIAL: never reached.** Defines the program's stopping
-boundary; requires victory processing capture (rewards, flags, music,
-return-to-field or next-event handoff). The "flags" part of that
-capture now has a concrete substrate and baseline: the event-flag
-arrays and the milestone-05 inventory (EXP-0037, DISC-0008).
+**All rows PARTIAL: not reached** — the first Whelk attempt ended in
+defeat (EXP-0039), so no post-victory state exists yet. Defines the
+program's stopping boundary; requires victory processing capture
+(rewards, flags, music, return-to-field or next-event handoff). The
+"flags" part of that capture has a concrete substrate and baseline:
+the event-flag arrays and the milestone-05 inventory (EXP-0037,
+DISC-0008). A further scripted beat past the Whelk point
+(CEN-EVENT-0011) was glimpsed and may be the handoff, but its
+sequence position is unresolved.
 
 ## Per-domain totals
 

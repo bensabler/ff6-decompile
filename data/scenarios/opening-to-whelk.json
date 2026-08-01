@@ -279,11 +279,14 @@
       "links": {
         "census": [
           "CEN-EVENT-0009",
+          "CEN-EVENT-0010",
+          "CEN-EVENT-0011",
           "CEN-WORLD-0002"
         ],
         "experiments": [
           "EXP-0025",
-          "EXP-0038"
+          "EXP-0038",
+          "EXP-0039"
         ],
         "discoveries": []
       }
@@ -302,7 +305,8 @@
           "EXP-0028",
           "EXP-0029",
           "EXP-0030",
-          "EXP-0038"
+          "EXP-0038",
+          "EXP-0039"
         ],
         "discoveries": []
       }
@@ -351,7 +355,7 @@
       "name": "Accessible menus and commands",
       "status_default": "PARTIAL",
       "overrides": {},
-      "note": "field menu censused; spell db Confirmed; Magitek list never captured; command records unlocated",
+      "note": "battle commands are character-specific (leader: MagiTek/Magic/Item; other member: MagiTek/Item). Magitek ability list CAPTURED on screen (EXP-0039): Fire Beam, Bolt Beam, Ice Beam, Heal Force. Command records still unlocated; Fire Beam attack-record index still ambiguous (EXP-0022).",
       "links": {
         "census": [
           "CEN-MAGIC-0001",
@@ -362,7 +366,8 @@
           "EXP-0022",
           "EXP-0025",
           "EXP-0026",
-          "EXP-0027"
+          "EXP-0027",
+          "EXP-0039"
         ],
         "discoveries": []
       }
@@ -391,10 +396,14 @@
       "name": "Whelk introduction",
       "status_default": "PARTIAL",
       "overrides": {},
-      "note": "never reached in any archived state",
+      "note": "REACHED for the first time (EXP-0039): scripted beat at mines tile (2A,09), then Whelk contact-triggered from (2A,07); multi-box introduction/warning dialogue observed; enemy name window renders 'Whelk' (name table still unlocated).",
       "links": {
-        "census": [],
-        "experiments": [],
+        "census": [
+          "CEN-EVENT-0010"
+        ],
+        "experiments": [
+          "EXP-0039"
+        ],
         "discoveries": []
       }
     },
@@ -403,15 +412,18 @@
       "name": "Whelk battle",
       "status_default": "PARTIAL",
       "overrides": {},
-      "note": "never reached; downstream battle systems Confirmed; boss AI interpreter unlocated",
+      "note": "FIRST CONTACT (EXP-0039): formation 432 ($01B0), staged record captured; shell counterattack confirmed behaviorally (killed one member outright, then wiped the party); battle lost on the first attempt; defeat flow observed (CEN-BATTLE-0007). Whelk's monster ids are Unknown - the formation record's id field needs a high-bit/extension decode. Pre-Whelk savestate preserved for the victory attempt.",
       "links": {
         "census": [
-          "CEN-BATTLE-0001"
+          "CEN-BATTLE-0001",
+          "CEN-BATTLE-0007",
+          "CEN-EVENT-0010"
         ],
         "experiments": [
           "EXP-0028",
           "EXP-0029",
-          "EXP-0030"
+          "EXP-0030",
+          "EXP-0039"
         ],
         "discoveries": []
       }
@@ -421,7 +433,7 @@
       "name": "Stable post-Whelk state",
       "status_default": "PARTIAL",
       "overrides": {},
-      "note": "never reached; victory/reward processing partly captured (EXP-0033, CEN-BATTLE-0008). Post-battle persistent state now has a concrete substrate: the event-flag arrays and their write inventory through milestone 05 (EXP-0037).",
+      "note": "never reached; victory/reward processing partly captured (EXP-0033, CEN-BATTLE-0008) and the event-flag substrate is inventoried (EXP-0037). The first Whelk victory attempt ended in defeat (EXP-0039), so the post-battle state remains uncaptured.",
       "links": {
         "census": [
           "CEN-BATTLE-0008",
@@ -429,7 +441,8 @@
         ],
         "experiments": [
           "EXP-0033",
-          "EXP-0037"
+          "EXP-0037",
+          "EXP-0039"
         ],
         "discoveries": [
           "DISC-0008"
