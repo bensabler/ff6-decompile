@@ -12,12 +12,12 @@ Breadth without pretense: counts are census entries at or above each threshold (
 | MONSTER | 3 | 2 | 0 | 0 | 0 | 0 |
 | ITEM | 0 | 0 | 0 | 0 | 0 | 0 |
 | WORLD | 6 | 0 | 0 | 0 | 0 | 0 |
-| EVENT | 4 | 0 | 0 | 0 | 0 | 0 |
+| EVENT | 5 | 1 | 0 | 0 | 0 | 1 |
 | MENU | 6 | 1 | 0 | 0 | 0 | 0 |
 | GFX | 4 | 1 | 1 | 1 | 1 | 0 |
 | AUDIO | 5 | 3 | 2 | 2 | 1 | 1 |
 | SAVE | 1 | 0 | 0 | 0 | 0 | 0 |
-| QUIRK | 1 | 0 | 0 | 0 | 0 | 0 |
+| QUIRK | 2 | 0 | 0 | 0 | 0 | 0 |
 
 ## ROM accounting
 
@@ -27,9 +27,9 @@ Breadth without pretense: counts are census entries at or above each threshold (
 
 ## Census health
 
-- Entries with unresolved fields/formats: 20.
-- Observed but not yet located (breadth backlog): 32.
-- Runtime-only findings (seen live, no location): 23.
+- Entries with unresolved fields/formats: 22.
+- Observed but not yet located (breadth backlog): 33.
+- Runtime-only findings (seen live, no location): 24.
 - Static-only findings (located, never exercised live): 1.
 
 ## Open breadth targets (next_action of unlocated entries)
@@ -59,6 +59,7 @@ Breadth without pretense: counts are census entries at or above each threshold (
 - **CEN-MENU-0005** (Field Magic menu (grid list, MP readout, help bar)): Trace the list renderer's reads (name table + availability array consumers) with a read-watch during menu open.
 - **CEN-MONSTER-0003** (Enemy battle sprites and palettes (green guard)): VRAM/OAM capture during battle to register the enemy sprite asset (EXP-0023 pattern).
 - **CEN-QUIRK-0001** (Boot-time uninitialized WRAM reads (entropy candidates)): Read-callback on the five addresses during a fresh boot to capture the reader PCs.
+- **CEN-QUIRK-0002** (Milestone-01 frame capture not byte-stable while WRAM is): Capture PPU/HDMA registers alongside the frame buffer at frame 15000 across two runs: differing registers mean unstable state, identical registers mean an unstable capture phase.
 - **CEN-SAVE-0001** (Opening-relevant persistent state (event progress, party, names)): Diff WRAM snapshots across two field states to bound the event-flag region; then SRAM after a save event.
 - **CEN-WORLD-0001** (Narshe exterior map (tileset, tilemap, palettes, animated tiles)): Capture PPU + VRAM for the field state (EXP-0023 pattern) and register the map layer assets.
 - **CEN-WORLD-0002** (Narshe mines interior map (cave tileset, rails, light effects)): Same capture pattern as the exterior; compare tileset bases to test per-map chr swapping.

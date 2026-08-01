@@ -43,7 +43,8 @@
         "EXP-0014",
         "EXP-0015",
         "EXP-0016",
-        "EXP-0017"
+        "EXP-0017",
+        "EXP-0032"
       ],
       "related_discoveries": [
         "DISC-0003",
@@ -2098,6 +2099,93 @@
       "runtime_status": "ENCOUNTERED",
       "confidence": "confirmed",
       "next_action": "Read-callback on the five addresses during a fresh boot to capture the reader PCs."
+    },
+    {
+      "schema_version": "1.0",
+      "rom_revision": "0f51b4fca41b7fd509e4b8f9d543151f68efa5e97b08493e4b2a0c06f5d8d5e2",
+      "rom_locations": [],
+      "wram_locations": [
+        "WRAM:+$11E0",
+        "WRAM:+$3F44-+$3F53"
+      ],
+      "cpu_routines": [
+        "ROMCPU:$C22899"
+      ],
+      "spc_locations": [],
+      "record_count_expected": null,
+      "record_count_found": null,
+      "record_size": null,
+      "pointer_tables": [],
+      "consumers": [],
+      "producers": [],
+      "related_experiments": [
+        "EXP-0030",
+        "EXP-0032"
+      ],
+      "related_discoveries": [],
+      "related_implementations": [],
+      "related_tests": [],
+      "runtime_scenarios": [
+        "local_artifacts/scenarios/SCN-0001/03-first-scripted-battle/03-first-scripted-battle.mss"
+      ],
+      "evidence": [
+        "local_artifacts/experiments/EXP-0032/ (probe logs, beat screenshots; hashes.sha256)",
+        "local_artifacts/scenarios/SCN-0001/03-first-scripted-battle/ (WRAM dumps, screens; hashes.sha256)"
+      ],
+      "unknown_fields": [
+        "the event opcode that invokes the battle",
+        "whether $0206/$3A97 (EXP-0029 event-battle path) is used here",
+        "formation flags record 2 semantics"
+      ],
+      "contradictions": [],
+      "notes": "",
+      "id": "CEN-EVENT-0005",
+      "domain": "EVENT",
+      "category": "scripted battles",
+      "name": "Scripted battle invocation (Narshe gate guard, formation 2)",
+      "description": "The opening Narshe-gate beat is a chain of input-waiting dialogue boxes separated by player-controlled walking; walking north into the guards triggers a scripted battle. Live staging at WRAM:+$11E0=$0002 with the +$3F44 record byte-matching ROM formation record 2 (ROMFILE:0x0F621E): monster-id bytes {12}, single enemy, matching the on-screen single Guard. Scripted (non-random) origin: reached without the encounter-roll walk pattern.",
+      "reconstruction_status": "LOCATED",
+      "runtime_status": "NORMAL_PATH_VERIFIED",
+      "confidence": "confirmed",
+      "next_action": "Exec-watch the frames before battle detection to capture the event-script invocation site; compare against the $0206/$3A97 alternate id path."
+    },
+    {
+      "schema_version": "1.0",
+      "rom_revision": "0f51b4fca41b7fd509e4b8f9d543151f68efa5e97b08493e4b2a0c06f5d8d5e2",
+      "rom_locations": [],
+      "wram_locations": [],
+      "cpu_routines": [],
+      "spc_locations": [],
+      "record_count_expected": null,
+      "record_count_found": null,
+      "record_size": null,
+      "pointer_tables": [],
+      "consumers": [],
+      "producers": [],
+      "related_experiments": [
+        "EXP-0032"
+      ],
+      "related_discoveries": [],
+      "related_implementations": [],
+      "related_tests": [],
+      "runtime_scenarios": [],
+      "evidence": [
+        "local_artifacts/scenarios/SCN-0001/01-opening-cinematic/ (run1/run2 dumps+screens; hashes.sha256)"
+      ],
+      "unknown_fields": [
+        "whether PPU/HDMA registers differ across runs at this frame"
+      ],
+      "contradictions": [],
+      "notes": "",
+      "id": "CEN-QUIRK-0002",
+      "domain": "QUIRK",
+      "category": "timing behavior",
+      "name": "Milestone-01 frame capture not byte-stable while WRAM is",
+      "description": "At frame 15000 of the opening presentation (snowfield march credits), two independent power-on runs of an identical input schedule produce byte-identical 128 KB WRAM but different screenshots (11536 vs 11339 B; same scene/text, sub-frame vertical difference) and different savestate sizes. Candidate cause: per-scanline/HDMA scroll state outside WRAM sampled at an unfixed phase by the endFrame screenshot; genuine emulation nondeterminism not excluded.",
+      "reconstruction_status": "OBSERVED",
+      "runtime_status": "OUTPUTS_CAPTURED",
+      "confidence": "tentative-hypothesis",
+      "next_action": "Capture PPU/HDMA registers alongside the frame buffer at frame 15000 across two runs: differing registers mean unstable state, identical registers mean an unstable capture phase."
     }
   ]
 }

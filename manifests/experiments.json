@@ -527,6 +527,23 @@
       "falsifying_outcome": "the same absolute-frame schedule from power-on yields differing WRAM dumps or visible screens at the milestone across two runs",
       "status": "completed",
       "record": "docs/experiments/EXP-0031-golden-route-newgame.md"
+    },
+    {
+      "schema_version": "1.0",
+      "id": "EXP-0032",
+      "question": "Can the deterministic schedule extend from the Narshe-entry stall into the first scripted battle (milestones 01/02/03), and which formation id does that battle stage?",
+      "starting_state": {
+        "emulator": "Mesen 2.1.1 macOS x86_64 (--testrunner headless, bridge v2)",
+        "rom_sha256": "0f51b4fca41b7fd509e4b8f9d543151f68efa5e97b08493e4b2a0c06f5d8d5e2",
+        "state": "EXP-0031 controlled lab (AllZeros RAM, virgin SRAM); fresh power-on replays of the segment-1 schedule plus an A metronome and a state-driven battle-init detector"
+      },
+      "expected_outcomes": [
+        "two runs byte-identical at milestones 01/02/03; battle detected at the same frame; staged formation id captured",
+        "runs diverge or the metronome hits a choice/menu (recorded; schedule revised)"
+      ],
+      "falsifying_outcome": "fixed-schedule power-on runs diverge at any milestone assertion, or no battle-init write burst occurs within the run budget",
+      "status": "completed",
+      "record": "docs/experiments/EXP-0032-golden-route-seg2.md"
     }
   ]
 }

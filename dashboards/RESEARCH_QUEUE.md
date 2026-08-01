@@ -9,10 +9,20 @@ Ordered next units (reorder when evidence exposes a better chain):
   power-on → New Game → Narshe-entry stall; milestone `00-new-game`;
   two runs byte-identical
   ([record](../docs/experiments/EXP-0031-golden-route-newgame.md)).
-- [ ] **EXP-0032: golden route segment 2** — Narshe-entry stall →
-  scripted approach → first scripted battle (milestones `01`–`03`).
-- [ ] Golden route segments 3..N → milestones `04`–`07-pre-whelk`,
+- [x] **EXP-0032: golden route segment 2** — done: milestones
+  `01`–`03`; first scripted battle = formation 2 / monster 12
+  (Confirmed live+static)
+  ([record](../docs/experiments/EXP-0032-golden-route-seg2.md)).
+- [ ] **EXP-0033: golden route segment 3** — Guard battle to victory
+  (victory/reward processing) → `04-free-movement`.
+- [ ] Golden route segments 4..N → milestones `05`–`07-pre-whelk`,
   then Whelk branches A/B/C (SCN-0001 route plan).
+- [ ] Milestone-01 PPU/HDMA falsifier (CEN-QUIRK-0002): capture PPU
+  registers + frame buffer at frame 15000 across two runs.
+- [ ] Monster record 12 extraction + on-screen cross-check (B14;
+  `ROMFILE:0x0F0180`).
+- [ ] Scripted-battle invocation opcode (CEN-EVENT-0005): exec-watch
+  the frames before battle detection.
 - [ ] New-game initialization capture (B01; CEN-SAVE-0001).
 - [ ] Event dispatcher location (B03/B05; CEN-EVENT-0001) — largest
   single blocker.

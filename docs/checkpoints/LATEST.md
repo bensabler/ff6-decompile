@@ -1,10 +1,10 @@
 # Latest Checkpoint
 
-**[2026-07-31 — EXP-0031: golden route segment 1](2026-07-31-exp0031-golden-route-seg1.md)**
+**[2026-07-31 — EXP-0032: golden route segment 2](2026-07-31-exp0032-golden-route-seg2.md)**
 
-State: milestone `00-new-game` established — deterministic power-on
-route (two runs byte-identical at frames 5200/30000); title/attract
-flow + boot entropy reads censused; lab controls: AllZeros RAM,
-virgin SRAM (originals backed up). Exact next action: EXP-0032 —
-golden route segment 2 (Narshe-entry stall → first scripted battle,
-milestones 01–03).
+State: golden route runs power-on → first scripted battle; milestones
+00–03 with WRAM byte-identical across two runs. First scripted battle
+= formation 2 / monster 12 (live staging matches ROM record
+0x0F621E). Open: milestone-01 frame capture not byte-stable
+(CEN-QUIRK-0002). Exact next action: EXP-0033 — segment 3 (Guard
+battle victory + reward processing → milestone 04-free-movement).

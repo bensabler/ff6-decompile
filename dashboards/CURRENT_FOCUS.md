@@ -22,18 +22,26 @@ introduction onward.
 (`--testrunner --timeout=7200`, `FF6_OUT` env, frame-scheduled input);
 see BLOCKERS.md.
 
-**Golden route status:** segment 1 **done** (EXP-0031): deterministic
-power-on route — title press (start+a edge toggling, frames
-2500–4200), milestone `00-new-game` at frame 5200, auto-run to the
-input-waiting Narshe-entry dialogue asserted at frame 30000; two runs
-byte-identical (WRAM + screen). Controlled lab variables:
-RamPowerOnState=AllZeros, virgin SRAM (original backed up). New
-census: CEN-EVENT-0004 (title/attract flow), CEN-QUIRK-0001 (boot
-uninitialized reads).
+**Golden route status:** segments **1–2 done** (EXP-0031/0032),
+milestones `00-new-game` → `03-first-scripted-battle`. The route is
+one probe (`mesen/probes/EXP-0032.lua`) from power-on: start+a edge
+toggling at the title (2500–4200), auto-run presentation, then held
+Up + A every 240 frames (31000–46000) through the dialogue/walk
+chain into the Narshe-gate battle, detected by the Confirmed
+`+$3B18`/`$C22800-$C22FFF` battle-init signature. **WRAM
+byte-identical across two power-on runs at all four milestones**;
+screens identical except milestone 01 (CEN-QUIRK-0002 — PPU-phase
+falsifier queued; treat WRAM as the assertion there).
 
-**Next exact action:** EXP-0032 — golden route segment 2: extend the
-schedule from the Narshe-entry stall through the scripted approach
-and the first scripted battle (milestones `01-opening-cinematic`,
-`02-narshe-entry`, `03-first-scripted-battle`), A-press cadence per
-stalled dialogue, with per-milestone WRAM assertions and a two-run
-determinism check.
+**Scenario finding:** the first scripted battle is **formation 2,
+single monster id 12** — live staged `+$3F44` bytes match ROM record
+2 (`ROMFILE:0x0F621E`) exactly, independently re-verifying the
+EXP-0030 formation table on a scripted (non-random) encounter.
+
+Controlled lab variables (whole program): RamPowerOnState=AllZeros,
+virgin SRAM — originals backed up under `local_artifacts/backups/`.
+
+**Next exact action:** EXP-0033 — golden route segment 3: from
+milestone 03, fight the Guard battle to victory (capturing victory /
+reward processing) and continue to free field movement (milestone
+`04-free-movement`), two-run determinism check.

@@ -35,3 +35,4 @@
 | EXP-0029 | formation-map | completed | see record | [EXP-0029-formation-map](../docs/experiments/EXP-0029-formation-map.md) |
 | EXP-0030 | formation-table | completed | see record | [EXP-0030-formation-table](../docs/experiments/EXP-0030-formation-table.md) |
 | EXP-0031 | golden-route-newgame | completed | see record | [EXP-0031-golden-route-newgame](../docs/experiments/EXP-0031-golden-route-newgame.md) |
+| EXP-0032 | golden-route-seg2 | completed | see record | [EXP-0032-golden-route-seg2](../docs/experiments/EXP-0032-golden-route-seg2.md) |

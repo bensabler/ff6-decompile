@@ -154,18 +154,28 @@ unlocated (CEN-EVENT-0001).
 - Remaining rows PARTIAL (nothing yet).
 
 ### B06 — Entry into Narshe
-Map transition into the town proper. **All rows PARTIAL: transition
-never captured; map records unlocated (CEN-WORLD-0004).**
+Map transition into the town proper.
+- identified/runtime PARTIAL→advanced: milestone `02-narshe-entry`
+  captured and deterministic (EXP-0032).
+- Remaining rows PARTIAL: the transition's map records, ids, and
+  loading path are still unlocated (CEN-WORLD-0004).
 
 ### B07 — Guard encounters / scripted battles
-- runtime PARTIAL: the scripted opening battle is the most-tested
-  state in the project (EXP-0001..0022 window); entry into it from
-  the field was never captured; on-screen formation names Were-Rat /
-  Repo Man registered (EXP-0027, defeat flow).
-- behavior PARTIAL: damage pipeline Confirmed+implemented; scripted-
-  battle invocation path unknown (`$0206`/`$3A97` lead, EXP-0029).
-- data-records PARTIAL: formation/monster tables Confirmed; this
-  battle's formation id not yet read.
+- runtime PARTIAL→advanced: **battle entry now captured on the golden
+  route** (EXP-0032, milestone `03-first-scripted-battle`, detected
+  identically at frame 31 557 in both runs). The battle interior is
+  the most-tested state in the project (EXP-0001..0022 window);
+  on-screen formation names Were-Rat / Repo Man registered
+  (EXP-0027, defeat flow).
+- data-records COMPLETE for identity: **formation id 2, single
+  monster id 12** — live staged `+$3F44` bytes match ROM record 2
+  (`ROMFILE:0x0F621E`) exactly (EXP-0032; second independent
+  verification of the EXP-0030 formation table, this time on a
+  scripted encounter). Monster record 12's fields are not yet
+  extracted (B14).
+- behavior PARTIAL: damage pipeline Confirmed+implemented; the
+  scripted-battle **invocation opcode** is still unknown
+  (`$0206`/`$3A97` lead, EXP-0029; CEN-EVENT-0005).
 - go-impl/tests PARTIAL: damage pipeline implemented and regression-
   tested; differential vs live for the standard path (EXP-0011..0016).
 
@@ -242,9 +252,15 @@ sync with the beat matrices. As of creation: 0 beats COMPLETE,
 
 ## Unresolved gaps (honest list)
 
-1. ~~No reproducible route from power-on exists~~ — segment 1 done
-   (EXP-0031: power-on → New Game → auto-run to the Narshe-entry
-   stall, deterministic). Segments 2+ (through Whelk) remain.
+1. ~~No reproducible route from power-on exists~~ — segments 1–2 done
+   (EXP-0031/0032: power-on → New Game → opening presentation →
+   Narshe entry → first scripted battle; milestones 00–03,
+   deterministic in WRAM). Segments 3+ (battle victory → free
+   movement → mines → Whelk) remain.
+1a. Milestone `01`'s **frame capture** is not byte-stable across runs
+   even though its WRAM is (CEN-QUIRK-0002) — a PPU/HDMA-phase
+   falsifier is queued; treat only WRAM as an assertion channel at
+   that milestone until resolved.
 2. The event-script engine (dispatcher, PC, opcode set) is entirely
    unlocated — the largest single blocker for B02–B07, B10, B17.
 3. Map system (headers, tilesets, tilemaps, collision, exits,
