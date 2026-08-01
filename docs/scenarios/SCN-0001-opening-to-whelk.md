@@ -176,23 +176,27 @@ Map transition into the town proper.
   EXP-0032 and EXP-0033, not silently patched. Second independent
   verification of the EXP-0030 formation table, on a scripted
   encounter.
-- behavior PARTIAL: damage pipeline Confirmed+implemented; the battle
+- **The opening runs exactly four scripted battles** before player
+  control (EXP-0034, identical across two power-on runs):
+  formations **2, 1, 2, 41** at entry frames 31 557 / 34 953 /
+  36 828 / 39 500. Every staged `+$3F44` record matches the ROM
+  formation table byte-for-byte — the table is now verified across
+  five independent encounters.
+- behavior PARTIAL: damage pipeline Confirmed+implemented; battle 1
   is **won on schedule** (frame 32 706) with rewards **32 EXP /
   96 GP** and a battle→field writeback into `~+$1600`
   (`$C2496E`/`$C24979`; EXP-0033, CEN-BATTLE-0008). The scripted-
   battle **invocation opcode** remains unknown (`$0206`/`$3A97` lead,
-  EXP-0029; CEN-EVENT-0005), and **further scripted battles follow
-  this one** (CEN-EVENT-0006) — the opening is not a single fight.
+  EXP-0029; CEN-EVENT-0005).
 - go-impl/tests PARTIAL: damage pipeline implemented and regression-
   tested; differential vs live for the standard path (EXP-0011..0016).
 
 ### B08 — Controllable field movement
-- runtime PARTIAL: free walk verified in an archived state, collision
-  live (EXP-0025), but **the golden route has not yet reached free
-  movement** — more scripted battles intervene after the first
-  (EXP-0033, CEN-EVENT-0006), so milestone `04-free-movement` is
-  still open and needs a state-driven detector rather than a fixed
-  frame offset.
+- identified/runtime PARTIAL→advanced: **milestone
+  `04-free-movement` established at frame 46 375 and byte-identical
+  across two power-on runs** (EXP-0034) — the Narshe exterior under
+  player control. Free walk and live collision were already verified
+  in an archived state (EXP-0025).
 - Remaining rows PARTIAL: per-step/collision logic unlocated
   (CEN-WORLD-0003).
 
@@ -223,9 +227,13 @@ CEN-WORLD-0002); no branch sweep, no collision data.
 - Remaining rows PARTIAL (nothing yet).
 
 ### B14 — Monsters reachable before Whelk
-- data-records PARTIAL: monster db Confirmed; formation 44 = monsters
-  {19, 77}; full opening-area monster set unknown pending B13; monster
-  name table unlocated; AI scripts unlocated; rewards fields unmapped.
+- data-records PARTIAL: monster db Confirmed. Known so far — records
+  **0** (40 HP / 15 MP, live-verified in battle slots 6/7) and **25**
+  (27 HP / 5 MP) from the four scripted battles, plus **19** and
+  **77** from the mines random encounter (EXP-0030). The full
+  reachable set still depends on B13 (encounter zones). Monster name
+  table unlocated; AI scripts unlocated; rewards fields unmapped;
+  30 of each record's 32 bytes unmapped (CEN-MONSTER-0004).
 - Remaining rows PARTIAL (nothing yet).
 
 ### B15 — Accessible menus and commands

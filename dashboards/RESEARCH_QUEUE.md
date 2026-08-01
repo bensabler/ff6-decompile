@@ -17,9 +17,12 @@ Ordered next units (reorder when evidence exposes a better chain):
   schedule, rewards 32 EXP / 96 GP, battle→field HP/MP writeback
   captured; free movement NOT reached (more scripted battles follow)
   ([record](../docs/experiments/EXP-0033-golden-route-seg3.md)).
-- [ ] **EXP-0034: segment 3b** — state-driven free-movement detector
-  → milestone `04-free-movement`; deferred two-run determinism check
-  for segments 3–3b.
+- [x] **EXP-0034: segment 3b** — done: four scripted battles
+  (formations 2/1/2/41), milestone `04-free-movement` at frame 46 375
+  byte-identical across two runs; deferred check cleared
+  ([record](../docs/experiments/EXP-0034-golden-route-seg3b.md)).
+- [ ] **EXP-0035: segment 4** — Narshe exterior navigation → mine
+  entrance; capture the map transition (`05-mines-entry`).
 - [ ] Golden route segments 4..N → milestones `05`–`07-pre-whelk`,
   then Whelk branches A/B/C (SCN-0001 route plan).
 - [ ] Milestone-01 PPU/HDMA falsifier (CEN-QUIRK-0002): capture PPU

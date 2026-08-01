@@ -9,10 +9,10 @@ Breadth without pretense: counts are census entries at or above each threshold (
 | BATTLE | 7 | 5 | 3 | 3 | 3 | 5 |
 | CHAR | 4 | 1 | 1 | 1 | 1 | 1 |
 | MAGIC | 9 | 4 | 2 | 1 | 0 | 3 |
-| MONSTER | 3 | 2 | 0 | 0 | 0 | 0 |
+| MONSTER | 4 | 3 | 0 | 0 | 0 | 0 |
 | ITEM | 0 | 0 | 0 | 0 | 0 | 0 |
 | WORLD | 6 | 0 | 0 | 0 | 0 | 0 |
-| EVENT | 6 | 1 | 0 | 0 | 0 | 1 |
+| EVENT | 6 | 2 | 0 | 0 | 0 | 2 |
 | MENU | 6 | 1 | 0 | 0 | 0 | 0 |
 | GFX | 4 | 1 | 1 | 1 | 1 | 0 |
 | AUDIO | 5 | 3 | 2 | 2 | 1 | 1 |
@@ -27,9 +27,9 @@ Breadth without pretense: counts are census entries at or above each threshold (
 
 ## Census health
 
-- Entries with unresolved fields/formats: 24.
-- Observed but not yet located (breadth backlog): 35.
-- Runtime-only findings (seen live, no location): 25.
+- Entries with unresolved fields/formats: 25.
+- Observed but not yet located (breadth backlog): 34.
+- Runtime-only findings (seen live, no location): 24.
 - Static-only findings (located, never exercised live): 1.
 
 ## Open breadth targets (next_action of unlocated entries)
@@ -45,7 +45,6 @@ Breadth without pretense: counts are census entries at or above each threshold (
 - **CEN-EVENT-0002** (Dialogue text content and encoding): Capture the dialogue compose region + derive the glyph-to-byte mapping via the tilemap-affine technique (EXP-0023 pattern).
 - **CEN-EVENT-0003** (Character naming state (Terra as '?????')): Locate the character-name store: WRAM search for the rendered name tile sequence source when the status window composes.
 - **CEN-EVENT-0004** (Title screen and attract-mode flow): Exec-trace the title input read to map the acceptance condition (edge requirement) and the start-vs-a discrimination.
-- **CEN-EVENT-0006** (Multiple scripted battles precede free field movement in the opening): Re-arm the battle-init detector after each battle end and count battles until none re-arms; capture each formation id from +$11E0.
 - **CEN-GFX-0002** (Field sprite assets (armor walker, NPCs, townsfolk)): OAM + chr capture on a field state; register the sprite sheet region.
 - **CEN-GFX-0003** (Battle background (cave scene)): BG1/BG2 VRAM + tilemap capture during battle; provenance search (EXP-0023 pattern).
 - **CEN-GFX-0004** (Variable-width dialogue font): Capture the dialogue compose region; the fixed-font provenance technique should locate the glyph source.

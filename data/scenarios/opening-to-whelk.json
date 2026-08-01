@@ -179,7 +179,7 @@
         "tests": "PARTIAL",
         "differential": "PARTIAL"
       },
-      "note": "first scripted battle = formation 2, TWO monsters of record id 0 (slots 6/7, HP 40 / MP 15) \u2014 corrected in EXP-0033; won on schedule at frame 32706; rewards 32 EXP / 96 GP captured; further scripted battles follow (CEN-EVENT-0006); invocation opcode open",
+      "note": "FOUR scripted battles precede free movement: formations 2, 1, 2, 41 (EXP-0034, deterministic across two runs; every staged record matches the ROM table). Battle 1 rewards 32 EXP / 96 GP with battle-to-field HP/MP writeback. Invocation opcode still open.",
       "links": {
         "census": [
           "CEN-BATTLE-0001",
@@ -195,7 +195,8 @@
           "EXP-0027",
           "EXP-0030",
           "EXP-0032",
-          "EXP-0033"
+          "EXP-0033",
+          "EXP-0034"
         ],
         "discoveries": [
           "DISC-0001",
@@ -213,15 +214,14 @@
       "name": "Controllable field movement",
       "status_default": "PARTIAL",
       "overrides": {},
-      "note": "free walk verified live in an archived state, but the golden route has NOT yet reached free movement: more scripted battles intervene (EXP-0033/CEN-EVENT-0006). Per-step/collision logic unlocated.",
+      "note": "milestone 04-free-movement established and deterministic (EXP-0034, frame 46375); per-step/collision logic still unlocated",
       "links": {
         "census": [
-          "CEN-WORLD-0003",
-          "CEN-EVENT-0006"
+          "CEN-WORLD-0003"
         ],
         "experiments": [
           "EXP-0025",
-          "EXP-0033"
+          "EXP-0034"
         ],
         "discoveries": []
       }
@@ -313,15 +313,18 @@
       "name": "Monsters reachable before Whelk",
       "status_default": "PARTIAL",
       "overrides": {},
-      "note": "monster db Confirmed; formation 44 = {19,77}; names/AI/rewards unmapped; full set pends B13",
+      "note": "monsters reachable before Whelk so far: records 0 (40 HP/15 MP) and 25 (27 HP/5 MP) from the four scripted battles, plus 19 and 77 from the mines random encounter. Names, AI, rewards, and the other record fields unmapped.",
       "links": {
         "census": [
-          "CEN-MONSTER-0001"
+          "CEN-MONSTER-0001",
+          "CEN-MONSTER-0004"
         ],
         "experiments": [
           "EXP-0028",
           "EXP-0029",
-          "EXP-0030"
+          "EXP-0030",
+          "EXP-0032",
+          "EXP-0034"
         ],
         "discoveries": []
       }
@@ -505,6 +508,71 @@
           },
           "runs_compared": 1,
           "result": "battle won and reward window captured; milestone 04-free-movement NOT reached (a second scripted battle follows); two-run determinism check deferred to EXP-0034"
+        }
+      },
+      {
+        "id": "3b",
+        "experiment": "EXP-0034",
+        "status": "COMPLETE",
+        "milestones": [
+          "04-free-movement"
+        ],
+        "schedule": {
+          "outside_battle": "up held + A 12 polls every 240 frames",
+          "inside_battle": "A 10 polls every 90 frames from entry+60",
+          "battle_entry_detect": "+$3B18 write from $C22800-$C22FFF (re-arming)",
+          "battle_end_detect": "HP words slots 3-9 all zero, sustained 30 frames",
+          "free_movement_detect": "no battle re-arms for 5400 frames"
+        },
+        "battles": [
+          {
+            "n": 1,
+            "entry": 31557,
+            "end": 32736,
+            "formation": 2,
+            "monster_ids": [
+              0,
+              0
+            ]
+          },
+          {
+            "n": 2,
+            "entry": 34953,
+            "end": 36004,
+            "formation": 1,
+            "monster_ids": [
+              25,
+              25
+            ]
+          },
+          {
+            "n": 3,
+            "entry": 36828,
+            "end": 38059,
+            "formation": 2,
+            "monster_ids": [
+              0,
+              0
+            ]
+          },
+          {
+            "n": 4,
+            "entry": 39500,
+            "end": 40975,
+            "formation": 41,
+            "monster_ids": [
+              25,
+              0,
+              0
+            ]
+          }
+        ],
+        "assertions": {
+          "milestone_04_frame": 46375,
+          "wram_04_sha256": "3e26bed96d05e9d82f37a49795d379aaec4e2ab6a15ff018d34495c76422a675",
+          "screen_04_sha256": "292013ab4368f8561f33f2e5ac6d29876f6aff2a391f755109ffe2ef3fcbb2e3",
+          "runs_compared": 2,
+          "result": "WRAM, screenshot, all battle frames and formation ids identical across runs; also clears EXP-0033's deferred check"
         }
       }
     ]

@@ -2261,19 +2261,21 @@
       "producers": [],
       "related_experiments": [
         "EXP-0032",
-        "EXP-0033"
+        "EXP-0033",
+        "EXP-0034"
       ],
       "related_discoveries": [],
       "related_implementations": [],
       "related_tests": [],
-      "runtime_scenarios": [],
+      "runtime_scenarios": [
+        "local_artifacts/scenarios/SCN-0001/04-free-movement/04-free-movement.mss"
+      ],
       "evidence": [
         "local_artifacts/experiments/EXP-0033/postvictory-screen.png, run1-beat-*.png; hashes.sha256"
       ],
       "unknown_fields": [
-        "how many scripted battles precede free movement",
-        "each battle's formation id",
-        "whether the party can lose and branch"
+        "what event opcode invokes each battle",
+        "whether losing branches the script"
       ],
       "contradictions": [],
       "notes": "",
@@ -2281,11 +2283,58 @@
       "domain": "EVENT",
       "category": "scripted battles",
       "name": "Multiple scripted battles precede free field movement in the opening",
-      "description": "After the first Narshe-gate battle (formation 2) is won and its reward windows dismissed, the scripted sequence transitions directly into a second scripted battle (two quadruped enemies) rather than returning control to the player. A fixed post-victory frame offset therefore cannot define the free-movement milestone; a state-driven detector is required.",
-      "reconstruction_status": "OBSERVED",
+      "description": "The opening runs exactly FOUR scripted battles before player control: formations 2, 1, 2, 41 (entry frames 31557/34953/36828/39500, ends 32736/36004/38059/40975 - identical across two power-on runs). Every staged +$3F44 record matches the ROM formation table ($CF6200+id*15) byte-for-byte. Free movement follows the fourth battle; milestone 04-free-movement captured at frame 46375.",
+      "reconstruction_status": "LOCATED",
+      "runtime_status": "NORMAL_PATH_VERIFIED",
+      "confidence": "confirmed",
+      "next_action": "Exec-watch the frames before each battle entry to capture the scripted invocation site (CEN-EVENT-0005)."
+    },
+    {
+      "schema_version": "1.0",
+      "rom_revision": "0f51b4fca41b7fd509e4b8f9d543151f68efa5e97b08493e4b2a0c06f5d8d5e2",
+      "rom_locations": [],
+      "wram_locations": [],
+      "cpu_routines": [],
+      "spc_locations": [],
+      "record_count_expected": null,
+      "record_count_found": null,
+      "record_size": 32,
+      "pointer_tables": [],
+      "consumers": [],
+      "producers": [],
+      "related_experiments": [
+        "EXP-0028",
+        "EXP-0030",
+        "EXP-0032",
+        "EXP-0033",
+        "EXP-0034"
+      ],
+      "related_discoveries": [],
+      "related_implementations": [],
+      "related_tests": [],
+      "runtime_scenarios": [],
+      "evidence": [
+        "local_artifacts/experiments/EXP-0034/ (per-battle entry captures, logs; hashes.sha256)"
+      ],
+      "unknown_fields": [
+        "monster names",
+        "AI scripts",
+        "rewards fields",
+        "elements/status/resistances",
+        "graphics and palettes",
+        "the remaining 30 fields of each record"
+      ],
+      "contradictions": [],
+      "notes": "",
+      "id": "CEN-MONSTER-0004",
+      "domain": "MONSTER",
+      "category": "monster records",
+      "name": "Opening-area monsters reachable before Whelk (records 0 and 25)",
+      "description": "The four scripted opening battles stage only two distinct monster records. Record 0 (ROMFILE:0x0F0000): +$08=40 HP, +$0A=15 MP - verified live as battle slots 6/7 in formation 2. Record 25 (ROMFILE:0x0F0320): +$08=27 HP, +$0A=5 MP - seen in formations 1 and 41, record fields read statically. The random mines encounter (formation 44) additionally stages records 19 and 77 (EXP-0030). Monster names are unknown: the name table is unlocated, so on-screen labels are observational only.",
+      "reconstruction_status": "LOCATED",
       "runtime_status": "ENCOUNTERED",
       "confidence": "confirmed",
-      "next_action": "Re-arm the battle-init detector after each battle end and count battles until none re-arms; capture each formation id from +$11E0."
+      "next_action": "Bulk-extract records 0, 19, 25, 77 and map fields beyond +$08/+$0A against observed battle behaviour (B14)."
     }
   ]
 }

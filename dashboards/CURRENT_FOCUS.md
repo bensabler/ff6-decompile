@@ -56,8 +56,18 @@ monsters of record id 0** (live slots 6/7, HP 40 / MP 15 matching
 record 0's `+$08`/`+$0A`), not one monster 12. Records, census, and
 the scenario manifest are corrected with the correction preserved.
 
-**Next exact action:** EXP-0034 — segment 3b: state-driven
-free-movement detector (re-arm the battle-init watch after each
-battle end; advance until no battle re-arms for M frames), capture
-milestone `04-free-movement`, then run the deferred two-run
-determinism check for segments 3–3b.
+**Segment 3b (EXP-0034) — done.** The opening runs **exactly four
+scripted battles** before player control — formations **2, 1, 2, 41**
+(entries 31 557 / 34 953 / 36 828 / 39 500) — every staged record
+matching the ROM formation table byte-for-byte. **Milestone
+`04-free-movement` established at frame 46 375, byte-identical across
+two power-on runs** (WRAM, screenshot, and every battle frame), which
+also clears EXP-0033's deferred determinism check. New monster
+reachable pre-Whelk: record **25** (27 HP / 5 MP), alongside record
+**0** (40 HP / 15 MP) — CEN-MONSTER-0004.
+
+**Next exact action:** EXP-0035 — segment 4: from milestone 04,
+navigate Narshe exterior to the mine entrance (milestone
+`05-mines-entry`), capturing the map transition (CEN-WORLD-0004).
+The walk cadence must become direction-scripted; "up-only" was
+sufficient for the scripted corridor but not for real navigation.

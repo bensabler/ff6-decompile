@@ -561,6 +561,23 @@
       "falsifying_outcome": "the fixed schedule yields different battle outcomes or different milestone-04 WRAM across two power-on runs",
       "status": "completed",
       "record": "docs/experiments/EXP-0033-golden-route-seg3.md"
+    },
+    {
+      "schema_version": "1.0",
+      "id": "EXP-0034",
+      "question": "How many scripted battles does the opening run before returning control to the player, which formation does each stage, and where is the first stable free-movement state?",
+      "starting_state": {
+        "emulator": "Mesen 2.1.1 macOS x86_64 (--testrunner headless, bridge v2)",
+        "rom_sha256": "0f51b4fca41b7fd509e4b8f9d543151f68efa5e97b08493e4b2a0c06f5d8d5e2",
+        "state": "EXP-0033 route with a re-arming battle detector; controlled lab (AllZeros RAM, virgin SRAM)"
+      },
+      "expected_outcomes": [
+        "a definite battle count with per-battle formation ids; milestone 04 captured and byte-identical across runs",
+        "battles never stop within budget, or runs diverge"
+      ],
+      "falsifying_outcome": "milestone-04 WRAM differs across two power-on runs of the identical schedule, or no 1200-frame quiet window occurs before the failsafe",
+      "status": "completed",
+      "record": "docs/experiments/EXP-0034-golden-route-seg3b.md"
     }
   ]
 }
