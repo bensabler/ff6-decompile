@@ -99,165 +99,108 @@ remain open. Confirmed along the way:
 - The **guard/Esper beat precedes Whelk** on a clean run
   (CEN-EVENT-0011 resolved).
 
-## ~~Blocked — no ATB model~~ → resolved by EXP-0041..0044
+## ATB research program — complete (EXP-0041..0047, 2026-08-01)
 
-Whelk execution was deferred from 2026-08-01 because the project could
-not model ACTIVE/WAIT, qualifying submenu pause states, timer domains or
-action-queue ordering. **EXP-0041 through EXP-0044 supplied all of those
-except the action queue**, and the pause condition is now known
-precisely.
+The blocker EXP-0040 raised is **discharged**. Seven bounded units built
+a usable ATB model; the records carry the evidence, this is the summary.
 
-EXP-0040's head/shell transitions remain **unusable as natural timing**,
-but they can now be *scoped* rather than merely dismissed: only intervals
-inside the ability list and target selection were paused. See BLOCKERS.md
-for the discharge note and the remaining non-blocking work.
-
-## ATB program started — EXP-0041 (2026-08-01)
-
-The blocker's prerequisite audit is done and the program's **first
-bounded unit is complete**. Battle configuration is no longer read off
-the screen with our eyes:
+### Configuration
 
 | Byte | Contents | Default |
 |---|---|---|
 | `WRAM:+$1D4D` | bits 0-2 Bat.Speed (0-5 → 1-6), bit 3 **Bat.Mode** (1 = Wait), bits 4-6 Msg.Speed, bit 7 Cmd.Set | `$2A` |
-| `WRAM:+$1D4E` | bit 4 Reequip, bit 5 Sound, bit 6 Cursor, bit 7 Gauge | `$00` |
+| `WRAM:+$1D4E` | bit 4 Reequip, 5 Sound, 6 Cursor, 7 Gauge | `$00` |
 | `WRAM:+$1D54` | bit 7 Controller | `$00` |
 
-The block is **not contiguous**. Cleared bit = the left-hand screen
-option. The Config screen marks the **selected** option with tile
-attribute `$20` and the unselected with `$28` — the inverse of the
-intuitive reading, and exactly why EXP-0040 misread `Bat.Mode`. That
-correction is now confirmed from memory: **`Wait` is where a new game
-arrives**, not an operator change. Configuration is **not** SRAM-backed
-before a save.
+Not contiguous. Cleared bit = the left-hand screen option. The Config
+screen marks the **selected** option with tile attribute `$20` and the
+unselected with `$28` — the inverse of the intuitive reading, and exactly
+why EXP-0040 misread `Bat.Mode`. Not SRAM-backed before a save.
+(EXP-0041, CEN-MENU-0007.)
 
-Two supporting changes landed first: the battle-configuration
-fingerprint is now a required, audited record field
-(`internal/audit.CheckBattleExperimentConfig`, from EXP-0041 onward), and
-`ff6lab state` reads work RAM and save RAM straight out of preserved
-`.mss` files, so earlier captures can be mined without an emulator.
-Trial 0 used it to extract the `+$1D4E` candidate from EXP-0040's
-savestate pair before Mesen was ever launched.
+### Battle entry
 
-## EXP-0042 — configuration is sampled at battle entry (2026-08-01)
+`ROMCPU:$C22472` reads the two config bytes **once each** and decomposes
+them: Bat.Mode → `+$3A8F`, Bat.Speed → `+$3A90` (`255 − 24 × speed`),
+Cmd.Set → `+$2F2E`, Gauge → `+$2021`, `+$1D4E` bits 0-2 → `+$2F34`.
+Neither timing setting is re-read during the battle; `Msg.Speed` and
+`Cursor` **are**, by `$C198AC` and `$C159D6` (presentation only).
 
-Answered **mixed, and the split falls exactly where it matters.** At
-battle entry `ROMCPU:$C22472` reads the two config bytes **once each**
-and decomposes them into battle-local cells:
+**Staging rule:** ACTIVE/WAIT and Battle Speed must be set *before*
+battle entry, or injected at `+$3A8F`/`+$3A90`. (EXP-0042,
+CEN-BATTLE-0010.)
 
-| Setting | Battle-local cell | Value |
-|---|---|---|
-| Bat.Mode (bit 3) | `WRAM:+$3A8F` | `01` = Wait, `00` = Active |
-| Bat.Speed (bits 0-2) | `WRAM:+$3A90` | `255 − 24 × speed` (Fast `$FF` … Slow `$87`) |
-| Cmd.Set | `WRAM:+$2F2E` | cleared when Window |
-| Gauge | `WRAM:+$2021` | cleared when Off |
-| `+$1D4E` bits 0-2 | `WRAM:+$2F34` | at `$C10FF7` |
-
-`Bat.Mode` and `Bat.Speed` are **never re-read for timing** during the
-battle. `Msg.Speed` and `Cursor` *are* read live, by `$C198AC` (message
-delay table at `ROMCPU:$C19872`) and `$C159D6` (clears the `$5C`-byte
-cursor-memory block at `+$890F` when Cursor = Reset — the mechanism
-behind EXP-0040's `Cursor = Memory` observation).
-
-Both `$3A8F`/`$3A90` values were **predicted from the disassembly before
-the second run** and matched exactly.
-
-**Staging rule for the whole ATB program:** ACTIVE/WAIT and Battle Speed
-must be established **before battle entry** — or injected directly at
-`+$3A8F`/`+$3A90`, which is a far better controlled handle than driving
-menus.
-
-## EXP-0043 — the ATB layer is located (2026-08-01)
+### The ATB layer
 
 | Address | Role |
 |---|---|
-| `WRAM:+$3AB4` | **ATB gauge array** — 10 entries, **stride 2**, 16-bit; party 0-3, enemies 4-9 |
-| `WRAM:+$3AC8` | per-slot **increment**; gauge += `$3AC8,X >> 1` at `ROMCPU:$C21195` |
-| `WRAM:+$3AA0` | per-slot scheduler **flags** |
-| `WRAM:+$3A3E` | 16-bit **battle tick counter**, one per non-gated frame |
-| `ROMCPU:$C21124` | **the gate**: `LDA $2F41 / AND $3A8F / BNE skip` |
+| `WRAM:+$3AB4` | **ATB gauges** — 10 entries, **stride 2**, 16-bit |
+| `WRAM:+$3AC8` | per-slot increment; gauge += `$3AC8,X >> 1` at `$C21195` |
+| `WRAM:+$3AA0` | scheduler flags — bit 3 gates the `+$3218` increment, **bit 6 = pending action**, bit 7 cleared on completion |
+| `WRAM:+$3A3E` | 16-bit battle tick counter |
+| `WRAM:+$3218` | second accumulator; `+$0100` on action completion |
 
-`$3A8F` is the Wait flag, so `$C21124` is **where ACTIVE and WAIT
-diverge**. `$2F41` — zeroed at battle entry, `00` throughout a
-free-running battle — is the untested other half.
+**Battle Speed scales enemy gauges only** — the `CPX #$08 / BCC` at
+`$C209F6` skips the `$3A90` multiply for party slots, and party
+increments were byte-identical at Bat.Speed 3 and 6 while enemy
+increments went 240 → 156. Watch the stride: the ATB family is **2**, not
+the `$14` of the HP/stat family. (EXP-0043, CEN-BATTLE-0011.)
 
-**Battle Speed scales enemy gauges only.** The `CPX #$08 / BCC` branch at
-`$C209F6` skips the `$3A90` multiply for party slots, and measurement
-agrees: party increments byte-identical at Bat.Speed 3 and 6
-(318/330/336) while enemy increments went 240 → 156.
+### ACTIVE/WAIT
 
-Watch the stride: the ATB family is **stride 2**, not the `$14` of the
-HP/stat family. DISC-0001's unified layout governs slot *assignment*, not
-stride.
-
-## EXP-0044 — the ACTIVE/WAIT pause matrix (2026-08-01)
-
-`WRAM:+$2F41` is the **battle submenu flag**: resting `$00`, cleared
-per-frame at `ROMCPU:$C17A92`, raised at `ROMCPU:$C17C01` when a
-qualifying submenu opens. `ROMCPU:$C21124` ANDs it with the Wait flag and
-skips the entire per-frame battle update.
+`ROMCPU:$C21124` — `LDA $2F41 / AND $3A8F / BNE` — skips the entire
+per-frame battle update. `+$2F41` is the **battle submenu flag**, cleared
+per-frame at `$C17A92` and raised at `$C17C01`.
 
 | State | ACTIVE | WAIT |
 |---|---|---|
 | Battle running, no menu | advances | advances |
 | **Main command window open** | advances | **advances** |
-| Ability list open | advances* | **paused** |
-| Target selection | advances* | **paused** |
-| Action resolving / animation | advances* | **advances** |
-| Item / Magic / Row / Defend, dialogue, damage display, victory, defeat | not sampled | not sampled |
+| Ability list / Item / target selection | advances* | **paused** |
+| Action resolving, victory presentation | advances* | **advances** |
+| Magic / Row / Defend | unreachable from a Magitek battle | |
 
-\* structurally implied — the gate is an `AND`, so ACTIVE can never pause;
-verified directly for the ability-list row.
+\* structurally implied — the gate is an `AND`; verified directly for the
+ability-list row.
 
-All four located domains — tick `+$3A3E`, gauges `+$3AB4`, flags
-`+$3AA0`, accumulator `+$3218` — froze and resumed **together**. No
-independent clock was found among them.
+**The pause is narrower than the folk model**: the command window is on
+screen for most of a WAIT battle and does not pause, and neither does
+action resolution. (EXP-0044/0045, CEN-BATTLE-0012.)
 
-**The pause is narrower than the folk model.** The command window is on
-screen for most of a WAIT battle and does not pause; neither do action
-animations. Verified by an in-place one-variable flip of `+$3A8F` inside
-a single savestate, cross-checked against genuinely configured WAIT.
+### Action execution
 
-**This scopes EXP-0040.** Its Whelk intervals inside the ability list and
-target selection were paused; intervals at the command window and during
-action resolution were not. Whether that is enough to reinterpret those
-captures or whether the fight should be re-run is an orchestration call,
-not a blocked one.
+The execution path (`ROMCPU:$C207xx`-`$C209xx`, completion write
+`$C201BE` `INC $3219,X`) is **periodic and ungated** — it fires roughly
+every 100-120 frames regardless of the gate, sweeping the battle slots.
+So work pending when the gate engages still completes, and the
+78/119/122-frame delays are just the wait for the next invocation.
 
-## EXP-0045 — queued work resolves past the gate (2026-08-01)
+This **vindicates EXP-0040**: "queued actions resolved out of issue
+order" while menus were open was real system behaviour, not operator
+error. (EXP-0046/0047, CEN-BATTLE-0013.)
 
-Per-frame tracing settled EXP-0044's unresolved transient. The scheduler
-stops dead — tick and gauges frozen across 1 245 gated frames with zero
-exceptions — but **an action already pending when the gate engages still
-completes**, clearing `+$3AA0` bit 6 and advancing that slot's `+$3218`
-by exactly `$0100`.
+### Consequence for Whelk
 
-| Trace | Pending at gate engage | Gated-frame changes |
-|---|---|---|
-| 1 | slot 6 | 1, at +78 frames |
-| 2 | **none** | **0** across 438 frames |
-| 3 | slot 8 — **predicted** | 1, at +119 frames |
-
-Trace 3 was a prediction test: the discriminator from traces 1 and 2 says
-*engage the gate while a slot is pending and a deferred completion will
-fire*. It did, on a different slot, at a different delay. Arming had to
-move into Lua — bridge round-trips are hundreds of frames apart.
-
-**`+$3AA0` bit 6 is the pending-action marker**, resolving a semantics
-question EXP-0043 and EXP-0044 both left open. And it **vindicates
-EXP-0040**: "queued actions resolved out of issue order" while menus were
-open was real system behaviour, not operator error.
-
-Matrix additions: **Item** is a qualifying submenu; the **victory
-presentation** is not. Magic/Row/Defend are unreachable from a Magitek
-battle and stay unsampled.
+**No longer blocked by an absent model.** EXP-0040's timing can be
+*scoped*: intervals inside the ability list and target selection were
+paused; intervals at the command window and during action resolution were
+not. Whelk is a boss with its own script and untested here — the one
+caveat for any re-run.
 
 ## Next exact action
 
-**EXP-0046 — name the driver of deferred completion.** Something
-advances a pending action while `ROMCPU:$C21124` is shut. Read-watch
-`+$3AA0` and `+$3218` through a gated interval arranged as trace 3
-arranged it, and capture the writing PC. That routine is the
-**action-queue execution path** — the next major piece of the ATB model,
-and the one EXP-0040's out-of-order observation depends on.
+**EXP-0048 — name the invoker of the execution path.** Stack archaeology
+has failed twice (`$C20EB6` is not a call frame; `$C20016` holds a
+plausible `JSR` yet never executes), so switch instrument: exec-watch
+outward from the confirmed `$C2141D`, or trace a single invocation.
+Narrow question — one routine, ~every 100 frames, confirmed sites to walk
+from.
+
+**Method note:** a `JSR` at `return − 3` is necessary but not sufficient
+to confirm a stack frame. Confirm by execution.
+
+Then the programme's remaining questions — increment formula and
+threshold, queue ordering and arbitration, status modifiers, other battle
+types — are all non-blocking, and the Whelk decision (reinterpret
+EXP-0040's scoped captures, or re-run with the model in hand) is an
+ordinary orchestration call.
