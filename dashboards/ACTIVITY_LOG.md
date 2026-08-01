@@ -1,5 +1,24 @@
 # Activity Log
 
+- 2026-08-01 (headless) — **EXP-0045: queued work resolves past the
+  gate.** Per-frame `endFrame` tracing settled EXP-0044's unresolved
+  transient. The scheduler stops dead — tick `+$3A3E` and all `+$3AB4`
+  gauges frozen across **1 245 gated frames with zero exceptions** — but
+  **an action already pending when the gate engages still completes**,
+  clearing `+$3AA0` bit 6 and advancing that slot's `+$3218` by exactly
+  `$0100`. Trace 1: slot 6 pending, one completion at +78 frames. Trace
+  2: nothing pending, **zero** changes across 438 gated frames. Trace 3
+  was a **prediction test** — the discriminator from the first two says
+  engaging the gate while a slot is pending should produce a completion;
+  arming was moved into Lua because bridge round-trips are hundreds of
+  frames apart, and it fired on **slot 8** at +119 frames, a different
+  slot and delay. **`+$3AA0` bit 6 is the pending-action marker**,
+  resolving a semantics question EXP-0043 and EXP-0044 both left open,
+  and it **vindicates EXP-0040**: "queued actions resolved out of issue
+  order" while menus were open was real system behaviour, not operator
+  error. Matrix additions: **Item** is a qualifying submenu; the
+  **victory presentation** is not; Magic/Row/Defend are unreachable from
+  a Magitek battle and stay honestly unsampled. CEN-BATTLE-0012 extended.
 - 2026-08-01 (headless) — **EXP-0044: the ACTIVE/WAIT pause matrix; the
   ATB blocker is discharged.** `WRAM:+$2F41` is the **battle submenu
   flag** — resting `$00`, cleared per-frame at `ROMCPU:$C17A92` (`STZ`),

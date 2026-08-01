@@ -1,54 +1,42 @@
 # Latest Checkpoint
 
-**[2026-08-01 — EXP-0044: the ACTIVE/WAIT pause matrix](2026-08-01-exp0044-active-wait-pause-matrix.md)**
+**[2026-08-01 — EXP-0045: queued work resolves past the gate](2026-08-01-exp0045-queued-work-past-gate.md)**
 
-State: **the ATB blocker raised by EXP-0040 is discharged.** Across
-EXP-0041..0044 the project now has configuration storage and encoding,
-battle-entry sampling, gauges, increments, the tick counter, and the
-exact ACTIVE/WAIT pause condition.
+State: the ATB pause model is now precise. `ROMCPU:$C21124` stops the
+scheduler dead — tick `+$3A3E` and every `+$3AB4` gauge frozen across
+**1 245 gated frames with zero exceptions** — but **an action already
+pending when the gate engages still completes**, clearing `+$3AA0` bit 6
+and advancing that slot's `+$3218` by exactly `$0100`.
 
-`WRAM:+$2F41` is the **battle submenu flag** — resting `$00`, cleared
-per-frame at `ROMCPU:$C17A92`, raised at `ROMCPU:$C17C01` when a
-qualifying submenu opens. `ROMCPU:$C21124` ANDs it with the Wait flag
-`+$3A8F` and skips the entire per-frame battle update.
-
-| State | ACTIVE | WAIT |
+| Trace | Pending at gate engage | Gated-frame changes |
 |---|---|---|
-| Battle running, no menu | advances | advances |
-| **Main command window open** | advances | **advances** |
-| Ability list open | advances* | **paused** |
-| Target selection | advances* | **paused** |
-| Action resolving / animation | advances* | **advances** |
-| Item / Magic / Row / Defend, dialogue, damage display, victory, defeat | not sampled | not sampled |
+| 1 | slot 6 | 1, at +78 frames |
+| 2 | **none** | **0** across 438 gated frames |
+| 3 | slot 8 — **predicted** | 1, at +119 frames |
 
-\* structurally implied — the gate is an `AND`; verified directly for the
-ability-list row.
+Trace 3 was a prediction test: traces 1 and 2 differ in exactly one
+respect, which predicts that engaging the gate while a slot is pending
+produces a completion. It did, on a different slot at a different delay.
+Arming moved into Lua because bridge round-trips are hundreds of frames
+apart — which is exactly why EXP-0044 could not settle this.
 
-All four located domains (`+$3A3E`, `+$3AB4`, `+$3AA0`, `+$3218`) froze
-and resumed **together**; no independent clock was found among them.
-**The pause is narrower than the folk model**: the command window is on
-screen for most of a WAIT battle and does not pause, and neither does
-action resolution.
+**`+$3AA0` bit 6 is the pending-action marker**, resolving a semantics
+question EXP-0043 and EXP-0044 both left open. It also **vindicates
+EXP-0040**: "queued actions resolved out of issue order" while menus were
+open was real system behaviour, not operator error.
 
-Method: the mode was flipped **in place** by patching `+$3A8F`, making
-ACTIVE-versus-WAIT a one-variable comparison inside a single savestate;
-the patch was then validated against genuinely configured WAIT, which
-froze identically.
+Matrix additions: **Item** is a qualifying submenu; the **victory
+presentation** is not. Magic, Row and Defend are unreachable from a
+Magitek battle and are left unsampled rather than guessed.
 
-**Whelk is no longer blocked by an absent model.** EXP-0040's timing is
-now *scoped* rather than dismissed: only intervals inside the ability
-list and target selection were paused.
+Carried forward: the driver of deferred completion is unnamed; multiple
+pending slots never co-occurred; `+$3218`'s `$0100` step rests on two
+observations; party slots were never pending at a gate engage.
 
-Carried forward honestly: six matrix rows are `not sampled`; a settling
-transient just after the gate engages is unresolved at this sampling
-resolution; unlocated domains (animation, AI script, status, boss-state)
-were not covered; and Whelk is a boss with its own script, untested here.
+12 evidence artifacts with hashes; no background processes; SRAM virgin.
+All gates clean.
 
-10 evidence artifacts with hashes; no background processes; SRAM virgin.
-All gates clean (gofmt/build/vet/test, `ff6lab audit`, census sync 65
-entries, restricted-file scan).
-
-Exact next action: **EXP-0045 — finish the matrix and settle the
-transient.** Walk the remaining menu and presentation states sampling
-`+$2F41`, and frame-step the gate transition with an `endFrame` callback
-rather than bridge round-trips.
+Exact next action: **EXP-0046 — the action-queue execution path.**
+Read-watch `+$3AA0` and `+$3218` through a gated interval arranged as
+trace 3 arranged it, and capture the writing PC. That routine sits
+outside the per-frame scheduler.

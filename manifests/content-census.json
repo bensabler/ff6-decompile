@@ -2895,7 +2895,7 @@
       "domain": "BATTLE",
       "category": "ATB scheduler",
       "name": "ACTIVE/WAIT pause gate and the submenu flag",
-      "description": "WRAM:+$2F41 is the battle submenu flag: resting $00, cleared per-frame at ROMCPU:$C17A92 (STZ), raised at ROMCPU:$C17C01 (INC) when a qualifying submenu opens, with a second clear path at ROMCPU:$C14434. ROMCPU:$C21124 ANDs it with the Wait flag +$3A8F and skips the entire per-frame battle update when both are set. All four located timer domains - battle tick +$3A3E, ATB gauges +$3AB4, scheduler flags +$3AA0, second accumulator +$3218 - freeze and resume together. The main battle command window does NOT raise the flag, and action animations do NOT pause; only the ability list and target selection were observed to pause.",
+      "description": "WRAM:+$2F41 is the battle submenu flag: resting $00, cleared per-frame at ROMCPU:$C17A92 (STZ), raised at ROMCPU:$C17C01 (INC) when a qualifying submenu opens, with a second clear path at ROMCPU:$C14434. ROMCPU:$C21124 ANDs it with the Wait flag +$3A8F and skips the entire per-frame battle update when both are set. All four located timer domains - battle tick +$3A3E, ATB gauges +$3AB4, scheduler flags +$3AA0, second accumulator +$3218 - freeze and resume together. The main battle command window does NOT raise the flag, and action animations do NOT pause; only the ability list and target selection were observed to pause. Queued work resolves past the gate: an action already pending when the gate engages still completes, clearing +$3AA0 bit 6 and advancing that slot's +$3218 by $0100, while the tick counter and gauges stay frozen (EXP-0045).",
       "reconstruction_status": "FORMAT_DECODED",
       "runtime_status": "ALTERNATE_PATH_VERIFIED",
       "rom_revision": "0f51b4fca41b7fd509e4b8f9d543151f68efa5e97b08493e4b2a0c06f5d8d5e2",
@@ -2917,6 +2917,7 @@
       "consumers": [],
       "producers": [],
       "related_experiments": [
+        "EXP-0045",
         "EXP-0044",
         "EXP-0043",
         "EXP-0042",
@@ -2933,15 +2934,15 @@
       ],
       "confidence": "confirmed",
       "unknown_fields": [
-        "the full set of qualifying submenus - Item, Magic, Row, Defend, dialogue, damage display, victory and defeat presentations were not sampled",
-        "whether any unlocated domain (animation, AI script, status, boss-state timers) advances during a paused interval",
-        "the settling transient after the gate engages - queued work resolving, or the last un-gated frame",
-        "ROMCPU:$C14434, the second clear path",
+        "what drives a pending action to completion while ROMCPU:$C21124 is shut - the action-queue execution path",
+        "whether several pending slots all drain during one gated interval",
+        "Magic, Row and Defend submenus - need a normal-party battle, not a Magitek one",
+        "the defeat presentation, with gate instrumentation",
         "battle types other than random encounters"
       ],
       "contradictions": [],
-      "next_action": "EXP-0045: walk every reachable battle menu and presentation state sampling +$2F41 to complete the matrix, and frame-step the gate transition to settle the transient.",
-      "notes": "The pause is NARROWER than the folk model: the main battle command window is on screen for most of a WAIT battle and does not pause, and action animations do not pause either. This scopes EXP-0040's contamination - intervals inside the ability list and target selection were paused; intervals at the command window and during action resolution were not. Verified by an in-place one-variable flip of +$3A8F inside a single savestate, and cross-checked against genuinely configured WAIT."
+      "next_action": "EXP-0046: read-watch +$3AA0 and +$3218 through a gated interval to name the routine that completes a pending action - the action-queue execution path.",
+      "notes": "The pause is NARROWER than the folk model: the main battle command window is on screen for most of a WAIT battle and does not pause, and action animations do not pause either. This scopes EXP-0040's contamination - intervals inside the ability list and target selection were paused; intervals at the command window and during action resolution were not. Verified by an in-place one-variable flip of +$3A8F inside a single savestate, and cross-checked against genuinely configured WAIT. EXP-0045 added: Item is a qualifying submenu; the victory presentation is not; and +$3AA0 bit 6 is the pending-action marker (Strong hypothesis), which resolves a semantics question EXP-0043 and EXP-0044 both left open. This vindicates EXP-0040's observation that queued actions resolved while menus were open - that was real system behaviour, not operator error."
     }
   ]
 }

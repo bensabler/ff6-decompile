@@ -225,11 +225,39 @@ action resolution were not. Whether that is enough to reinterpret those
 captures or whether the fight should be re-run is an orchestration call,
 not a blocked one.
 
+## EXP-0045 — queued work resolves past the gate (2026-08-01)
+
+Per-frame tracing settled EXP-0044's unresolved transient. The scheduler
+stops dead — tick and gauges frozen across 1 245 gated frames with zero
+exceptions — but **an action already pending when the gate engages still
+completes**, clearing `+$3AA0` bit 6 and advancing that slot's `+$3218`
+by exactly `$0100`.
+
+| Trace | Pending at gate engage | Gated-frame changes |
+|---|---|---|
+| 1 | slot 6 | 1, at +78 frames |
+| 2 | **none** | **0** across 438 frames |
+| 3 | slot 8 — **predicted** | 1, at +119 frames |
+
+Trace 3 was a prediction test: the discriminator from traces 1 and 2 says
+*engage the gate while a slot is pending and a deferred completion will
+fire*. It did, on a different slot, at a different delay. Arming had to
+move into Lua — bridge round-trips are hundreds of frames apart.
+
+**`+$3AA0` bit 6 is the pending-action marker**, resolving a semantics
+question EXP-0043 and EXP-0044 both left open. And it **vindicates
+EXP-0040**: "queued actions resolved out of issue order" while menus were
+open was real system behaviour, not operator error.
+
+Matrix additions: **Item** is a qualifying submenu; the **victory
+presentation** is not. Magic/Row/Defend are unreachable from a Magitek
+battle and stay unsampled.
+
 ## Next exact action
 
-**EXP-0045 — finish the matrix and settle the transient.** Walk every
-remaining battle menu and presentation state sampling `+$2F41` (six rows
-currently read `not sampled`), and frame-step the gate transition with an
-`endFrame` callback to decide whether the settling transient is queued
-work resolving past the gate or simply the last un-gated frame. Bridge
-round-trips are far too coarse for the latter.
+**EXP-0046 — name the driver of deferred completion.** Something
+advances a pending action while `ROMCPU:$C21124` is shut. Read-watch
+`+$3AA0` and `+$3218` through a gated interval arranged as trace 3
+arranged it, and capture the writing PC. That routine is the
+**action-queue execution path** — the next major piece of the ATB model,
+and the one EXP-0040's out-of-order observation depends on.

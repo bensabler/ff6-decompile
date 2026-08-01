@@ -113,12 +113,22 @@ Ordered next units (reorder when evidence exposes a better chain):
   and target selection did. Verified by an in-place one-variable flip of
   `+$3A8F` and cross-checked against genuinely configured WAIT
   ([record](../docs/experiments/EXP-0044-active-wait-pause-matrix.md)).
-- [ ] **P0 NEXT — EXP-0045: finish the matrix, settle the transient.**
-  Six matrix rows read `not sampled` (Item, Magic, Row, Defend, dialogue,
-  damage display, victory, defeat) — walk each sampling `+$2F41`. Then
-  frame-step the gate transition with an `endFrame` callback to decide
-  whether the settling transient is queued work resolving past the gate
-  or the last un-gated frame; bridge round-trips are far too coarse.
+- [x] **EXP-0045: the gate transition frame by frame** — done. **Queued
+  work resolves past the gate**: the scheduler stops dead (tick and
+  gauges frozen across 1 245 gated frames, zero exceptions) but an action
+  already pending when the gate engages still completes, clearing
+  `+$3AA0` bit 6 and advancing `+$3218` by `$0100`. Observed at +78 and
+  +119 frames in two traces, with a controlled negative between them, and
+  the second **predicted in advance**. `+$3AA0` bit 6 identified as the
+  pending-action marker. Item added as a qualifying submenu; the victory
+  presentation does not pause
+  ([record](../docs/experiments/EXP-0045-gate-transition-and-matrix-completion.md)).
+- [ ] **P0 NEXT — EXP-0046: the action-queue execution path.** Something
+  drives a pending action to completion while `ROMCPU:$C21124` is shut.
+  Read-watch `+$3AA0`/`+$3218` through a gated interval arranged as
+  EXP-0045 trace 3 arranged it and capture the writing PC. This is the
+  queue/execution half of the ATB model and what EXP-0040's "actions
+  resolved out of issue order" depends on.
 - [ ] **ATB program, remaining (none blocking):** the exact increment
   formula, threshold and gauge reset; `+$3AA0` bit semantics; the action
   queue and readiness arbitration; status modifiers (Haste/Slow/Stop);

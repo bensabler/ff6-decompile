@@ -828,6 +828,43 @@
       "falsifying_outcome": "No menu state sets $2F41; or patched WAIT behaves differently from configured WAIT, voiding every patched trial; or a domain advances identically in ACTIVE and WAIT while $2F41 is set",
       "status": "completed",
       "record": "docs/experiments/EXP-0044-active-wait-pause-matrix.md"
+    },
+    {
+      "schema_version": "1.0",
+      "id": "EXP-0045",
+      "domain": "battle",
+      "question": "When WRAM:+$2F41 goes 0->1 under WAIT, does any timer domain advance on a frame where the gate is already set? And which of EXP-0044's unsampled menu/presentation states raise the gate?",
+      "starting_state": {
+        "emulator": "Mesen 2.1.1 macOS, --testrunner headless (--timeout=7200, FF6_OUT set), bridge v2, probe EXP-0045.lua; one instance",
+        "rom_sha256": "0f51b4fca41b7fd509e4b8f9d543151f68efa5e97b08493e4b2a0c06f5d8d5e2",
+        "state": "local_artifacts/experiments/EXP-0042/in-battle-active-speed6.mss; +$3A8F patched to $01 (Wait), a patch validated by EXP-0044 trial 9",
+        "battle_config": {
+          "battle_mode": "Active",
+          "battle_speed": 6,
+          "message_speed": 3,
+          "command_set": "Window",
+          "gauge": "On",
+          "sound": "Stereo",
+          "cursor": "Reset",
+          "reequip": "Optimum",
+          "controller": "Single",
+          "source": "memory-read",
+          "raw": {
+            "WRAM:+$1D4D": "0x25",
+            "WRAM:+$1D4E": "0x00",
+            "WRAM:+$3A8F": "0x00 patched to 0x01",
+            "WRAM:+$3A90": "0x87"
+          }
+        }
+      },
+      "expected_outcomes": [
+        "last-un-gated-frame: every advance occurs on a frame where +$2F41 reads 0",
+        "work resolves past the gate: at least one domain advances on a gated frame",
+        "something else: the gate flickers, or a bounded drain over the first few gated frames"
+      ],
+      "falsifying_outcome": "For 'last un-gated frame': any domain advancing on a frame with +$2F41 = 1. For 'work resolves past the gate': no advance on any gated frame. If +$2F41 toggles every frame rather than holding, EXP-0044's readings were aliased.",
+      "status": "completed",
+      "record": "docs/experiments/EXP-0045-gate-transition-and-matrix-completion.md"
     }
   ]
 }
