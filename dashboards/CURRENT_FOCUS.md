@@ -66,8 +66,21 @@ also clears EXP-0033's deferred determinism check. New monster
 reachable pre-Whelk: record **25** (27 HP / 5 MP), alongside record
 **0** (40 HP / 15 MP) — CEN-MONSTER-0004.
 
-**Next exact action:** EXP-0035 — segment 4: from milestone 04,
-navigate Narshe exterior to the mine entrance (milestone
-`05-mines-entry`), capturing the map transition (CEN-WORLD-0004).
-The walk cadence must become direction-scripted; "up-only" was
-sufficient for the scripted corridor but not for real navigation.
+**Segment 4 (EXP-0035) — partial.** The route from milestone 04 to
+the mines is **mapped leg by leg** and the mines interior was
+reached, but the scheduled encoding and determinism check are not
+done, so **milestone 05 is deliberately not claimed**. Two findings
+beyond routing: **player tile position at `WRAM:+$00AF`/`+$00B0`**
+(Strong hypothesis — clean per-axis single-step behaviour), and a
+**candidate map-id byte `+$1EA5`** ($00 opening / $05 Narshe
+exterior / $0D mines across eight states — Tentative, with one
+unexplained tension at milestone 02). A **fifth scripted battle**
+gates the route (CEN-EVENT-0007); the climb is a zigzag, so the
+up-only cadence used by earlier segments cannot walk it.
+
+**Next exact action:** EXP-0036 — encode EXP-0035's leg table as
+absolute frame windows on top of the EXP-0034 schedule (re-arming
+battle detector kept, so battle 5 is fought and its `+$11E0`
+formation id logged), detect the transition by watching `+$1EA5`
+(which simultaneously tests that byte's falsifier), capture milestone
+`05-mines-entry`, and run the two-run determinism check.

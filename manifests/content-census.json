@@ -2335,6 +2335,98 @@
       "runtime_status": "ENCOUNTERED",
       "confidence": "confirmed",
       "next_action": "Bulk-extract records 0, 19, 25, 77 and map fields beyond +$08/+$0A against observed battle behaviour (B14)."
+    },
+    {
+      "schema_version": "1.0",
+      "rom_revision": "0f51b4fca41b7fd509e4b8f9d543151f68efa5e97b08493e4b2a0c06f5d8d5e2",
+      "rom_locations": [],
+      "wram_locations": [
+        "WRAM:+$00AF",
+        "WRAM:+$00B0",
+        "WRAM:+$1EA5",
+        "WRAM:+$0541",
+        "WRAM:+$087A"
+      ],
+      "cpu_routines": [],
+      "spc_locations": [],
+      "record_count_expected": null,
+      "record_count_found": null,
+      "record_size": null,
+      "pointer_tables": [],
+      "consumers": [],
+      "producers": [],
+      "related_experiments": [
+        "EXP-0035"
+      ],
+      "related_discoveries": [],
+      "related_implementations": [],
+      "related_tests": [],
+      "runtime_scenarios": [],
+      "evidence": [
+        "local_artifacts/experiments/EXP-0035/pos-*.hex, *-1E00-256.hex, recon screenshots; hashes.sha256"
+      ],
+      "unknown_fields": [
+        "producers of +$00AF/+$00B0",
+        "what the alias blocks are",
+        "whether +$1EA5 is the map id or a correlate",
+        "subtile/pixel position bytes",
+        "facing"
+      ],
+      "contradictions": [],
+      "notes": "",
+      "id": "CEN-WORLD-0007",
+      "domain": "WORLD",
+      "category": "map headers",
+      "name": "Player field position bytes and candidate map-id byte",
+      "description": "Blind low-WRAM diffing across single-tile moves isolated WRAM:+$00AF = player X tile and +$00B0 = player Y tile (each changes by exactly 1 per step on its own axis and is stable on the other). Aliases at +$0541/42, +$0543/44, +$0545/46 and +$087A/7B track identically (followers or a mirror block, undecided). Separately, WRAM:+$1EA5 takes exactly three values across eight independent savestates: $00 (snowfield/opening-approach states), $05 (all four Narshe exterior free-walk states), $0D (both mines-interior states) - a candidate map id. Tension kept: milestone 02 is visually Narshe exterior but reads $00, so either the scripted approach uses a different map record or the byte is not the map id.",
+      "reconstruction_status": "CANDIDATE_LOCATION",
+      "runtime_status": "INPUTS_CAPTURED",
+      "confidence": "strong-hypothesis",
+      "next_action": "Write-watch +$1EA5 across the mine-entry transition: if its writer also drives tileset/tilemap loading it is the map id (EXP-0036 does this while encoding the route)."
+    },
+    {
+      "schema_version": "1.0",
+      "rom_revision": "0f51b4fca41b7fd509e4b8f9d543151f68efa5e97b08493e4b2a0c06f5d8d5e2",
+      "rom_locations": [],
+      "wram_locations": [
+        "WRAM:+$00AF",
+        "WRAM:+$00B0"
+      ],
+      "cpu_routines": [],
+      "spc_locations": [],
+      "record_count_expected": null,
+      "record_count_found": null,
+      "record_size": null,
+      "pointer_tables": [],
+      "consumers": [],
+      "producers": [],
+      "related_experiments": [
+        "EXP-0034",
+        "EXP-0035"
+      ],
+      "related_discoveries": [],
+      "related_implementations": [],
+      "related_tests": [],
+      "runtime_scenarios": [],
+      "evidence": [
+        "local_artifacts/experiments/EXP-0035/recon-guard*.png, trial1-final.png; hashes.sha256"
+      ],
+      "unknown_fields": [
+        "its formation id (no probe armed during recon)",
+        "its monster records",
+        "the trigger region's data source"
+      ],
+      "contradictions": [],
+      "notes": "",
+      "id": "CEN-EVENT-0007",
+      "domain": "EVENT",
+      "category": "scripted battles",
+      "name": "Fifth scripted battle en route to the mines",
+      "description": "A guard-dialogue trigger at player tile ($1E,$27) on the Narshe exterior - reached after the free-movement milestone, on the way to the mine entrance - starts a fifth scripted battle (a large quadruped plus guards; enemy HP words observed in slots 6-9 as $73/$28/$28). It sits after the opening's four-battle chain (CEN-EVENT-0006), not within it. A second scripted dialogue at ($1F,$16) precedes the mine shaft itself and gates entry until cleared.",
+      "reconstruction_status": "OBSERVED",
+      "runtime_status": "NORMAL_PATH_VERIFIED",
+      "confidence": "confirmed",
+      "next_action": "EXP-0036 arms the re-arming battle detector across this trigger to capture +$11E0 and the staged formation record."
     }
   ]
 }

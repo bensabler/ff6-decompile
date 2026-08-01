@@ -11,8 +11,8 @@ Breadth without pretense: counts are census entries at or above each threshold (
 | MAGIC | 9 | 4 | 2 | 1 | 0 | 3 |
 | MONSTER | 4 | 3 | 0 | 0 | 0 | 0 |
 | ITEM | 0 | 0 | 0 | 0 | 0 | 0 |
-| WORLD | 6 | 0 | 0 | 0 | 0 | 0 |
-| EVENT | 6 | 2 | 0 | 0 | 0 | 2 |
+| WORLD | 7 | 0 | 0 | 0 | 0 | 0 |
+| EVENT | 7 | 2 | 0 | 0 | 0 | 3 |
 | MENU | 6 | 1 | 0 | 0 | 0 | 0 |
 | GFX | 4 | 1 | 1 | 1 | 1 | 0 |
 | AUDIO | 5 | 3 | 2 | 2 | 1 | 1 |
@@ -27,9 +27,9 @@ Breadth without pretense: counts are census entries at or above each threshold (
 
 ## Census health
 
-- Entries with unresolved fields/formats: 25.
-- Observed but not yet located (breadth backlog): 34.
-- Runtime-only findings (seen live, no location): 24.
+- Entries with unresolved fields/formats: 27.
+- Observed but not yet located (breadth backlog): 36.
+- Runtime-only findings (seen live, no location): 25.
 - Static-only findings (located, never exercised live): 1.
 
 ## Open breadth targets (next_action of unlocated entries)
@@ -45,6 +45,7 @@ Breadth without pretense: counts are census entries at or above each threshold (
 - **CEN-EVENT-0002** (Dialogue text content and encoding): Capture the dialogue compose region + derive the glyph-to-byte mapping via the tilemap-affine technique (EXP-0023 pattern).
 - **CEN-EVENT-0003** (Character naming state (Terra as '?????')): Locate the character-name store: WRAM search for the rendered name tile sequence source when the status window composes.
 - **CEN-EVENT-0004** (Title screen and attract-mode flow): Exec-trace the title input read to map the acceptance condition (edge requirement) and the start-vs-a discrimination.
+- **CEN-EVENT-0007** (Fifth scripted battle en route to the mines): EXP-0036 arms the re-arming battle detector across this trigger to capture +$11E0 and the staged formation record.
 - **CEN-GFX-0002** (Field sprite assets (armor walker, NPCs, townsfolk)): OAM + chr capture on a field state; register the sprite sheet region.
 - **CEN-GFX-0003** (Battle background (cave scene)): BG1/BG2 VRAM + tilemap capture during battle; provenance search (EXP-0023 pattern).
 - **CEN-GFX-0004** (Variable-width dialogue font): Capture the dialogue compose region; the fixed-font provenance technique should locate the glyph source.
@@ -68,3 +69,4 @@ Breadth without pretense: counts are census entries at or above each threshold (
 - **CEN-WORLD-0004** (Map transitions (exits/entrances)): Walk through one Narshe doorway and capture the transition inputs (map id, target position).
 - **CEN-WORLD-0005** (Treasure/chest state): Find a chest in the mines path; open it; watch the flag write.
 - **CEN-WORLD-0006** (Random encounter triggering (mines)): Watch the step counter and encounter-check reads during a walk to locate the zone/rate data.
+- **CEN-WORLD-0007** (Player field position bytes and candidate map-id byte): Write-watch +$1EA5 across the mine-entry transition: if its writer also drives tileset/tilemap loading it is the map id (EXP-0036 does this while encoding the route).

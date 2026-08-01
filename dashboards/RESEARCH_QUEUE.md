@@ -21,8 +21,13 @@ Ordered next units (reorder when evidence exposes a better chain):
   (formations 2/1/2/41), milestone `04-free-movement` at frame 46 375
   byte-identical across two runs; deferred check cleared
   ([record](../docs/experiments/EXP-0034-golden-route-seg3b.md)).
-- [ ] **EXP-0035: segment 4** — Narshe exterior navigation → mine
-  entrance; capture the map transition (`05-mines-entry`).
+- [x] **EXP-0035: segment 4 (partial)** — route to the mines mapped
+  leg by leg and walked; player tile bytes `+$00AF`/`+$00B0` and
+  candidate map-id `+$1EA5` found; milestone 05 not claimed
+  ([record](../docs/experiments/EXP-0035-golden-route-seg4.md)).
+- [ ] **EXP-0036: segment 4 scheduled** — encode the leg table,
+  capture `05-mines-entry`, two-run determinism; also tests the
+  `+$1EA5` map-id falsifier and logs battle 5's formation id.
 - [ ] Golden route segments 4..N → milestones `05`–`07-pre-whelk`,
   then Whelk branches A/B/C (SCN-0001 route plan).
 - [ ] Milestone-01 PPU/HDMA falsifier (CEN-QUIRK-0002): capture PPU

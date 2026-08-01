@@ -217,7 +217,8 @@
       "note": "milestone 04-free-movement established and deterministic (EXP-0034, frame 46375); per-step/collision logic still unlocated",
       "links": {
         "census": [
-          "CEN-WORLD-0003"
+          "CEN-WORLD-0003",
+          "CEN-WORLD-0007"
         ],
         "experiments": [
           "EXP-0025",
@@ -231,13 +232,16 @@
       "name": "Narshe exterior traversal",
       "status_default": "PARTIAL",
       "overrides": {},
-      "note": "tileset observed only; no branch sweep",
+      "note": "route from milestone 04 to the mine entrance mapped leg by leg with player-tile coordinates (EXP-0035); a fifth scripted battle and a shaft dialogue gate the way; tileset/branch sweep still not done",
       "links": {
         "census": [
-          "CEN-WORLD-0001"
+          "CEN-WORLD-0001",
+          "CEN-WORLD-0007",
+          "CEN-EVENT-0007"
         ],
         "experiments": [
-          "EXP-0025"
+          "EXP-0025",
+          "EXP-0035"
         ],
         "discoveries": []
       }
@@ -247,13 +251,15 @@
       "name": "Mine entry and map transition",
       "status_default": "PARTIAL",
       "overrides": {},
-      "note": "mines state exists; transition never captured",
+      "note": "mines interior reached interactively via the transition at (1F,16)->(26,1C); candidate map-id byte +$1EA5 ($05 exterior / $0D mines). Milestone 05-mines-entry not yet captured from a scheduled run (EXP-0036).",
       "links": {
         "census": [
-          "CEN-WORLD-0004"
+          "CEN-WORLD-0004",
+          "CEN-WORLD-0007"
         ],
         "experiments": [
-          "EXP-0025"
+          "EXP-0025",
+          "EXP-0035"
         ],
         "discoveries": []
       }
@@ -574,6 +580,74 @@
           "runs_compared": 2,
           "result": "WRAM, screenshot, all battle frames and formation ids identical across runs; also clears EXP-0033's deferred check"
         }
+      },
+      {
+        "id": 4,
+        "experiment": "EXP-0035",
+        "status": "PARTIAL",
+        "milestones": [],
+        "route_legs": [
+          {
+            "n": 1,
+            "input": "right",
+            "result": "X $1A->$1B"
+          },
+          {
+            "n": 2,
+            "input": "up",
+            "result": "Y $2A->$27"
+          },
+          {
+            "n": 3,
+            "input": "right",
+            "result": "X->$1E; triggers guard dialogue"
+          },
+          {
+            "n": 4,
+            "input": "A",
+            "result": "dialogue -> scripted battle 5"
+          },
+          {
+            "n": 5,
+            "input": "A cadence",
+            "result": "battle 5 won; field pos (1E,25)"
+          },
+          {
+            "n": 6,
+            "input": "A then up",
+            "result": "Y $25->$21"
+          },
+          {
+            "n": 7,
+            "input": "left 1 tile, up",
+            "result": "(1D,1E)"
+          },
+          {
+            "n": 8,
+            "input": "right 1 tile, up",
+            "result": "(1E,18)"
+          },
+          {
+            "n": 9,
+            "input": "right 1 tile, up",
+            "result": "(1F,16); mine-shaft dialogue"
+          },
+          {
+            "n": 10,
+            "input": "A x3",
+            "result": "dialogue cleared"
+          },
+          {
+            "n": 11,
+            "input": "up",
+            "result": "(26,1C) - map transition into the mines"
+          }
+        ],
+        "assertions": {
+          "runs_compared": 0,
+          "result": "route walked interactively and the mines interior reached; scheduled encoding and two-run determinism check NOT done (carried to EXP-0036). Milestone 05 deliberately not claimed from interactive recon."
+        },
+        "notes": "the climb is a zigzag: a plain hold-up stalls at Y=$21 and Y=$16, so the up-only cadence used by segments 2-3b cannot walk it"
       }
     ]
   }

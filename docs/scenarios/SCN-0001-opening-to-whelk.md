@@ -201,12 +201,25 @@ Map transition into the town proper.
   (CEN-WORLD-0003).
 
 ### B09 — Narshe exterior traversal
-**All rows PARTIAL:** tileset/animated tiles observed only
-(CEN-WORLD-0001); accessible-branch sweep not performed.
+- runtime PARTIAL→advanced: the route from milestone 04 to the mine
+  entrance is **mapped leg by leg with player-tile coordinates**
+  (EXP-0035). The climb is a zigzag, and it is gated by a **fifth
+  scripted battle** at tile ($1E,$27) plus a shaft dialogue at
+  ($1F,$16) — CEN-EVENT-0007.
+- Remaining rows PARTIAL: tileset/animated tiles observed only
+  (CEN-WORLD-0001); the accessible-branch and dead-end sweep is still
+  not performed, and static map/object data has not been inspected.
 
 ### B10 — Mine entry and map transition
-**All rows PARTIAL:** mines state exists (checkpoint3) but the
-transition was never captured (CEN-WORLD-0004).
+- runtime PARTIAL→advanced: **the transition was walked** —
+  ($1F,$16) exterior → ($26,$1C) mines interior (EXP-0035), with a
+  candidate map-id byte `WRAM:+$1EA5` reading `$05` on every Narshe
+  exterior state and `$0D` on both mines states (Tentative;
+  CEN-WORLD-0007).
+- Remaining rows PARTIAL: milestone `05-mines-entry` is **not** yet
+  captured from a scheduled run (deliberately not claimed from
+  interactive recon), and the map records behind the transition are
+  unlocated (CEN-WORLD-0004).
 
 ### B11 — Mine traversal
 **All rows PARTIAL:** cave tileset/rails/light observed (EXP-0025,
