@@ -53,7 +53,10 @@
 - **Bounds:** no map-format or map-id decoding (CEN-WORLD-0004's own
   unit); no mines traversal beyond the settled entry state; register
   newly visible systems, do not investigate them.
-- **Raw evidence paths:** `local_artifacts/experiments/EXP-0035/`,
+- **Raw evidence paths:** `local_artifacts/experiments/EXP-0035/`
+  (including `commands-recon.log`, the archived bridge command
+  transcript for the whole recon — the authoritative source the
+  condensed table must be checked against; sha256 in hashes.sha256),
   `local_artifacts/scenarios/SCN-0001/05-mines-entry/`.
 - **Result:** the route exists, was walked end to end, and the mines
   interior was reached. The mines are **not** event-gated beyond one
@@ -96,8 +99,11 @@
     > This unit's own recon log has the missing `up` leg between them
     > (`right 400 → 1E 27`, `up 400 → 1E 25`, then the dialogue). Two
     > EXP-0036 runs timed out at (`$1E`,`$27`) before the omission was
-    > found. The corrected sequence is below and in
-    > `internal/scenario/route.MinesRoute`.
+    > found. A second condensation in row 11: the single `up 200` hold
+    > carried the party through the transition AND four tiles further to
+    > (`$26`,`$1C`) — two steps merged into one row, which is why the
+    > scheduled encoding needs separate legs 16 and 17. The corrected
+    > sequence is below and in `internal/scenario/route.MinesRoute`.
 
     | Leg | Input | Result |
     |---|---|---|
@@ -112,7 +118,7 @@
     | 7 | left 1 tile, up | ($1D,$1E) |
     | 8 | right 1 tile, up | ($1E,$18) |
     | 9 | right 1 tile, up | ($1F,$16) — **mine-shaft dialogue** |
-    | 10 | A ×3 | dialogue cleared |
+    | 10 | A ×6 issued | dialogue cleared (how many presses were *required* is unverified; the scheduled route uses a 600-frame A pulse) |
     | 11 | up | **($26,$1C) — map transition into the mines** |
 
     Legs 7-9 matter: the climb is a **zigzag**, and a plain "hold up"
@@ -120,8 +126,9 @@
     cannot walk this route — that is why the earlier segments' up-only
     cadence had to be replaced.
   - **Battle 5 registered (a fifth scripted battle, beyond EXP-0034's
-    four):** triggered by the guard-dialogue trigger at ($1E,$27) on
-    the way to the mines, so it sits *after* the free-movement
+    four):** triggered via the guard dialogue at ($1E,$25) — the tile
+    the correction above establishes; this paragraph originally said
+    ($1E,$27), the same transcription error — on the way to the mines, so it sits *after* the free-movement
     milestone rather than in the opening chain. Enemy name window
     shows two entries (a large quadruped plus guards); enemy HP words
     observed at slots 6-9 (`$73`, `$28`, `$28`). Records not

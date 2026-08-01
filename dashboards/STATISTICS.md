@@ -1,19 +1,19 @@
 # Statistics
 
-As of 2026-07-30 (post-EXP-0020 maintenance; regenerate via `/weekly-review`):
+As of 2026-08-01 (post-audit refresh; regenerate via `/weekly-review`):
 
 | Metric | Count |
 |---|---|
 | Documented sessions | 3 (SES-001..003; SES-003 reconstructed post-hoc) |
 | Function records | 9 (FN-0001..0009; FN-0003..0009 Confirmed code via EXP-0001/0003/0006/0009/0010) |
-| Experiment records | 26 completed (EXP-0001..0026; EXP-0008 negative-result, EXP-0012 and EXP-0020 refuted hypotheses) |
+| Experiment records | 36 completed (EXP-0001..0036; EXP-0008 negative-result; EXP-0012/0020 refuted hypotheses; EXP-0033/0035 completed-partial with carried work closed by EXP-0034/0036) |
 | Graphics asset records | 1 (GFX-0001, ROM provenance Confirmed) |
 | Audio asset records | 1 (AUD-0001, trigger chain + ROM provenance Confirmed) |
-| Content census entries | 43 across 10 of 12 domains ([COVERAGE.md](COVERAGE.md)) |
-| ROM ownership | 20 regions; 10,753 bytes known (0.34%), 120 candidate ([ROM_REGIONS.md](../indexes/ROM_REGIONS.md)) |
+| Content census entries | 57 across 12 of 12 domains ([COVERAGE.md](COVERAGE.md)) |
+| ROM ownership | 26 regions; 14,885 bytes known (0.47%), 120 candidate ([ROM_REGIONS.md](../indexes/ROM_REGIONS.md)) |
 | Variable records | 4 (VAR-0001..0004) |
 | Structure records | 4 (ST-0001..0004) |
-| Contradiction records | 1 resolved (CONTRA-0001, notation standards) |
-| Go packages with tests | 10 of 15 (`cmd/ff6lab`, `internal/audit`, `internal/audio/brr`, `internal/census`, `internal/game/attackdata`, `internal/game/battle`, `internal/game/chardata`, `internal/graphics/tile2bpp`, `internal/graphics/tile4bpp`, `internal/platform/bgr555`) |
+| Contradiction records | 2 resolved (CONTRA-0001 notation; CONTRA-0002 $1EA5 event-flag byte), 0 open |
+| Go packages with tests | 11 of 17 (adds `internal/scenario/route`; the 6 without tests are declaration-only or wiring packages) |
 | Go packages missing required tests | 0 |
-| Quality gates (2026-07-30) | gofmt clean; `go build`/`go vet`/`go test ./...`/`ff6lab audit` pass |
+| Quality gates (2026-08-01) | gofmt clean; build/vet/test, `ff6lab audit`, `census validate`, and a clean tracked-only checkout build all pass |

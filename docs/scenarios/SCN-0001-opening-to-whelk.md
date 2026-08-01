@@ -216,10 +216,10 @@ Map transition into the town proper.
   state-driven route reach (`$26`,`$1C`) inside the mines with
   byte-identical WRAM (`c26453d3…`) and matching leg frames.
 - behavior PARTIAL: the transition is observable as a player-position
-  jump; `WRAM:+$1EA5` moves to the mines value `$0D` **before** the
-  transition is visible, so it is **not** a simple map-id byte
-  (CEN-WORLD-0007 — the EXP-0035 candidate reading is weakened, not
-  promoted).
+  jump; `WRAM:+$1EA5` moves to `$0D` **before** the transition is
+  visible — and CONTRA-0002 resolved why: the byte is part of the
+  event-flag bit array at `+$1EA0` (CEN-EVENT-0008), so it never
+  denoted a map at all.
 - Remaining rows PARTIAL: the map records, header, and tileset load
   path behind the transition are still unlocated (CEN-WORLD-0004).
 

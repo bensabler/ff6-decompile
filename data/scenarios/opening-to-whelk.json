@@ -630,7 +630,7 @@
               "$05 Narshe exterior",
               "$0D mines"
             ],
-            "verdict": "NOT a simple current-map byte - reaches $0D while still visibly on the exterior; candidate map-load target / event-state"
+            "verdict": "RESOLVED by CONTRA-0002: byte 5 of the event-flag bit array at WRAM:+$1EA0 (flags $28-$2F); values accumulate bits ($00->$01->$05->$0D) via ORA $C0BAFC,X / STA $1EA0,Y. Neither a map id nor a map-load target; the location correlation was incidental to story progress. See CEN-EVENT-0008."
           },
           "battle_position_bytes": "not field-meaningful during battle (1E,00 at entry, 00,00 at end)"
         },

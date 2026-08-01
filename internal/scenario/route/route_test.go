@@ -289,7 +289,7 @@ func TestBattleEdgeLegs(t *testing.T) {
 	}
 }
 
-func TestElapsedAndMapChangeLegs(t *testing.T) {
+func TestElapsedAndWatchedByteLegs(t *testing.T) {
 	r := Route{
 		Name: "settle-then-transition", StartFrame: 0, NeutralFrames: 0,
 		Legs: []Leg{

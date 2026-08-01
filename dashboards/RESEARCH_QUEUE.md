@@ -23,7 +23,8 @@ Ordered next units (reorder when evidence exposes a better chain):
   ([record](../docs/experiments/EXP-0034-golden-route-seg3b.md)).
 - [x] **EXP-0035: segment 4 (partial)** — route to the mines mapped
   leg by leg and walked; player tile bytes `+$00AF`/`+$00B0` and
-  candidate map-id `+$1EA5` found; milestone 05 not claimed
+  candidate map-id `+$1EA5` found (reading later refuted — CONTRA-0002);
+  milestone 05 not claimed at the time
   ([record](../docs/experiments/EXP-0035-golden-route-seg4.md)).
 - [x] **EXP-0036: segment 4 scheduled** — done: 17-leg state-driven
   route controller; battle 5 = formation 84 {27,27,0,0}; `+$1EA5`

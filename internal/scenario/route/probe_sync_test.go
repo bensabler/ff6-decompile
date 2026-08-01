@@ -20,13 +20,15 @@ var (
 )
 
 type probeLeg struct {
-	num    int
-	kind   string
-	dir    string
-	target int64
-	cmp    string
-	until  string
-	hasTgt bool
+	num     int
+	kind    string
+	dir     string
+	target  int64
+	cmp     string
+	until   string
+	hasTgt  bool
+	dur     int64
+	timeout int64
 }
 
 func parseProbeRoute(t *testing.T) []probeLeg {
@@ -56,6 +58,14 @@ func parseProbeRoute(t *testing.T) []probeLeg {
 				v, err := strconv.ParseInt(num, 0, 64)
 				if err == nil {
 					leg.target, leg.hasTgt = v, true
+				}
+			case "dur":
+				if v, err := strconv.ParseInt(num, 0, 64); err == nil {
+					leg.dur = v
+				}
+			case "timeout":
+				if v, err := strconv.ParseInt(num, 0, 64); err == nil {
+					leg.timeout = v
 				}
 			}
 		}
@@ -106,6 +116,16 @@ func TestProbeRouteMatchesModel(t *testing.T) {
 			}
 		} else if got.until != untilName[want.Until] {
 			t.Errorf("leg %d: probe until_ %q, model %q", want.Num, got.until, untilName[want.Until])
+		}
+		// Timing drift between the encodings is as real a divergence as a
+		// wrong target: the EXP-0036 audit found the guard compared shape
+		// but not durations, so a timeout edit in one file would have
+		// passed silently.
+		if int64(want.Timeout) != got.timeout {
+			t.Errorf("leg %d: probe timeout %d, model %d", want.Num, got.timeout, want.Timeout)
+		}
+		if want.Until == UntilElapsed && int64(want.Duration) != got.dur {
+			t.Errorf("leg %d: probe dur %d, model %d", want.Num, got.dur, want.Duration)
 		}
 	}
 }

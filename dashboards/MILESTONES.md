@@ -11,3 +11,4 @@
 | M6 | Graphics subsystem vertical slice | In progress — first vertical proof complete (EXP-0023: HUD font runtime→ROM→decoder→comparison); next: load-path trace, glyph semantics, a compressed asset |
 | M7 | Audio subsystem vertical slice | In progress — first vertical proof complete (EXP-0024: confirm SFX trigger→port→voice→sample→ROM); next: SPC driver dispatch, sequence decode, music cue |
 | M8 | Public clean release | Not started |
+| S1 | SCN-0001 opening-to-Whelk golden route | In progress — milestones 00-05 established from power-on with byte-identical WRAM across repeated runs ([SCN-0001](../docs/scenarios/SCN-0001-opening-to-whelk.md)); remaining: 06-random-encounter through 10-whelk-victory and branches A/B/C |

@@ -1,5 +1,49 @@
 # Activity Log
 
+- 2026-08-01 (audit) — Project audit focused on route tables vs raw
+  recon logs vs `internal/scenario`: recon command transcript archived
+  into EXP-0035 evidence (was only in mutable mesen/out), "A x3" and a
+  stale ($1E,$27) trigger coordinate corrected against the raw log,
+  probe-sync guard extended to timeouts/durations, CONTRA-0002
+  propagated into the scenario manifest/record. One substantive item
+  reported for approval: the "contact-triggered" battle-5 claim rests
+  on wrong-tile evidence.
+
+- 2026-08-01 (autonomous) — CONTRA-0002: **`WRAM:+$1EA5` is byte 5 of
+  the event-flag bit array at `+$1EA0`** — both the EXP-0035 "map id"
+  and EXP-0036 "map-load target" readings refuted by a static decode
+  of the writer (`ORA $C0BAFC,X / STA $1EA0,Y`; decoder $BAED; values
+  accumulate bits $00→$01→$05→$0D). Event-flag system registered
+  (CEN-EVENT-0008); dependent route identifiers renamed and unfrozen.
+
+- 2026-08-01 (autonomous) — Units 36/36b / EXP-0036: **milestone
+  `05-mines-entry` established** — 17-leg state-driven route
+  controller (position targets, battle edges, per-leg timeouts that
+  name the earliest divergent leg); three power-on runs byte-identical
+  at ($26,$1C) in the mines. Battle 5 = formation 84 {27,27,0,0}
+  (ROM-verified 0x0F66EC); new pre-Whelk monster record 27 (115 HP /
+  30 MP). Found and corrected an EXP-0035 condensed-table omission (a
+  dropped `up` leg) after two self-naming leg timeouts. Go model +
+  tests in `internal/scenario/route` with a Lua/Go probe-sync guard.
+
+- 2026-08-01 (autonomous) — Unit 35 / EXP-0035: route from milestone
+  04 to the mines interior mapped leg-by-leg via live position reads;
+  **player tile bytes `+$00AF`/`+$00B0` located** (blind WRAM diff);
+  fifth scripted battle registered (CEN-EVENT-0007); milestone 05
+  deliberately not claimed from interactive recon.
+
+- 2026-07-31 (autonomous) — Units 31-34 / EXP-0031..0034: **golden
+  route power-on → free movement, deterministic** — title requires
+  edge-toggled start+a (holds ignored; $4219 verified latched); real
+  opening auto-runs to an input-waiting box; exactly four scripted
+  battles (formations 2, 1, 2, 41 — every staged record matching the
+  ROM table); battle-1 rewards 32 EXP / 96 GP with field HP/MP
+  writeback ($C2496E/$C24979 → +$1609/+$160D); milestones 00-04, WRAM
+  byte-identical across paired power-on runs. Lab controls set:
+  RamPowerOnState=AllZeros, virgin SRAM (originals backed up).
+  Corrected EXP-0032's formation-2 misread (two of monster 0, not one
+  monster 12). SCN-0001 program record + manifest created.
+
 - 2026-07-31 (autonomous) — Unit 30 / EXP-0030: **the formation table
   is located and verified — ROMFILE:0x0F6200, 15-byte records
   (id x15 via the ASLx4-minus-id idiom), monster ids at bytes +2..+7,
