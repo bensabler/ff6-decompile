@@ -34,3 +34,4 @@
 | EXP-0028 | monster-source | completed | see record | [EXP-0028-monster-source](../docs/experiments/EXP-0028-monster-source.md) |
 | EXP-0029 | formation-map | completed | see record | [EXP-0029-formation-map](../docs/experiments/EXP-0029-formation-map.md) |
 | EXP-0030 | formation-table | completed | see record | [EXP-0030-formation-table](../docs/experiments/EXP-0030-formation-table.md) |
+| EXP-0031 | golden-route-newgame | completed | see record | [EXP-0031-golden-route-newgame](../docs/experiments/EXP-0031-golden-route-newgame.md) |

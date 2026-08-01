@@ -695,7 +695,8 @@
       "consumers": [],
       "producers": [],
       "related_experiments": [
-        "EXP-0025"
+        "EXP-0025",
+        "EXP-0031"
       ],
       "related_discoveries": [],
       "related_implementations": [],
@@ -710,7 +711,7 @@
       "unknown_fields": [],
       "contradictions": [],
       "next_action": "Exec-census a dialogue advance (A press) to find the event dispatcher loop PC.",
-      "notes": ""
+      "notes": "EXP-0031: the real opening auto-runs (timed dialogue) until the scripted Narshe-entry box, which waits for A indefinitely \u2014 the engine distinguishes timed from input-waiting boxes."
     },
     {
       "schema_version": "1.0",
@@ -1513,7 +1514,8 @@
       "consumers": [],
       "producers": [],
       "related_experiments": [
-        "EXP-0025"
+        "EXP-0025",
+        "EXP-0031"
       ],
       "related_discoveries": [],
       "related_implementations": [],
@@ -1530,7 +1532,7 @@
       ],
       "contradictions": [],
       "next_action": "Diff WRAM snapshots across two field states to bound the event-flag region; then SRAM after a save event.",
-      "notes": ""
+      "notes": "EXP-0031: deterministic virgin-SRAM power-on milestone (00-new-game.mss + full WRAM dump) available as the init-capture baseline."
     },
     {
       "schema_version": "1.0",
@@ -2007,6 +2009,95 @@
       "contradictions": [],
       "next_action": "Watch the step counter and encounter-check reads during a walk to locate the zone/rate data.",
       "notes": ""
+    },
+    {
+      "schema_version": "1.0",
+      "rom_revision": "0f51b4fca41b7fd509e4b8f9d543151f68efa5e97b08493e4b2a0c06f5d8d5e2",
+      "rom_locations": [],
+      "wram_locations": [],
+      "cpu_routines": [],
+      "spc_locations": [],
+      "record_count_expected": null,
+      "record_count_found": null,
+      "record_size": null,
+      "pointer_tables": [],
+      "consumers": [],
+      "producers": [],
+      "related_experiments": [
+        "EXP-0031"
+      ],
+      "related_discoveries": [],
+      "related_implementations": [],
+      "related_tests": [],
+      "runtime_scenarios": [
+        "local_artifacts/scenarios/SCN-0001/00-new-game/00-new-game.mss"
+      ],
+      "evidence": [
+        "local_artifacts/experiments/EXP-0031/ (phase A screenshots, events logs; hashes.sha256)",
+        "local_artifacts/scenarios/SCN-0001/00-new-game/ (run1/run2 dumps; hashes.sha256)"
+      ],
+      "unknown_fields": [
+        "which button (start vs a) the title accepts",
+        "exact input-acceptance window",
+        "attract dimming mechanism",
+        "flow with non-empty SRAM"
+      ],
+      "contradictions": [],
+      "notes": "",
+      "id": "CEN-EVENT-0004",
+      "domain": "EVENT",
+      "category": "cutscenes",
+      "name": "Title screen and attract-mode flow",
+      "description": "Power-on: title logo+(c) visible ~frame 2969, faded by ~3709; with no input an attract loop (~21000-frame period) alternates a dimmed-palette opening replay with a gameplay demo, dialogue auto-advancing, returning to the title each iteration. The title ignores long Start holds and sparse presses (input verifiably latched, $4219=$10) but accepts rapid start+a edge toggling; with virgin SRAM no save-select screen appears and the full-palette real opening begins directly, auto-running to the first input-waiting dialogue at scripted Narshe entry.",
+      "reconstruction_status": "OBSERVED",
+      "runtime_status": "INPUTS_CAPTURED",
+      "confidence": "confirmed",
+      "next_action": "Exec-trace the title input read to map the acceptance condition (edge requirement) and the start-vs-a discrimination."
+    },
+    {
+      "schema_version": "1.0",
+      "rom_revision": "0f51b4fca41b7fd509e4b8f9d543151f68efa5e97b08493e4b2a0c06f5d8d5e2",
+      "rom_locations": [],
+      "wram_locations": [
+        "WRAM:+$7BF7",
+        "WRAM:+$7BF8",
+        "WRAM:+$7CAD",
+        "WRAM:+$7CAE",
+        "WRAM:+$7DB2"
+      ],
+      "cpu_routines": [],
+      "spc_locations": [],
+      "record_count_expected": null,
+      "record_count_found": null,
+      "record_size": null,
+      "pointer_tables": [],
+      "consumers": [],
+      "producers": [],
+      "related_experiments": [
+        "EXP-0031"
+      ],
+      "related_discoveries": [],
+      "related_implementations": [],
+      "related_tests": [],
+      "runtime_scenarios": [],
+      "evidence": [
+        "local_artifacts/experiments/EXP-0031/mesen-exp31-phaseA.log (boot warnings)"
+      ],
+      "unknown_fields": [
+        "reading routines",
+        "whether the values seed RNG or are dead reads"
+      ],
+      "contradictions": [],
+      "notes": "",
+      "id": "CEN-QUIRK-0001",
+      "domain": "QUIRK",
+      "category": "hardware assumptions",
+      "name": "Boot-time uninitialized WRAM reads (entropy candidates)",
+      "description": "Mesen's boot log flags uninitialized reads at $7E7DB2, $7E7CAD, $7E7CAE, $7E7BF7, $7E7BF8 during power-on before first write. On hardware these are unpredictable; with RamPowerOnState=AllZeros (the SCN-0001 controlled lab default) they read 0. Candidate RNG-seed or scratch reads; consumers undecoded.",
+      "reconstruction_status": "OBSERVED",
+      "runtime_status": "ENCOUNTERED",
+      "confidence": "confirmed",
+      "next_action": "Read-callback on the five addresses during a fresh boot to capture the reader PCs."
     }
   ]
 }

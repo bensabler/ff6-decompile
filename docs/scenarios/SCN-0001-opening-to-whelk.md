@@ -111,14 +111,26 @@ graphics · audio · persistence · go-impl · tests · differential
 
 ### B01 — New Game initialization
 Power-on → title → New Game selected; WRAM/character/inventory/RNG
-initialization. **All rows PARTIAL: no power-on route or capture
-exists yet.** First target of the golden route (EXP-0031).
-Links: CEN-SAVE-0001 (open).
+initialization.
+- identified/runtime PARTIAL→advanced: **EXP-0031 established
+  milestone `00-new-game`** — deterministic frame-scheduled route
+  from power-on (title at ~2969; start+a edge toggling 2500–4200;
+  milestone at 5200; two runs byte-identical at frames 5200 and
+  30000). Title/attract flow registered (CEN-EVENT-0004); boot
+  uninitialized-read entropy candidates registered (CEN-QUIRK-0001).
+- data-records/behavior PARTIAL: the initialization writes themselves
+  are uncaptured (the dedicated init unit; baseline WRAM dump
+  archived). Links: CEN-SAVE-0001, EXP-0031.
 
 ### B02 — Opening cinematic / introductory presentation
-Presentation between New Game and gaining the snowfield march.
-**All rows PARTIAL: never captured.** Skippability unknown (route
-determinism question). Mode-7/effects usage unknown.
+Presentation between New Game and the snowfield march.
+- runtime PARTIAL→advanced: the real opening **auto-runs without
+  input** from the title press to the first input-waiting dialogue at
+  scripted Narshe entry (EXP-0031; the attract variant runs the same
+  scenes dimmed). Milestone-grade captures for the interior beats
+  (`01-opening-cinematic`) still pending in segment 2.
+- Remaining rows PARTIAL (event script, graphics, audio provenance
+  all open).
 
 ### B03 — Snowfield march toward Narshe
 Scripted Magitek walk. **All rows PARTIAL: no capture.** Event engine
@@ -230,8 +242,9 @@ sync with the beat matrices. As of creation: 0 beats COMPLETE,
 
 ## Unresolved gaps (honest list)
 
-1. No reproducible route from power-on exists; all archived states are
-   mid-scenario with unrecorded input provenance.
+1. ~~No reproducible route from power-on exists~~ — segment 1 done
+   (EXP-0031: power-on → New Game → auto-run to the Narshe-entry
+   stall, deterministic). Segments 2+ (through Whelk) remain.
 2. The event-script engine (dispatcher, PC, opcode set) is entirely
    unlocated — the largest single blocker for B02–B07, B10, B17.
 3. Map system (headers, tilesets, tilemaps, collision, exits,

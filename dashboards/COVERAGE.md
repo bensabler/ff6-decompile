@@ -12,12 +12,12 @@ Breadth without pretense: counts are census entries at or above each threshold (
 | MONSTER | 3 | 2 | 0 | 0 | 0 | 0 |
 | ITEM | 0 | 0 | 0 | 0 | 0 | 0 |
 | WORLD | 6 | 0 | 0 | 0 | 0 | 0 |
-| EVENT | 3 | 0 | 0 | 0 | 0 | 0 |
+| EVENT | 4 | 0 | 0 | 0 | 0 | 0 |
 | MENU | 6 | 1 | 0 | 0 | 0 | 0 |
 | GFX | 4 | 1 | 1 | 1 | 1 | 0 |
 | AUDIO | 5 | 3 | 2 | 2 | 1 | 1 |
 | SAVE | 1 | 0 | 0 | 0 | 0 | 0 |
-| QUIRK | 0 | 0 | 0 | 0 | 0 | 0 |
+| QUIRK | 1 | 0 | 0 | 0 | 0 | 0 |
 
 ## ROM accounting
 
@@ -27,9 +27,9 @@ Breadth without pretense: counts are census entries at or above each threshold (
 
 ## Census health
 
-- Entries with unresolved fields/formats: 18.
-- Observed but not yet located (breadth backlog): 30.
-- Runtime-only findings (seen live, no location): 21.
+- Entries with unresolved fields/formats: 20.
+- Observed but not yet located (breadth backlog): 32.
+- Runtime-only findings (seen live, no location): 23.
 - Static-only findings (located, never exercised live): 1.
 
 ## Open breadth targets (next_action of unlocated entries)
@@ -43,6 +43,7 @@ Breadth without pretense: counts are census entries at or above each threshold (
 - **CEN-EVENT-0001** (Event scripting engine (opening scripted sequence)): Exec-census a dialogue advance (A press) to find the event dispatcher loop PC.
 - **CEN-EVENT-0002** (Dialogue text content and encoding): Capture the dialogue compose region + derive the glyph-to-byte mapping via the tilemap-affine technique (EXP-0023 pattern).
 - **CEN-EVENT-0003** (Character naming state (Terra as '?????')): Locate the character-name store: WRAM search for the rendered name tile sequence source when the status window composes.
+- **CEN-EVENT-0004** (Title screen and attract-mode flow): Exec-trace the title input read to map the acceptance condition (edge requirement) and the start-vs-a discrimination.
 - **CEN-GFX-0002** (Field sprite assets (armor walker, NPCs, townsfolk)): OAM + chr capture on a field state; register the sprite sheet region.
 - **CEN-GFX-0003** (Battle background (cave scene)): BG1/BG2 VRAM + tilemap capture during battle; provenance search (EXP-0023 pattern).
 - **CEN-GFX-0004** (Variable-width dialogue font): Capture the dialogue compose region; the fixed-font provenance technique should locate the glyph source.
@@ -57,6 +58,7 @@ Breadth without pretense: counts are census entries at or above each threshold (
 - **CEN-MENU-0004** (Field main menu): EXP-0026: open the field menu from checkpoint2 (X press), screenshot, register submenus.
 - **CEN-MENU-0005** (Field Magic menu (grid list, MP readout, help bar)): Trace the list renderer's reads (name table + availability array consumers) with a read-watch during menu open.
 - **CEN-MONSTER-0003** (Enemy battle sprites and palettes (green guard)): VRAM/OAM capture during battle to register the enemy sprite asset (EXP-0023 pattern).
+- **CEN-QUIRK-0001** (Boot-time uninitialized WRAM reads (entropy candidates)): Read-callback on the five addresses during a fresh boot to capture the reader PCs.
 - **CEN-SAVE-0001** (Opening-relevant persistent state (event progress, party, names)): Diff WRAM snapshots across two field states to bound the event-flag region; then SRAM after a save event.
 - **CEN-WORLD-0001** (Narshe exterior map (tileset, tilemap, palettes, animated tiles)): Capture PPU + VRAM for the field state (EXP-0023 pattern) and register the map layer assets.
 - **CEN-WORLD-0002** (Narshe mines interior map (cave tileset, rails, light effects)): Same capture pattern as the exterior; compare tileset bases to test per-map chr swapping.

@@ -510,6 +510,23 @@
       "falsifying_outcome": "no writes to +$3F46 at encounter entry",
       "status": "completed",
       "record": "docs/experiments/EXP-0030-formation-table.md"
+    },
+    {
+      "schema_version": "1.0",
+      "id": "EXP-0031",
+      "question": "Can a fully frame-scheduled input sequence from power-on deterministically reach and confirm New Game selection (SCN-0001 milestone 00-new-game), and at what frame anchors does the title flow accept input?",
+      "starting_state": {
+        "emulator": "Mesen 2.1.1 macOS x86_64 (--testrunner headless, bridge v2)",
+        "rom_sha256": "0f51b4fca41b7fd509e4b8f9d543151f68efa5e97b08493e4b2a0c06f5d8d5e2",
+        "state": "power-on, no savestate; SNES RamPowerOnState=AllZeros (controlled); SRAM virgin (prior .srm backed up, hash 6afbcf1ee326d0e1f163feeee2c49e5deb17bcf7d29ebb7a15b8c4433752cc7a)"
+      },
+      "expected_outcomes": [
+        "two power-on runs of the same absolute-frame schedule produce identical milestone assertions (milestone established)",
+        "assertions differ across runs (boot entropy finding; locate differing bytes before proceeding)"
+      ],
+      "falsifying_outcome": "the same absolute-frame schedule from power-on yields differing WRAM dumps or visible screens at the milestone across two runs",
+      "status": "completed",
+      "record": "docs/experiments/EXP-0031-golden-route-newgame.md"
     }
   ]
 }

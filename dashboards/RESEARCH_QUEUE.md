@@ -5,9 +5,13 @@
 Master record: `docs/scenarios/SCN-0001-opening-to-whelk.md`.
 Ordered next units (reorder when evidence exposes a better chain):
 
-- [ ] **EXP-0031: golden route segment 1** — power-on → New Game;
-  milestone `00-new-game`; determinism check (two runs).
-- [ ] Golden route segments 2..N → milestones `01`–`07-pre-whelk`,
+- [x] **EXP-0031: golden route segment 1** — done: deterministic
+  power-on → New Game → Narshe-entry stall; milestone `00-new-game`;
+  two runs byte-identical
+  ([record](../docs/experiments/EXP-0031-golden-route-newgame.md)).
+- [ ] **EXP-0032: golden route segment 2** — Narshe-entry stall →
+  scripted approach → first scripted battle (milestones `01`–`03`).
+- [ ] Golden route segments 3..N → milestones `04`–`07-pre-whelk`,
   then Whelk branches A/B/C (SCN-0001 route plan).
 - [ ] New-game initialization capture (B01; CEN-SAVE-0001).
 - [ ] Event dispatcher location (B03/B05; CEN-EVENT-0001) — largest
