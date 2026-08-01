@@ -255,15 +255,19 @@
       "note": "milestone 05-mines-entry ESTABLISHED (EXP-0036): three power-on runs reach ($26,$1C) in the mines with byte-identical WRAM. Transition detected by the player position jump, since +$1EA5 reaches the mines value before the transition is visible. Map records behind the transition still unlocated.",
       "links": {
         "census": [
+          "CEN-EVENT-0008",
           "CEN-WORLD-0004",
           "CEN-WORLD-0007"
         ],
         "experiments": [
           "EXP-0025",
           "EXP-0035",
-          "EXP-0036"
+          "EXP-0036",
+          "EXP-0037"
         ],
-        "discoveries": []
+        "discoveries": [
+          "DISC-0008"
+        ]
       }
     },
     {
@@ -364,13 +368,18 @@
       "name": "Chests, save points, NPCs, objects, branches",
       "status_default": "PARTIAL",
       "overrides": {},
-      "note": "nothing yet; requires branch sweep plus static object data",
+      "note": "nothing yet on chests/NPCs/objects; requires branch sweep plus static object data. The flag machinery those interactions will use is now decoded and inventoried (EXP-0037, CEN-EVENT-0008): no $1E80/$1EA0/$1EC0 flag is touched by any opening chest/NPC interaction on the golden route (none is performed on it).",
       "links": {
         "census": [
+          "CEN-EVENT-0008",
           "CEN-WORLD-0005"
         ],
-        "experiments": [],
-        "discoveries": []
+        "experiments": [
+          "EXP-0037"
+        ],
+        "discoveries": [
+          "DISC-0008"
+        ]
       }
     },
     {
@@ -408,15 +417,19 @@
       "name": "Stable post-Whelk state",
       "status_default": "PARTIAL",
       "overrides": {},
-      "note": "never reached; but victory/reward processing and battle-to-field writeback are now partly captured (EXP-0033, CEN-BATTLE-0008) and will apply here",
+      "note": "never reached; victory/reward processing partly captured (EXP-0033, CEN-BATTLE-0008). Post-battle persistent state now has a concrete substrate: the event-flag arrays and their write inventory through milestone 05 (EXP-0037).",
       "links": {
         "census": [
-          "CEN-BATTLE-0008"
+          "CEN-BATTLE-0008",
+          "CEN-EVENT-0008"
         ],
         "experiments": [
-          "EXP-0033"
+          "EXP-0033",
+          "EXP-0037"
         ],
-        "discoveries": []
+        "discoveries": [
+          "DISC-0008"
+        ]
       }
     }
   ],

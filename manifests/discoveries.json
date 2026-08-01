@@ -92,6 +92,20 @@
       "record": "docs/discoveries/DISC-0007-attack-record-format.md",
       "go_symbols": "attackdata.Record, attackdata.Decode, attackdata.RecordAt, attackdata.TableFileOffset",
       "tests": "TestDecodeAndAccessors, TestRecordAt, FuzzDecode (attackdata)"
+    },
+    {
+      "schema_version": "1.0",
+      "id": "DISC-0008",
+      "title": "Event-flag bit arrays: addressing, handler family, opening inventory",
+      "status": "implemented",
+      "experiments": [
+        "CONTRA-0002",
+        "EXP-0036",
+        "EXP-0037"
+      ],
+      "record": "docs/discoveries/DISC-0008-event-flag-system.md",
+      "go_symbols": "eventflags.ArrayBase, eventflags.Ref, eventflags.FlagAt, eventflags.SetMasks, eventflags.ClearMasks",
+      "tests": "TestRefDerivation, TestMaskTablesMatchROMDecode, TestFlagAtRoundTrip, TestMilestone05Value (eventflags)"
     }
   ]
 }

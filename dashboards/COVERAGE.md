@@ -12,7 +12,7 @@ Breadth without pretense: counts are census entries at or above each threshold (
 | MONSTER | 4 | 3 | 0 | 0 | 0 | 0 |
 | ITEM | 0 | 0 | 0 | 0 | 0 | 0 |
 | WORLD | 7 | 0 | 0 | 0 | 0 | 1 |
-| EVENT | 8 | 4 | 1 | 0 | 0 | 3 |
+| EVENT | 8 | 4 | 1 | 0 | 0 | 4 |
 | MENU | 6 | 1 | 0 | 0 | 0 | 0 |
 | GFX | 4 | 1 | 1 | 1 | 1 | 0 |
 | AUDIO | 5 | 3 | 2 | 2 | 1 | 1 |
@@ -21,15 +21,15 @@ Breadth without pretense: counts are census entries at or above each threshold (
 
 ## ROM accounting
 
-- Known: 14885 of 3145728 bytes (0.47%) — code 2844 bytes (0.09%), data 12041 bytes (0.38%).
+- Known: 15496 of 3145728 bytes (0.49%) — code 3439 bytes (0.11%), data 12057 bytes (0.38%).
 - Candidate-only: 120 bytes.
-- **Unknown: 3130723 bytes (99.52%)** across 24 gaps.
+- **Unknown: 3130112 bytes (99.50%)** across 27 gaps.
 
 ## Census health
 
-- Entries with unresolved fields/formats: 28.
+- Entries with unresolved fields/formats: 29.
 - Observed but not yet located (breadth backlog): 35.
-- Runtime-only findings (seen live, no location): 25.
+- Runtime-only findings (seen live, no location): 24.
 - Static-only findings (located, never exercised live): 1.
 
 ## Open breadth targets (next_action of unlocated entries)
@@ -41,7 +41,7 @@ Breadth without pretense: counts are census entries at or above each threshold (
 - **CEN-CHAR-0002** (Party formation and follower chain): Locate the party-composition store consumed at battle init (slot staging producers from EXP-0018 are the thread).
 - **CEN-CHAR-0003** (Field player/NPC objects (Magitek armor walker, guards, townsfolk)): OAM capture on the field state to register the sprite composition (tiles, palettes, OAM layout).
 - **CEN-CHAR-0004** (Field character-record block (~WRAM:+$1600)): Map the record stride via a second character's values; relate to the $C10DF3 copy-loop source.
-- **CEN-EVENT-0001** (Event scripting engine (opening scripted sequence)): Exec-census a dialogue advance (A press) to find the event dispatcher loop PC.
+- **CEN-EVENT-0001** (Event scripting engine (opening scripted sequence)): Static-decode ROMCPU:$C09B5C and its callers to find the dispatch loop and opcode table; then exec-census a dialogue advance to confirm live.
 - **CEN-EVENT-0002** (Dialogue text content and encoding): Capture the dialogue compose region + derive the glyph-to-byte mapping via the tilemap-affine technique (EXP-0023 pattern).
 - **CEN-EVENT-0003** (Character naming state (Terra as '?????')): Locate the character-name store: WRAM search for the rendered name tile sequence source when the status window composes.
 - **CEN-EVENT-0004** (Title screen and attract-mode flow): Exec-trace the title input read to map the acceptance condition (edge requirement) and the start-vs-a discrimination.

@@ -92,6 +92,7 @@ Confirmed systems already covering parts of this scenario:
 | Per-slot monster loader $C22C30 (+aux tables ×4/×8/×32/$CF8400) | EXP-0029 | Confirmed |
 | Formation table $CF6200 (15-byte), staging at +$3F46, flags $CF5900 | EXP-0029/0030 | Confirmed |
 | Field character-record block ~WRAM:+$1600 (HP +$09, MP +$0D offsets observed) | EXP-0027 | Strong hypothesis |
+| Event-flag arrays $1E80/$1EA0/$1EC0: decoder, masks, 16-handler family, opening write inventory (20 flags), interpreter anchor $C09B5C | CONTRA-0002, EXP-0037, DISC-0008 | Confirmed (meanings unassigned) |
 
 ## Timeline beats
 
@@ -219,7 +220,11 @@ Map transition into the town proper.
   jump; `WRAM:+$1EA5` moves to `$0D` **before** the transition is
   visible — and CONTRA-0002 resolved why: the byte is part of the
   event-flag bit array at `+$1EA0` (CEN-EVENT-0008), so it never
-  denoted a map at all.
+  denoted a map at all. EXP-0037 pinned the moment exactly: flag
+  `EVF-1EA0-$2B` is set at frame 50 699, during leg 15's
+  shaft-dialogue settle at (`$1F`,`$16`) — 214 frames before the
+  position jump completes leg 16 at 50 913, confirming EXP-0036's
+  "set during the preceding dialogue leg" reading.
 - Remaining rows PARTIAL: the map records, header, and tileset load
   path behind the transition are still unlocated (CEN-WORLD-0004).
 
@@ -260,8 +265,13 @@ CEN-WORLD-0002); no branch sweep, no collision data.
 - Remaining rows PARTIAL (nothing yet).
 
 ### B16 — Chests, save points, NPCs, objects, branches
-**All rows PARTIAL: nothing yet** (CEN-WORLD-0005 treasure lead).
-Requires the full accessible-branch sweep plus static object data.
+**All rows PARTIAL** (CEN-WORLD-0005 treasure lead). Requires the
+full accessible-branch sweep plus static object data. The flag
+machinery these interactions will use is now decoded and inventoried
+(EXP-0037, DISC-0008, CEN-EVENT-0008); the golden route performs no
+chest/NPC interaction, and correspondingly no additional
+`$1E80/$1EA0/$1EC0` flag is touched during free movement outside the
+scripted beats.
 
 ### B17 — Whelk introduction
 **All rows PARTIAL: never reached in any archived state.** Warning
@@ -277,7 +287,9 @@ carry over; boss AI interpreter is unlocated.
 ### B19 — Stable post-Whelk state
 **All rows PARTIAL: never reached.** Defines the program's stopping
 boundary; requires victory processing capture (rewards, flags, music,
-return-to-field or next-event handoff).
+return-to-field or next-event handoff). The "flags" part of that
+capture now has a concrete substrate and baseline: the event-flag
+arrays and the milestone-05 inventory (EXP-0037, DISC-0008).
 
 ## Per-domain totals
 

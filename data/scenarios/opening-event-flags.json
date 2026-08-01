@@ -1,0 +1,2190 @@
+{
+ "schema_version": "1.0",
+ "id": "opening-event-flags",
+ "experiment": "EXP-0037",
+ "description": "Inventory of every write to the event-flag arrays WRAM:+$1E80/+$1EA0/+$1EC0 across the SCN-0001 scheduled route, power-on through milestone 05-mines-entry. Flag identifiers are address-anchored (EVF-<base>-$NN, NN = byte_offset*8 + bit, per the ROMCPU:$C0BAED decoder); no story semantics are assigned. Frames are absolute power-on frame counts of the deterministic route.",
+ "rom_sha256": "0f51b4fca41b7fd509e4b8f9d543151f68efa5e97b08493e4b2a0c06f5d8d5e2",
+ "route": "EXP-0036 17-leg scheduled route (probe EXP-0037.lua, instrumentation-only additions)",
+ "arrays_watched": [
+  "WRAM:+$1E80",
+  "WRAM:+$1EA0",
+  "WRAM:+$1EC0"
+ ],
+ "watch_span": "WRAM:+$1E80..+$1EDF (96 bytes)",
+ "boot_clear": {
+  "pc_after_store": "$C0BB11",
+  "routine": "ROMCPU:$C0BB0C (STZ $1E80,X loop, X=0..$5F)",
+  "frame": 21,
+  "note": "clears all 96 bytes at power-on before any flag activity"
+ },
+ "value_changing_writes": 162,
+ "same_value_rewrites": 47903,
+ "rewrite_sites": {
+  "$C04A25:$1EB6": 92,
+  "$C04A2D:$1EB7": 92,
+  "$C04AFB:$1ED8": 92,
+  "$C04B03:$1ED8": 92,
+  "$C04B0B:$1ED8": 92,
+  "$C04B13:$1ED8": 92,
+  "$C0B9B6:$1EDF": 1,
+  "$C0BA94:$1EB6": 23655,
+  "$C0BAA0:$1EB6": 476,
+  "$C0BAAA:$1EB6": 23102,
+  "$C0BB11:$1E80": 1,
+  "$C0BB11:$1E81": 1,
+  "$C0BB11:$1E82": 1,
+  "$C0BB11:$1E83": 1,
+  "$C0BB11:$1E84": 1,
+  "$C0BB11:$1E85": 1,
+  "$C0BB11:$1E86": 1,
+  "$C0BB11:$1E87": 1,
+  "$C0BB11:$1E88": 1,
+  "$C0BB11:$1E89": 1,
+  "$C0BB11:$1E8A": 1,
+  "$C0BB11:$1E8B": 1,
+  "$C0BB11:$1E8C": 1,
+  "$C0BB11:$1E8D": 1,
+  "$C0BB11:$1E8E": 1,
+  "$C0BB11:$1E8F": 1,
+  "$C0BB11:$1E90": 1,
+  "$C0BB11:$1E91": 1,
+  "$C0BB11:$1E92": 1,
+  "$C0BB11:$1E93": 1,
+  "$C0BB11:$1E94": 1,
+  "$C0BB11:$1E95": 1,
+  "$C0BB11:$1E96": 1,
+  "$C0BB11:$1E97": 1,
+  "$C0BB11:$1E98": 1,
+  "$C0BB11:$1E99": 1,
+  "$C0BB11:$1E9A": 1,
+  "$C0BB11:$1E9B": 1,
+  "$C0BB11:$1E9C": 1,
+  "$C0BB11:$1E9D": 1,
+  "$C0BB11:$1E9E": 1,
+  "$C0BB11:$1E9F": 1,
+  "$C0BB11:$1EA0": 1,
+  "$C0BB11:$1EA1": 1,
+  "$C0BB11:$1EA2": 1,
+  "$C0BB11:$1EA3": 1,
+  "$C0BB11:$1EA4": 1,
+  "$C0BB11:$1EA5": 1,
+  "$C0BB11:$1EA6": 1,
+  "$C0BB11:$1EA7": 1,
+  "$C0BB11:$1EA8": 1,
+  "$C0BB11:$1EA9": 1,
+  "$C0BB11:$1EAA": 1,
+  "$C0BB11:$1EAB": 1,
+  "$C0BB11:$1EAC": 1,
+  "$C0BB11:$1EAD": 1,
+  "$C0BB11:$1EAE": 1,
+  "$C0BB11:$1EAF": 1,
+  "$C0BB11:$1EB0": 1,
+  "$C0BB11:$1EB1": 1,
+  "$C0BB11:$1EB2": 1,
+  "$C0BB11:$1EB3": 1,
+  "$C0BB11:$1EB4": 1,
+  "$C0BB11:$1EB5": 1,
+  "$C0BB11:$1EB6": 1,
+  "$C0BB11:$1EB7": 1,
+  "$C0BB11:$1EB8": 1,
+  "$C0BB11:$1EB9": 1,
+  "$C0BB11:$1EBA": 1,
+  "$C0BB11:$1EBB": 1,
+  "$C0BB11:$1EBC": 1,
+  "$C0BB11:$1EBD": 1,
+  "$C0BB11:$1EBE": 1,
+  "$C0BB11:$1EBF": 1,
+  "$C0BB11:$1EC0": 1,
+  "$C0BB11:$1EC1": 1,
+  "$C0BB11:$1EC2": 1,
+  "$C0BB11:$1EC3": 1,
+  "$C0BB11:$1EC4": 1,
+  "$C0BB11:$1EC5": 1,
+  "$C0BB11:$1EC6": 1,
+  "$C0BB11:$1EC7": 1,
+  "$C0BB11:$1EC8": 1,
+  "$C0BB11:$1EC9": 1,
+  "$C0BB11:$1ECA": 1,
+  "$C0BB11:$1ECB": 1,
+  "$C0BB11:$1ECC": 1,
+  "$C0BB11:$1ECD": 1,
+  "$C0BB11:$1ECE": 1,
+  "$C0BB11:$1ECF": 1,
+  "$C0BB11:$1ED0": 1,
+  "$C0BB11:$1ED1": 1,
+  "$C0BB11:$1ED2": 1,
+  "$C0BB11:$1ED3": 1,
+  "$C0BB11:$1ED4": 1,
+  "$C0BB11:$1ED5": 1,
+  "$C0BB11:$1ED6": 1,
+  "$C0BB11:$1ED7": 1,
+  "$C0BB11:$1ED8": 1,
+  "$C0BB11:$1ED9": 1,
+  "$C0BB11:$1EDA": 1,
+  "$C0BB11:$1EDB": 1,
+  "$C0BB11:$1EDC": 1,
+  "$C0BB11:$1EDD": 1,
+  "$C0BB11:$1EDE": 1,
+  "$C0BB11:$1EDF": 1,
+  "$C0BFAE:$1EB6": 5,
+  "$C0BFB5:$1EBE": 8,
+  "$C0BFB8:$1EBF": 8
+ },
+ "flags": [
+  {
+   "id": "EVF-1EA0-$0B",
+   "array_base": "WRAM:+$1EA0",
+   "flag_number": "$0B",
+   "byte": "WRAM:+$1EA1",
+   "bit": 3,
+   "classification": "latched",
+   "first_set_frame": 2520,
+   "first_set_era": "power-on..00-new-game",
+   "final_state": "set",
+   "set_writer_pcs": [
+    "$C0B5B6"
+   ],
+   "clear_writer_pcs": [],
+   "events": [
+    {
+     "action": "set",
+     "frame": 2520,
+     "era": "power-on..00-new-game",
+     "pc": "$C0B5B6",
+     "leg": 0,
+     "battles_fought": 0,
+     "player_pos": "08,08"
+    }
+   ]
+  },
+  {
+   "id": "EVF-1EA0-$28",
+   "array_base": "WRAM:+$1EA0",
+   "flag_number": "$28",
+   "byte": "WRAM:+$1EA5",
+   "bit": 0,
+   "classification": "latched",
+   "first_set_frame": 34298,
+   "first_set_era": "03-first-scripted-battle..04-free-movement",
+   "final_state": "set",
+   "set_writer_pcs": [
+    "$C0B5B6"
+   ],
+   "clear_writer_pcs": [],
+   "events": [
+    {
+     "action": "set",
+     "frame": 34298,
+     "era": "03-first-scripted-battle..04-free-movement",
+     "pc": "$C0B5B6",
+     "leg": 0,
+     "battles_fought": 1,
+     "player_pos": "26,26"
+    }
+   ]
+  },
+  {
+   "id": "EVF-1EA0-$2A",
+   "array_base": "WRAM:+$1EA0",
+   "flag_number": "$2A",
+   "byte": "WRAM:+$1EA5",
+   "bit": 2,
+   "classification": "latched",
+   "first_set_frame": 39090,
+   "first_set_era": "03-first-scripted-battle..04-free-movement",
+   "final_state": "set",
+   "set_writer_pcs": [
+    "$C0B5B6"
+   ],
+   "clear_writer_pcs": [],
+   "events": [
+    {
+     "action": "set",
+     "frame": 39090,
+     "era": "03-first-scripted-battle..04-free-movement",
+     "pc": "$C0B5B6",
+     "leg": 0,
+     "battles_fought": 3,
+     "player_pos": "26,1A"
+    }
+   ]
+  },
+  {
+   "id": "EVF-1EA0-$2B",
+   "array_base": "WRAM:+$1EA0",
+   "flag_number": "$2B",
+   "byte": "WRAM:+$1EA5",
+   "bit": 3,
+   "classification": "latched",
+   "first_set_frame": 50699,
+   "first_set_era": "04-free-movement..05-mines-entry",
+   "final_state": "set",
+   "set_writer_pcs": [
+    "$C0B5B6"
+   ],
+   "clear_writer_pcs": [],
+   "events": [
+    {
+     "action": "set",
+     "frame": 50699,
+     "era": "04-free-movement..05-mines-entry",
+     "pc": "$C0B5B6",
+     "leg": 15,
+     "battles_fought": 5,
+     "player_pos": "1F,16"
+    }
+   ]
+  },
+  {
+   "id": "EVF-1EA0-$30",
+   "array_base": "WRAM:+$1EA0",
+   "flag_number": "$30",
+   "byte": "WRAM:+$1EA6",
+   "bit": 0,
+   "classification": "latched",
+   "first_set_frame": 42450,
+   "first_set_era": "03-first-scripted-battle..04-free-movement",
+   "final_state": "set",
+   "set_writer_pcs": [
+    "$C0B5B6"
+   ],
+   "clear_writer_pcs": [],
+   "events": [
+    {
+     "action": "set",
+     "frame": 42450,
+     "era": "03-first-scripted-battle..04-free-movement",
+     "pc": "$C0B5B6",
+     "leg": 0,
+     "battles_fought": 4,
+     "player_pos": "26,11"
+    }
+   ]
+  },
+  {
+   "id": "EVF-1EA0-$31",
+   "array_base": "WRAM:+$1EA0",
+   "flag_number": "$31",
+   "byte": "WRAM:+$1EA6",
+   "bit": 1,
+   "classification": "latched",
+   "first_set_frame": 49855,
+   "first_set_era": "04-free-movement..05-mines-entry",
+   "final_state": "set",
+   "set_writer_pcs": [
+    "$C0B5B6"
+   ],
+   "clear_writer_pcs": [],
+   "events": [
+    {
+     "action": "set",
+     "frame": 49855,
+     "era": "04-free-movement..05-mines-entry",
+     "pc": "$C0B5B6",
+     "leg": 7,
+     "battles_fought": 5,
+     "player_pos": "1E,25"
+    }
+   ]
+  },
+  {
+   "id": "EVF-1EA0-$B0",
+   "array_base": "WRAM:+$1EA0",
+   "flag_number": "$B0",
+   "byte": "WRAM:+$1EB6",
+   "bit": 0,
+   "classification": "toggling",
+   "first_set_frame": 48,
+   "first_set_era": "power-on..00-new-game",
+   "final_state": "set",
+   "set_writer_pcs": [
+    "$C0BA94"
+   ],
+   "clear_writer_pcs": [
+    "$C0BA94"
+   ],
+   "events": [
+    {
+     "action": "set",
+     "frame": 48,
+     "era": "power-on..00-new-game",
+     "pc": "$C0BA94",
+     "leg": 0,
+     "battles_fought": 0,
+     "player_pos": "08,08"
+    },
+    {
+     "action": "clear",
+     "frame": 2556,
+     "era": "power-on..00-new-game",
+     "pc": "$C0BA94",
+     "leg": 0,
+     "battles_fought": 0,
+     "player_pos": "12,19"
+    },
+    {
+     "action": "set",
+     "frame": 5567,
+     "era": "00-new-game..01-opening-cinematic",
+     "pc": "$C0BA94",
+     "leg": 0,
+     "battles_fought": 0,
+     "player_pos": "0B,07"
+    },
+    {
+     "action": "clear",
+     "frame": 7253,
+     "era": "00-new-game..01-opening-cinematic",
+     "pc": "$C0BA94",
+     "leg": 0,
+     "battles_fought": 0,
+     "player_pos": "0B,0C"
+    },
+    {
+     "action": "set",
+     "frame": 18950,
+     "era": "01-opening-cinematic..02-narshe-entry",
+     "pc": "$C0BA94",
+     "leg": 0,
+     "battles_fought": 0,
+     "player_pos": "26,3A"
+    },
+    {
+     "action": "clear",
+     "frame": 19019,
+     "era": "01-opening-cinematic..02-narshe-entry",
+     "pc": "$C0BA94",
+     "leg": 0,
+     "battles_fought": 0,
+     "player_pos": "26,3A"
+    },
+    {
+     "action": "set",
+     "frame": 19036,
+     "era": "01-opening-cinematic..02-narshe-entry",
+     "pc": "$C0BA94",
+     "leg": 0,
+     "battles_fought": 0,
+     "player_pos": "26,3A"
+    },
+    {
+     "action": "clear",
+     "frame": 34519,
+     "era": "03-first-scripted-battle..04-free-movement",
+     "pc": "$C0BA94",
+     "leg": 0,
+     "battles_fought": 1,
+     "player_pos": "26,1A"
+    },
+    {
+     "action": "set",
+     "frame": 39091,
+     "era": "03-first-scripted-battle..04-free-movement",
+     "pc": "$C0BA94",
+     "leg": 0,
+     "battles_fought": 3,
+     "player_pos": "26,19"
+    },
+    {
+     "action": "clear",
+     "frame": 39295,
+     "era": "03-first-scripted-battle..04-free-movement",
+     "pc": "$C0BA94",
+     "leg": 0,
+     "battles_fought": 3,
+     "player_pos": "26,11"
+    },
+    {
+     "action": "set",
+     "frame": 42451,
+     "era": "03-first-scripted-battle..04-free-movement",
+     "pc": "$C0BA94",
+     "leg": 0,
+     "battles_fought": 4,
+     "player_pos": "26,10"
+    },
+    {
+     "action": "clear",
+     "frame": 46377,
+     "era": "04-free-movement..05-mines-entry",
+     "pc": "$C0BA94",
+     "leg": 1,
+     "battles_fought": 4,
+     "player_pos": "1A,2A"
+    },
+    {
+     "action": "set",
+     "frame": 46401,
+     "era": "04-free-movement..05-mines-entry",
+     "pc": "$C0BA94",
+     "leg": 2,
+     "battles_fought": 4,
+     "player_pos": "1B,29"
+    },
+    {
+     "action": "clear",
+     "frame": 46449,
+     "era": "04-free-movement..05-mines-entry",
+     "pc": "$C0BA94",
+     "leg": 3,
+     "battles_fought": 4,
+     "player_pos": "1B,27"
+    },
+    {
+     "action": "set",
+     "frame": 46505,
+     "era": "04-free-movement..05-mines-entry",
+     "pc": "$C0BA94",
+     "leg": 4,
+     "battles_fought": 4,
+     "player_pos": "1E,26"
+    },
+    {
+     "action": "clear",
+     "frame": 49940,
+     "era": "04-free-movement..05-mines-entry",
+     "pc": "$C0BA94",
+     "leg": 9,
+     "battles_fought": 5,
+     "player_pos": "1D,21"
+    },
+    {
+     "action": "set",
+     "frame": 49956,
+     "era": "04-free-movement..05-mines-entry",
+     "pc": "$C0BA94",
+     "leg": 10,
+     "battles_fought": 5,
+     "player_pos": "1D,20"
+    },
+    {
+     "action": "clear",
+     "frame": 50004,
+     "era": "04-free-movement..05-mines-entry",
+     "pc": "$C0BA94",
+     "leg": 11,
+     "battles_fought": 5,
+     "player_pos": "1D,1E"
+    },
+    {
+     "action": "set",
+     "frame": 50028,
+     "era": "04-free-movement..05-mines-entry",
+     "pc": "$C0BA94",
+     "leg": 12,
+     "battles_fought": 5,
+     "player_pos": "1E,1D"
+    },
+    {
+     "action": "clear",
+     "frame": 50124,
+     "era": "04-free-movement..05-mines-entry",
+     "pc": "$C0BA94",
+     "leg": 13,
+     "battles_fought": 5,
+     "player_pos": "1E,18"
+    },
+    {
+     "action": "set",
+     "frame": 50148,
+     "era": "04-free-movement..05-mines-entry",
+     "pc": "$C0BA94",
+     "leg": 14,
+     "battles_fought": 5,
+     "player_pos": "1F,17"
+    }
+   ]
+  },
+  {
+   "id": "EVF-1EA0-$B1",
+   "array_base": "WRAM:+$1EA0",
+   "flag_number": "$B1",
+   "byte": "WRAM:+$1EB6",
+   "bit": 1,
+   "classification": "toggling",
+   "first_set_frame": 9035,
+   "first_set_era": "00-new-game..01-opening-cinematic",
+   "final_state": "clear",
+   "set_writer_pcs": [
+    "$C0BA94"
+   ],
+   "clear_writer_pcs": [
+    "$C0BA94"
+   ],
+   "events": [
+    {
+     "action": "set",
+     "frame": 9035,
+     "era": "00-new-game..01-opening-cinematic",
+     "pc": "$C0BA94",
+     "leg": 0,
+     "battles_fought": 0,
+     "player_pos": "09,0C"
+    },
+    {
+     "action": "clear",
+     "frame": 10798,
+     "era": "00-new-game..01-opening-cinematic",
+     "pc": "$C0BA94",
+     "leg": 0,
+     "battles_fought": 0,
+     "player_pos": "09,0C"
+    },
+    {
+     "action": "set",
+     "frame": 34519,
+     "era": "03-first-scripted-battle..04-free-movement",
+     "pc": "$C0BA94",
+     "leg": 0,
+     "battles_fought": 1,
+     "player_pos": "26,1A"
+    },
+    {
+     "action": "clear",
+     "frame": 39091,
+     "era": "03-first-scripted-battle..04-free-movement",
+     "pc": "$C0BA94",
+     "leg": 0,
+     "battles_fought": 3,
+     "player_pos": "26,19"
+    },
+    {
+     "action": "set",
+     "frame": 39295,
+     "era": "03-first-scripted-battle..04-free-movement",
+     "pc": "$C0BA94",
+     "leg": 0,
+     "battles_fought": 3,
+     "player_pos": "26,11"
+    },
+    {
+     "action": "clear",
+     "frame": 42451,
+     "era": "03-first-scripted-battle..04-free-movement",
+     "pc": "$C0BA94",
+     "leg": 0,
+     "battles_fought": 4,
+     "player_pos": "26,10"
+    },
+    {
+     "action": "set",
+     "frame": 46377,
+     "era": "04-free-movement..05-mines-entry",
+     "pc": "$C0BA94",
+     "leg": 1,
+     "battles_fought": 4,
+     "player_pos": "1A,2A"
+    },
+    {
+     "action": "clear",
+     "frame": 46401,
+     "era": "04-free-movement..05-mines-entry",
+     "pc": "$C0BA94",
+     "leg": 2,
+     "battles_fought": 4,
+     "player_pos": "1B,29"
+    },
+    {
+     "action": "set",
+     "frame": 46449,
+     "era": "04-free-movement..05-mines-entry",
+     "pc": "$C0BA94",
+     "leg": 3,
+     "battles_fought": 4,
+     "player_pos": "1B,27"
+    },
+    {
+     "action": "clear",
+     "frame": 46505,
+     "era": "04-free-movement..05-mines-entry",
+     "pc": "$C0BA94",
+     "leg": 4,
+     "battles_fought": 4,
+     "player_pos": "1E,26"
+    },
+    {
+     "action": "set",
+     "frame": 50004,
+     "era": "04-free-movement..05-mines-entry",
+     "pc": "$C0BA94",
+     "leg": 11,
+     "battles_fought": 5,
+     "player_pos": "1D,1E"
+    },
+    {
+     "action": "clear",
+     "frame": 50028,
+     "era": "04-free-movement..05-mines-entry",
+     "pc": "$C0BA94",
+     "leg": 12,
+     "battles_fought": 5,
+     "player_pos": "1E,1D"
+    },
+    {
+     "action": "set",
+     "frame": 50124,
+     "era": "04-free-movement..05-mines-entry",
+     "pc": "$C0BA94",
+     "leg": 13,
+     "battles_fought": 5,
+     "player_pos": "1E,18"
+    },
+    {
+     "action": "clear",
+     "frame": 50148,
+     "era": "04-free-movement..05-mines-entry",
+     "pc": "$C0BA94",
+     "leg": 14,
+     "battles_fought": 5,
+     "player_pos": "1F,17"
+    }
+   ]
+  },
+  {
+   "id": "EVF-1EA0-$B2",
+   "array_base": "WRAM:+$1EA0",
+   "flag_number": "$B2",
+   "byte": "WRAM:+$1EB6",
+   "bit": 2,
+   "classification": "toggling",
+   "first_set_frame": 2556,
+   "first_set_era": "power-on..00-new-game",
+   "final_state": "clear",
+   "set_writer_pcs": [
+    "$C0BA94"
+   ],
+   "clear_writer_pcs": [
+    "$C0BA94"
+   ],
+   "events": [
+    {
+     "action": "set",
+     "frame": 2556,
+     "era": "power-on..00-new-game",
+     "pc": "$C0BA94",
+     "leg": 0,
+     "battles_fought": 0,
+     "player_pos": "12,19"
+    },
+    {
+     "action": "clear",
+     "frame": 5567,
+     "era": "00-new-game..01-opening-cinematic",
+     "pc": "$C0BA94",
+     "leg": 0,
+     "battles_fought": 0,
+     "player_pos": "0B,07"
+    },
+    {
+     "action": "set",
+     "frame": 9027,
+     "era": "00-new-game..01-opening-cinematic",
+     "pc": "$C0BA94",
+     "leg": 0,
+     "battles_fought": 0,
+     "player_pos": "09,0C"
+    },
+    {
+     "action": "clear",
+     "frame": 9035,
+     "era": "00-new-game..01-opening-cinematic",
+     "pc": "$C0BA94",
+     "leg": 0,
+     "battles_fought": 0,
+     "player_pos": "09,0C"
+    },
+    {
+     "action": "set",
+     "frame": 10813,
+     "era": "00-new-game..01-opening-cinematic",
+     "pc": "$C0BA94",
+     "leg": 0,
+     "battles_fought": 0,
+     "player_pos": "09,0D"
+    },
+    {
+     "action": "clear",
+     "frame": 18950,
+     "era": "01-opening-cinematic..02-narshe-entry",
+     "pc": "$C0BA94",
+     "leg": 0,
+     "battles_fought": 0,
+     "player_pos": "26,3A"
+    },
+    {
+     "action": "set",
+     "frame": 19019,
+     "era": "01-opening-cinematic..02-narshe-entry",
+     "pc": "$C0BA94",
+     "leg": 0,
+     "battles_fought": 0,
+     "player_pos": "26,3A"
+    },
+    {
+     "action": "clear",
+     "frame": 19036,
+     "era": "01-opening-cinematic..02-narshe-entry",
+     "pc": "$C0BA94",
+     "leg": 0,
+     "battles_fought": 0,
+     "player_pos": "26,3A"
+    }
+   ]
+  },
+  {
+   "id": "EVF-1EA0-$B3",
+   "array_base": "WRAM:+$1EA0",
+   "flag_number": "$B3",
+   "byte": "WRAM:+$1EB6",
+   "bit": 3,
+   "classification": "transient",
+   "first_set_frame": 7253,
+   "first_set_era": "00-new-game..01-opening-cinematic",
+   "final_state": "clear",
+   "set_writer_pcs": [
+    "$C0BA94"
+   ],
+   "clear_writer_pcs": [
+    "$C0BA94"
+   ],
+   "events": [
+    {
+     "action": "set",
+     "frame": 7253,
+     "era": "00-new-game..01-opening-cinematic",
+     "pc": "$C0BA94",
+     "leg": 0,
+     "battles_fought": 0,
+     "player_pos": "0B,0C"
+    },
+    {
+     "action": "clear",
+     "frame": 9027,
+     "era": "00-new-game..01-opening-cinematic",
+     "pc": "$C0BA94",
+     "leg": 0,
+     "battles_fought": 0,
+     "player_pos": "09,0C"
+    },
+    {
+     "action": "set",
+     "frame": 10798,
+     "era": "00-new-game..01-opening-cinematic",
+     "pc": "$C0BA94",
+     "leg": 0,
+     "battles_fought": 0,
+     "player_pos": "09,0C"
+    },
+    {
+     "action": "clear",
+     "frame": 10813,
+     "era": "00-new-game..01-opening-cinematic",
+     "pc": "$C0BA94",
+     "leg": 0,
+     "battles_fought": 0,
+     "player_pos": "09,0D"
+    },
+    {
+     "action": "set",
+     "frame": 49940,
+     "era": "04-free-movement..05-mines-entry",
+     "pc": "$C0BA94",
+     "leg": 9,
+     "battles_fought": 5,
+     "player_pos": "1D,21"
+    },
+    {
+     "action": "clear",
+     "frame": 49956,
+     "era": "04-free-movement..05-mines-entry",
+     "pc": "$C0BA94",
+     "leg": 10,
+     "battles_fought": 5,
+     "player_pos": "1D,20"
+    }
+   ]
+  },
+  {
+   "id": "EVF-1EA0-$B4",
+   "array_base": "WRAM:+$1EA0",
+   "flag_number": "$B4",
+   "byte": "WRAM:+$1EB6",
+   "bit": 4,
+   "classification": "toggling",
+   "first_set_frame": 2520,
+   "first_set_era": "power-on..00-new-game",
+   "final_state": "clear",
+   "set_writer_pcs": [
+    "$C0BAA0"
+   ],
+   "clear_writer_pcs": [
+    "$C0BAAA"
+   ],
+   "events": [
+    {
+     "action": "set",
+     "frame": 2520,
+     "era": "power-on..00-new-game",
+     "pc": "$C0BAA0",
+     "leg": 0,
+     "battles_fought": 0,
+     "player_pos": "08,08"
+    },
+    {
+     "action": "clear",
+     "frame": 2530,
+     "era": "power-on..00-new-game",
+     "pc": "$C0BAAA",
+     "leg": 0,
+     "battles_fought": 0,
+     "player_pos": "08,08"
+    },
+    {
+     "action": "set",
+     "frame": 2556,
+     "era": "power-on..00-new-game",
+     "pc": "$C0BAA0",
+     "leg": 0,
+     "battles_fought": 0,
+     "player_pos": "12,19"
+    },
+    {
+     "action": "clear",
+     "frame": 2562,
+     "era": "power-on..00-new-game",
+     "pc": "$C0BAAA",
+     "leg": 0,
+     "battles_fought": 0,
+     "player_pos": "12,19"
+    },
+    {
+     "action": "set",
+     "frame": 2568,
+     "era": "power-on..00-new-game",
+     "pc": "$C0BAA0",
+     "leg": 0,
+     "battles_fought": 0,
+     "player_pos": "12,19"
+    },
+    {
+     "action": "clear",
+     "frame": 2574,
+     "era": "power-on..00-new-game",
+     "pc": "$C0BAAA",
+     "leg": 0,
+     "battles_fought": 0,
+     "player_pos": "12,19"
+    },
+    {
+     "action": "set",
+     "frame": 2580,
+     "era": "power-on..00-new-game",
+     "pc": "$C0BAA0",
+     "leg": 0,
+     "battles_fought": 0,
+     "player_pos": "12,19"
+    },
+    {
+     "action": "clear",
+     "frame": 2586,
+     "era": "power-on..00-new-game",
+     "pc": "$C0BAAA",
+     "leg": 0,
+     "battles_fought": 0,
+     "player_pos": "12,19"
+    },
+    {
+     "action": "set",
+     "frame": 2592,
+     "era": "power-on..00-new-game",
+     "pc": "$C0BAA0",
+     "leg": 0,
+     "battles_fought": 0,
+     "player_pos": "12,19"
+    },
+    {
+     "action": "clear",
+     "frame": 2598,
+     "era": "power-on..00-new-game",
+     "pc": "$C0BAAA",
+     "leg": 0,
+     "battles_fought": 0,
+     "player_pos": "12,19"
+    },
+    {
+     "action": "set",
+     "frame": 2604,
+     "era": "power-on..00-new-game",
+     "pc": "$C0BAA0",
+     "leg": 0,
+     "battles_fought": 0,
+     "player_pos": "12,19"
+    },
+    {
+     "action": "clear",
+     "frame": 2610,
+     "era": "power-on..00-new-game",
+     "pc": "$C0BAAA",
+     "leg": 0,
+     "battles_fought": 0,
+     "player_pos": "12,19"
+    },
+    {
+     "action": "set",
+     "frame": 2616,
+     "era": "power-on..00-new-game",
+     "pc": "$C0BAA0",
+     "leg": 0,
+     "battles_fought": 0,
+     "player_pos": "12,19"
+    },
+    {
+     "action": "clear",
+     "frame": 2622,
+     "era": "power-on..00-new-game",
+     "pc": "$C0BAAA",
+     "leg": 0,
+     "battles_fought": 0,
+     "player_pos": "12,19"
+    },
+    {
+     "action": "set",
+     "frame": 2628,
+     "era": "power-on..00-new-game",
+     "pc": "$C0BAA0",
+     "leg": 0,
+     "battles_fought": 0,
+     "player_pos": "12,19"
+    },
+    {
+     "action": "clear",
+     "frame": 2663,
+     "era": "power-on..00-new-game",
+     "pc": "$C0BAAA",
+     "leg": 0,
+     "battles_fought": 0,
+     "player_pos": "12,19"
+    },
+    {
+     "action": "set",
+     "frame": 2712,
+     "era": "power-on..00-new-game",
+     "pc": "$C0BAA0",
+     "leg": 0,
+     "battles_fought": 0,
+     "player_pos": "12,19"
+    },
+    {
+     "action": "clear",
+     "frame": 2742,
+     "era": "power-on..00-new-game",
+     "pc": "$C0BAAA",
+     "leg": 0,
+     "battles_fought": 0,
+     "player_pos": "12,19"
+    },
+    {
+     "action": "set",
+     "frame": 3288,
+     "era": "power-on..00-new-game",
+     "pc": "$C0BAA0",
+     "leg": 0,
+     "battles_fought": 0,
+     "player_pos": "12,19"
+    },
+    {
+     "action": "clear",
+     "frame": 3294,
+     "era": "power-on..00-new-game",
+     "pc": "$C0BAAA",
+     "leg": 0,
+     "battles_fought": 0,
+     "player_pos": "12,19"
+    },
+    {
+     "action": "set",
+     "frame": 3300,
+     "era": "power-on..00-new-game",
+     "pc": "$C0BAA0",
+     "leg": 0,
+     "battles_fought": 0,
+     "player_pos": "12,19"
+    },
+    {
+     "action": "clear",
+     "frame": 3306,
+     "era": "power-on..00-new-game",
+     "pc": "$C0BAAA",
+     "leg": 0,
+     "battles_fought": 0,
+     "player_pos": "12,19"
+    },
+    {
+     "action": "set",
+     "frame": 3312,
+     "era": "power-on..00-new-game",
+     "pc": "$C0BAA0",
+     "leg": 0,
+     "battles_fought": 0,
+     "player_pos": "12,19"
+    },
+    {
+     "action": "clear",
+     "frame": 3318,
+     "era": "power-on..00-new-game",
+     "pc": "$C0BAAA",
+     "leg": 0,
+     "battles_fought": 0,
+     "player_pos": "12,19"
+    },
+    {
+     "action": "set",
+     "frame": 3361,
+     "era": "power-on..00-new-game",
+     "pc": "$C0BAA0",
+     "leg": 0,
+     "battles_fought": 0,
+     "player_pos": "26,36"
+    },
+    {
+     "action": "clear",
+     "frame": 3366,
+     "era": "power-on..00-new-game",
+     "pc": "$C0BAAA",
+     "leg": 0,
+     "battles_fought": 0,
+     "player_pos": "26,36"
+    },
+    {
+     "action": "set",
+     "frame": 3456,
+     "era": "power-on..00-new-game",
+     "pc": "$C0BAA0",
+     "leg": 0,
+     "battles_fought": 0,
+     "player_pos": "26,36"
+    },
+    {
+     "action": "clear",
+     "frame": 4194,
+     "era": "power-on..00-new-game",
+     "pc": "$C0BAAA",
+     "leg": 0,
+     "battles_fought": 0,
+     "player_pos": "26,36"
+    },
+    {
+     "action": "set",
+     "frame": 4200,
+     "era": "power-on..00-new-game",
+     "pc": "$C0BAA0",
+     "leg": 0,
+     "battles_fought": 0,
+     "player_pos": "26,36"
+    },
+    {
+     "action": "clear",
+     "frame": 4201,
+     "era": "power-on..00-new-game",
+     "pc": "$C0BAAA",
+     "leg": 0,
+     "battles_fought": 0,
+     "player_pos": "26,36"
+    },
+    {
+     "action": "set",
+     "frame": 31000,
+     "era": "02-narshe-entry..03-first-scripted-battle",
+     "pc": "$C0BAA0",
+     "leg": 0,
+     "battles_fought": 0,
+     "player_pos": "26,32"
+    },
+    {
+     "action": "clear",
+     "frame": 31012,
+     "era": "02-narshe-entry..03-first-scripted-battle",
+     "pc": "$C0BAAA",
+     "leg": 0,
+     "battles_fought": 0,
+     "player_pos": "26,32"
+    },
+    {
+     "action": "set",
+     "frame": 31240,
+     "era": "02-narshe-entry..03-first-scripted-battle",
+     "pc": "$C0BAA0",
+     "leg": 0,
+     "battles_fought": 0,
+     "player_pos": "26,2B"
+    },
+    {
+     "action": "clear",
+     "frame": 31252,
+     "era": "02-narshe-entry..03-first-scripted-battle",
+     "pc": "$C0BAAA",
+     "leg": 0,
+     "battles_fought": 0,
+     "player_pos": "26,2A"
+    },
+    {
+     "action": "set",
+     "frame": 31480,
+     "era": "02-narshe-entry..03-first-scripted-battle",
+     "pc": "$C0BAA0",
+     "leg": 0,
+     "battles_fought": 0,
+     "player_pos": "26,26"
+    },
+    {
+     "action": "clear",
+     "frame": 31492,
+     "era": "02-narshe-entry..03-first-scripted-battle",
+     "pc": "$C0BAAA",
+     "leg": 0,
+     "battles_fought": 0,
+     "player_pos": "26,26"
+    },
+    {
+     "action": "set",
+     "frame": 34360,
+     "era": "03-first-scripted-battle..04-free-movement",
+     "pc": "$C0BAA0",
+     "leg": 0,
+     "battles_fought": 1,
+     "player_pos": "26,22"
+    },
+    {
+     "action": "clear",
+     "frame": 34372,
+     "era": "03-first-scripted-battle..04-free-movement",
+     "pc": "$C0BAAA",
+     "leg": 0,
+     "battles_fought": 1,
+     "player_pos": "26,21"
+    },
+    {
+     "action": "set",
+     "frame": 34600,
+     "era": "03-first-scripted-battle..04-free-movement",
+     "pc": "$C0BAA0",
+     "leg": 0,
+     "battles_fought": 1,
+     "player_pos": "26,1A"
+    },
+    {
+     "action": "clear",
+     "frame": 34612,
+     "era": "03-first-scripted-battle..04-free-movement",
+     "pc": "$C0BAAA",
+     "leg": 0,
+     "battles_fought": 1,
+     "player_pos": "26,1A"
+    },
+    {
+     "action": "set",
+     "frame": 34840,
+     "era": "03-first-scripted-battle..04-free-movement",
+     "pc": "$C0BAA0",
+     "leg": 0,
+     "battles_fought": 1,
+     "player_pos": "26,1A"
+    },
+    {
+     "action": "clear",
+     "frame": 34852,
+     "era": "03-first-scripted-battle..04-free-movement",
+     "pc": "$C0BAAA",
+     "leg": 0,
+     "battles_fought": 1,
+     "player_pos": "26,1A"
+    },
+    {
+     "action": "set",
+     "frame": 36761,
+     "era": "03-first-scripted-battle..04-free-movement",
+     "pc": "$C0BAA0",
+     "leg": 0,
+     "battles_fought": 2,
+     "player_pos": "26,1A"
+    },
+    {
+     "action": "clear",
+     "frame": 36772,
+     "era": "03-first-scripted-battle..04-free-movement",
+     "pc": "$C0BAAA",
+     "leg": 0,
+     "battles_fought": 2,
+     "player_pos": "26,1A"
+    },
+    {
+     "action": "set",
+     "frame": 39160,
+     "era": "03-first-scripted-battle..04-free-movement",
+     "pc": "$C0BAA0",
+     "leg": 0,
+     "battles_fought": 3,
+     "player_pos": "26,15"
+    },
+    {
+     "action": "clear",
+     "frame": 39172,
+     "era": "03-first-scripted-battle..04-free-movement",
+     "pc": "$C0BAAA",
+     "leg": 0,
+     "battles_fought": 3,
+     "player_pos": "26,14"
+    },
+    {
+     "action": "set",
+     "frame": 39400,
+     "era": "03-first-scripted-battle..04-free-movement",
+     "pc": "$C0BAA0",
+     "leg": 0,
+     "battles_fought": 3,
+     "player_pos": "26,11"
+    },
+    {
+     "action": "clear",
+     "frame": 39412,
+     "era": "03-first-scripted-battle..04-free-movement",
+     "pc": "$C0BAAA",
+     "leg": 0,
+     "battles_fought": 3,
+     "player_pos": "26,11"
+    },
+    {
+     "action": "set",
+     "frame": 42520,
+     "era": "03-first-scripted-battle..04-free-movement",
+     "pc": "$C0BAA0",
+     "leg": 0,
+     "battles_fought": 4,
+     "player_pos": "26,0C"
+    },
+    {
+     "action": "clear",
+     "frame": 42532,
+     "era": "03-first-scripted-battle..04-free-movement",
+     "pc": "$C0BAAA",
+     "leg": 0,
+     "battles_fought": 4,
+     "player_pos": "26,0B"
+    },
+    {
+     "action": "set",
+     "frame": 42760,
+     "era": "03-first-scripted-battle..04-free-movement",
+     "pc": "$C0BAA0",
+     "leg": 0,
+     "battles_fought": 4,
+     "player_pos": "1A,34"
+    },
+    {
+     "action": "clear",
+     "frame": 42772,
+     "era": "03-first-scripted-battle..04-free-movement",
+     "pc": "$C0BAAA",
+     "leg": 0,
+     "battles_fought": 4,
+     "player_pos": "1A,33"
+    },
+    {
+     "action": "set",
+     "frame": 43000,
+     "era": "03-first-scripted-battle..04-free-movement",
+     "pc": "$C0BAA0",
+     "leg": 0,
+     "battles_fought": 4,
+     "player_pos": "1A,2A"
+    },
+    {
+     "action": "clear",
+     "frame": 43012,
+     "era": "03-first-scripted-battle..04-free-movement",
+     "pc": "$C0BAAA",
+     "leg": 0,
+     "battles_fought": 4,
+     "player_pos": "1A,2A"
+    },
+    {
+     "action": "set",
+     "frame": 43240,
+     "era": "03-first-scripted-battle..04-free-movement",
+     "pc": "$C0BAA0",
+     "leg": 0,
+     "battles_fought": 4,
+     "player_pos": "1A,2A"
+    },
+    {
+     "action": "clear",
+     "frame": 43252,
+     "era": "03-first-scripted-battle..04-free-movement",
+     "pc": "$C0BAAA",
+     "leg": 0,
+     "battles_fought": 4,
+     "player_pos": "1A,2A"
+    },
+    {
+     "action": "set",
+     "frame": 43480,
+     "era": "03-first-scripted-battle..04-free-movement",
+     "pc": "$C0BAA0",
+     "leg": 0,
+     "battles_fought": 4,
+     "player_pos": "1A,2A"
+    },
+    {
+     "action": "clear",
+     "frame": 43492,
+     "era": "03-first-scripted-battle..04-free-movement",
+     "pc": "$C0BAAA",
+     "leg": 0,
+     "battles_fought": 4,
+     "player_pos": "1A,2A"
+    },
+    {
+     "action": "set",
+     "frame": 43720,
+     "era": "03-first-scripted-battle..04-free-movement",
+     "pc": "$C0BAA0",
+     "leg": 0,
+     "battles_fought": 4,
+     "player_pos": "1A,2A"
+    },
+    {
+     "action": "clear",
+     "frame": 43732,
+     "era": "03-first-scripted-battle..04-free-movement",
+     "pc": "$C0BAAA",
+     "leg": 0,
+     "battles_fought": 4,
+     "player_pos": "1A,2A"
+    },
+    {
+     "action": "set",
+     "frame": 43960,
+     "era": "03-first-scripted-battle..04-free-movement",
+     "pc": "$C0BAA0",
+     "leg": 0,
+     "battles_fought": 4,
+     "player_pos": "1A,2A"
+    },
+    {
+     "action": "clear",
+     "frame": 43972,
+     "era": "03-first-scripted-battle..04-free-movement",
+     "pc": "$C0BAAA",
+     "leg": 0,
+     "battles_fought": 4,
+     "player_pos": "1A,2A"
+    },
+    {
+     "action": "set",
+     "frame": 44200,
+     "era": "03-first-scripted-battle..04-free-movement",
+     "pc": "$C0BAA0",
+     "leg": 0,
+     "battles_fought": 4,
+     "player_pos": "1A,2A"
+    },
+    {
+     "action": "clear",
+     "frame": 44212,
+     "era": "03-first-scripted-battle..04-free-movement",
+     "pc": "$C0BAAA",
+     "leg": 0,
+     "battles_fought": 4,
+     "player_pos": "1A,2A"
+    },
+    {
+     "action": "set",
+     "frame": 44440,
+     "era": "03-first-scripted-battle..04-free-movement",
+     "pc": "$C0BAA0",
+     "leg": 0,
+     "battles_fought": 4,
+     "player_pos": "1A,2A"
+    },
+    {
+     "action": "clear",
+     "frame": 44452,
+     "era": "03-first-scripted-battle..04-free-movement",
+     "pc": "$C0BAAA",
+     "leg": 0,
+     "battles_fought": 4,
+     "player_pos": "1A,2A"
+    },
+    {
+     "action": "set",
+     "frame": 44680,
+     "era": "03-first-scripted-battle..04-free-movement",
+     "pc": "$C0BAA0",
+     "leg": 0,
+     "battles_fought": 4,
+     "player_pos": "1A,2A"
+    },
+    {
+     "action": "clear",
+     "frame": 44692,
+     "era": "03-first-scripted-battle..04-free-movement",
+     "pc": "$C0BAAA",
+     "leg": 0,
+     "battles_fought": 4,
+     "player_pos": "1A,2A"
+    },
+    {
+     "action": "set",
+     "frame": 44920,
+     "era": "03-first-scripted-battle..04-free-movement",
+     "pc": "$C0BAA0",
+     "leg": 0,
+     "battles_fought": 4,
+     "player_pos": "1A,2A"
+    },
+    {
+     "action": "clear",
+     "frame": 44932,
+     "era": "03-first-scripted-battle..04-free-movement",
+     "pc": "$C0BAAA",
+     "leg": 0,
+     "battles_fought": 4,
+     "player_pos": "1A,2A"
+    },
+    {
+     "action": "set",
+     "frame": 45160,
+     "era": "03-first-scripted-battle..04-free-movement",
+     "pc": "$C0BAA0",
+     "leg": 0,
+     "battles_fought": 4,
+     "player_pos": "1A,2A"
+    },
+    {
+     "action": "clear",
+     "frame": 45172,
+     "era": "03-first-scripted-battle..04-free-movement",
+     "pc": "$C0BAAA",
+     "leg": 0,
+     "battles_fought": 4,
+     "player_pos": "1A,2A"
+    },
+    {
+     "action": "set",
+     "frame": 45400,
+     "era": "03-first-scripted-battle..04-free-movement",
+     "pc": "$C0BAA0",
+     "leg": 0,
+     "battles_fought": 4,
+     "player_pos": "1A,2A"
+    },
+    {
+     "action": "clear",
+     "frame": 45412,
+     "era": "03-first-scripted-battle..04-free-movement",
+     "pc": "$C0BAAA",
+     "leg": 0,
+     "battles_fought": 4,
+     "player_pos": "1A,2A"
+    },
+    {
+     "action": "set",
+     "frame": 45640,
+     "era": "03-first-scripted-battle..04-free-movement",
+     "pc": "$C0BAA0",
+     "leg": 0,
+     "battles_fought": 4,
+     "player_pos": "1A,2A"
+    },
+    {
+     "action": "clear",
+     "frame": 45652,
+     "era": "03-first-scripted-battle..04-free-movement",
+     "pc": "$C0BAAA",
+     "leg": 0,
+     "battles_fought": 4,
+     "player_pos": "1A,2A"
+    },
+    {
+     "action": "set",
+     "frame": 45880,
+     "era": "03-first-scripted-battle..04-free-movement",
+     "pc": "$C0BAA0",
+     "leg": 0,
+     "battles_fought": 4,
+     "player_pos": "1A,2A"
+    },
+    {
+     "action": "clear",
+     "frame": 45892,
+     "era": "03-first-scripted-battle..04-free-movement",
+     "pc": "$C0BAAA",
+     "leg": 0,
+     "battles_fought": 4,
+     "player_pos": "1A,2A"
+    },
+    {
+     "action": "set",
+     "frame": 46120,
+     "era": "03-first-scripted-battle..04-free-movement",
+     "pc": "$C0BAA0",
+     "leg": 0,
+     "battles_fought": 4,
+     "player_pos": "1A,2A"
+    },
+    {
+     "action": "clear",
+     "frame": 46132,
+     "era": "03-first-scripted-battle..04-free-movement",
+     "pc": "$C0BAAA",
+     "leg": 0,
+     "battles_fought": 4,
+     "player_pos": "1A,2A"
+    },
+    {
+     "action": "set",
+     "frame": 46360,
+     "era": "03-first-scripted-battle..04-free-movement",
+     "pc": "$C0BAA0",
+     "leg": 0,
+     "battles_fought": 4,
+     "player_pos": "1A,2A"
+    },
+    {
+     "action": "clear",
+     "frame": 46372,
+     "era": "03-first-scripted-battle..04-free-movement",
+     "pc": "$C0BAAA",
+     "leg": 0,
+     "battles_fought": 4,
+     "player_pos": "1A,2A"
+    },
+    {
+     "action": "set",
+     "frame": 46529,
+     "era": "04-free-movement..05-mines-entry",
+     "pc": "$C0BAA0",
+     "leg": 5,
+     "battles_fought": 4,
+     "player_pos": "1E,25"
+    },
+    {
+     "action": "clear",
+     "frame": 46540,
+     "era": "04-free-movement..05-mines-entry",
+     "pc": "$C0BAAA",
+     "leg": 5,
+     "battles_fought": 4,
+     "player_pos": "1E,25"
+    },
+    {
+     "action": "set",
+     "frame": 46619,
+     "era": "04-free-movement..05-mines-entry",
+     "pc": "$C0BAA0",
+     "leg": 5,
+     "battles_fought": 4,
+     "player_pos": "1E,25"
+    },
+    {
+     "action": "clear",
+     "frame": 46629,
+     "era": "04-free-movement..05-mines-entry",
+     "pc": "$C0BAAA",
+     "leg": 5,
+     "battles_fought": 4,
+     "player_pos": "1E,25"
+    },
+    {
+     "action": "set",
+     "frame": 49866,
+     "era": "04-free-movement..05-mines-entry",
+     "pc": "$C0BAA0",
+     "leg": 7,
+     "battles_fought": 5,
+     "player_pos": "1E,25"
+    },
+    {
+     "action": "clear",
+     "frame": 49867,
+     "era": "04-free-movement..05-mines-entry",
+     "pc": "$C0BAAA",
+     "leg": 8,
+     "battles_fought": 5,
+     "player_pos": "1E,25"
+    },
+    {
+     "action": "set",
+     "frame": 50172,
+     "era": "04-free-movement..05-mines-entry",
+     "pc": "$C0BAA0",
+     "leg": 15,
+     "battles_fought": 5,
+     "player_pos": "1F,16"
+    },
+    {
+     "action": "clear",
+     "frame": 50182,
+     "era": "04-free-movement..05-mines-entry",
+     "pc": "$C0BAAA",
+     "leg": 15,
+     "battles_fought": 5,
+     "player_pos": "1F,16"
+    },
+    {
+     "action": "set",
+     "frame": 50262,
+     "era": "04-free-movement..05-mines-entry",
+     "pc": "$C0BAA0",
+     "leg": 15,
+     "battles_fought": 5,
+     "player_pos": "1F,16"
+    },
+    {
+     "action": "clear",
+     "frame": 50272,
+     "era": "04-free-movement..05-mines-entry",
+     "pc": "$C0BAAA",
+     "leg": 15,
+     "battles_fought": 5,
+     "player_pos": "1F,16"
+    },
+    {
+     "action": "set",
+     "frame": 50352,
+     "era": "04-free-movement..05-mines-entry",
+     "pc": "$C0BAA0",
+     "leg": 15,
+     "battles_fought": 5,
+     "player_pos": "1F,16"
+    },
+    {
+     "action": "clear",
+     "frame": 50362,
+     "era": "04-free-movement..05-mines-entry",
+     "pc": "$C0BAAA",
+     "leg": 15,
+     "battles_fought": 5,
+     "player_pos": "1F,16"
+    },
+    {
+     "action": "set",
+     "frame": 50442,
+     "era": "04-free-movement..05-mines-entry",
+     "pc": "$C0BAA0",
+     "leg": 15,
+     "battles_fought": 5,
+     "player_pos": "1F,16"
+    },
+    {
+     "action": "clear",
+     "frame": 50452,
+     "era": "04-free-movement..05-mines-entry",
+     "pc": "$C0BAAA",
+     "leg": 15,
+     "battles_fought": 5,
+     "player_pos": "1F,16"
+    },
+    {
+     "action": "set",
+     "frame": 50532,
+     "era": "04-free-movement..05-mines-entry",
+     "pc": "$C0BAA0",
+     "leg": 15,
+     "battles_fought": 5,
+     "player_pos": "1F,16"
+    },
+    {
+     "action": "clear",
+     "frame": 50542,
+     "era": "04-free-movement..05-mines-entry",
+     "pc": "$C0BAAA",
+     "leg": 15,
+     "battles_fought": 5,
+     "player_pos": "1F,16"
+    },
+    {
+     "action": "set",
+     "frame": 50622,
+     "era": "04-free-movement..05-mines-entry",
+     "pc": "$C0BAA0",
+     "leg": 15,
+     "battles_fought": 5,
+     "player_pos": "1F,16"
+    },
+    {
+     "action": "clear",
+     "frame": 50632,
+     "era": "04-free-movement..05-mines-entry",
+     "pc": "$C0BAAA",
+     "leg": 15,
+     "battles_fought": 5,
+     "player_pos": "1F,16"
+    },
+    {
+     "action": "set",
+     "frame": 50712,
+     "era": "04-free-movement..05-mines-entry",
+     "pc": "$C0BAA0",
+     "leg": 15,
+     "battles_fought": 5,
+     "player_pos": "1F,16"
+    },
+    {
+     "action": "clear",
+     "frame": 50722,
+     "era": "04-free-movement..05-mines-entry",
+     "pc": "$C0BAAA",
+     "leg": 15,
+     "battles_fought": 5,
+     "player_pos": "1F,16"
+    }
+   ]
+  },
+  {
+   "id": "EVF-1EA0-$B6",
+   "array_base": "WRAM:+$1EA0",
+   "flag_number": "$B6",
+   "byte": "WRAM:+$1EB6",
+   "bit": 6,
+   "classification": "toggling",
+   "first_set_frame": 46,
+   "first_set_era": "power-on..00-new-game",
+   "final_state": "clear",
+   "set_writer_pcs": [
+    "$C0BFAE"
+   ],
+   "clear_writer_pcs": [
+    "$C0BFC6"
+   ],
+   "events": [
+    {
+     "action": "set",
+     "frame": 46,
+     "era": "power-on..00-new-game",
+     "pc": "$C0BFAE",
+     "leg": 0,
+     "battles_fought": 0,
+     "player_pos": "00,00"
+    },
+    {
+     "action": "clear",
+     "frame": 46,
+     "era": "power-on..00-new-game",
+     "pc": "$C0BFC6",
+     "leg": 0,
+     "battles_fought": 0,
+     "player_pos": "00,00"
+    },
+    {
+     "action": "set",
+     "frame": 2554,
+     "era": "power-on..00-new-game",
+     "pc": "$C0BFAE",
+     "leg": 0,
+     "battles_fought": 0,
+     "player_pos": "08,08"
+    },
+    {
+     "action": "clear",
+     "frame": 2554,
+     "era": "power-on..00-new-game",
+     "pc": "$C0BFC6",
+     "leg": 0,
+     "battles_fought": 0,
+     "player_pos": "08,08"
+    },
+    {
+     "action": "set",
+     "frame": 3358,
+     "era": "power-on..00-new-game",
+     "pc": "$C0BFAE",
+     "leg": 0,
+     "battles_fought": 0,
+     "player_pos": "12,19"
+    },
+    {
+     "action": "clear",
+     "frame": 3359,
+     "era": "power-on..00-new-game",
+     "pc": "$C0BFC6",
+     "leg": 0,
+     "battles_fought": 0,
+     "player_pos": "12,19"
+    },
+    {
+     "action": "set",
+     "frame": 4257,
+     "era": "power-on..00-new-game",
+     "pc": "$C0BFAE",
+     "leg": 0,
+     "battles_fought": 0,
+     "player_pos": "26,36"
+    },
+    {
+     "action": "clear",
+     "frame": 4257,
+     "era": "power-on..00-new-game",
+     "pc": "$C0BFC6",
+     "leg": 0,
+     "battles_fought": 0,
+     "player_pos": "26,36"
+    },
+    {
+     "action": "set",
+     "frame": 5565,
+     "era": "00-new-game..01-opening-cinematic",
+     "pc": "$C0BFAE",
+     "leg": 0,
+     "battles_fought": 0,
+     "player_pos": "07,1B"
+    },
+    {
+     "action": "clear",
+     "frame": 5565,
+     "era": "00-new-game..01-opening-cinematic",
+     "pc": "$C0BFC6",
+     "leg": 0,
+     "battles_fought": 0,
+     "player_pos": "07,1B"
+    },
+    {
+     "action": "set",
+     "frame": 18946,
+     "era": "01-opening-cinematic..02-narshe-entry",
+     "pc": "$C0BFAE",
+     "leg": 0,
+     "battles_fought": 0,
+     "player_pos": "09,16"
+    },
+    {
+     "action": "clear",
+     "frame": 18947,
+     "era": "01-opening-cinematic..02-narshe-entry",
+     "pc": "$C0BFC6",
+     "leg": 0,
+     "battles_fought": 0,
+     "player_pos": "09,16"
+    },
+    {
+     "action": "set",
+     "frame": 34267,
+     "era": "03-first-scripted-battle..04-free-movement",
+     "pc": "$C0BFAE",
+     "leg": 0,
+     "battles_fought": 1,
+     "player_pos": "26,26"
+    },
+    {
+     "action": "clear",
+     "frame": 42758,
+     "era": "03-first-scripted-battle..04-free-movement",
+     "pc": "$C0BFC6",
+     "leg": 0,
+     "battles_fought": 4,
+     "player_pos": "26,01"
+    },
+    {
+     "action": "set",
+     "frame": 49832,
+     "era": "04-free-movement..05-mines-entry",
+     "pc": "$C0BFAE",
+     "leg": 7,
+     "battles_fought": 5,
+     "player_pos": "1E,25"
+    },
+    {
+     "action": "clear",
+     "frame": 50878,
+     "era": "04-free-movement..05-mines-entry",
+     "pc": "$C0BFC6",
+     "leg": 16,
+     "battles_fought": 5,
+     "player_pos": "1F,14"
+    }
+   ]
+  },
+  {
+   "id": "EVF-1EA0-$C1",
+   "array_base": "WRAM:+$1EA0",
+   "flag_number": "$C1",
+   "byte": "WRAM:+$1EB8",
+   "bit": 1,
+   "classification": "latched",
+   "first_set_frame": 31140,
+   "first_set_era": "02-narshe-entry..03-first-scripted-battle",
+   "final_state": "set",
+   "set_writer_pcs": [
+    "$C0B5B6"
+   ],
+   "clear_writer_pcs": [],
+   "events": [
+    {
+     "action": "set",
+     "frame": 31140,
+     "era": "02-narshe-entry..03-first-scripted-battle",
+     "pc": "$C0B5B6",
+     "leg": 0,
+     "battles_fought": 0,
+     "player_pos": "26,31"
+    }
+   ]
+  },
+  {
+   "id": "EVF-1EA0-$CC",
+   "array_base": "WRAM:+$1EA0",
+   "flag_number": "$CC",
+   "byte": "WRAM:+$1EB9",
+   "bit": 4,
+   "classification": "transient",
+   "first_set_frame": 2528,
+   "first_set_era": "power-on..00-new-game",
+   "final_state": "clear",
+   "set_writer_pcs": [
+    "$C0B5B6"
+   ],
+   "clear_writer_pcs": [
+    "$C0B5F2"
+   ],
+   "events": [
+    {
+     "action": "set",
+     "frame": 2528,
+     "era": "power-on..00-new-game",
+     "pc": "$C0B5B6",
+     "leg": 0,
+     "battles_fought": 0,
+     "player_pos": "08,08"
+    },
+    {
+     "action": "clear",
+     "frame": 18981,
+     "era": "01-opening-cinematic..02-narshe-entry",
+     "pc": "$C0B5F2",
+     "leg": 0,
+     "battles_fought": 0,
+     "player_pos": "26,3A"
+    }
+   ]
+  },
+  {
+   "id": "EVF-1EA0-$CF",
+   "array_base": "WRAM:+$1EA0",
+   "flag_number": "$CF",
+   "byte": "WRAM:+$1EB9",
+   "bit": 7,
+   "classification": "transient",
+   "first_set_frame": 3359,
+   "first_set_era": "power-on..00-new-game",
+   "final_state": "clear",
+   "set_writer_pcs": [
+    "$C0C034"
+   ],
+   "clear_writer_pcs": [
+    "$C0B5F2"
+   ],
+   "events": [
+    {
+     "action": "set",
+     "frame": 3359,
+     "era": "power-on..00-new-game",
+     "pc": "$C0C034",
+     "leg": 0,
+     "battles_fought": 0,
+     "player_pos": "12,19"
+    },
+    {
+     "action": "clear",
+     "frame": 3359,
+     "era": "power-on..00-new-game",
+     "pc": "$C0B5F2",
+     "leg": 0,
+     "battles_fought": 0,
+     "player_pos": "12,19"
+    },
+    {
+     "action": "set",
+     "frame": 50878,
+     "era": "04-free-movement..05-mines-entry",
+     "pc": "$C0C034",
+     "leg": 16,
+     "battles_fought": 5,
+     "player_pos": "1F,14"
+    },
+    {
+     "action": "clear",
+     "frame": 50880,
+     "era": "04-free-movement..05-mines-entry",
+     "pc": "$C0B5F2",
+     "leg": 16,
+     "battles_fought": 5,
+     "player_pos": "1F,14"
+    }
+   ]
+  },
+  {
+   "id": "EVF-1EA0-$E3",
+   "array_base": "WRAM:+$1EA0",
+   "flag_number": "$E3",
+   "byte": "WRAM:+$1EBC",
+   "bit": 3,
+   "classification": "latched",
+   "first_set_frame": 2520,
+   "first_set_era": "power-on..00-new-game",
+   "final_state": "set",
+   "set_writer_pcs": [
+    "$C0B5B6"
+   ],
+   "clear_writer_pcs": [],
+   "events": [
+    {
+     "action": "set",
+     "frame": 2520,
+     "era": "power-on..00-new-game",
+     "pc": "$C0B5B6",
+     "leg": 0,
+     "battles_fought": 0,
+     "player_pos": "08,08"
+    }
+   ]
+  },
+  {
+   "id": "EVF-1EC0-$E0",
+   "array_base": "WRAM:+$1EC0",
+   "flag_number": "$E0",
+   "byte": "WRAM:+$1EDC",
+   "bit": 0,
+   "classification": "latched",
+   "first_set_frame": 2516,
+   "first_set_era": "power-on..00-new-game",
+   "final_state": "set",
+   "set_writer_pcs": [
+    "$C0B5CA"
+   ],
+   "clear_writer_pcs": [],
+   "events": [
+    {
+     "action": "set",
+     "frame": 2516,
+     "era": "power-on..00-new-game",
+     "pc": "$C0B5CA",
+     "leg": 0,
+     "battles_fought": 0,
+     "player_pos": "08,08"
+    }
+   ]
+  },
+  {
+   "id": "EVF-1EC0-$F0",
+   "array_base": "WRAM:+$1EC0",
+   "flag_number": "$F0",
+   "byte": "WRAM:+$1EDE",
+   "bit": 0,
+   "classification": "latched",
+   "first_set_frame": 2516,
+   "first_set_era": "power-on..00-new-game",
+   "final_state": "set",
+   "set_writer_pcs": [
+    "$C0B5CA"
+   ],
+   "clear_writer_pcs": [],
+   "events": [
+    {
+     "action": "set",
+     "frame": 2516,
+     "era": "power-on..00-new-game",
+     "pc": "$C0B5CA",
+     "leg": 0,
+     "battles_fought": 0,
+     "player_pos": "08,08"
+    }
+   ]
+  },
+  {
+   "id": "EVF-1EC0-$FE",
+   "array_base": "WRAM:+$1EC0",
+   "flag_number": "$FE",
+   "byte": "WRAM:+$1EDF",
+   "bit": 6,
+   "classification": "latched",
+   "first_set_frame": 2528,
+   "first_set_era": "power-on..00-new-game",
+   "final_state": "set",
+   "set_writer_pcs": [
+    "$C0B5CA"
+   ],
+   "clear_writer_pcs": [],
+   "events": [
+    {
+     "action": "set",
+     "frame": 2528,
+     "era": "power-on..00-new-game",
+     "pc": "$C0B5CA",
+     "leg": 0,
+     "battles_fought": 0,
+     "player_pos": "08,08"
+    }
+   ]
+  },
+  {
+   "id": "EVF-1EC0-$FF",
+   "array_base": "WRAM:+$1EC0",
+   "flag_number": "$FF",
+   "byte": "WRAM:+$1EDF",
+   "bit": 7,
+   "classification": "transient",
+   "first_set_frame": 2516,
+   "first_set_era": "power-on..00-new-game",
+   "final_state": "clear",
+   "set_writer_pcs": [
+    "$C0B98A"
+   ],
+   "clear_writer_pcs": [
+    "$C0B951"
+   ],
+   "events": [
+    {
+     "action": "set",
+     "frame": 2516,
+     "era": "power-on..00-new-game",
+     "pc": "$C0B98A",
+     "leg": 0,
+     "battles_fought": 0,
+     "player_pos": "08,08"
+    },
+    {
+     "action": "clear",
+     "frame": 2527,
+     "era": "power-on..00-new-game",
+     "pc": "$C0B951",
+     "leg": 0,
+     "battles_fought": 0,
+     "player_pos": "08,08"
+    }
+   ]
+  }
+ ],
+ "runs": {
+  "verified": [
+   "run1",
+   "run2"
+  ],
+  "observational": [
+   "gui1"
+  ]
+ },
+ "local_evidence_sha256": {
+  "run1-flags.jsonl": "fba398c0cc820dd008afacfa1e23b23897d574fc98810dcbe836d78e85eee97d",
+  "run1-snapshots.log": "25b9d5bd97ace41cad7a415a032af21b41f71813d6b164a84bb5feb1c90c53b3",
+  "run1-events.log": "650b242d716f955517425a48bab56b52a6dbdd790a9a924c59e355c598010aa6",
+  "run1-wram-final.bin": "c26453d3664a4ec3178ad58634f93b972b61be278600f27ec85516ae34401fcf",
+  "run2-flags.jsonl": "fba398c0cc820dd008afacfa1e23b23897d574fc98810dcbe836d78e85eee97d",
+  "run2-snapshots.log": "25b9d5bd97ace41cad7a415a032af21b41f71813d6b164a84bb5feb1c90c53b3",
+  "run2-events.log": "79cf468705d97efcc5d35036b93a93f855aee6389d84d581016362c7f0c0a826",
+  "run2-wram-final.bin": "c26453d3664a4ec3178ad58634f93b972b61be278600f27ec85516ae34401fcf",
+  "gui1-flags.jsonl": "b694c19299d0a922ca17e6ebca76b097a03c33a5407328acc48b12ab85536ebe",
+  "gui1-snapshots.log": "b78ebe6c1340dad844f3bdcbfa33ad230ef27b78f908b6c7e9a5f1b0a27786eb",
+  "gui1-events.log": "265c61460cd0c5f49bc2e2a833ee0c112bd6c2256d8656bf353e7b6c5706d799",
+  "gui1-wram-final.bin": "c26453d3664a4ec3178ad58634f93b972b61be278600f27ec85516ae34401fcf"
+ }
+}

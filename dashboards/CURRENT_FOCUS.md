@@ -47,11 +47,16 @@ non-byte-stable frame capture.
 - Battle 1 rewards **32 EXP / 96 GP**, with post-battle HP/MP written
   back into the field character block (`$C2496E`/`$C24979` →
   `+$1609`/`+$160D`).
-- **Event-flag system located** (CONTRA-0002): three bit arrays at
-  `WRAM:+$1E80`/`+$1EA0`/`+$1EC0`, set via `ORA $C0BAFC,X` /
-  `STA $1EA0,Y` with a flag-number decoder at `ROMCPU:$BAED`
-  (Y = flag/8, X = flag&7). `+$1EA5` — twice mistaken for a map
-  indicator — is byte 5 of the `+$1EA0` array (flags `$28`-`$2F`).
+- **Event-flag system located, decoded and inventoried**
+  (CONTRA-0002 → EXP-0037/DISC-0008): three bit arrays at
+  `WRAM:+$1E80`/`+$1EA0`/`+$1EC0` (decoder `ROMCPU:$BAED`, masks
+  `$C0BAFC`/`$C0BB04`). The whole opening touches exactly **20
+  flags** — 11 latched story flags, 4 transient, 5 engine working
+  bits — deterministically across GUI and headless runs. The
+  16-handler script-command family covers eight bases (five beyond
+  the verified three, static-only), and every handler tail anchors
+  the event interpreter at candidate `ROMCPU:$C09B5C`. Inventory:
+  `data/scenarios/opening-event-flags.json`.
 - Position bytes are **not field-meaningful during battle**.
 
 ## Controlled lab variables (whole program)
@@ -62,15 +67,17 @@ non-byte-stable frame capture.
 
 ## Next exact action
 
-**EXP-0037 — map the opening's event flags.** CONTRA-0002 removed
-`+$1EA5` as a map lead and replaced it with something larger: the
-event-flag arrays and their set/clear routines. The bounded next unit
-write-watches `$1E80`/`$1EA0`/`$1EC0` across the scheduled route to
-record **which flag numbers the opening sets and when** — that serves
-B16 (treasure/interaction flags), B19 (post-battle state) and
-persistence, and gives the event engine (CEN-EVENT-0001) a concrete
-anchor it has never had.
+**Golden route segment 5 — mines traversal to milestone
+`06-random-encounter` (EXP-0038).** Milestone 05 is deterministic and
+the flag inventory gives every subsequent unit a persistent-state
+baseline. Extend the route controller into the mines, reach the first
+random encounter reproducibly, and capture the encounter trigger
+context on the way (`+$11E0` producer, CEN-WORLD-0006). Most direct
+advance toward Whelk (B11–B13).
 
-The map header / tileset question (CEN-WORLD-0004) is **still open and
-untouched** — `+$1EA5` was never going to answer it, so that lead is
-now genuinely unstarted and needs its own discriminator.
+Also newly available, not chosen: static-decode of the event
+interpreter from its first concrete anchor (`ROMCPU:$C09B5C`,
+EXP-0037) — high leverage on B02–B07 but not scenario-critical-path;
+and the map header / tileset question (CEN-WORLD-0004), still open and
+untouched, which needs its own discriminator (VRAM/DMA watch across
+the reproducible mines transition).

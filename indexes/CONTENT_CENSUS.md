@@ -22,14 +22,14 @@
 | CEN-CHAR-0002 | CHAR | party formation | Party formation and follower chain | OBSERVED | ENCOUNTERED | confirmed |
 | CEN-CHAR-0003 | CHAR | field player object | Field player/NPC objects (Magitek armor walker, guards, townsfolk) | OBSERVED | INPUTS_CAPTURED | confirmed |
 | CEN-CHAR-0004 | CHAR | character records | Field character-record block (~WRAM:+$1600) | CANDIDATE_LOCATION | OUTPUTS_CAPTURED | strong-hypothesis |
-| CEN-EVENT-0001 | EVENT | event bytecode | Event scripting engine (opening scripted sequence) | OBSERVED | ENCOUNTERED | confirmed |
+| CEN-EVENT-0001 | EVENT | event bytecode | Event scripting engine (opening scripted sequence) | CANDIDATE_LOCATION | ENCOUNTERED | confirmed |
 | CEN-EVENT-0002 | EVENT | dialogue | Dialogue text content and encoding | OBSERVED | ENCOUNTERED | confirmed |
 | CEN-EVENT-0003 | EVENT | naming events | Character naming state (Terra as '?????') | OBSERVED | ENCOUNTERED | confirmed |
 | CEN-EVENT-0004 | EVENT | cutscenes | Title screen and attract-mode flow | OBSERVED | INPUTS_CAPTURED | confirmed |
 | CEN-EVENT-0005 | EVENT | scripted battles | Scripted battle invocation (Narshe gate guard, formation 2) | LOCATED | NORMAL_PATH_VERIFIED | confirmed |
 | CEN-EVENT-0006 | EVENT | scripted battles | Multiple scripted battles precede free field movement in the opening | LOCATED | NORMAL_PATH_VERIFIED | confirmed |
 | CEN-EVENT-0007 | EVENT | scripted battles | Fifth scripted battle en route to the mines | LOCATED | NORMAL_PATH_VERIFIED | confirmed |
-| CEN-EVENT-0008 | EVENT | event flags | Event-flag bit arrays and their set/clear routines | FORMAT_DECODED | OUTPUTS_CAPTURED | confirmed |
+| CEN-EVENT-0008 | EVENT | event flags | Event-flag bit arrays and their set/clear routines | FORMAT_DECODED | NORMAL_PATH_VERIFIED | confirmed |
 | CEN-GFX-0001 | GFX | fonts | Battle HUD fixed 8x8 text tile block | REGRESSION_TESTED | OUTPUTS_CAPTURED | confirmed |
 | CEN-GFX-0002 | GFX | character sprites | Field sprite assets (armor walker, NPCs, townsfolk) | OBSERVED | ENCOUNTERED | confirmed |
 | CEN-GFX-0003 | GFX | battle backgrounds | Battle background (cave scene) | OBSERVED | ENCOUNTERED | confirmed |

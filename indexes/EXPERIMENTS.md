@@ -40,3 +40,4 @@
 | EXP-0034 | golden-route-seg3b | completed | see record | [EXP-0034-golden-route-seg3b](../docs/experiments/EXP-0034-golden-route-seg3b.md) |
 | EXP-0035 | golden-route-seg4 | completed | see record | [EXP-0035-golden-route-seg4](../docs/experiments/EXP-0035-golden-route-seg4.md) |
 | EXP-0036 | scheduled-route-to-mines | completed | see record | [EXP-0036-scheduled-route-to-mines](../docs/experiments/EXP-0036-scheduled-route-to-mines.md) |
+| EXP-0037 | opening-event-flags | completed | see record | [EXP-0037-opening-event-flags](../docs/experiments/EXP-0037-opening-event-flags.md) |

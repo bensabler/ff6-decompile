@@ -8,11 +8,16 @@ import (
 	"testing"
 )
 
-// The Mesen probe executes the route; MinesRoute() is the tracked model of
-// it. Two sources of truth drift silently, so this test parses the probe's
-// ROUTE table and asserts the leg sequence matches. If the probe is
-// intentionally changed, update MinesRoute() in the same commit.
-const probePath = "../../../mesen/probes/EXP-0036.lua"
+// The Mesen probes execute the route; MinesRoute() is the tracked model of
+// it. Multiple sources of truth drift silently, so this test parses each
+// probe's ROUTE table and asserts the leg sequence matches. If a probe is
+// intentionally changed, update MinesRoute() in the same commit. EXP-0037
+// carries a copy of the EXP-0036 route (instrumentation-only additions),
+// so both encodings are guarded.
+var probePaths = []string{
+	"../../../mesen/probes/EXP-0036.lua",
+	"../../../mesen/probes/EXP-0037.lua",
+}
 
 var (
 	legLineRe = regexp.MustCompile(`\{\s*n\s*=\s*(\d+),\s*kind\s*=\s*"(\w+)"(.*)$`)
@@ -31,7 +36,7 @@ type probeLeg struct {
 	timeout int64
 }
 
-func parseProbeRoute(t *testing.T) []probeLeg {
+func parseProbeRoute(t *testing.T, probePath string) []probeLeg {
 	t.Helper()
 	data, err := os.ReadFile(filepath.Clean(probePath))
 	if err != nil {
@@ -75,7 +80,15 @@ func parseProbeRoute(t *testing.T) []probeLeg {
 }
 
 func TestProbeRouteMatchesModel(t *testing.T) {
-	probe := parseProbeRoute(t)
+	for _, probePath := range probePaths {
+		t.Run(filepath.Base(probePath), func(t *testing.T) {
+			assertProbeMatchesModel(t, probePath)
+		})
+	}
+}
+
+func assertProbeMatchesModel(t *testing.T, probePath string) {
+	probe := parseProbeRoute(t, probePath)
 	model := MinesRoute()
 
 	if len(probe) != len(model.Legs) {

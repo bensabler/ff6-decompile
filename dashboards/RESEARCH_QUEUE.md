@@ -34,10 +34,21 @@ Ordered next units (reorder when evidence exposes a better chain):
 - [x] **CONTRA-0002:** `+$1EA5` map-id vs map-load-target — **both
   refuted**; it is an event-flag byte. Event-flag system located
   ([record](../docs/contradictions/CONTRA-0002-1ea5-map-id-vs-event-flags.md)).
-- [ ] **EXP-0037 (recommended next): opening event flags.** Write-watch
-  `$1E80`/`$1EA0`/`$1EC0` across the scheduled route to map which flag
-  numbers the opening sets and when (CEN-EVENT-0008). Serves B16, B19,
-  persistence; anchors CEN-EVENT-0001.
+- [x] **EXP-0037: opening event flags** — done: all writes to
+  `$1E80`/`$1EA0`/`$1EC0` inventoried across the route (20 flags:
+  11 latched story, 4 transient, 5 working bits), deterministic across
+  one GUI + two headless runs; every writer PC statically decoded;
+  16-handler family over eight bases found; event interpreter anchored
+  at candidate `$C09B5C` (CEN-EVENT-0001); GUI/testrunner parity
+  verified for this schedule; implemented as `internal/game/eventflags`
+  ([record](../docs/experiments/EXP-0037-opening-event-flags.md),
+  [DISC-0008](../docs/discoveries/DISC-0008-event-flag-system.md),
+  inventory `data/scenarios/opening-event-flags.json`).
+- [ ] **Golden route segment 5 (recommended next): mines traversal →
+  milestone `06-random-encounter`.** Extend the route controller into
+  the mines from milestone 05; capture the encounter trigger
+  (`+$11E0` producer context, CEN-WORLD-0006) on the way. Most direct
+  advance toward Whelk (B11-B13).
 - [ ] **Map header / tileset load path** (CEN-WORLD-0004) — still open
   and now genuinely unstarted; `+$1EA5` was a false lead. Needs its own
   discriminator (candidate: VRAM/DMA watch across the mines transition,
@@ -53,7 +64,14 @@ Ordered next units (reorder when evidence exposes a better chain):
   the frames before battle detection.
 - [ ] New-game initialization capture (B01; CEN-SAVE-0001).
 - [ ] Event dispatcher location (B03/B05; CEN-EVENT-0001) — largest
-  single blocker.
+  single blocker; **now anchored**: every decoded event-command
+  handler ends `JMP $C09B5C` with A = plausible command length
+  (EXP-0037). Next: static-decode `$C09B5C` and its callers to find
+  the dispatch loop and opcode table.
+- [ ] Extended flag arrays (CEN-EVENT-0008 follow-up): write-watch the
+  statically-decoded additional bases (`$1EE0`-`$1F5F`, `$1DC9`) on a
+  future route unit; capture a save event to settle SRAM backing
+  (CEN-SAVE-0001).
 - [ ] Map/transition/collision data (B06/B08–B11; CEN-WORLD-0001..0004).
 - [ ] `+$11E0` encounter-roll producer (B12; CEN-WORLD-0006).
 - [ ] Encounter packs + opening monster set, names, rewards, AI

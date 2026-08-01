@@ -1,5 +1,20 @@
 # Activity Log
 
+- 2026-08-01 (autonomous) — **EXP-0037: opening event-flag inventory
+  complete.** All writes to `$1E80`/`$1EA0`/`$1EC0` captured across
+  the scheduled route (one visible GUI pass + two headless evidence
+  runs): 20 flags touched — 11 latched story flags, 4 transient, 5
+  engine working bits — 162 value-changing writes, byte-identical
+  across runs on every channel, final WRAM = milestone 05 (now five
+  byte-identical runs). Every writer PC statically decoded; the
+  16-handler script-command family found over eight bases; event
+  interpreter anchored at candidate `$C09B5C` (CEN-EVENT-0001);
+  GUI/testrunner parity verified for this schedule; `$1EA5`'s
+  `$00→$01→$05→$0D` reproduced as `EVF-1EA0-$28/$2A/$2B`. New:
+  DISC-0008, `internal/game/eventflags` (+tests), ROM-0027..0032,
+  `data/scenarios/opening-event-flags.json`. Next: EXP-0038 (mines
+  traversal to milestone 06).
+
 - 2026-08-01 (audit) — Project audit focused on route tables vs raw
   recon logs vs `internal/scenario`: recon command transcript archived
   into EXP-0035 evidence (was only in mutable mesen/out), "A x3" and a

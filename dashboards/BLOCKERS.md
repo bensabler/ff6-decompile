@@ -8,8 +8,12 @@ Soft items:
   (`--testrunner --timeout=7200` with `FF6_OUT` set and frame-scheduled
   input): with the display locked, GUI Mesen either crashes at launch
   (Avalonia RenderTimer −6661) or silently never loads the script
-  window (2026-07-30, EXP-0021). GUI/testrunner input-latching parity
-  is assumed, not yet verified.
+  window (2026-07-30, EXP-0021). ~~GUI/testrunner input-latching parity
+  is assumed, not yet verified~~ — **verified for the full opening
+  schedule** (2026-08-01, EXP-0037): one GUI run and two headless runs
+  produce byte-identical WRAM at frame 51 578 and identical
+  event-flag write timelines (frame+addr+value+PC). Parity beyond this
+  schedule's input pattern remains untested.
 - Live MP verification (research queue) additionally needs a battle
   savestate with an MP-consuming action — the Magitek intro battle has
   none.

@@ -612,6 +612,23 @@
       "falsifying_outcome": "a leg times out, runs disagree on leg coordinates/battle trigger/formation id/$1EA5 sequence, or the final coordinate is not (26,1C) with $1EA5=$0D",
       "status": "completed",
       "record": "docs/experiments/EXP-0036-scheduled-route-to-mines.md"
+    },
+    {
+      "schema_version": "1.0",
+      "id": "EXP-0037",
+      "question": "Across the scheduled route (power-on to milestone 05), which bytes and bits of the event-flag arrays at WRAM:+$1E80/+$1EA0/+$1EC0 are written, by what instruction, at what frame, and in which scenario beat?",
+      "starting_state": {
+        "emulator": "Mesen 2.1.1 macOS x86_64 (GUI exploratory pass + --testrunner evidence passes)",
+        "rom_sha256": "0f51b4fca41b7fd509e4b8f9d543151f68efa5e97b08493e4b2a0c06f5d8d5e2",
+        "state": "power-on; EXP-0036 17-leg scheduled route unchanged; controlled lab (AllZeros RAM, virgin SRAM); write watch over +$1E80-+$1EDF with JSONL timeline and array snapshots"
+      },
+      "expected_outcomes": [
+        "every value-changing write attributable (frame, PC, bit); snapshots match write-reconstructed state; two headless runs produce identical timelines; the known $1EA5 sequence reappears as EVF-1EA0-$28/$2A/$2B",
+        "runs disagree, snapshots diverge from reconstruction, or writes bypass the monitored span"
+      ],
+      "falsifying_outcome": "snapshot mismatch (unmonitored write path), cross-run timeline divergence, or failure to reproduce the CONTRA-0002/EXP-0036 $1EA5 observations",
+      "status": "completed",
+      "record": "docs/experiments/EXP-0037-opening-event-flags.md"
     }
   ]
 }

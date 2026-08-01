@@ -494,6 +494,118 @@
       "overlaps": [],
       "status": "known",
       "notes": "id x15 addressing + $CF6200/$CF5900 reads; adjacent to ROM-0009."
+    },
+    {
+      "id": "ROM-0027",
+      "start": 46483,
+      "size": 320,
+      "bank": "ROMCPU:$C0B593-$C0B6D2",
+      "classification": "CODE",
+      "owner": "CEN-EVENT-0008",
+      "format": "16 uniform 20-byte event-command flag set/clear handlers",
+      "confidence": "confirmed",
+      "evidence": [
+        "docs/experiments/EXP-0037-opening-event-flags.md (static decode of live-observed writer PCs)",
+        "docs/contradictions/CONTRA-0002-1ea5-map-id-vs-event-flags.md"
+      ],
+      "consumers": [],
+      "overlaps": [],
+      "status": "known",
+      "notes": "LDA $EB / JSR $BAED / LDA base,Y / ORA $C0BAFC,X (set) or AND $C0BB04,X (clear) / STA base,Y / LDA #$02 / JMP $C09B5C. Bases in order: set $1E80/$1EA0/$1EC0, clear $1E80/$1EA0/$1EC0, set $1EE0/$1F00/$1F20/$1F40, clear $1EE0/$1F00/$1F20/$1F40, set $1DC9, clear $1DC9. Family may continue past $C0B6D2 (undecoded). Live writers observed by EXP-0037: stores $C0B5B3/$C0B5C7/$C0B5EF."
+    },
+    {
+      "id": "ROM-0028",
+      "start": 47785,
+      "size": 83,
+      "bank": "ROMCPU:$C0BAA9-$C0BAFB",
+      "classification": "CODE",
+      "owner": "CEN-EVENT-0008",
+      "format": "6 flag-test routines + flag-number index decoder",
+      "confidence": "confirmed",
+      "evidence": [
+        "docs/experiments/EXP-0037-opening-event-flags.md (static decode of live-observed writer PCs)",
+        "docs/contradictions/CONTRA-0002-1ea5-map-id-vs-event-flags.md"
+      ],
+      "consumers": [],
+      "overlaps": [],
+      "status": "known",
+      "notes": "Tests (JSR $BAED / LDA base,Y / AND $C0BAFC,X / RTS) for bases $1E80/$1EA0/$1EE0/$1F00/$1F20/$1F40 \u2014 note $1EC0 absent here. Decoder $C0BAED: REP #$20/TAX/LSR x3/TAY/TDC/SEP #$20/TXA/AND #$07/TAX/RTS (Y=flag/8, X=flag&7)."
+    },
+    {
+      "id": "ROM-0029",
+      "start": 47868,
+      "size": 16,
+      "bank": "ROMCPU:$C0BAFC-$C0BB0B",
+      "classification": "DATA_TABLE",
+      "owner": "CEN-EVENT-0008",
+      "format": "8-byte set-mask table + 8-byte clear-mask table",
+      "confidence": "confirmed",
+      "evidence": [
+        "docs/experiments/EXP-0037-opening-event-flags.md (static decode of live-observed writer PCs)",
+        "docs/contradictions/CONTRA-0002-1ea5-map-id-vs-event-flags.md"
+      ],
+      "consumers": [
+        "ROM-0027 handlers",
+        "ROM-0028 tests",
+        "$C0BA8D working-bit writer"
+      ],
+      "overlaps": [],
+      "status": "known",
+      "notes": "01 02 04 08 10 20 40 80 / FE FD FB F7 EF DF BF 7F. Mirrored by internal/game/eventflags (SetMasks/ClearMasks)."
+    },
+    {
+      "id": "ROM-0030",
+      "start": 47884,
+      "size": 24,
+      "bank": "ROMCPU:$C0BB0C-$C0BB23",
+      "classification": "CODE",
+      "owner": "CEN-EVENT-0008",
+      "format": "two STZ clear loops",
+      "confidence": "confirmed",
+      "evidence": [
+        "docs/experiments/EXP-0037-opening-event-flags.md (static decode of live-observed writer PCs)",
+        "docs/contradictions/CONTRA-0002-1ea5-map-id-vs-event-flags.md"
+      ],
+      "consumers": [],
+      "overlaps": [],
+      "status": "known",
+      "notes": "$C0BB0C clears $1E80-$1EDF (X=0..$5F; the 96 watched bytes \u2014 live boot writer at frame 21, after-PC $C0BB11). $C0BB18 clears $1E40-$1E6F (X=0..$2F), an adjacent region of unknown role."
+    },
+    {
+      "id": "ROM-0031",
+      "start": 47745,
+      "size": 40,
+      "bank": "ROMCPU:$C0BA81-$C0BAA8",
+      "classification": "CODE",
+      "owner": "CEN-EVENT-0008",
+      "format": "$1EB6 working-bit updater",
+      "confidence": "confirmed",
+      "evidence": [
+        "docs/experiments/EXP-0037-opening-event-flags.md (static decode of live-observed writer PCs)",
+        "docs/contradictions/CONTRA-0002-1ea5-map-id-vs-event-flags.md"
+      ],
+      "consumers": [],
+      "overlaps": [],
+      "status": "known",
+      "notes": "LDY $0803 / LDA $087F,Y / TAX / LDA $1EB6 / AND #$F0 / ORA $C0BAFC,X / STA $1EB6, then bit 4 set/clear from $06 sign. Entry boundary unverified (decoded from $C0BA81). Live after-PCs $C0BA94/$C0BAA0/$C0BAAA dominate the EXP-0037 rewrite counts."
+    },
+    {
+      "id": "ROM-0032",
+      "start": 47424,
+      "size": 128,
+      "bank": "ROMCPU:$C0B940-$C0B9BF",
+      "classification": "CODE",
+      "owner": "CEN-EVENT-0008",
+      "format": "event-command handlers incl. three $1EDF-bit7 copy sequences",
+      "confidence": "confirmed",
+      "evidence": [
+        "docs/experiments/EXP-0037-opening-event-flags.md (static decode of live-observed writer PCs)",
+        "docs/contradictions/CONTRA-0002-1ea5-map-id-vs-event-flags.md"
+      ],
+      "consumers": [],
+      "overlaps": [],
+      "status": "known",
+      "notes": "Fully decoded: $C0B943 (src $0205) / $C0B97B (src $0200) / $C0B9A5 (src $0200) each AND #$80 into $1A, merge into $1EDF bit 7 (flag EVF-1EC0-$FF); stores $C0B94E/$C0B987/$C0B9B3. Interleaved handler code between them not yet decoded; handler tails JMP $C09B5C."
     }
   ]
 }

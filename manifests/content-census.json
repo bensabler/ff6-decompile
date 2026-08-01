@@ -682,12 +682,14 @@
       "category": "event bytecode",
       "name": "Event scripting engine (opening scripted sequence)",
       "description": "checkpoint1 shows a scripted guard-chase beat: dialogue + positioned actors; an event interpreter with flags and branching must exist.",
-      "reconstruction_status": "OBSERVED",
+      "reconstruction_status": "CANDIDATE_LOCATION",
       "runtime_status": "ENCOUNTERED",
       "rom_revision": "0f51b4fca41b7fd509e4b8f9d543151f68efa5e97b08493e4b2a0c06f5d8d5e2",
       "rom_locations": [],
       "wram_locations": [],
-      "cpu_routines": [],
+      "cpu_routines": [
+        "ROMCPU:$C09B5C (candidate interpreter-advance: every decoded event-command handler ends LDA #$01|#$02 / JMP $C09B5C with A = plausible operand length)"
+      ],
       "spc_locations": [],
       "record_count_expected": null,
       "record_count_found": null,
@@ -697,7 +699,8 @@
       "producers": [],
       "related_experiments": [
         "EXP-0025",
-        "EXP-0031"
+        "EXP-0031",
+        "EXP-0037"
       ],
       "related_discoveries": [],
       "related_implementations": [],
@@ -709,10 +712,15 @@
         "local_artifacts/experiments/EXP-0025/ (screenshots; hashes.sha256)"
       ],
       "confidence": "confirmed",
-      "unknown_fields": [],
+      "unknown_fields": [
+        "dispatcher loop PC and opcode-table location",
+        "opcode set and operand formats",
+        "script pointer variable",
+        "script source in ROM (CEN-EVENT-0002 ties in)"
+      ],
       "contradictions": [],
-      "next_action": "Exec-census a dialogue advance (A press) to find the event dispatcher loop PC.",
-      "notes": "EXP-0031: the real opening auto-runs (timed dialogue) until the scripted Narshe-entry box, which waits for A indefinitely \u2014 the engine distinguishes timed from input-waiting boxes."
+      "next_action": "Static-decode ROMCPU:$C09B5C and its callers to find the dispatch loop and opcode table; then exec-census a dialogue advance to confirm live.",
+      "notes": "EXP-0031: the real opening auto-runs (timed dialogue) until the scripted Narshe-entry box, which waits for A indefinitely \u2014 the engine distinguishes timed from input-waiting boxes. EXP-0037 static decode: the 16 flag set/clear command handlers at ROMCPU:$C0B593-$C0B6D2 (and the $1EDF-bit7 copy handlers at $C0B940-$C0B9BF) all terminate in LDA #$01 or #$02 / JMP $C09B5C, consistent with an interpreter advancing its script pointer by the command length. $C09B5C is the first concrete code anchor for this engine; the flag number arrives in DP $EB, so $EB plausibly holds a fetched operand."
     },
     {
       "schema_version": "1.0",
@@ -2084,7 +2092,8 @@
       "consumers": [],
       "producers": [],
       "related_experiments": [
-        "EXP-0031"
+        "EXP-0031",
+        "EXP-0037"
       ],
       "related_discoveries": [],
       "related_implementations": [],
@@ -2098,7 +2107,7 @@
         "whether the values seed RNG or are dead reads"
       ],
       "contradictions": [],
-      "notes": "",
+      "notes": "EXP-0037 side observation (register-only): --testrunner stdout emits [CPU] Uninitialized memory read diagnostics at boot under AllZeros RAM; 127 events across WRAM:+$1A6D, +$1D54, +$1F6E/+$1F6F and the contiguous run +$1FD3-+$1FF2 \u2014 all disjoint from the five previously registered addresses. +$1A6D is later the gate byte (CMP #$01) of the battle-era flag-clear routine at ROMCPU:$C04AF0 (EXP-0037 static decode); +$1F6E/6F sit past the statically-decoded flag bases. Raw diagnostic preserved in local_artifacts/experiments/EXP-0037/testrunner-stdout-run1.log.",
       "id": "CEN-QUIRK-0001",
       "domain": "QUIRK",
       "category": "hardware assumptions",
@@ -2449,17 +2458,20 @@
         "WRAM:+$1EC0"
       ],
       "cpu_routines": [
-        "ROMCPU:$BAED",
-        "ROMCPU:$C0B5B3",
-        "ROMCPU:$C0B598",
-        "ROMCPU:$C0B5C0",
-        "ROMCPU:$C07972",
-        "ROMCPU:$C0798C",
-        "ROMCPU:$C079A6"
+        "ROMCPU:$BAED (flag-number decoder: Y=flag/8, X=flag&7)",
+        "ROMCPU:$C0B593-$C0B6D2 (16 uniform script set/clear handlers; bases $1E80/$1EA0/$1EC0/$1EE0/$1F00/$1F20/$1F40/$1DC9; ROM-0027)",
+        "ROMCPU:$C0BAA9-$C0BAE9 (flag test routines for $1E80/$1EA0/$1EE0/$1F00/$1F20/$1F40; ROM-0028)",
+        "ROMCPU:$C0BB0C (boot clear of $1E80-$1EDF; live at frame 21)",
+        "ROMCPU:$C0BB18 (boot clear of $1E40-$1E6F, role unknown)",
+        "ROMCPU:$C0B943/$C0B97B/$C0B9A5 ($0205/$0200 bit-7 copy into $1EDF bit 7; ROM-0032)",
+        "ROMCPU:$C0BA81 ($1EB6 working-bit updater: facing nibble + bit 4; ROM-0031)",
+        "ROMCPU:$C0BFA6 region ($1EB6 bit-6 busy latch; STZ $1EBE/$1EBF)",
+        "ROMCPU:$C0C02D ($1EB9 bit-7 direct set)",
+        "ROMCPU:$C04A1D/$C04AF3 (battle-era RMW clears of $1EB6/$1EB7/$1ED8 bits)"
       ],
       "spc_locations": [],
       "record_count_expected": 768,
-      "record_count_found": null,
+      "record_count_found": 20,
       "record_size": null,
       "pointer_tables": [
         "ROMCPU:$C0BAFC (set masks)",
@@ -2469,33 +2481,44 @@
       "producers": [],
       "related_experiments": [
         "EXP-0035",
-        "EXP-0036"
+        "EXP-0036",
+        "EXP-0037"
       ],
-      "related_discoveries": [],
-      "related_implementations": [],
-      "related_tests": [],
-      "runtime_scenarios": [],
+      "related_discoveries": [
+        "DISC-0008"
+      ],
+      "related_implementations": [
+        "internal/game/eventflags (Ref, FlagAt, SetMasks/ClearMasks mirroring $C0BAFC/$C0BB04)"
+      ],
+      "related_tests": [
+        "internal/game/eventflags: TestRefDerivation, TestMaskTablesMatchROMDecode, TestFlagAtRoundTrip, TestMilestone05Value"
+      ],
+      "runtime_scenarios": [
+        "SCN-0001 golden route power-on..milestone 05 (EXP-0037: gui1 + run1 + run2)"
+      ],
       "evidence": [
         "docs/contradictions/CONTRA-0002-1ea5-map-id-vs-event-flags.md (static ROM decode; mask tables and decoder read from the verified ROM)",
         "local_artifacts/experiments/EXP-0036/ (live EVFLAG/MAPC write log: $00->$01->$05->$0D, all from $C0B5B6)"
       ],
       "unknown_fields": [
-        "which array holds which flag family (event vs treasure vs map-state)",
-        "the meaning of individual flag numbers",
-        "whether all three arrays are SRAM-backed",
-        "the flag-test/read routine's callers"
+        "the meaning of individual flag numbers (identifiers stay address-anchored)",
+        "whether the arrays are SRAM-backed (needs a save-event capture)",
+        "whether the statically-decoded extra arrays ($1EE0-$1F5F, $1DC9-$1DE8) are used at runtime",
+        "the role of the $1E40-$1E6F region cleared at boot",
+        "the semantic source of the $0200/$0205 bit copied into EVF-1EC0-$FF",
+        "the flag-test routine callers (who reads these flags, and when)"
       ],
       "contradictions": [],
-      "notes": "",
+      "notes": "EXP-0037 write-watched all 96 bytes of the three arrays across the scheduled opening route: 162 value-changing writes, identical across a GUI run and headless runs (frame+addr+old+new+PC), snapshots replay-consistent, final WRAM byte-identical to milestone 05. 20 flags touched: 11 latched story flags (all via the script handlers), 4 transient, 5 fast-toggling working bits ($1EB6 low nibble + bits 4/6 are engine working state living inside the flag address space). Boot clears the whole span at frame 21. Static decode extends the same handler family to five more bases ($1EE0/$1F00/$1F20/$1F40/$1DC9) \u2014 runtime-unobserved; and $1EC0 has set/clear handlers but no test routine in the decoded family. Tracked inventory: data/scenarios/opening-event-flags.json.",
       "id": "CEN-EVENT-0008",
       "domain": "EVENT",
       "category": "event flags",
       "name": "Event-flag bit arrays and their set/clear routines",
       "description": "Three parallel bit arrays at WRAM:+$1E80, +$1EA0 and +$1EC0, each $20 bytes apart (256 flags each). A shared decoder at ROMCPU:$BAED converts a flag number to array indices: REP #$20 / TAX / LSR x3 / TAY (byte index = flag/8) / TDC / SEP #$20 / TXA / AND #$07 / TAX (bit index = flag&7). Set routines read-modify-write with ORA $C0BAFC,X (masks 01 02 04 08 10 20 40 80); clear routines use AND $C0BB04,X (masks FE FD FB F7 EF DF BF 7F, exact complements). Live-observed writer: STA $1EA0,Y at ROMCPU:$C0B5B3 (the probe reports the following PC, $C0B5B6). Access sites: LDA $1EA0,Y x5 / STA $1EA0,Y x4, with symmetric counts for the $1E80 and $1EC0 arrays. Located by CONTRA-0002 while refuting a map-id reading of WRAM:+$1EA5, which is byte 5 of the $1EA0 array (flags $28-$2F); at milestone 05 its bits 0, 2 and 3 are set, i.e. flags $28, $2A, $2B.",
       "reconstruction_status": "FORMAT_DECODED",
-      "runtime_status": "OUTPUTS_CAPTURED",
+      "runtime_status": "NORMAL_PATH_VERIFIED",
       "confidence": "confirmed",
-      "next_action": "Write-watch $1E80/$1EA0/$1EC0 across the scheduled route to map which flag numbers the opening sets and when; that serves B16 treasure flags and B19 persistence."
+      "next_action": "Extend the write watch to the statically-decoded additional arrays ($1EE0-$1F5F, $1DC9) on a future route unit, and capture a save event to settle SRAM backing; correlate latched opening flags against the treasure/interaction beats (B16) as those systems come under test."
     }
   ]
 }
