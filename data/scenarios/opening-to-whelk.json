@@ -241,7 +241,8 @@
         ],
         "experiments": [
           "EXP-0025",
-          "EXP-0035"
+          "EXP-0035",
+          "EXP-0036"
         ],
         "discoveries": []
       }
@@ -251,7 +252,7 @@
       "name": "Mine entry and map transition",
       "status_default": "PARTIAL",
       "overrides": {},
-      "note": "mines interior reached interactively via the transition at (1F,16)->(26,1C); candidate map-id byte +$1EA5 ($05 exterior / $0D mines). Milestone 05-mines-entry not yet captured from a scheduled run (EXP-0036).",
+      "note": "mines transition reproduced from a scheduled power-on route (EXP-0036); detection is by the player position jump, since +$1EA5 reaches the mines value before the transition is visible. Milestone 05 still unclaimed pending three acceptance runs.",
       "links": {
         "census": [
           "CEN-WORLD-0004",
@@ -259,7 +260,8 @@
         ],
         "experiments": [
           "EXP-0025",
-          "EXP-0035"
+          "EXP-0035",
+          "EXP-0036"
         ],
         "discoveries": []
       }
@@ -319,7 +321,7 @@
       "name": "Monsters reachable before Whelk",
       "status_default": "PARTIAL",
       "overrides": {},
-      "note": "monsters reachable before Whelk so far: records 0 (40 HP/15 MP) and 25 (27 HP/5 MP) from the four scripted battles, plus 19 and 77 from the mines random encounter. Names, AI, rewards, and the other record fields unmapped.",
+      "note": "monsters reachable before Whelk: records 0 (40 HP/15 MP), 25 (27 HP/5 MP) and 27 (115 HP/30 MP) from the five scripted battles, plus 19 and 77 from the mines random encounter. Names, AI, rewards and the other record fields unmapped.",
       "links": {
         "census": [
           "CEN-MONSTER-0001",
@@ -330,7 +332,8 @@
           "EXP-0029",
           "EXP-0030",
           "EXP-0032",
-          "EXP-0034"
+          "EXP-0034",
+          "EXP-0036"
         ],
         "discoveries": []
       }
@@ -583,71 +586,56 @@
       },
       {
         "id": 4,
-        "experiment": "EXP-0035",
+        "experiment": "EXP-0035 (recon) + EXP-0036 (scheduled)",
         "status": "PARTIAL",
         "milestones": [],
-        "route_legs": [
-          {
-            "n": 1,
-            "input": "right",
-            "result": "X $1A->$1B"
+        "encoding": {
+          "legs": 17,
+          "model": "internal/scenario/route.MinesRoute",
+          "probe": "mesen/probes/EXP-0036.lua",
+          "advancement": "state-driven: position targets (overshoot-tolerant), battle edges, elapsed settles",
+          "neutral_frames": 8,
+          "transition_detect": "player X reaching $26 (NOT +$1EA5, which changes before the transition is visible)"
+        },
+        "findings": {
+          "guard_trigger": {
+            "tile": "($1E,$25)",
+            "semantics": "contact-triggered, not tile-occupancy",
+            "note": "EXP-0035's condensed leg table omitted an intermediate up step; corrected"
           },
-          {
-            "n": 2,
-            "input": "up",
-            "result": "Y $2A->$27"
+          "battle5": {
+            "formation": 84,
+            "rom": "ROMFILE:0x0F66EC",
+            "monster_ids": [
+              27,
+              27,
+              0,
+              0
+            ],
+            "new_monster": {
+              "id": 27,
+              "rom": "ROMFILE:0x0F0360",
+              "hp": 115,
+              "mp": 30
+            }
           },
-          {
-            "n": 3,
-            "input": "right",
-            "result": "X->$1E; triggers guard dialogue"
+          "map_context_byte": {
+            "addr": "WRAM:+$1EA5",
+            "writer": "ROMCPU:$C0B5B6",
+            "sequence": [
+              "$00 opening",
+              "$01 mid-opening",
+              "$05 Narshe exterior",
+              "$0D mines"
+            ],
+            "verdict": "NOT a simple current-map byte - reaches $0D while still visibly on the exterior; candidate map-load target / event-state"
           },
-          {
-            "n": 4,
-            "input": "A",
-            "result": "dialogue -> scripted battle 5"
-          },
-          {
-            "n": 5,
-            "input": "A cadence",
-            "result": "battle 5 won; field pos (1E,25)"
-          },
-          {
-            "n": 6,
-            "input": "A then up",
-            "result": "Y $25->$21"
-          },
-          {
-            "n": 7,
-            "input": "left 1 tile, up",
-            "result": "(1D,1E)"
-          },
-          {
-            "n": 8,
-            "input": "right 1 tile, up",
-            "result": "(1E,18)"
-          },
-          {
-            "n": 9,
-            "input": "right 1 tile, up",
-            "result": "(1F,16); mine-shaft dialogue"
-          },
-          {
-            "n": 10,
-            "input": "A x3",
-            "result": "dialogue cleared"
-          },
-          {
-            "n": 11,
-            "input": "up",
-            "result": "(26,1C) - map transition into the mines"
-          }
-        ],
+          "battle_position_bytes": "not field-meaningful during battle (1E,00 at entry, 00,00 at end)"
+        },
         "assertions": {
           "runs_compared": 0,
-          "result": "route walked interactively and the mines interior reached; scheduled encoding and two-run determinism check NOT done (carried to EXP-0036). Milestone 05 deliberately not claimed from interactive recon."
-        },
-        "notes": "the climb is a zigzag: a plain hold-up stalls at Y=$21 and Y=$16, so the up-only cadence used by segments 2-3b cannot walk it"
+          "result": "16-leg encoding reached the mines interior once (screenshot-verified); 17-leg encoding adds the walk to the documented tile. The three required acceptance runs are outstanding, so milestone 05 is NOT claimed."
+        }
       }
     ]
   }

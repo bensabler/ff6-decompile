@@ -78,9 +78,34 @@ unexplained tension at milestone 02). A **fifth scripted battle**
 gates the route (CEN-EVENT-0007); the climb is a zigzag, so the
 up-only cadence used by earlier segments cannot walk it.
 
-**Next exact action:** EXP-0036 — encode EXP-0035's leg table as
-absolute frame windows on top of the EXP-0034 schedule (re-arming
-battle detector kept, so battle 5 is fought and its `+$11E0`
-formation id logged), detect the transition by watching `+$1EA5`
-(which simultaneously tests that byte's falsifier), capture milestone
-`05-mines-entry`, and run the two-run determinism check.
+**Segment 4 (EXP-0036) — route works, milestone still unclaimed.** The
+17-leg **state-driven route controller** walks the whole stretch from
+milestone 04 into the mines interior with no manual correction:
+position targets (`WRAM:+$00AF`/`+$00B0`, overshoot-tolerant), battle
+edges, and elapsed settles, with per-leg timeouts that name the
+earliest divergent leg. Tracked model + tests in
+`internal/scenario/route`, with a probe-sync test that stops the Lua
+and Go encodings drifting apart.
+
+Findings: the guard trigger is at (`$1E`,`$25`) and is
+**contact-triggered** (EXP-0035's condensed table had dropped an
+intermediate `up` step — corrected in place); **battle 5 = formation
+84**, ROM-verified at `0x0F66EC`, monsters {27, 27, 0, 0}, adding
+**record 27** (115 HP / 30 MP, HP anchored to a live word) to the
+pre-Whelk set; position bytes are **not field-meaningful during
+battle**.
+
+**`+$1EA5` falsifier fired.** It reaches the mines value `$0D` during
+the shaft dialogue **while the party is still visibly on the
+exterior** and has not moved, so it is **not** a simple current-map
+byte — the evidence-safe reading is a map-load target / event-state
+value written by `ROMCPU:$C0B5B6`. Transition detection was moved to
+the player-position jump. Confidence deliberately **not** promoted.
+
+**Milestone 05 is NOT claimed:** the acceptance criteria require three
+scheduled power-on runs reaching (`$26`,`$1C`) in the mines, and the
+final 17-leg encoding has not yet completed that set.
+
+**Next exact action:** run the 17-leg encoding three times from
+power-on, byte-compare milestone-05 WRAM across them, and create
+milestone 05 only if all three land at (`$26`,`$1C`) inside the mines.

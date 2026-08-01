@@ -2307,7 +2307,8 @@
         "EXP-0030",
         "EXP-0032",
         "EXP-0033",
-        "EXP-0034"
+        "EXP-0034",
+        "EXP-0036"
       ],
       "related_discoveries": [],
       "related_implementations": [],
@@ -2330,7 +2331,7 @@
       "domain": "MONSTER",
       "category": "monster records",
       "name": "Opening-area monsters reachable before Whelk (records 0 and 25)",
-      "description": "The four scripted opening battles stage only two distinct monster records. Record 0 (ROMFILE:0x0F0000): +$08=40 HP, +$0A=15 MP - verified live as battle slots 6/7 in formation 2. Record 25 (ROMFILE:0x0F0320): +$08=27 HP, +$0A=5 MP - seen in formations 1 and 41, record fields read statically. The random mines encounter (formation 44) additionally stages records 19 and 77 (EXP-0030). Monster names are unknown: the name table is unlocated, so on-screen labels are observational only.",
+      "description": "The five scripted opening-area battles stage three distinct monster records. Record 0 (ROMFILE:0x0F0000): +$08=40 HP, +$0A=15 MP - verified live as battle slots 6/7 in formation 2. Record 25 (ROMFILE:0x0F0320): +$08=27 HP, +$0A=5 MP - seen in formations 1 and 41, record fields read statically. The random mines encounter (formation 44) additionally stages records 19 and 77 (EXP-0030). Monster names are unknown: the name table is unlocated, so on-screen labels are observational only. Record 27 (ROMFILE:0x0F0360): +$08=115 HP, +$0A=30 MP - staged by formation 84, the fifth scripted battle, with its 115 HP anchored to a live enemy HP word (EXP-0036).",
       "reconstruction_status": "LOCATED",
       "runtime_status": "ENCOUNTERED",
       "confidence": "confirmed",
@@ -2347,7 +2348,9 @@
         "WRAM:+$0541",
         "WRAM:+$087A"
       ],
-      "cpu_routines": [],
+      "cpu_routines": [
+        "ROMCPU:$C0B5B6"
+      ],
       "spc_locations": [],
       "record_count_expected": null,
       "record_count_found": null,
@@ -2356,7 +2359,8 @@
       "consumers": [],
       "producers": [],
       "related_experiments": [
-        "EXP-0035"
+        "EXP-0035",
+        "EXP-0036"
       ],
       "related_discoveries": [],
       "related_implementations": [],
@@ -2367,22 +2371,22 @@
       ],
       "unknown_fields": [
         "producers of +$00AF/+$00B0",
-        "what the alias blocks are",
-        "whether +$1EA5 is the map id or a correlate",
-        "subtile/pixel position bytes",
-        "facing"
+        "alias block ownership",
+        "whether $C0B5B6 drives tileset/tilemap loading or only records an intent"
       ],
-      "contradictions": [],
+      "contradictions": [
+        "EXP-0035 read +$1EA5 as a candidate map id; EXP-0036 showed it changes before the transition is visible, weakening that reading"
+      ],
       "notes": "",
       "id": "CEN-WORLD-0007",
       "domain": "WORLD",
       "category": "map headers",
       "name": "Player field position bytes and candidate map-id byte",
-      "description": "Blind low-WRAM diffing across single-tile moves isolated WRAM:+$00AF = player X tile and +$00B0 = player Y tile (each changes by exactly 1 per step on its own axis and is stable on the other). Aliases at +$0541/42, +$0543/44, +$0545/46 and +$087A/7B track identically (followers or a mirror block, undecided). Separately, WRAM:+$1EA5 takes exactly three values across eight independent savestates: $00 (snowfield/opening-approach states), $05 (all four Narshe exterior free-walk states), $0D (both mines-interior states) - a candidate map id. Tension kept: milestone 02 is visually Narshe exterior but reads $00, so either the scripted approach uses a different map record or the byte is not the map id.",
+      "description": "WRAM:+$00AF = player X tile and +$00B0 = player Y tile (each changes by exactly 1 per step on its own axis, stable on the other; EXP-0035, re-verified across 17 scheduled route legs in EXP-0036). Alias blocks at +$0541/42, +$0543/44, +$0545/46 and +$087A/7B mirror the leader with a one-tile lag on the trailing member during turns, re-converging within a leg (follower-chain behaviour, ownership unresolved). Position bytes are NOT field-meaningful during battle (observed 1E,00 at entry and 00,00 at end). WRAM:+$1EA5 is a map-context CANDIDATE only: it progresses $00 -> $01 -> $05 across the scripted opening and reads $0D in the mines, every change written by ROMCPU:$C0B5B6 - but EXP-0036 showed it reaches $0D during the mine-shaft dialogue while the party is still visibly on the exterior and has not moved, so it is NOT a simple current-map byte. Evidence-safe reading: a map-load target / pending-map or event-state value.",
       "reconstruction_status": "CANDIDATE_LOCATION",
       "runtime_status": "INPUTS_CAPTURED",
-      "confidence": "strong-hypothesis",
-      "next_action": "Write-watch +$1EA5 across the mine-entry transition: if its writer also drives tileset/tilemap loading it is the map id (EXP-0036 does this while encoding the route)."
+      "confidence": "tentative-hypothesis",
+      "next_action": "Write-watch ROMCPU:$C0B5B6 and correlate against tileset/tilemap/VRAM loading to decide between map-id and map-load-target readings."
     },
     {
       "schema_version": "1.0",
@@ -2402,7 +2406,8 @@
       "producers": [],
       "related_experiments": [
         "EXP-0034",
-        "EXP-0035"
+        "EXP-0035",
+        "EXP-0036"
       ],
       "related_discoveries": [],
       "related_implementations": [],
@@ -2412,9 +2417,9 @@
         "local_artifacts/experiments/EXP-0035/recon-guard*.png, trial1-final.png; hashes.sha256"
       ],
       "unknown_fields": [
-        "its formation id (no probe armed during recon)",
-        "its monster records",
-        "the trigger region's data source"
+        "the event opcode that invokes the battle",
+        "the trigger region's data source",
+        "whether the trigger is one-time"
       ],
       "contradictions": [],
       "notes": "",
@@ -2422,11 +2427,11 @@
       "domain": "EVENT",
       "category": "scripted battles",
       "name": "Fifth scripted battle en route to the mines",
-      "description": "A guard-dialogue trigger at player tile ($1E,$27) on the Narshe exterior - reached after the free-movement milestone, on the way to the mine entrance - starts a fifth scripted battle (a large quadruped plus guards; enemy HP words observed in slots 6-9 as $73/$28/$28). It sits after the opening's four-battle chain (CEN-EVENT-0006), not within it. A second scripted dialogue at ($1F,$16) precedes the mine shaft itself and gates entry until cleared.",
-      "reconstruction_status": "OBSERVED",
+      "description": "A contact trigger at player tile ($1E,$25) on the Narshe exterior - reached after the free-movement milestone, on the way to the mine entrance - starts a fifth scripted battle: FORMATION 84 ($0054), staged record byte-identical to ROMFILE:0x0F66EC, monster-id bytes 1B 1B 00 00 FF FF = two of record 27 and two of record 0. Record 27 (ROMFILE:0x0F0360) holds 115 HP / 30 MP, and the 115 matches the live enemy HP word seen in EXP-0035. The trigger is contact-based, not tile-occupancy based: standing on the tile tapping A never fires it; pushing into the guard does. A second scripted dialogue at ($1F,$16) gates the mine shaft itself.",
+      "reconstruction_status": "LOCATED",
       "runtime_status": "NORMAL_PATH_VERIFIED",
       "confidence": "confirmed",
-      "next_action": "EXP-0036 arms the re-arming battle detector across this trigger to capture +$11E0 and the staged formation record."
+      "next_action": "Exec-watch the frames before this battle's entry to capture the scripted invocation site (shared with CEN-EVENT-0005)."
     }
   ]
 }

@@ -1,12 +1,14 @@
 # Latest Checkpoint
 
-**[2026-08-01 — EXP-0035: route to the mines (partial)](2026-08-01-exp0035-route-to-mines.md)**
+**[2026-08-01 — EXP-0036: scheduled route to the mines (partial)](2026-08-01-exp0036-scheduled-route.md)**
 
-State: scheduled deterministic route still ends at milestone 04. The
-remaining path to the mines interior is now mapped leg by leg
-(11 legs, zigzag climb, gated by a fifth scripted battle) but was
-walked interactively, so milestone 05 is **not** claimed. Found:
-player tile bytes `WRAM:+$00AF`/`+$00B0` (Strong) and candidate
-map-id `+$1EA5` (Tentative). Exact next action: EXP-0036 — encode the
-leg table into a scheduled probe, capture `05-mines-entry`, two-run
-determinism, and test the `+$1EA5` falsifier.
+State: a 17-leg state-driven route controller walks power-on → mines
+interior with no manual correction (model + tests in
+`internal/scenario/route`, probe-sync guard against the Lua). Battle 5
+= formation 84 {27,27,0,0}, ROM-verified; new pre-Whelk monster record
+27. The `+$1EA5` falsifier **fired** — it reaches the mines value while
+the party is still on the exterior, so it is not a simple map-id byte.
+Milestone 05 **not claimed**: three acceptance runs required, and the
+final encoding has not completed that set. Exact next action: three
+power-on runs of `mesen/probes/EXP-0036.lua`, byte-compare milestone
+WRAM, then promote milestone 05 only if all three land at (`$26`,`$1C`).

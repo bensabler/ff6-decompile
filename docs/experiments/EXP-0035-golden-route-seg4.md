@@ -86,11 +86,21 @@
     is the map id; if it merely correlates, discard.
   - **Route from milestone 04 (start pos X=$1A, Y=$2A):**
 
+    > **Correction (EXP-0036).** This condensed table dropped one step:
+    > the guard dialogue appears at (`$1E`,`$25`), **not** (`$1E`,`$27`).
+    > This unit's own recon log has the missing `up` leg between them
+    > (`right 400 → 1E 27`, `up 400 → 1E 25`, then the dialogue). Two
+    > EXP-0036 runs timed out at (`$1E`,`$27`) before the omission was
+    > found. The corrected sequence is below and in
+    > `internal/scenario/route.MinesRoute`.
+
     | Leg | Input | Result |
     |---|---|---|
     | 1 | right | X $1A→$1B |
     | 2 | up | Y $2A→$27 |
-    | 3 | right | X→$1E — **triggers guard dialogue** |
+    | 3 | right | X→$1E |
+    | 3a | up | Y $27→$25 (**omitted from the original table**) |
+    | 3b | right | pushes into the guard — **triggers dialogue** |
     | 4 | A | dialogue → **battle 5** |
     | 5 | A cadence | battle 5 won; field pos ($1E,$25) |
     | 6 | A, then up | Y $25→$21 |

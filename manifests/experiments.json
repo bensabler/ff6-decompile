@@ -595,6 +595,23 @@
       "falsifying_outcome": "milestone-05 WRAM differs across two power-on runs of the identical schedule",
       "status": "completed",
       "record": "docs/experiments/EXP-0035-golden-route-seg4.md"
+    },
+    {
+      "schema_version": "1.0",
+      "id": "EXP-0036",
+      "question": "Can the complete route from milestone 04 through the Narshe exterior, the fifth scripted battle, the zigzag climb, and the mines transition be reproduced reliably from the scheduled power-on route, with no interactive correction?",
+      "starting_state": {
+        "emulator": "Mesen 2.1.1 macOS x86_64 (--testrunner headless, bridge v2)",
+        "rom_sha256": "0f51b4fca41b7fd509e4b8f9d543151f68efa5e97b08493e4b2a0c06f5d8d5e2",
+        "state": "power-on; EXP-0034 schedule to milestone 04 (frame 46375), then a coordinate-driven 15-leg route controller; controlled lab (AllZeros RAM, virgin SRAM)"
+      },
+      "expected_outcomes": [
+        "three power-on runs execute all 15 legs uncorrected and finish at (26,1C) in the mines with matching per-leg coordinates, formation id and $1EA5 sequence",
+        "a run diverges: reported as the earliest divergent leg with observed vs expected coordinates"
+      ],
+      "falsifying_outcome": "a leg times out, runs disagree on leg coordinates/battle trigger/formation id/$1EA5 sequence, or the final coordinate is not (26,1C) with $1EA5=$0D",
+      "status": "completed",
+      "record": "docs/experiments/EXP-0036-scheduled-route-to-mines.md"
     }
   ]
 }

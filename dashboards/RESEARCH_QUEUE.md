@@ -25,9 +25,16 @@ Ordered next units (reorder when evidence exposes a better chain):
   leg by leg and walked; player tile bytes `+$00AF`/`+$00B0` and
   candidate map-id `+$1EA5` found; milestone 05 not claimed
   ([record](../docs/experiments/EXP-0035-golden-route-seg4.md)).
-- [ ] **EXP-0036: segment 4 scheduled** — encode the leg table,
-  capture `05-mines-entry`, two-run determinism; also tests the
-  `+$1EA5` map-id falsifier and logs battle 5's formation id.
+- [x] **EXP-0036: segment 4 scheduled (partial)** — 17-leg state-driven
+  route controller walks into the mines uncorrected; battle 5 =
+  formation 84 {27,27,0,0}; `+$1EA5` falsifier fired (not a simple map
+  id); milestone 05 unclaimed pending three acceptance runs
+  ([record](../docs/experiments/EXP-0036-scheduled-route-to-mines.md)).
+- [ ] **Milestone 05 acceptance** — three power-on runs of the 17-leg
+  encoding reaching (`$26`,`$1C`) in the mines; byte-compare WRAM.
+- [ ] **`+$1EA5` semantics** — write-watch `ROMCPU:$C0B5B6` against
+  tileset/tilemap loading to decide map-id vs map-load-target
+  (CEN-WORLD-0007).
 - [ ] Golden route segments 4..N → milestones `05`–`07-pre-whelk`,
   then Whelk branches A/B/C (SCN-0001 route plan).
 - [ ] Milestone-01 PPU/HDMA falsifier (CEN-QUIRK-0002): capture PPU

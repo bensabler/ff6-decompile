@@ -28,7 +28,7 @@
 | CEN-EVENT-0004 | EVENT | cutscenes | Title screen and attract-mode flow | OBSERVED | INPUTS_CAPTURED | confirmed |
 | CEN-EVENT-0005 | EVENT | scripted battles | Scripted battle invocation (Narshe gate guard, formation 2) | LOCATED | NORMAL_PATH_VERIFIED | confirmed |
 | CEN-EVENT-0006 | EVENT | scripted battles | Multiple scripted battles precede free field movement in the opening | LOCATED | NORMAL_PATH_VERIFIED | confirmed |
-| CEN-EVENT-0007 | EVENT | scripted battles | Fifth scripted battle en route to the mines | OBSERVED | NORMAL_PATH_VERIFIED | confirmed |
+| CEN-EVENT-0007 | EVENT | scripted battles | Fifth scripted battle en route to the mines | LOCATED | NORMAL_PATH_VERIFIED | confirmed |
 | CEN-GFX-0001 | GFX | fonts | Battle HUD fixed 8x8 text tile block | REGRESSION_TESTED | OUTPUTS_CAPTURED | confirmed |
 | CEN-GFX-0002 | GFX | character sprites | Field sprite assets (armor walker, NPCs, townsfolk) | OBSERVED | ENCOUNTERED | confirmed |
 | CEN-GFX-0003 | GFX | battle backgrounds | Battle background (cave scene) | OBSERVED | ENCOUNTERED | confirmed |
@@ -61,4 +61,4 @@
 | CEN-WORLD-0004 | WORLD | map transitions | Map transitions (exits/entrances) | UNMAPPED | NOT_ENCOUNTERED | unknown |
 | CEN-WORLD-0005 | WORLD | treasure | Treasure/chest state | UNMAPPED | NOT_ENCOUNTERED | unknown |
 | CEN-WORLD-0006 | WORLD | encounter zones | Random encounter triggering (mines) | OBSERVED | INPUTS_CAPTURED | confirmed |
-| CEN-WORLD-0007 | WORLD | map headers | Player field position bytes and candidate map-id byte | CANDIDATE_LOCATION | INPUTS_CAPTURED | strong-hypothesis |
+| CEN-WORLD-0007 | WORLD | map headers | Player field position bytes and candidate map-id byte | CANDIDATE_LOCATION | INPUTS_CAPTURED | tentative-hypothesis |
