@@ -6,7 +6,7 @@
 --   0-46375   the EXP-0034 schedule verbatim (power-on -> milestone 04):
 --             title edge toggling, then walk+A through the four scripted
 --             battles, gated by the re-arming battle detector.
---   46375+    the 15-leg route controller (see ROUTE below).
+--   46375+    the 17-leg route controller (see ROUTE below).
 --
 -- Leg advancement is state-driven: a walk leg ends when its coordinate
 -- target is satisfied (overshoot-tolerant), an A-pulse leg ends on a
@@ -14,8 +14,10 @@
 -- - they fail the run and name the divergent leg.
 --
 -- Coordinates: WRAM:+$00AF (X tile) / +$00B0 (Y tile) - EXP-0035
--- candidates. +$1EA5 is used only as a candidate transition signal;
--- leg 15 records the coordinate jump independently.
+-- candidates. +$1EA5 is logged for observation only: CONTRA-0002 decoded
+-- it as byte 5 of the event-flag bit array based at +$1EA0 (set via
+-- `ORA $C0BAFC,X / STA $1EA0,Y`), NOT a map indicator. Log lines before
+-- that resolution used the tag `MAPC-WRITE` and the field `map=`.
 local OUT = _G.FF6_OUT_DIR or "mesen/out/"
 local RUN = (os.getenv and os.getenv("FF6_RUN")) or "run1"
 local ROOT = OUT .. "../../local_artifacts/scenarios/SCN-0001/"
@@ -31,7 +33,7 @@ local ROUTE_START = 46375
 local NEUTRAL = 8
 local SETTLE_AFTER_TRANSITION = 600
 
-local X, Y, MAPC = 0x00AF, 0x00B0, 0x1EA5
+local X, Y, EVFLAG = 0x00AF, 0x00B0, 0x1EA5
 local ALIASES = { 0x0541, 0x0543, 0x0545, 0x087A }
 
 -- kind: "walk" (dir + axis target), "pulse" (A presses + condition)
@@ -58,8 +60,8 @@ local ROUTE = {
   { n = 15, kind = "pulse", until_ = "elapsed", dur = 600, timeout = 900 },
   -- Detect the transition by the position jump, NOT by +$1EA5: it reaches
   -- $0D during the shaft dialogue while the party is still visibly on the
-  -- exterior, so a map-value condition completes in 0 frames and the step
-  -- into the shaft never happens. X only reaches $26 past the transition.
+  -- exterior. CONTRA-0002 explains why - that byte is an event-flag byte,
+  -- so it never marked the transition. X only reaches $26 past it.
   { n = 16, kind = "walk",  dir = "up",    axis = X, cmp = "ge", target = 0x26, timeout = 1800 },
   -- the transition lands at Y=$21/$20; walk on to the documented
   -- milestone-05 tile (26,1C) from EXP-0035's recon.
@@ -141,28 +143,29 @@ emu.addMemoryCallback(function()
     end
     local cx, cy = coords()
     log(string.format(
-      "BATTLE %d ENTRY frame=%d 11E0=$%04X pos=%02X,%02X map=%02X staged=%s",
+      "BATTLE %d ENTRY frame=%d 11E0=$%04X pos=%02X,%02X evf=%02X staged=%s",
       battleCount, battleFrame, emu.readWord(0x11E0, emu.memType.snesWorkRam),
-      cx, cy, rd(MAPC), table.concat(staged, " ")))
+      cx, cy, rd(EVFLAG), table.concat(staged, " ")))
     log(string.format("  alias-at-battle-entry: %s", aliasStr()))
   end
 end, emu.callbackType.write, 0x3B18, 0x3BB7, emu.cpuType.snes,
   emu.memType.snesWorkRam)
 
 -- ---------------------------------------------------------------------
--- +$1EA5 write watch: frame + PC for every change
+-- +$1EA5 write watch: frame + PC for every change (event-flag byte;
+-- see CONTRA-0002)
 -- ---------------------------------------------------------------------
 local mapPrev = nil
 local mapChanged = false
 emu.addMemoryCallback(function(addr, value)
-  local prev = rd(MAPC)
+  local prev = rd(EVFLAG)
   if value == prev then return end
   local c = emu.getCpuState(emu.cpuType.snes)
   local pc = (c.k << 16) | c.pc
   mapChanged = true
-  log(string.format("MAPC-WRITE frame=%d pc=$%06X %02X->%s",
+  log(string.format("EVFLAG-WRITE frame=%d pc=$%06X %02X->%s",
     emu.getState().frameCount, pc, prev, tostring(value)))
-end, emu.callbackType.write, MAPC, MAPC, emu.cpuType.snes,
+end, emu.callbackType.write, EVFLAG, EVFLAG, emu.cpuType.snes,
   emu.memType.snesWorkRam)
 
 -- ---------------------------------------------------------------------
@@ -180,21 +183,21 @@ local function beginLeg(i, fc)
   pulseBase = fc
   local L = ROUTE[i]
   local cx, cy = coords()
-  log(string.format("LEG %d BEGIN frame=%d kind=%s dir=%s pos=%02X,%02X map=%02X alias=[%s]",
-    L.n, fc, L.kind, tostring(L.dir), cx, cy, rd(MAPC), aliasStr()))
+  log(string.format("LEG %d BEGIN frame=%d kind=%s dir=%s pos=%02X,%02X evf=%02X alias=[%s]",
+    L.n, fc, L.kind, tostring(L.dir), cx, cy, rd(EVFLAG), aliasStr()))
 end
 
 local function endLeg(fc, why)
   local L = ROUTE[legIdx]
   local cx, cy = coords()
-  log(string.format("LEG %d END frame=%d dur=%d why=%s pos=%02X,%02X map=%02X alias=[%s]",
-    L.n, fc, fc - legStart, why, cx, cy, rd(MAPC), aliasStr()))
+  log(string.format("LEG %d END frame=%d dur=%d why=%s pos=%02X,%02X evf=%02X alias=[%s]",
+    L.n, fc, fc - legStart, why, cx, cy, rd(EVFLAG), aliasStr()))
 end
 
 local function legSatisfied(L, fc)
   if L.kind == "walk" then
-    if L.until_ == "map_change" then
-      return rd(MAPC) == 0x0D
+    if L.until_ == "watched_byte" then
+      return rd(EVFLAG) == 0x0D
     end
     local v = rd(L.axis)
     if L.cmp == "ge" then return v >= L.target end
@@ -264,8 +267,8 @@ emu.addEventCallback(function()
         shot(dir .. RUN .. "-screen.png")
         mkstate(dir .. RUN .. "-05.mss", "MS-05")
         log(string.format(
-          "MILESTONE 05 frame=%d pos=%02X,%02X map=%02X alias=[%s] battles=%d",
-          f2, cx, cy, rd(MAPC), aliasStr(), battleCount))
+          "MILESTONE 05 frame=%d pos=%02X,%02X evf=%02X alias=[%s] battles=%d",
+          f2, cx, cy, rd(EVFLAG), aliasStr(), battleCount))
         log("RUN-COMPLETE " .. RUN)
       end, emu.eventType.endFrame)
       return
@@ -279,8 +282,8 @@ emu.addEventCallback(function()
     routeFailed = true
     local cx, cy = coords()
     log(string.format(
-      "LEG %d TIMEOUT frame=%d pos=%02X,%02X map=%02X expected=%s alias=[%s]",
-      L.n, fc, cx, cy, rd(MAPC),
+      "LEG %d TIMEOUT frame=%d pos=%02X,%02X evf=%02X expected=%s alias=[%s]",
+      L.n, fc, cx, cy, rd(EVFLAG),
       L.target and string.format("%s %02X", L.cmp, L.target) or tostring(L.until_),
       aliasStr()))
     shot(EVD .. RUN .. "-leg" .. L.n .. "-timeout.png")

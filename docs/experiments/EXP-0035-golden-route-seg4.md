@@ -67,7 +67,12 @@
     `+$0545/+$0546` and `+$087A/+$087B` track identically (party
     followers and/or a mirror block — undecided). This made the rest
     of the recon coordinate-driven rather than screenshot-guessed.
-  - **Candidate map-id byte `WRAM:+$1EA5`.** Read across eight
+  - **Candidate map-id byte `WRAM:+$1EA5`** — **SUPERSEDED by
+    [CONTRA-0002](../contradictions/CONTRA-0002-1ea5-map-id-vs-event-flags.md):
+    this byte is not a map id at all. It is byte 5 of an event-flag bit
+    array based at `+$1EA0`. The reading below is preserved as recorded,
+    including its unexplained tension, which the resolution explains.**
+    Read across eight
     independently produced savestates it takes exactly three values,
     consistent within each context:
 
@@ -125,8 +130,10 @@
   coordinates logged at every leg). `+$00AF`/`+$00B0` as player X/Y
   tile — **Strong hypothesis** (clean per-axis single-step behaviour
   across two independent move series; the aliases are undecided and
-  no producer was traced). `+$1EA5` as map id — Tentative (three
-  consistent values, one unexplained tension). Battle 5's existence —
+  no producer was traced). `+$1EA5` as map id — **REFUTED by
+  CONTRA-0002**; the byte is part of an event-flag array, and the
+  "unexplained tension" noted above is explained by that resolution.
+  Battle 5's existence —
   Confirmed (fought to victory); its formation id was **not** read
   (no probe was armed during recon).
 - **Next action:** EXP-0036 — encode the leg table above as absolute

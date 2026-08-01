@@ -5,7 +5,7 @@
 // as its completion condition is unmet. Advancement is state-driven rather
 // than duration-driven: walk legs finish when a player-position byte
 // reaches its target, and the remaining legs finish on a battle edge, a
-// map-value change, or an elapsed-frame settle. Timeouts exist only to
+// watched-byte value, or an elapsed-frame settle. Timeouts exist only to
 // detect divergence — a timed-out leg fails the route and names itself, it
 // is never retried or corrected (EXP-0036).
 //
@@ -14,8 +14,7 @@
 // tested off-emulator. It is not an emulator and does not run input.
 //
 // Position bytes are the EXP-0035 candidates WRAM:+$00AF (X tile) and
-// WRAM:+$00B0 (Y tile), both Strong hypothesis. The map-context byte
-// WRAM:+$1EA5 is a Tentative candidate and is named accordingly.
+// WRAM:+$00B0 (Y tile), both Strong hypothesis.
 package route
 
 import "fmt"
@@ -27,11 +26,11 @@ const (
 	AddrPlayerTileX = 0x00AF
 	// AddrPlayerTileY is the player's Y tile position (EXP-0035).
 	AddrPlayerTileY = 0x00B0
-	// AddrMapContextCandidate is the candidate map-context byte. Its
-	// semantics are unresolved: it separates opening, Narshe-exterior and
-	// mines states, but a visually exterior scripted state also reads the
-	// opening value (EXP-0035, EXP-0036).
-	AddrMapContextCandidate = 0x1EA5
+	// AddrEventFlagsBase is the base of an event-flag bit array: the set
+	// routine indexes it as $1EA0,Y with Y = flag/8 and ORs in a single-bit
+	// mask selected by X = flag&7. Byte 5 of this array (WRAM:+$1EA5) was
+	// briefly mistaken for a map id before CONTRA-0002 decoded the writer.
+	AddrEventFlagsBase = 0x1EA0
 )
 
 // Direction is a held d-pad input. The empty Direction means no input.
@@ -81,9 +80,11 @@ const (
 	// no observed state distinguishes "done" — dismissing the reward and
 	// shaft dialogue windows.
 	UntilElapsed
-	// UntilMapChange completes when the map-context candidate reaches
-	// MapValue.
-	UntilMapChange
+	// UntilWatchedByte completes when the watched byte reaches WatchValue.
+	// Deliberately generic: the byte this once named was refuted as a map
+	// indicator (CONTRA-0002), so the condition carries no semantics of its
+	// own and the caller supplies the meaning.
+	UntilWatchedByte
 )
 
 // Leg is one step of a route: hold Input until the condition is met.
@@ -97,12 +98,12 @@ type Leg struct {
 	// tapping A to dismiss the dialogue.
 	Pulse bool
 
-	Until    Until
-	Axis     Axis
-	Compare  Compare
-	Target   uint8
-	Duration int
-	MapValue uint8
+	Until      Until
+	Axis       Axis
+	Compare    Compare
+	Target     uint8
+	Duration   int
+	WatchValue uint8
 
 	// Timeout in frames. Exceeding it fails the route.
 	Timeout int
@@ -116,10 +117,10 @@ type Leg struct {
 
 // State is the observed machine state a route is evaluated against.
 type State struct {
-	Frame      int
-	X, Y       uint8
-	MapContext uint8
-	InBattle   bool
+	Frame     int
+	X, Y      uint8
+	WatchByte uint8
+	InBattle  bool
 	// BattleStarted and BattleEnded are edges: true only on the frame the
 	// transition is observed.
 	BattleStarted bool
@@ -254,8 +255,8 @@ func legSatisfied(leg Leg, s State, legStart int) bool {
 		return s.BattleEnded
 	case UntilElapsed:
 		return s.Frame-legStart >= leg.Duration
-	case UntilMapChange:
-		return s.MapContext == leg.MapValue
+	case UntilWatchedByte:
+		return s.WatchByte == leg.WatchValue
 	default:
 		v := s.X
 		if leg.Axis == AxisY {

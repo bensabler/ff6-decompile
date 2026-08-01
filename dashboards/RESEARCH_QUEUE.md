@@ -30,11 +30,17 @@ Ordered next units (reorder when evidence exposes a better chain):
   falsifier fired (not a simple map id); **milestone 05 established**
   over three byte-identical power-on runs
   ([record](../docs/experiments/EXP-0036-scheduled-route-to-mines.md)).
-- [ ] **EXP-0037 (recommended next): map system.** Write-watch
-  `ROMCPU:$C0B5B6` across the now-reproducible mines transition to
-  settle `+$1EA5` (map id vs map-load target) and follow it to the map
-  header / tileset load path (CEN-WORLD-0004/0007). Unlocks B06,
-  B08-B11, B16.
+- [x] **CONTRA-0002:** `+$1EA5` map-id vs map-load-target — **both
+  refuted**; it is an event-flag byte. Event-flag system located
+  ([record](../docs/contradictions/CONTRA-0002-1ea5-map-id-vs-event-flags.md)).
+- [ ] **EXP-0037 (recommended next): opening event flags.** Write-watch
+  `$1E80`/`$1EA0`/`$1EC0` across the scheduled route to map which flag
+  numbers the opening sets and when (CEN-EVENT-0008). Serves B16, B19,
+  persistence; anchors CEN-EVENT-0001.
+- [ ] **Map header / tileset load path** (CEN-WORLD-0004) — still open
+  and now genuinely unstarted; `+$1EA5` was a false lead. Needs its own
+  discriminator (candidate: VRAM/DMA watch across the mines transition,
+  which is reproducible on demand).
 - [ ] Golden route segments 5..N → milestones `06-random-encounter`
   and `07-pre-whelk`, then Whelk branches A/B/C (SCN-0001 route plan).
 - [ ] Milestone-01 PPU/HDMA falsifier (CEN-QUIRK-0002): capture PPU

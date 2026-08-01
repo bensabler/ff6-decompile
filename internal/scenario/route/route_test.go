@@ -294,7 +294,7 @@ func TestElapsedAndMapChangeLegs(t *testing.T) {
 		Name: "settle-then-transition", StartFrame: 0, NeutralFrames: 0,
 		Legs: []Leg{
 			pulseLeg(1, UntilElapsed, 5),
-			{Num: 2, Input: Up, Until: UntilMapChange, MapValue: 0x0D, Timeout: 100},
+			{Num: 2, Input: Up, Until: UntilWatchedByte, WatchValue: 0x0D, Timeout: 100},
 		},
 	}
 	rn := NewRunner(r)
@@ -306,10 +306,10 @@ func TestElapsedAndMapChangeLegs(t *testing.T) {
 	if got := rn.Step(State{Frame: 5}); got != Advanced {
 		t.Fatalf("at elapsed = %v, want Advanced", got)
 	}
-	if got := rn.Step(State{Frame: 6, MapContext: 0x05}); got != Continue {
+	if got := rn.Step(State{Frame: 6, WatchByte: 0x05}); got != Continue {
 		t.Fatalf("exterior map value = %v, want Continue", got)
 	}
-	if got := rn.Step(State{Frame: 7, MapContext: 0x0D}); got != Done {
+	if got := rn.Step(State{Frame: 7, WatchByte: 0x0D}); got != Done {
 		t.Fatalf("mines map value = %v, want Done", got)
 	}
 }

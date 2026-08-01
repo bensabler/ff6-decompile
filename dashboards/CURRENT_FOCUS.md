@@ -47,10 +47,11 @@ non-byte-stable frame capture.
 - Battle 1 rewards **32 EXP / 96 GP**, with post-battle HP/MP written
   back into the field character block (`$C2496E`/`$C24979` →
   `+$1609`/`+$160D`).
-- `WRAM:+$1EA5` is **not** a simple map-id byte: it reaches the mines
-  value before the transition is visible or the party moves. Recorded
-  as a map-load-target / event-state candidate written by
-  `ROMCPU:$C0B5B6`.
+- **Event-flag system located** (CONTRA-0002): three bit arrays at
+  `WRAM:+$1E80`/`+$1EA0`/`+$1EC0`, set via `ORA $C0BAFC,X` /
+  `STA $1EA0,Y` with a flag-number decoder at `ROMCPU:$BAED`
+  (Y = flag/8, X = flag&7). `+$1EA5` — twice mistaken for a map
+  indicator — is byte 5 of the `+$1EA0` array (flags `$28`-`$2F`).
 - Position bytes are **not field-meaningful during battle**.
 
 ## Controlled lab variables (whole program)
@@ -61,10 +62,15 @@ non-byte-stable frame capture.
 
 ## Next exact action
 
-**EXP-0037 — the map system.** The mines transition is now
-reproducible on demand, which makes this the highest-leverage target:
-write-watch `ROMCPU:$C0B5B6` across the transition to settle
-`+$1EA5`'s meaning, and follow it to the map header / tileset load
-path (CEN-WORLD-0004, CEN-WORLD-0007). It unlocks beats B06 and
-B08–B11 and B16 — the widest remaining PARTIAL rows in the matrix —
-and the event engine (CEN-EVENT-0001) is the only comparable blocker.
+**EXP-0037 — map the opening's event flags.** CONTRA-0002 removed
+`+$1EA5` as a map lead and replaced it with something larger: the
+event-flag arrays and their set/clear routines. The bounded next unit
+write-watches `$1E80`/`$1EA0`/`$1EC0` across the scheduled route to
+record **which flag numbers the opening sets and when** — that serves
+B16 (treasure/interaction flags), B19 (post-battle state) and
+persistence, and gives the event engine (CEN-EVENT-0001) a concrete
+anchor it has never had.
+
+The map header / tileset question (CEN-WORLD-0004) is **still open and
+untouched** — `+$1EA5` was never going to answer it, so that lead is
+now genuinely unstarted and needs its own discriminator.

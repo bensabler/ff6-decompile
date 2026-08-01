@@ -5,8 +5,9 @@ package route
 // (`05-mines-entry`, mines interior).
 //
 // EXP-0035 walked and documented eleven legs interactively. Three of those
-// combine a one-tile sidestep with a climb, so this encoding splits them:
-// fifteen legs, each with exactly one input and one completion condition.
+// combine a one-tile sidestep with a climb, and EXP-0036 found one omitted
+// climb plus a walk-on to the documented tile, so this encoding splits them
+// into seventeen legs, each with one input and one completion condition.
 // The zigzag matters — a single held direction stalls at Y=$21 and again
 // at Y=$16, which is why the earlier segments' hold-one-direction cadence
 // could not walk this stretch.
@@ -79,12 +80,12 @@ func MinesRoute() Route {
 			{Num: 15, Pulse: true, Until: UntilElapsed, Duration: 600, Timeout: 900,
 				ExpectX: 0x1F, ExpectY: 0x16,
 				Note: "clear the shaft dialogue"},
-			// The transition is detected by the position jump, not by the
-			// map byte: EXP-0036 observed +$1EA5 reaching $0D during the
-			// shaft dialogue while the party was still visibly on the
-			// exterior, so a map-value condition here completes in 0 frames
-			// and the step into the shaft never happens. X only ever
-			// reaches $26 on the far side of the transition.
+			// The transition is detected by the position jump. EXP-0036 first
+			// tried +$1EA5 reaching $0D and the leg completed in 0 frames with
+			// the party still on the exterior; CONTRA-0002 later showed why —
+			// that byte is an event-flag byte, not a map indicator, so it was
+			// never going to mark the transition. X only reaches $26 on the far
+			// side of it.
 			{Num: 16, Input: Up, Until: UntilPosition, Axis: AxisX,
 				Compare: AtLeast, Target: 0x26, Timeout: 1800,
 				ExpectX: 0x26, ExpectY: 0x21,

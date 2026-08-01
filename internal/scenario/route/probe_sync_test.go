@@ -76,7 +76,7 @@ func TestProbeRouteMatchesModel(t *testing.T) {
 		UntilBattleStart: "battle_start",
 		UntilBattleEnd:   "battle_end",
 		UntilElapsed:     "elapsed",
-		UntilMapChange:   "map_change",
+		UntilWatchedByte: "watched_byte",
 	}
 	cmpName := map[Compare]string{AtLeast: "ge", AtMost: "le"}
 

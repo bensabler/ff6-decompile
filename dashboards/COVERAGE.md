@@ -12,7 +12,7 @@ Breadth without pretense: counts are census entries at or above each threshold (
 | MONSTER | 4 | 3 | 0 | 0 | 0 | 0 |
 | ITEM | 0 | 0 | 0 | 0 | 0 | 0 |
 | WORLD | 7 | 0 | 0 | 0 | 0 | 1 |
-| EVENT | 7 | 3 | 0 | 0 | 0 | 3 |
+| EVENT | 8 | 4 | 1 | 0 | 0 | 3 |
 | MENU | 6 | 1 | 0 | 0 | 0 | 0 |
 | GFX | 4 | 1 | 1 | 1 | 1 | 0 |
 | AUDIO | 5 | 3 | 2 | 2 | 1 | 1 |
@@ -27,7 +27,7 @@ Breadth without pretense: counts are census entries at or above each threshold (
 
 ## Census health
 
-- Entries with unresolved fields/formats: 27.
+- Entries with unresolved fields/formats: 28.
 - Observed but not yet located (breadth backlog): 35.
 - Runtime-only findings (seen live, no location): 25.
 - Static-only findings (located, never exercised live): 1.
@@ -68,4 +68,4 @@ Breadth without pretense: counts are census entries at or above each threshold (
 - **CEN-WORLD-0004** (Map transitions (exits/entrances)): Write-watch ROMCPU:$C0B5B6 across the reproducible mines transition and follow it to the map header / tileset load path.
 - **CEN-WORLD-0005** (Treasure/chest state): Find a chest in the mines path; open it; watch the flag write.
 - **CEN-WORLD-0006** (Random encounter triggering (mines)): Watch the step counter and encounter-check reads during a walk to locate the zone/rate data.
-- **CEN-WORLD-0007** (Player field position bytes and candidate map-id byte): Write-watch ROMCPU:$C0B5B6 and correlate against tileset/tilemap/VRAM loading to decide between map-id and map-load-target readings.
+- **CEN-WORLD-0007** (Player field position bytes and follower alias blocks): Write-watch +$00AF/+$00B0 during a single walked tile to capture their producers and settle the alias blocks' ownership.

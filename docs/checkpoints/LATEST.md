@@ -1,13 +1,15 @@
 # Latest Checkpoint
 
-**[2026-08-01 — EXP-0036: scheduled route to the mines](2026-08-01-exp0036-scheduled-route.md)**
+**[2026-08-01 — CONTRA-0002 resolved: `+$1EA5` is an event-flag byte](2026-08-01-contra0002-event-flags.md)**
 
-State: milestone `05-mines-entry` **established** — three power-on runs
-of a 17-leg state-driven route controller all reach (`$26`,`$1C`)
-inside the mines with byte-identical WRAM. The golden route now spans
-power-on → milestones 00–05. Battle 5 = formation 84 {27,27,0,0},
-ROM-verified. The `+$1EA5` falsifier fired: it reaches the mines value
-before the transition is visible, so it is not a simple map-id byte.
-Exact next action: EXP-0037 — write-watch `ROMCPU:$C0B5B6` across the
-reproducible transition to settle `+$1EA5` and locate the map header /
-tileset load path (CEN-WORLD-0004/0007).
+State: the `+$1EA5` contradiction is resolved — **both** the "map id"
+(EXP-0035) and "map-load target" (EXP-0036) readings are refuted. A
+static decode of the writer shows `ORA $C0BAFC,X / STA $1EA0,Y`: the
+byte is byte 5 of an **event-flag bit array** at `WRAM:+$1EA0`, and its
+values accumulate bits rather than naming a map. The event-flag system
+(three arrays, set/clear routines, mask tables, index decoder at
+`$BAED`) is located as a by-product — CEN-EVENT-0008. Dependent code
+renamed and unfrozen; no golden-route result changed. Note:
+CEN-WORLD-0004 (map header / tileset path) is now genuinely unstarted.
+Exact next action: EXP-0037 — write-watch all three flag arrays across
+the scheduled route to inventory which flags the opening sets, and when.

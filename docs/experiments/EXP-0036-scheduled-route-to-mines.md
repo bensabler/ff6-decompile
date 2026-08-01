@@ -1,6 +1,13 @@
 # EXP-0036: Scheduled route from milestone 04 to the mines interior
 
-- **Status:** in progress (2026-08-01)
+- **Status:** completed (2026-08-01). The `+$1EA5` interpretation this
+  record reached was later superseded by
+  [CONTRA-0002](../contradictions/CONTRA-0002-1ea5-map-id-vs-event-flags.md);
+  the route results and milestone 05 are unaffected. The plan sections
+  below are preserved as written before the run, so they still describe
+  the original 15-leg encoding and its `+$1EA5` transition condition —
+  the Result section records what actually happened (17 legs,
+  position-based transition detection).
 - **Question:** can the complete route from milestone 04 through the
   Narshe exterior, the fifth scripted battle, the zigzag climb, and
   the mines transition be reproduced reliably from the project's
@@ -229,10 +236,15 @@ map-ID byte."* So:
 - **`+$1EA5` is NOT a simple "current map" byte.** It reaches the
   destination value *before* the transition is visible and before the
   player's position changes.
-- The evidence-safe reading is a **map-load target / pending-map or
-  event-state value**, written by `$C0B5B6` when the event *decides* on
-  a map rather than when the map becomes current. This is recorded as
-  the interpretation, not asserted as fact.
+- The evidence-safe reading proposed here was a **map-load target /
+  pending-map or event-state value**, written by `$C0B5B6` when the
+  event *decides* on a map. **That proposal is itself now SUPERSEDED by
+  [CONTRA-0002](../contradictions/CONTRA-0002-1ea5-map-id-vs-event-flags.md):
+  a static decode of the writer shows `STA $1EA0,Y` preceded by
+  `ORA $C0BAFC,X`, i.e. a bit-set into an event-flag array. The byte is
+  not map-related at all; the location correlation was incidental to
+  story progress.** The route consequence below was nonetheless
+  correct, and is now correct for the right reason.
 - Confidence is **not promoted**; if anything the "map id" framing is
   now the weaker of the two readings. Deciding between them needs the
   `$C0B5B6` write-watch against tileset/tilemap loading — still a
@@ -321,10 +333,10 @@ frame-identical:**
   Monster record 27's HP/MP — Confirmed as record fields (HP
   additionally anchored to a live enemy word). Guard trigger at
   (`$1E`,`$25`), contact-based — Confirmed (three schedule variants
-  discriminate it). `+$1EA5` as a simple map-id byte — **weakened, not
-  promoted**: it reaches the destination value before the transition is
-  visible or the position changes; recorded as a map-load target /
-  event-state candidate. Frame-capture instability at milestone 05 —
+  discriminate it). `+$1EA5` — **resolved by CONTRA-0002 after this
+  record was written**: neither a map id nor a map-load target, but
+  byte 5 of the event-flag array at `+$1EA0`. Both readings this unit
+  entertained are refuted. Frame-capture instability at milestone 05 —
   Tentative, folded into CEN-QUIRK-0002.
 - **Next action:** EXP-0037 — the mines interior is now reachable
   deterministically, so the highest-leverage next target is the map

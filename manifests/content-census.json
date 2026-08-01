@@ -2348,13 +2348,12 @@
       "wram_locations": [
         "WRAM:+$00AF",
         "WRAM:+$00B0",
-        "WRAM:+$1EA5",
         "WRAM:+$0541",
+        "WRAM:+$0543",
+        "WRAM:+$0545",
         "WRAM:+$087A"
       ],
-      "cpu_routines": [
-        "ROMCPU:$C0B5B6"
-      ],
+      "cpu_routines": [],
       "spc_locations": [],
       "record_count_expected": null,
       "record_count_found": null,
@@ -2375,22 +2374,19 @@
       ],
       "unknown_fields": [
         "producers of +$00AF/+$00B0",
-        "alias block ownership",
-        "whether $C0B5B6 drives tileset/tilemap loading or only records an intent"
+        "alias block ownership (followers vs mirror)"
       ],
-      "contradictions": [
-        "EXP-0035 read +$1EA5 as a candidate map id; EXP-0036 showed it changes before the transition is visible, weakening that reading"
-      ],
-      "notes": "",
+      "contradictions": [],
+      "notes": "CONTRA-0002 removed the +$1EA5 map-id candidate from this entry.",
       "id": "CEN-WORLD-0007",
       "domain": "WORLD",
       "category": "map headers",
-      "name": "Player field position bytes and candidate map-id byte",
-      "description": "WRAM:+$00AF = player X tile and +$00B0 = player Y tile (each changes by exactly 1 per step on its own axis, stable on the other; EXP-0035, re-verified across 17 scheduled route legs in EXP-0036). Alias blocks at +$0541/42, +$0543/44, +$0545/46 and +$087A/7B mirror the leader with a one-tile lag on the trailing member during turns, re-converging within a leg (follower-chain behaviour, ownership unresolved). Position bytes are NOT field-meaningful during battle (observed 1E,00 at entry and 00,00 at end). WRAM:+$1EA5 is a map-context CANDIDATE only: it progresses $00 -> $01 -> $05 across the scripted opening and reads $0D in the mines, every change written by ROMCPU:$C0B5B6 - but EXP-0036 showed it reaches $0D during the mine-shaft dialogue while the party is still visibly on the exterior and has not moved, so it is NOT a simple current-map byte. Evidence-safe reading: a map-load target / pending-map or event-state value.",
+      "name": "Player field position bytes and follower alias blocks",
+      "description": "WRAM:+$00AF = player X tile and +$00B0 = player Y tile (each changes by exactly 1 per step on its own axis, stable on the other; EXP-0035, re-verified across 17 scheduled route legs in EXP-0036). Alias blocks at +$0541/42, +$0543/44, +$0545/46 and +$087A/7B mirror the leader with a one-tile lag on the trailing member during turns, re-converging within a leg (follower-chain behaviour, ownership unresolved). Position bytes are NOT field-meaningful during battle (observed 1E,00 at entry and 00,00 at end). NOTE: this entry previously also carried a candidate map-id reading of WRAM:+$1EA5; that reading was REFUTED by CONTRA-0002, which decoded the byte as part of an event-flag bit array. See CEN-EVENT-0008.",
       "reconstruction_status": "CANDIDATE_LOCATION",
       "runtime_status": "INPUTS_CAPTURED",
-      "confidence": "tentative-hypothesis",
-      "next_action": "Write-watch ROMCPU:$C0B5B6 and correlate against tileset/tilemap/VRAM loading to decide between map-id and map-load-target readings."
+      "confidence": "strong-hypothesis",
+      "next_action": "Write-watch +$00AF/+$00B0 during a single walked tile to capture their producers and settle the alias blocks' ownership."
     },
     {
       "schema_version": "1.0",
@@ -2436,6 +2432,64 @@
       "runtime_status": "NORMAL_PATH_VERIFIED",
       "confidence": "confirmed",
       "next_action": "Exec-watch the frames before this battle's entry to capture the scripted invocation site (shared with CEN-EVENT-0005)."
+    },
+    {
+      "schema_version": "1.0",
+      "rom_revision": "0f51b4fca41b7fd509e4b8f9d543151f68efa5e97b08493e4b2a0c06f5d8d5e2",
+      "rom_locations": [],
+      "wram_locations": [
+        "WRAM:+$1E80",
+        "WRAM:+$1EA0",
+        "WRAM:+$1EC0"
+      ],
+      "cpu_routines": [
+        "ROMCPU:$BAED",
+        "ROMCPU:$C0B5B3",
+        "ROMCPU:$C0B598",
+        "ROMCPU:$C0B5C0",
+        "ROMCPU:$C07972",
+        "ROMCPU:$C0798C",
+        "ROMCPU:$C079A6"
+      ],
+      "spc_locations": [],
+      "record_count_expected": 768,
+      "record_count_found": null,
+      "record_size": null,
+      "pointer_tables": [
+        "ROMCPU:$C0BAFC (set masks)",
+        "ROMCPU:$C0BB04 (clear masks)"
+      ],
+      "consumers": [],
+      "producers": [],
+      "related_experiments": [
+        "EXP-0035",
+        "EXP-0036"
+      ],
+      "related_discoveries": [],
+      "related_implementations": [],
+      "related_tests": [],
+      "runtime_scenarios": [],
+      "evidence": [
+        "docs/contradictions/CONTRA-0002-1ea5-map-id-vs-event-flags.md (static ROM decode; mask tables and decoder read from the verified ROM)",
+        "local_artifacts/experiments/EXP-0036/ (live EVFLAG/MAPC write log: $00->$01->$05->$0D, all from $C0B5B6)"
+      ],
+      "unknown_fields": [
+        "which array holds which flag family (event vs treasure vs map-state)",
+        "the meaning of individual flag numbers",
+        "whether all three arrays are SRAM-backed",
+        "the flag-test/read routine's callers"
+      ],
+      "contradictions": [],
+      "notes": "",
+      "id": "CEN-EVENT-0008",
+      "domain": "EVENT",
+      "category": "event flags",
+      "name": "Event-flag bit arrays and their set/clear routines",
+      "description": "Three parallel bit arrays at WRAM:+$1E80, +$1EA0 and +$1EC0, each $20 bytes apart (256 flags each). A shared decoder at ROMCPU:$BAED converts a flag number to array indices: REP #$20 / TAX / LSR x3 / TAY (byte index = flag/8) / TDC / SEP #$20 / TXA / AND #$07 / TAX (bit index = flag&7). Set routines read-modify-write with ORA $C0BAFC,X (masks 01 02 04 08 10 20 40 80); clear routines use AND $C0BB04,X (masks FE FD FB F7 EF DF BF 7F, exact complements). Live-observed writer: STA $1EA0,Y at ROMCPU:$C0B5B3 (the probe reports the following PC, $C0B5B6). Access sites: LDA $1EA0,Y x5 / STA $1EA0,Y x4, with symmetric counts for the $1E80 and $1EC0 arrays. Located by CONTRA-0002 while refuting a map-id reading of WRAM:+$1EA5, which is byte 5 of the $1EA0 array (flags $28-$2F); at milestone 05 its bits 0, 2 and 3 are set, i.e. flags $28, $2A, $2B.",
+      "reconstruction_status": "FORMAT_DECODED",
+      "runtime_status": "OUTPUTS_CAPTURED",
+      "confidence": "confirmed",
+      "next_action": "Write-watch $1E80/$1EA0/$1EC0 across the scheduled route to map which flag numbers the opening sets and when; that serves B16 treasure flags and B19 persistence."
     }
   ]
 }
