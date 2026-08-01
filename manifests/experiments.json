@@ -754,6 +754,43 @@
       "falsifying_outcome": "For sampled-at-entry: any reading PC whose count keeps rising during the battle. For consulted-continuously: every reading PC's lastFrame at or before the battle-entry frame. Zero hits across a confirmed entry would implicate the instrumentation (the bytes lie in the low-RAM mirror) before the conclusion.",
       "status": "completed",
       "record": "docs/experiments/EXP-0042-battle-entry-config-sampling.md"
+    },
+    {
+      "schema_version": "1.0",
+      "id": "EXP-0043",
+      "domain": "battle",
+      "question": "What reads WRAM:+$3A90 (the battle-local Battle Speed value), what does it advance, and where are the ATB gauges?",
+      "starting_state": {
+        "emulator": "Mesen 2.1.1 macOS, --testrunner headless (--timeout=7200, FF6_OUT set), bridge v2, probe EXP-0043.lua; one instance",
+        "rom_sha256": "0f51b4fca41b7fd509e4b8f9d543151f68efa5e97b08493e4b2a0c06f5d8d5e2",
+        "state": "local_artifacts/experiments/EXP-0042/in-battle-active-speed6.mss (live battle, formation 14, Active, Bat.Speed 6); contrast in-battle-formation14.mss (Wait, Bat.Speed 3)",
+        "battle_config": {
+          "battle_mode": "Active",
+          "battle_speed": 6,
+          "message_speed": 3,
+          "command_set": "Window",
+          "gauge": "On",
+          "sound": "Stereo",
+          "cursor": "Reset",
+          "reequip": "Optimum",
+          "controller": "Single",
+          "source": "memory-read",
+          "raw": {
+            "WRAM:+$1D4D": "0x25",
+            "WRAM:+$1D4E": "0x00",
+            "WRAM:+$3A8F": "0x00",
+            "WRAM:+$3A90": "0x87"
+          }
+        }
+      },
+      "expected_outcomes": [
+        "direct: one reading PC consumes +$3A90 and the routine advances a per-slot accumulator the differential pass independently shows moving",
+        "partial: reader found but its target is not a per-slot array",
+        "refuted: nothing reads +$3A90 during a running battle"
+      ],
+      "falsifying_outcome": "Zero reads of +$3A90 across a running ACTIVE battle; or a reader that writes nothing the differential pass sees advancing (instruments fail to converge); or candidate gauge cells advancing identically at $3A90 = $87 and $CF",
+      "status": "completed",
+      "record": "docs/experiments/EXP-0043-atb-gauges-and-speed-consumer.md"
     }
   ]
 }

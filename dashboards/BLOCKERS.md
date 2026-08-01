@@ -32,10 +32,22 @@ are sampled **once at battle entry** into `WRAM:+$3A8F` (Wait flag) and
 `WRAM:+$3A90` (`255 − 24 × speed`), so ACTIVE/WAIT and Battle Speed
 conditions must be set *before* entry, or injected at those two cells.
 
-The blocker itself **remains open**: no timer domain, pause condition, or
-queue semantics is known. What has changed is that there is now a
-concrete way in — `+$3A90`'s consumer is unlocated and is very likely the
-ATB rate path. Next: EXP-0043.
+EXP-0043 then **located the ATB layer**: gauges at `WRAM:+$3AB4` (10
+entries, stride 2, 16-bit), per-slot increment `+$3AC8`, scheduler flags
+`+$3AA0`, battle tick counter `+$3A3E`, and — the key one — the gate at
+`ROMCPU:$C21124`, `LDA $2F41 / AND $3A8F / BNE`, which is **where ACTIVE
+and WAIT diverge**. Battle Speed was found to scale **enemy gauges only**.
+
+**Status: the blocker is now narrow rather than total.** The timer
+domains are named and directly readable. What remains unknown is the
+pause *condition* (`$2F41` is untested), the exact increment/threshold
+arithmetic, and the action queue. Next: **EXP-0044, the ACTIVE/WAIT
+pause matrix** — the unit this blocker has been asking for since
+EXP-0040, and now cheap because every quantity in the matrix has an
+address.
+
+Whelk stays deferred until that matrix exists: EXP-0040's head/shell
+timing can only be reinterpreted once the pause semantics are known.
 
 Soft items:
 

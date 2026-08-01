@@ -46,3 +46,4 @@
 | EXP-0040 | whelk-victory | blocked | see record | [EXP-0040-whelk-victory](../docs/experiments/EXP-0040-whelk-victory.md) |
 | EXP-0041 | battle-config-storage | completed | see record | [EXP-0041-battle-config-storage](../docs/experiments/EXP-0041-battle-config-storage.md) |
 | EXP-0042 | battle-entry-config-sampling | completed | see record | [EXP-0042-battle-entry-config-sampling](../docs/experiments/EXP-0042-battle-entry-config-sampling.md) |
+| EXP-0043 | atb-gauges-and-speed-consumer | completed | see record | [EXP-0043-atb-gauges-and-speed-consumer](../docs/experiments/EXP-0043-atb-gauges-and-speed-consumer.md) |

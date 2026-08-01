@@ -2828,6 +2828,66 @@
       "contradictions": [],
       "next_action": "EXP-0043: read-watch WRAM:+$3A8F-+$3A90 across a battle to find their consumer; expected to converge with the eight undumped callees of ROMCPU:$C101FB (open question #6) on the ATB tick site.",
       "notes": "Establishes the ATB program's staging rule: ACTIVE/WAIT and Battle Speed conditions must be set BEFORE battle entry, or injected directly at +$3A8F/+$3A90. $3A90 decreases as the displayed speed number rises (Fast=$FF, Slow=$87), which is consistent with an addend rather than a threshold - registered as a Tentative hypothesis, not a conclusion, since no consumer is located."
+    },
+    {
+      "schema_version": "1.0",
+      "id": "CEN-BATTLE-0011",
+      "domain": "BATTLE",
+      "category": "ATB scheduler",
+      "name": "ATB gauges, per-slot increment, and the per-frame battle scheduler",
+      "description": "ATB gauge array WRAM:+$3AB4 (10 entries, stride 2, 16-bit; party 0-3, enemies 4-9) advanced by $3AC8,X >> 1 at ROMCPU:$C21195-$C2119D. Per-slot increment WRAM:+$3AC8 built near ROMCPU:$C209E0 from the slot Speed at +$3B19,X; the +$3A90 (Battle Speed) multiply at $C209FA applies only for X >= 8, i.e. enemy slots. Per-slot scheduler flags WRAM:+$3AA0. Battle tick counter WRAM:+$3A3E. The whole per-frame update is gated at ROMCPU:$C21124 by LDA $2F41 / AND $3A8F - the point where ACTIVE and WAIT diverge. NOTE the ATB family is stride 2, not the $14 stride of the HP/stat family.",
+      "reconstruction_status": "FORMAT_PARTIAL",
+      "runtime_status": "NORMAL_PATH_VERIFIED",
+      "rom_revision": "0f51b4fca41b7fd509e4b8f9d543151f68efa5e97b08493e4b2a0c06f5d8d5e2",
+      "rom_locations": [],
+      "wram_locations": [
+        "WRAM:+$3AB4 ATB gauge array (10 x 2)",
+        "WRAM:+$3AC8 per-slot ATB increment (10 x 2)",
+        "WRAM:+$3AA0 per-slot scheduler flags (10 x 2)",
+        "WRAM:+$3A3E-+$3A3F battle tick counter (16-bit)",
+        "WRAM:+$3218 second per-slot accumulator (10 x 2), gated on $3219,X",
+        "WRAM:+$3B19,X per-slot Speed feeding the increment (strong hypothesis)",
+        "WRAM:+$2F41 the other half of the pause gate (tentative, untested)",
+        "WRAM:+$322C comparand on the gauge threshold path (tentative)"
+      ],
+      "cpu_routines": [
+        "ROMCPU:$C2111B-$C21192 per-frame battle scheduler; gate at $C21124",
+        "ROMCPU:$C21193-$C211BA gauge advance",
+        "ROMCPU:$C211BB-$C211C9 second accumulator",
+        "ROMCPU:$C209E0-$C20A0E per-slot increment builder"
+      ],
+      "spc_locations": [],
+      "record_count_expected": 10,
+      "record_count_found": 10,
+      "record_size": 2,
+      "pointer_tables": [],
+      "consumers": [],
+      "producers": [],
+      "related_experiments": [
+        "EXP-0043",
+        "EXP-0042",
+        "EXP-0041"
+      ],
+      "related_discoveries": [],
+      "related_implementations": [],
+      "related_tests": [],
+      "runtime_scenarios": [
+        "local_artifacts/experiments/EXP-0042/in-battle-active-speed6.mss"
+      ],
+      "evidence": [
+        "local_artifacts/experiments/EXP-0043/ (8 artifacts; hashes.sha256)"
+      ],
+      "confidence": "confirmed",
+      "unknown_fields": [
+        "exact increment formula, threshold, overflow and gauge reset behaviour",
+        "WRAM:+$3AA0 individual bit semantics (bit 6 observed set where the decoded path writes bit 5)",
+        "what sets and clears WRAM:+$2F41 - the untested half of the ACTIVE/WAIT gate",
+        "relationship between +$3AB4 and the second accumulator +$3218",
+        "Battle Speed's middle values, other formations, other party compositions"
+      ],
+      "contradictions": [],
+      "next_action": "EXP-0044: find what sets/clears WRAM:+$2F41, then build the ACTIVE/WAIT pause matrix reading +$3AB4, +$3A3E, +$3AA0 and +$3218 directly.",
+      "notes": "Battle Speed scales ENEMY gauges only - the CPX #$08 / BCC branch skips the $3A90 multiply for party slots, and party increments were byte-identical at Bat.Speed 3 and 6 (318/330/336) while enemy increments went 240 -> 156. Confirmed for the tested formation and two speeds. Also: the ATB family uses stride 2, so DISC-0001's unified layout governs slot assignment but NOT stride - do not assume $14 for new battle arrays."
     }
   ]
 }

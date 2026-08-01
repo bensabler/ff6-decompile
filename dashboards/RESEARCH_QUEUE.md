@@ -93,18 +93,28 @@ Ordered next units (reorder when evidence exposes a better chain):
   Battle Speed must be set before battle entry, or injected at
   `+$3A8F`/`+$3A90`
   ([record](../docs/experiments/EXP-0042-battle-entry-config-sampling.md)).
-- [ ] **P0 NEXT — EXP-0043: the consumer of `WRAM:+$3A90`, and the ATB
-  gauges.** `$3A90` is the sharpest lead into battle timing the project
-  has: a battle-local value derived from Battle Speed whose reader is
-  unknown. Read-watch `+$3A8F`–`+$3A90` across a battle and follow the
-  reader to what it advances. Expected to converge with the **eight
-  undumped callees of `ROMCPU:$C101FB`** (open question #6), and to
-  resolve open question #18 (the sub-1.0 per-frame rate). Substrate is
-  on disk: `EXP-0042/in-battle-formation14.mss` plus the byte-identical
-  milestone-03/06 WRAM dumps, now diffable offline with `ff6lab state`.
-- [ ] **ATB program, after that:** gauge storage and increment
-  arithmetic; then the ACTIVE/WAIT pause matrix, the first unit
-  warranting `/battle-baseline` and parallel read-only observers.
+- [x] **EXP-0043: ATB gauges and the `+$3A90` consumer** — done. **Gauge
+  array `WRAM:+$3AB4`** (10 entries, **stride 2**, 16-bit), advanced by
+  `$3AC8,X >> 1` at `ROMCPU:$C21195`; per-slot increment `WRAM:+$3AC8`
+  built at `ROMCPU:$C209E0` from Speed at `+$3B19,X`; scheduler flags
+  `WRAM:+$3AA0`; battle tick counter `WRAM:+$3A3E`. `+$3A8F`'s consumer
+  is **`ROMCPU:$C21124`** — `LDA $2F41 / AND $3A8F / BNE` gates the whole
+  per-frame update, so that is where ACTIVE and WAIT diverge.
+  **Battle Speed scales enemy gauges only** (party increments identical
+  at Bat.Speed 3 and 6; enemy 240 vs 156)
+  ([record](../docs/experiments/EXP-0043-atb-gauges-and-speed-consumer.md)).
+- [ ] **P0 NEXT — EXP-0044: the ACTIVE/WAIT pause matrix.** Find what
+  sets and clears `WRAM:+$2F41`, the untested half of the `$C21124` gate
+  (write-watch across opening and closing each battle submenu), then
+  build the matrix of menu and presentation states against timer domains.
+  Now cheap: every domain has an address (`+$3AB4`, `+$3A3E`, `+$3AA0`,
+  `+$3218`), and `$3A8F`/`$3A90` can be patched directly, making
+  ACTIVE-versus-WAIT a one-variable comparison inside one savestate
+  lineage. First unit warranting `/battle-baseline` and parallel
+  read-only observers.
+- [ ] **ATB program, after that:** the exact increment formula, threshold
+  and gauge reset; `+$3AA0` bit semantics; the action queue and readiness
+  arbitration; status modifiers (Haste/Slow/Stop).
 - [ ] Whether battle types other than random encounters sample
   configuration differently (scripted, pincer, back, boss) — cheap to
   re-check at the first scripted battle rather than as its own unit.

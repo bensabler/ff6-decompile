@@ -1,5 +1,24 @@
 # Activity Log
 
+- 2026-08-01 (headless) — **EXP-0043: the ATB layer is located.** Gauge
+  array **`WRAM:+$3AB4`** (10 entries, **stride 2**, 16-bit; party 0-3,
+  enemies 4-9), advanced by `$3AC8,X >> 1` at
+  `ROMCPU:$C21195-$C2119D` — observed climbing by exactly `$4E` =
+  `$9C >> 1` and wrapping. Per-slot increment **`WRAM:+$3AC8`** built at
+  `ROMCPU:$C209E0` from the slot Speed at `+$3B19,X`. Scheduler flags
+  **`WRAM:+$3AA0`**, battle tick counter **`WRAM:+$3A3E`** (one per
+  non-gated frame). `+$3A8F`'s consumer is **`ROMCPU:$C21124`** —
+  `LDA $2F41 / AND $3A8F / BNE` gates the *entire* per-frame battle
+  update, so that instruction is **where ACTIVE and WAIT diverge**;
+  `$2F41` is the untested other half. **Battle Speed scales enemy gauges
+  only**: the `CPX #$08 / BCC` branch at `$C209F6` skips the `$3A90`
+  multiply for party slots, and measurement agrees — party increments
+  byte-identical at Bat.Speed 3 and 6 (318/330/336) while enemy
+  increments went 240 → 156. Three instruments converged (read watch,
+  static decode, live sampling); no falsifier fired. **Caution recorded:
+  the ATB family is stride 2, not the `$14` of the HP/stat family** — so
+  DISC-0001's unified layout governs slot assignment, not stride. New
+  CEN-BATTLE-0011. Blocker is now narrow rather than total.
 - 2026-08-01 (headless) — **EXP-0042: configuration is sampled at battle
   entry; first battle-local timing cells found.** Answered **mixed**, and
   the split falls exactly where it matters. `ROMCPU:$C22472` reads the

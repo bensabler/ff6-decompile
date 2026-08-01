@@ -164,13 +164,39 @@ must be established **before battle entry** — or injected directly at
 `+$3A8F`/`+$3A90`, which is a far better controlled handle than driving
 menus.
 
+## EXP-0043 — the ATB layer is located (2026-08-01)
+
+| Address | Role |
+|---|---|
+| `WRAM:+$3AB4` | **ATB gauge array** — 10 entries, **stride 2**, 16-bit; party 0-3, enemies 4-9 |
+| `WRAM:+$3AC8` | per-slot **increment**; gauge += `$3AC8,X >> 1` at `ROMCPU:$C21195` |
+| `WRAM:+$3AA0` | per-slot scheduler **flags** |
+| `WRAM:+$3A3E` | 16-bit **battle tick counter**, one per non-gated frame |
+| `ROMCPU:$C21124` | **the gate**: `LDA $2F41 / AND $3A8F / BNE skip` |
+
+`$3A8F` is the Wait flag, so `$C21124` is **where ACTIVE and WAIT
+diverge**. `$2F41` — zeroed at battle entry, `00` throughout a
+free-running battle — is the untested other half.
+
+**Battle Speed scales enemy gauges only.** The `CPX #$08 / BCC` branch at
+`$C209F6` skips the `$3A90` multiply for party slots, and measurement
+agrees: party increments byte-identical at Bat.Speed 3 and 6
+(318/330/336) while enemy increments went 240 → 156.
+
+Watch the stride: the ATB family is **stride 2**, not the `$14` of the
+HP/stat family. DISC-0001's unified layout governs slot *assignment*, not
+stride.
+
 ## Next exact action
 
-**EXP-0043 — locate the consumer of `WRAM:+$3A90`, and the ATB gauges.**
-`$3A90` is the sharpest lead the project has into battle timing: a
-battle-local value derived from Battle Speed whose reader is unknown.
-Read-watch `+$3A8F`–`+$3A90` across a battle and follow the reader to
-whatever it advances. Expected to converge with the other standing lead,
-the **eight undumped callees of `ROMCPU:$C101FB`** (open question #6).
-Substrate is already on disk: `EXP-0042/in-battle-formation14.mss` is a
-preserved live battle. Whelk remains deferred.
+**EXP-0044 — the ACTIVE/WAIT pause matrix.** Find what sets and clears
+`WRAM:+$2F41` (write-watch across opening and closing each battle
+submenu), then build the matrix of menu and presentation states against
+timer domains — now cheap, because every domain has an address:
+`+$3AB4`, `+$3A3E`, `+$3AA0`, `+$3218`.
+
+This is the unit the ATB program has been aiming at, and the first that
+genuinely warrants `/battle-baseline` and parallel read-only observers.
+`$3A8F`/`$3A90` can now be patched directly, making ACTIVE-versus-WAIT a
+one-variable comparison inside a single savestate lineage. Whelk remains
+deferred.

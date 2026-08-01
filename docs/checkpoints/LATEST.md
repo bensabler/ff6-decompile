@@ -1,46 +1,49 @@
 # Latest Checkpoint
 
-**[2026-08-01 — EXP-0042: battle-entry configuration sampling](2026-08-01-exp0042-battle-entry-config-sampling.md)**
+**[2026-08-01 — EXP-0043: the ATB layer is located](2026-08-01-exp0043-atb-layer-located.md)**
 
-State: the ATB program has its **staging rule**. Configuration sampling
-across a battle entry is **mixed, and the split falls exactly where it
-matters**. `ROMCPU:$C22472` reads the two config bytes **once each** at
-the entry frame and decomposes them:
+State: **the ATB layer is located.** Every timer domain the master
+program asked for now has an address:
 
-| Setting | Battle-local cell | Value |
-|---|---|---|
-| Bat.Mode | `WRAM:+$3A8F` | `01` = Wait, `00` = Active |
-| Bat.Speed | `WRAM:+$3A90` | `255 − 24 × speed` (Fast `$FF` … Slow `$87`) |
-| Cmd.Set | `WRAM:+$2F2E` | cleared when Window |
-| Gauge | `WRAM:+$2021` | cleared when Off |
-| `+$1D4E` bits 0-2 | `WRAM:+$2F34` | at `$C10FF7` |
+| Address | Role |
+|---|---|
+| `WRAM:+$3AB4` | **ATB gauge array** — 10 entries, **stride 2**, 16-bit; party 0-3, enemies 4-9 |
+| `WRAM:+$3AC8` | per-slot **increment**; gauge += `$3AC8,X >> 1` at `ROMCPU:$C21195` |
+| `WRAM:+$3AA0` | per-slot scheduler **flags** |
+| `WRAM:+$3A3E` | 16-bit **battle tick counter**, one per non-gated frame |
+| `WRAM:+$3218` | second accumulator, gated on `$3219,X` |
+| `ROMCPU:$C21124` | **the gate** — `LDA $2F41 / AND $3A8F / BNE` |
 
-Neither Bat.Mode nor Bat.Speed is re-read for timing during the battle.
-`Msg.Speed` and `Cursor` **are** read live, by `$C198AC` (message-delay
-table `ROMCPU:$C19872`) and `$C159D6` (clears the `$5C`-byte
-cursor-memory block at `+$890F` when Cursor = Reset — the mechanism
-behind EXP-0040's `Cursor = Memory` observation).
+Two headline results. **`$C21124` is where ACTIVE and WAIT diverge**:
+that one branch skips the entire per-frame battle update, with `$3A8F`
+the Wait flag from EXP-0042 and `$2F41` the untested other half.
+And **Battle Speed scales enemy gauges only** — the `CPX #$08 / BCC`
+branch skips the `$3A90` multiply for party slots, confirmed
+numerically: party increments byte-identical at Bat.Speed 3 and 6
+(318/330/336) while enemy increments went 240 → 156.
 
-The `$C22472` arithmetic was decoded statically and then used to
-**predict** `$3A8F`/`$3A90` for a second, differently-configured run;
-both matched exactly. Two live encounters, both formation 14,
-reproducing EXP-0038.
+Three instruments were required to converge before anything was claimed —
+read watch, static ROM decode, and live sampling showing `+$3AB4` advance
+by exactly the predicted `$4E` = `$9C >> 1`, including a wrap. No
+falsifier fired.
 
-**Consequence:** ACTIVE/WAIT and Battle Speed must be established
-**before battle entry**, or injected directly at `+$3A8F`/`+$3A90`.
+**Correction to carry forward:** the ATB family is **stride 2**, not the
+`$14` of the HP/stat family. DISC-0001's unified layout governs slot
+assignment, not stride.
 
-**The hard ATB blocker remains open** — no timer domain, pause condition
-or queue semantics is known. But there is now a concrete way in:
-`+$3A90`'s consumer is unlocated and is the sharpest lead into ATB rate.
-Registered as a Tentative hypothesis, not a conclusion.
+**The blocker is now narrow rather than total.** Still unknown: the pause
+condition (`$2F41` never observed non-zero), the exact increment and
+threshold arithmetic, and the action queue. Whelk stays deferred until
+the pause matrix exists.
 
-Whelk not resumed; its savestates not reloaded. 8 evidence artifacts
-preserved with hashes (including two **live battle savestates**); no
-background processes; SRAM virgin. All gates clean (gofmt/build/vet/test,
-`ff6lab audit`, census sync 63 entries, restricted-file scan).
+8 evidence artifacts with hashes; no background processes; SRAM virgin.
+All gates clean (gofmt/build/vet/test, `ff6lab audit`, census sync 64
+entries, restricted-file scan).
 
-Exact next action: **EXP-0043 — locate the consumer of `WRAM:+$3A90` and
-the ATB gauges.** Read-watch `+$3A8F`–`+$3A90` across a battle and follow
-the reader; expect convergence with the eight undumped callees of
-`ROMCPU:$C101FB`. Start from
-`local_artifacts/experiments/EXP-0042/in-battle-formation14.mss`.
+Exact next action: **EXP-0044 — the ACTIVE/WAIT pause matrix.**
+Write-watch `WRAM:+$2F41` across opening and closing each battle submenu,
+then build the matrix of menu states against timer domains, reading
+`+$3AB4`, `+$3A3E`, `+$3AA0` and `+$3218` directly. `$3A8F`/`$3A90` can
+be patched in place, making ACTIVE versus WAIT a one-variable comparison
+inside a single savestate lineage. First unit warranting
+`/battle-baseline` and bounded parallel observers.
