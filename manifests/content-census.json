@@ -2943,6 +2943,66 @@
       "contradictions": [],
       "next_action": "EXP-0046: read-watch +$3AA0 and +$3218 through a gated interval to name the routine that completes a pending action - the action-queue execution path.",
       "notes": "The pause is NARROWER than the folk model: the main battle command window is on screen for most of a WAIT battle and does not pause, and action animations do not pause either. This scopes EXP-0040's contamination - intervals inside the ability list and target selection were paused; intervals at the command window and during action resolution were not. Verified by an in-place one-variable flip of +$3A8F inside a single savestate, and cross-checked against genuinely configured WAIT. EXP-0045 added: Item is a qualifying submenu; the victory presentation is not; and +$3AA0 bit 6 is the pending-action marker (Strong hypothesis), which resolves a semantics question EXP-0043 and EXP-0044 both left open. This vindicates EXP-0040's observation that queued actions resolved while menus were open - that was real system behaviour, not operator error."
+    },
+    {
+      "schema_version": "1.0",
+      "id": "CEN-BATTLE-0013",
+      "domain": "BATTLE",
+      "category": "ATB scheduler",
+      "name": "Action-execution path outside the per-frame scheduler",
+      "description": "An action-execution path in ROMCPU:$C207xx-$C209xx runs outside ROMCPU:$C21124's ACTIVE/WAIT gate and completes a pending action in a single-frame burst. ROMCPU:$C201BE (INC $3219,X) advances WRAM:+$3218 by $0100, guarded by +$3AA0 bit 3; $C20795 clears +$3AA0 bit 7 and sets bit 6 of +$3204,X; $C20974 sets +$3AA0 bit 3. ROMCPU:$C211B4 is a SHARED helper (ORA $3AA0,X / STA / RTS) entered by the scheduler at $C211B2 with A=$20 and by $C208C6 with A=$50, so a write callback at $C211BA does not imply the scheduler ran.",
+      "reconstruction_status": "FORMAT_PARTIAL",
+      "runtime_status": "NORMAL_PATH_VERIFIED",
+      "rom_revision": "0f51b4fca41b7fd509e4b8f9d543151f68efa5e97b08493e4b2a0c06f5d8d5e2",
+      "rom_locations": [],
+      "wram_locations": [
+        "WRAM:+$3218 high byte incremented at ROMCPU:$C201BE",
+        "WRAM:+$3AA0 bit 3 (gates the increment), bit 7 (cleared on completion)",
+        "WRAM:+$3204 per-slot byte, bit 6 set on the completion path (uncharacterised)",
+        "WRAM:+$322C written $FF on the completion path",
+        "WRAM:+$3AB5 zeroed on the completion path"
+      ],
+      "cpu_routines": [
+        "ROMCPU:$C201B1-$C201CD action-completion step",
+        "ROMCPU:$C20788-$C20798 flag clear",
+        "ROMCPU:$C2096C-$C20977 sets +$3AA0 bit 3",
+        "ROMCPU:$C208C6-$C208CB calls the shared flag helper with A=$50",
+        "ROMCPU:$C211B4 shared ORA/STA flag helper, at least two entry points"
+      ],
+      "spc_locations": [],
+      "record_count_expected": null,
+      "record_count_found": null,
+      "record_size": null,
+      "pointer_tables": [],
+      "consumers": [],
+      "producers": [],
+      "related_experiments": [
+        "EXP-0046",
+        "EXP-0045",
+        "EXP-0044",
+        "EXP-0043",
+        "EXP-0040"
+      ],
+      "related_discoveries": [],
+      "related_implementations": [],
+      "related_tests": [],
+      "runtime_scenarios": [
+        "local_artifacts/experiments/EXP-0042/in-battle-active-speed6.mss"
+      ],
+      "evidence": [
+        "local_artifacts/experiments/EXP-0046/ (hashes.sha256)"
+      ],
+      "confidence": "confirmed",
+      "unknown_fields": [
+        "what invokes the execution path, and why the completion fired 122 frames after the gate engaged",
+        "the caller chain above $C208C6 ($C208B1, $C21420, $C20EB6) - captured but not decoded",
+        "boundaries and purpose of the routines enclosing $C20798 and $C20974",
+        "+$3AA0 bits 0-2, 4, 5; and +$3204",
+        "whether several pending slots drain in one burst or several"
+      ],
+      "contradictions": [],
+      "next_action": "EXP-0047: decode the caller chain above $C208C6 and exec-watch the entry point across a gated interval to recover the invocation cadence.",
+      "notes": "Carries a CORRECTION to EXP-0043: the +$3AA0 store at $C211B7 belongs to a shared helper with at least two callers, so a PC in that range does not imply the scheduler ran. No earlier conclusion depended on the stronger reading. The apparent contradiction (a scheduler PC writing while gated) was resolved by stack evidence rather than assumption."
     }
   ]
 }

@@ -123,12 +123,20 @@ Ordered next units (reorder when evidence exposes a better chain):
   pending-action marker. Item added as a qualifying submenu; the victory
   presentation does not pause
   ([record](../docs/experiments/EXP-0045-gate-transition-and-matrix-completion.md)).
-- [ ] **P0 NEXT — EXP-0046: the action-queue execution path.** Something
-  drives a pending action to completion while `ROMCPU:$C21124` is shut.
-  Read-watch `+$3AA0`/`+$3218` through a gated interval arranged as
-  EXP-0045 trace 3 arranged it and capture the writing PC. This is the
-  queue/execution half of the ATB model and what EXP-0040's "actions
-  resolved out of issue order" depends on.
+- [x] **EXP-0046: the action-execution path** — done. **`ROMCPU:$C201BE`
+  (`INC $3219,X`)** advances `+$3218` by `$0100`, guarded by `+$3AA0`
+  bit 3, reached from a path in `ROMCPU:$C207xx`-`$C209xx` that runs
+  outside `$C21124`. All gated writes fell on a single frame. An apparent
+  contradiction — a scheduler PC writing while gated — was resolved by
+  stack evidence: `$C211B4` is a **shared helper** with at least two
+  entry points, which **corrects EXP-0043**
+  ([record](../docs/experiments/EXP-0046-action-queue-execution-path.md)).
+- [ ] **P0 NEXT — EXP-0047: what invokes the execution path, and when.**
+  Decode the captured stack frames above `$C208C6` (`$C208B1`,
+  `$C21420`, `$C20EB6`) and exec-watch the entry point across a gated
+  interval to recover the invocation cadence — nothing yet explains the
+  78/119/122-frame delays. Last structural piece before the ATB
+  programme's action-lifecycle and queue-model deliverables.
 - [ ] **ATB program, remaining (none blocking):** the exact increment
   formula, threshold and gauge reset; `+$3AA0` bit semantics; the action
   queue and readiness arbitration; status modifiers (Haste/Slow/Stop);

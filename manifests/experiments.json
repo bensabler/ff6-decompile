@@ -865,6 +865,43 @@
       "falsifying_outcome": "For 'last un-gated frame': any domain advancing on a frame with +$2F41 = 1. For 'work resolves past the gate': no advance on any gated frame. If +$2F41 toggles every frame rather than holding, EXP-0044's readings were aliased.",
       "status": "completed",
       "record": "docs/experiments/EXP-0045-gate-transition-and-matrix-completion.md"
+    },
+    {
+      "schema_version": "1.0",
+      "id": "EXP-0046",
+      "domain": "battle",
+      "question": "Which routine clears WRAM:+$3AA0 bit 6 and advances WRAM:+$3218 while ROMCPU:$C21124's gate is shut?",
+      "starting_state": {
+        "emulator": "Mesen 2.1.1 macOS, --testrunner headless (--timeout=7200, FF6_OUT set), bridge v2, probe EXP-0046.lua; one instance",
+        "rom_sha256": "0f51b4fca41b7fd509e4b8f9d543151f68efa5e97b08493e4b2a0c06f5d8d5e2",
+        "state": "local_artifacts/experiments/EXP-0042/in-battle-active-speed6.mss; +$3A8F patched to $01 (Wait), validated by EXP-0044 trial 9",
+        "battle_config": {
+          "battle_mode": "Active",
+          "battle_speed": 6,
+          "message_speed": 3,
+          "command_set": "Window",
+          "gauge": "On",
+          "sound": "Stereo",
+          "cursor": "Reset",
+          "reequip": "Optimum",
+          "controller": "Single",
+          "source": "memory-read",
+          "raw": {
+            "WRAM:+$1D4D": "0x25",
+            "WRAM:+$1D4E": "0x00",
+            "WRAM:+$3A8F": "0x00 patched to 0x01",
+            "WRAM:+$3A90": "0x87"
+          }
+        }
+      },
+      "expected_outcomes": [
+        "direct: a small number of PCs write while gated and their stacks name a decodable caller chain",
+        "partial: writes seen but the stack does not resolve a caller",
+        "refuted: no gated write, meaning the completion happens by a path the watch does not cover"
+      ],
+      "falsifying_outcome": "No gated write captured despite an observed completion; or the only gated writers lie inside ROMCPU:$C2111B-$C21192, contradicting EXP-0045; or the captured PC writes every frame rather than once",
+      "status": "completed",
+      "record": "docs/experiments/EXP-0046-action-queue-execution-path.md"
     }
   ]
 }

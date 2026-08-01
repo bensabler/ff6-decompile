@@ -6,7 +6,7 @@ Breadth without pretense: counts are census entries at or above each threshold (
 
 | Domain | Registered | Located | Decoded | Extracted | Implemented | Runtime verified |
 |---|---|---|---|---|---|---|
-| BATTLE | 11 | 8 | 5 | 3 | 3 | 8 |
+| BATTLE | 12 | 9 | 5 | 3 | 3 | 9 |
 | CHAR | 4 | 1 | 1 | 1 | 1 | 1 |
 | MAGIC | 9 | 4 | 2 | 1 | 0 | 3 |
 | MONSTER | 4 | 3 | 0 | 0 | 0 | 0 |
@@ -27,7 +27,7 @@ Breadth without pretense: counts are census entries at or above each threshold (
 
 ## Census health
 
-- Entries with unresolved fields/formats: 37.
+- Entries with unresolved fields/formats: 38.
 - Observed but not yet located (breadth backlog): 39.
 - Runtime-only findings (seen live, no location): 28.
 - Static-only findings (located, never exercised live): 1.

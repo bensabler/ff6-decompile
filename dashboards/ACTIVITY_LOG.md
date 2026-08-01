@@ -1,5 +1,24 @@
 # Activity Log
 
+- 2026-08-01 (headless) — **EXP-0046: the action-execution path.** The
+  routine EXP-0045 left unnamed is **`ROMCPU:$C201BE` (`INC $3219,X`)**,
+  which advances `+$3218` by `$0100`, guarded by `+$3AA0` **bit 3**, and
+  is reached from an action-execution path in `ROMCPU:$C207xx`-`$C209xx`
+  that runs **outside** `$C21124`'s gate. All thirteen gated writes fell
+  on a **single frame** (122 frames after the trigger) — the deferred
+  completion is a burst, not a drain. One capture looked like a
+  contradiction: `$C211BA`, inside the gauge-advance routine the gate
+  skips, wrote while gated. The stacks **resolved** it rather than
+  explaining it away — `$C211B4` is a **shared helper**
+  (`ORA $3AA0,X / STA / RTS`) with at least two entry points, the
+  scheduler at `$C211B2` with `A=$20` and `$C208C6` with `A=$50`. That
+  carries a **correction to EXP-0043**, which had attributed the store to
+  the scheduler's threshold path: a PC in that range does not imply the
+  scheduler ran. Memory map amended; no earlier conclusion depended on
+  the stronger reading. `+$3AA0` fills in further — bit 3 gates the
+  increment (set by `$C20974`), bit 7 cleared on completion by
+  `$C20795`, which also sets bit 6 of a new uncharacterised per-slot byte
+  `+$3204,X`. New CEN-BATTLE-0013.
 - 2026-08-01 (headless) — **EXP-0045: queued work resolves past the
   gate.** Per-frame `endFrame` tracing settled EXP-0044's unresolved
   transient. The scheduler stops dead — tick `+$3A3E` and all `+$3AB4`
