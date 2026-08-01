@@ -2950,7 +2950,7 @@
       "domain": "BATTLE",
       "category": "ATB scheduler",
       "name": "Action-execution path outside the per-frame scheduler",
-      "description": "An action-execution path in ROMCPU:$C207xx-$C209xx runs outside ROMCPU:$C21124's ACTIVE/WAIT gate and completes a pending action in a single-frame burst. ROMCPU:$C201BE (INC $3219,X) advances WRAM:+$3218 by $0100, guarded by +$3AA0 bit 3; $C20795 clears +$3AA0 bit 7 and sets bit 6 of +$3204,X; $C20974 sets +$3AA0 bit 3. ROMCPU:$C211B4 is a SHARED helper (ORA $3AA0,X / STA / RTS) entered by the scheduler at $C211B2 with A=$20 and by $C208C6 with A=$50, so a write callback at $C211BA does not imply the scheduler ran.",
+      "description": "An action-execution path in ROMCPU:$C207xx-$C209xx runs outside ROMCPU:$C21124's ACTIVE/WAIT gate and completes a pending action in a single-frame burst. ROMCPU:$C201BE (INC $3219,X) advances WRAM:+$3218 by $0100, guarded by +$3AA0 bit 3; $C20795 clears +$3AA0 bit 7 and sets bit 6 of +$3204,X; $C20974 sets +$3AA0 bit 3. ROMCPU:$C211B4 is a SHARED helper (ORA $3AA0,X / STA / RTS) entered by the scheduler at $C211B2 with A=$20 and by $C208C6 with A=$50, so a write callback at $C211BA does not imply the scheduler ran. EXP-0047: the path is PERIODIC and UNGATED - $C201BE executes at both gate states, invoked roughly every 100-120 frames and sweeping the battle slots ($C208AE seen with X = $0010/$000E/$000C on one frame). The 78/119/122-frame completion delays are the wait for the next invocation, scheduled upstream of $C21124.",
       "reconstruction_status": "FORMAT_PARTIAL",
       "runtime_status": "NORMAL_PATH_VERIFIED",
       "rom_revision": "0f51b4fca41b7fd509e4b8f9d543151f68efa5e97b08493e4b2a0c06f5d8d5e2",
@@ -2967,7 +2967,10 @@
         "ROMCPU:$C20788-$C20798 flag clear",
         "ROMCPU:$C2096C-$C20977 sets +$3AA0 bit 3",
         "ROMCPU:$C208C6-$C208CB calls the shared flag helper with A=$50",
-        "ROMCPU:$C211B4 shared ORA/STA flag helper, at least two entry points"
+        "ROMCPU:$C211B4 shared ORA/STA flag helper, at least two entry points",
+        "ROMCPU:$C2141D JSR $C2083F (on the live path)",
+        "ROMCPU:$C208AE JSR $C208C6 (slot sweep)",
+        "ROMCPU:$C201A0 JSR $C213D3 (on the live path)"
       ],
       "spc_locations": [],
       "record_count_expected": null,
@@ -2977,6 +2980,7 @@
       "consumers": [],
       "producers": [],
       "related_experiments": [
+        "EXP-0047",
         "EXP-0046",
         "EXP-0045",
         "EXP-0044",
@@ -2994,15 +2998,15 @@
       ],
       "confidence": "confirmed",
       "unknown_fields": [
-        "what invokes the execution path, and why the completion fired 122 frames after the gate engaged",
-        "the caller chain above $C208C6 ($C208B1, $C21420, $C20EB6) - captured but not decoded",
-        "boundaries and purpose of the routines enclosing $C20798 and $C20974",
+        "the invoker of the execution path - two candidates refuted (see notes)",
+        "the invocation period on more than one run; gaps of 121/35/105/122 observed",
+        "ROMCPU:$C223ED, $C2083F, $C213D3 - named call targets, none decoded",
         "+$3AA0 bits 0-2, 4, 5; and +$3204",
-        "whether several pending slots drain in one burst or several"
+        "whether several pending slots drain in one invocation"
       ],
       "contradictions": [],
-      "next_action": "EXP-0047: decode the caller chain above $C208C6 and exec-watch the entry point across a gated interval to recover the invocation cadence.",
-      "notes": "Carries a CORRECTION to EXP-0043: the +$3AA0 store at $C211B7 belongs to a shared helper with at least two callers, so a PC in that range does not imply the scheduler ran. No earlier conclusion depended on the stronger reading. The apparent contradiction (a scheduler PC writing while gated) was resolved by stack evidence rather than assumption."
+      "next_action": "EXP-0048: name the invoker with a different instrument - exec-watch outward from $C2141D, or trace one invocation. Stack archaeology has failed twice on this path.",
+      "notes": "Carries a CORRECTION to EXP-0043: the +$3AA0 store at $C211B7 belongs to a shared helper with at least two callers, so a PC in that range does not imply the scheduler ran. No earlier conclusion depended on the stronger reading. The apparent contradiction (a scheduler PC writing while gated) was resolved by stack evidence rather than assumption. METHOD NOTE (EXP-0047): a JSR at return-3 is necessary but NOT sufficient to confirm a stack frame. $C20EB6 is not a call frame (TSX at return-3), and $C20016 holds a plausible JSR yet never executed across a gated interval containing a completion. Confirm stack frames by EXECUTION, not by the presence of a JSR."
     }
   ]
 }

@@ -1,36 +1,30 @@
 # Latest Checkpoint
 
-**[2026-08-01 — EXP-0046: the action-execution path](2026-08-01-exp0046-action-execution-path.md)**
+**[2026-08-01 — EXP-0047: the execution path is periodic and ungated](2026-08-01-exp0047-execution-path-invocation.md)**
 
-State: the routine EXP-0045 left unnamed is named.
-**`ROMCPU:$C201BE` (`INC $3219,X`)** advances `+$3218` by `$0100`,
-guarded by `+$3AA0` **bit 3**, reached from an action-execution path in
-`ROMCPU:$C207xx`–`$C209xx` that runs **outside** `$C21124`'s gate. Every
-gated write fell on a **single frame** — the deferred completion is a
-burst, not a drain.
+State: the delay question is answered. `$C201BE` — the completion write —
+executed at **`gate=0` and `gate=1`**, so the action-execution path was
+never behind the ACTIVE/WAIT gate. It is **periodic**, firing roughly
+every 100-120 frames (observed gaps 121/35/105/122) and sweeping the
+battle slots. The **78/119/122-frame completion delays are the wait for
+the next invocation**, scheduled upstream of `$C21124`.
 
-One capture looked like a contradiction: `$C211BA`, inside the
-gauge-advance routine the gate skips, wrote while gated. The stacks
-resolved it rather than explaining it away — **`$C211B4` is a shared
-helper** (`ORA $3AA0,X / STA / RTS`) with at least two entry points: the
-scheduler at `$C211B2` with `A=$20`, and `$C208C6` with `A=$50`.
+This reframes EXP-0045's finding: the gate stops the scheduler, and the
+execution path was never behind it to begin with.
 
-**Correction propagated:** EXP-0043 read the `+$3AA0` store at `$C211B7`
-as the scheduler's threshold path. It belongs to a shared helper, so a PC
-there does not imply the scheduler ran. The memory map is amended; no
-earlier conclusion depended on the stronger reading.
+**Two refutations, recorded rather than buried.** `$C20EB6` is not a call
+frame (`TSX` at return−3). `$C20016` holds a plausible `JSR` yet **never
+executed** across a gated interval in which a completion demonstrably
+occurred. Method note to carry forward: **a `JSR` at return−3 is
+necessary but not sufficient — confirm stack frames by execution.**
 
-`+$3AA0` is filling in: **bit 3** gates the increment (set by `$C20974`),
-**bit 6** is the pending-action marker (EXP-0045), **bit 7** is cleared
-on completion by `$C20795`. Bits 0-2, 4, 5 remain Unknown, as do
-`+$3204`, the caller chain above `$C208C6`, and why the completion fired
-122 frames after the gate engaged.
+Confirmed on the live path: `$C2141D`, `$C208AE`, `$C201A0`, `$C201BE`.
+Named but undecoded call targets: `$C223ED`, `$C2083F`, `$C213D3`.
+The invoker itself remains **Unknown**.
 
-New CEN-BATTLE-0013. No blockers. All gates clean; no background
-processes; SRAM virgin.
+No blockers. All gates clean; no background processes; SRAM virgin.
 
-Exact next action: **EXP-0047 — what invokes the execution path, and
-when.** Decode the captured chain (`$C208B1`, `$C21420`, `$C20EB6`) and
-exec-watch the entry point across a gated interval to recover the
-invocation cadence. That is the last structural piece before the action
-lifecycle and queue model can be written down.
+Exact next action: **EXP-0048 — name the invoker with a different
+instrument.** Stack archaeology has failed twice here; exec-watch outward
+from the confirmed `$C2141D`, or trace a single invocation. Narrow
+question, confirmed sites to walk from.

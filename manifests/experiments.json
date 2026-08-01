@@ -902,6 +902,43 @@
       "falsifying_outcome": "No gated write captured despite an observed completion; or the only gated writers lie inside ROMCPU:$C2111B-$C21192, contradicting EXP-0045; or the captured PC writes every frame rather than once",
       "status": "completed",
       "record": "docs/experiments/EXP-0046-action-queue-execution-path.md"
+    },
+    {
+      "schema_version": "1.0",
+      "id": "EXP-0047",
+      "domain": "battle",
+      "question": "What calls the action-execution path, and why does a pending action complete tens of frames after the gate engages rather than immediately?",
+      "starting_state": {
+        "emulator": "Mesen 2.1.1 macOS, --testrunner headless, bridge v2, probe EXP-0047.lua; one instance",
+        "rom_sha256": "0f51b4fca41b7fd509e4b8f9d543151f68efa5e97b08493e4b2a0c06f5d8d5e2",
+        "state": "local_artifacts/experiments/EXP-0042/in-battle-active-speed6.mss; +$3A8F patched to $01 (Wait)",
+        "battle_config": {
+          "battle_mode": "Active",
+          "battle_speed": 6,
+          "message_speed": 3,
+          "command_set": "Window",
+          "gauge": "On",
+          "sound": "Stereo",
+          "cursor": "Reset",
+          "reequip": "Optimum",
+          "controller": "Single",
+          "source": "memory-read",
+          "raw": {
+            "WRAM:+$1D4D": "0x25",
+            "WRAM:+$1D4E": "0x00",
+            "WRAM:+$3A8F": "0x00 patched to 0x01",
+            "WRAM:+$3A90": "0x87"
+          }
+        }
+      },
+      "expected_outcomes": [
+        "countdown inside the path: entry fires on most gated frames, completion on one",
+        "upstream scheduling: entry fires rarely, ideally once on the completion frame",
+        "neither: entry never fires while gated, so the reconstructed chain is wrong"
+      ],
+      "falsifying_outcome": "The entry never executes during a gated interval in which a completion is observed; or it fires every frame including when nothing is pending; or no JSR is found at return-3 for a reconstructed frame",
+      "status": "completed",
+      "record": "docs/experiments/EXP-0047-execution-path-invocation.md"
     }
   ]
 }

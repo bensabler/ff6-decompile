@@ -1,5 +1,19 @@
 # Activity Log
 
+- 2026-08-01 (headless) — **EXP-0047: the execution path is periodic and
+  ungated.** `$C201BE` — the completion write — executed at **`gate=0`
+  and `gate=1`**, so it was never behind the ACTIVE/WAIT gate at all. It
+  fires roughly **every 100-120 frames** (observed gaps 121/35/105/122)
+  and sweeps the battle slots (`$C208AE` seen with X = `$0010`/`$000E`/
+  `$000C` on one frame). The **78/119/122-frame completion delays are
+  simply the wait for the next invocation**, scheduled upstream of
+  `$C21124`. This reframes EXP-0045: the gate stops the scheduler, and
+  the execution path was never behind it. **Two refutations recorded
+  rather than buried:** `$C20EB6` is not a call frame (`TSX` at
+  return−3), and `$C20016` holds a plausible `JSR` yet **never executed**
+  across a gated interval containing a completion. Method note carried
+  forward — a `JSR` at return−3 is necessary but not sufficient; confirm
+  stack frames by execution. The invoker remains unnamed.
 - 2026-08-01 (headless) — **EXP-0046: the action-execution path.** The
   routine EXP-0045 left unnamed is **`ROMCPU:$C201BE` (`INC $3219,X`)**,
   which advances `+$3218` by `$0100`, guarded by `+$3AA0` **bit 3**, and

@@ -131,12 +131,19 @@ Ordered next units (reorder when evidence exposes a better chain):
   stack evidence: `$C211B4` is a **shared helper** with at least two
   entry points, which **corrects EXP-0043**
   ([record](../docs/experiments/EXP-0046-action-queue-execution-path.md)).
-- [ ] **P0 NEXT — EXP-0047: what invokes the execution path, and when.**
-  Decode the captured stack frames above `$C208C6` (`$C208B1`,
-  `$C21420`, `$C20EB6`) and exec-watch the entry point across a gated
-  interval to recover the invocation cadence — nothing yet explains the
-  78/119/122-frame delays. Last structural piece before the ATB
-  programme's action-lifecycle and queue-model deliverables.
+- [x] **EXP-0047: execution-path invocation** — done. The path is
+  **periodic and ungated**: `$C201BE` executes at both gate states,
+  invoked roughly every 100-120 frames and sweeping the battle slots. The
+  78/119/122-frame delays are simply the wait for the next invocation,
+  scheduled **upstream** of `$C21124`. Two reconstructions refuted:
+  `$C20EB6` is not a call frame, and `$C20016` never executed despite
+  holding a plausible `JSR`
+  ([record](../docs/experiments/EXP-0047-execution-path-invocation.md)).
+- [ ] **P0 NEXT — EXP-0048: name the invoker, with a different
+  instrument.** Stack archaeology has failed twice on this path. Exec
+  -watch outward from the confirmed `$C2141D`, or trace a single
+  invocation. Narrow question: one routine, ~every 100 frames, confirmed
+  sites to walk from.
 - [ ] **ATB program, remaining (none blocking):** the exact increment
   formula, threshold and gauge reset; `+$3AA0` bit semantics; the action
   queue and readiness arbitration; status modifiers (Haste/Slow/Stop);
