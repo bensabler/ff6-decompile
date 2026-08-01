@@ -279,29 +279,57 @@ matches `MinesRoute()` leg for leg — so the two cannot drift silently.
 That guard caught nothing yet only because every probe change in this
 unit was made in the same commit as its model change.
 
-### Route status
+### Acceptance runs — milestone 05 established
 
-The 16-leg encoding reached the mines interior (verified by screenshot:
-the party is inside the shaft, not at its mouth) at (`$26`,`$21`),
+The 16-leg encoding reached the mines interior (screenshot-verified:
+the party inside the shaft, not at its mouth) at (`$26`,`$21`),
 settling to (`$26`,`$20`). EXP-0035's documented milestone tile is
-(`$26`,`$1C`), which the recon reached by walking further north after
-the transition, so a 17th leg (`up` until `Y <= $1C`) was added to land
-on the documented coordinate.
+(`$26`,`$1C`), reached in recon by walking further north, so a 17th leg
+(`up` until `Y <= $1C`) was added to land on it.
 
-**The three acceptance runs of the final 17-leg encoding are still
-outstanding at the time of this record's last update.** Milestone 05 is
-therefore **not claimed** — see Confidence.
+**Three power-on runs of the final 17-leg encoding, all successful and
+frame-identical:**
 
-- **Confidence:** route legs 1-16 execute uncorrected from a scheduled
-  power-on run and reach the mines interior — **Confirmed for a single
-  run** of that encoding. Formation 84 identity and its ROM match —
-  **Confirmed**. Monster record 27's HP/MP — Confirmed as record fields
-  (HP additionally anchored to a live enemy word). Guard trigger at
+| Leg / event | run1 | run2 | run3 |
+|---|---|---|---|
+| Battle 5 entry (formation 84) | 46 802 | 46 802 | 46 802 |
+| Leg 16 end (transition, X→`$26`) | 50 913 | 50 913 | 50 913 |
+| Leg 17 end | 50 978 → (`$26`,`$1C`) | 50 978 → (`$26`,`$1C`) | 50 978 → (`$26`,`$1C`) |
+| Milestone 05 | 51 578, map `$0D`, 5 battles | 51 578, map `$0D`, 5 battles | 51 578, map `$0D`, 5 battles |
+
+- **Milestone-05 WRAM is byte-identical across all three runs**
+  (SHA-256 `c26453d3…`), every leg boundary matched, and all three
+  ended at the required (`$26`,`$1C`) inside the mines with five
+  battles fought. Timing did not vary either — the state-driven route
+  happened to be frame-stable as well, so the "timing varies but
+  routing succeeds" distinction did not need to be invoked.
+- **One channel disagreed:** run 1's screenshot differs from runs 2/3
+  (which match each other) while its WRAM is identical. Visual
+  inspection shows the same scene differing only in the phase of the
+  mines' animated lamp glow. This is the **already-registered
+  CEN-QUIRK-0002** phenomenon — deterministic WRAM, non-byte-stable
+  frame capture — now observed at a second milestone, which
+  strengthens the "capture phase, not state" reading. WRAM remains the
+  valid assertion channel; the screenshot is not.
+- Milestone artifacts: `05-mines-entry.mss` (promoted from run 3),
+  three WRAM dumps, three screenshots, `hashes.sha256`.
+
+- **Confidence:** the 17-leg route executes uncorrected from a scheduled
+  power-on run and reaches (`$26`,`$1C`) in the mines — **Confirmed**
+  (three independent runs, byte-identical milestone WRAM and matching
+  leg frames). Formation 84 identity and its ROM match — **Confirmed**.
+  Monster record 27's HP/MP — Confirmed as record fields (HP
+  additionally anchored to a live enemy word). Guard trigger at
   (`$1E`,`$25`), contact-based — Confirmed (three schedule variants
   discriminate it). `+$1EA5` as a simple map-id byte — **weakened, not
   promoted**: it reaches the destination value before the transition is
-  visible or the position changes. Determinism of the full 17-leg route
-  — **not established** (fewer than the required three runs completed).
-- **Next action:** run the 17-leg encoding three times from power-on and
-  byte-compare milestone-05 WRAM, per the acceptance criteria; create
-  milestone 05 only if all three reach (`$26`,`$1C`) inside the mines.
+  visible or the position changes; recorded as a map-load target /
+  event-state candidate. Frame-capture instability at milestone 05 —
+  Tentative, folded into CEN-QUIRK-0002.
+- **Next action:** EXP-0037 — the mines interior is now reachable
+  deterministically, so the highest-leverage next target is the map
+  system itself: write-watch `ROMCPU:$C0B5B6` across the transition to
+  settle `+$1EA5`'s meaning and locate the map header / tileset load
+  path (CEN-WORLD-0004, CEN-WORLD-0007). That unlocks B06, B08-B11 and
+  B16, which are the widest remaining PARTIAL rows in the scenario
+  matrix.

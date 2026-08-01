@@ -10,8 +10,8 @@ Ordered next units (reorder when evidence exposes a better chain):
   two runs byte-identical
   ([record](../docs/experiments/EXP-0031-golden-route-newgame.md)).
 - [x] **EXP-0032: golden route segment 2** — done: milestones
-  `01`–`03`; first scripted battle = formation 2 / monster 12
-  (Confirmed live+static)
+  `01`–`03`; first scripted battle = formation 2 = two of monster
+  record 0 (corrected in unit 33; Confirmed live+static)
   ([record](../docs/experiments/EXP-0032-golden-route-seg2.md)).
 - [x] **EXP-0033: golden route segment 3 (partial)** — battle won on
   schedule, rewards 32 EXP / 96 GP, battle→field HP/MP writeback
@@ -25,22 +25,23 @@ Ordered next units (reorder when evidence exposes a better chain):
   leg by leg and walked; player tile bytes `+$00AF`/`+$00B0` and
   candidate map-id `+$1EA5` found; milestone 05 not claimed
   ([record](../docs/experiments/EXP-0035-golden-route-seg4.md)).
-- [x] **EXP-0036: segment 4 scheduled (partial)** — 17-leg state-driven
-  route controller walks into the mines uncorrected; battle 5 =
-  formation 84 {27,27,0,0}; `+$1EA5` falsifier fired (not a simple map
-  id); milestone 05 unclaimed pending three acceptance runs
+- [x] **EXP-0036: segment 4 scheduled** — done: 17-leg state-driven
+  route controller; battle 5 = formation 84 {27,27,0,0}; `+$1EA5`
+  falsifier fired (not a simple map id); **milestone 05 established**
+  over three byte-identical power-on runs
   ([record](../docs/experiments/EXP-0036-scheduled-route-to-mines.md)).
-- [ ] **Milestone 05 acceptance** — three power-on runs of the 17-leg
-  encoding reaching (`$26`,`$1C`) in the mines; byte-compare WRAM.
-- [ ] **`+$1EA5` semantics** — write-watch `ROMCPU:$C0B5B6` against
-  tileset/tilemap loading to decide map-id vs map-load-target
-  (CEN-WORLD-0007).
-- [ ] Golden route segments 4..N → milestones `05`–`07-pre-whelk`,
-  then Whelk branches A/B/C (SCN-0001 route plan).
+- [ ] **EXP-0037 (recommended next): map system.** Write-watch
+  `ROMCPU:$C0B5B6` across the now-reproducible mines transition to
+  settle `+$1EA5` (map id vs map-load target) and follow it to the map
+  header / tileset load path (CEN-WORLD-0004/0007). Unlocks B06,
+  B08-B11, B16.
+- [ ] Golden route segments 5..N → milestones `06-random-encounter`
+  and `07-pre-whelk`, then Whelk branches A/B/C (SCN-0001 route plan).
 - [ ] Milestone-01 PPU/HDMA falsifier (CEN-QUIRK-0002): capture PPU
   registers + frame buffer at frame 15000 across two runs.
-- [ ] Monster record 12 extraction + on-screen cross-check (B14;
-  `ROMFILE:0x0F0180`).
+- [ ] Pre-Whelk monster record extraction (B14): records 0, 19, 25,
+  27, 77 — full 32-byte field map beyond the Confirmed +$08/+$0A, plus
+  the monster NAME table, which is still unlocated (CEN-MONSTER-0004).
 - [ ] Scripted-battle invocation opcode (CEN-EVENT-0005): exec-watch
   the frames before battle detection.
 - [ ] New-game initialization capture (B01; CEN-SAVE-0001).

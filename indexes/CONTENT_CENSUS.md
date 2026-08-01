@@ -53,12 +53,12 @@
 | CEN-MONSTER-0003 | MONSTER | graphics | Enemy battle sprites and palettes (green guard) | OBSERVED | ENCOUNTERED | confirmed |
 | CEN-MONSTER-0004 | MONSTER | monster records | Opening-area monsters reachable before Whelk (records 0 and 25) | LOCATED | ENCOUNTERED | confirmed |
 | CEN-QUIRK-0001 | QUIRK | hardware assumptions | Boot-time uninitialized WRAM reads (entropy candidates) | OBSERVED | ENCOUNTERED | confirmed |
-| CEN-QUIRK-0002 | QUIRK | timing behavior | Milestone-01 frame capture not byte-stable while WRAM is | OBSERVED | OUTPUTS_CAPTURED | tentative-hypothesis |
+| CEN-QUIRK-0002 | QUIRK | timing behavior | Milestone frame captures not byte-stable while WRAM is | OBSERVED | ALTERNATE_PATH_VERIFIED | tentative-hypothesis |
 | CEN-SAVE-0001 | SAVE | global state | Opening-relevant persistent state (event progress, party, names) | OBSERVED | ENCOUNTERED | tentative-hypothesis |
 | CEN-WORLD-0001 | WORLD | interior/exterior maps | Narshe exterior map (tileset, tilemap, palettes, animated tiles) | OBSERVED | ENCOUNTERED | confirmed |
 | CEN-WORLD-0002 | WORLD | interior maps | Narshe mines interior map (cave tileset, rails, light effects) | OBSERVED | ENCOUNTERED | confirmed |
 | CEN-WORLD-0003 | WORLD | collision | Field movement and collision | OBSERVED | INPUTS_CAPTURED | confirmed |
-| CEN-WORLD-0004 | WORLD | map transitions | Map transitions (exits/entrances) | UNMAPPED | NOT_ENCOUNTERED | unknown |
+| CEN-WORLD-0004 | WORLD | map transitions | Map transitions (exits/entrances) | UNMAPPED | NORMAL_PATH_VERIFIED | unknown |
 | CEN-WORLD-0005 | WORLD | treasure | Treasure/chest state | UNMAPPED | NOT_ENCOUNTERED | unknown |
 | CEN-WORLD-0006 | WORLD | encounter zones | Random encounter triggering (mines) | OBSERVED | INPUTS_CAPTURED | confirmed |
 | CEN-WORLD-0007 | WORLD | map headers | Player field position bytes and candidate map-id byte | CANDIDATE_LOCATION | INPUTS_CAPTURED | tentative-hypothesis |

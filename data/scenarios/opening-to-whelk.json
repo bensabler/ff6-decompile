@@ -232,7 +232,7 @@
       "name": "Narshe exterior traversal",
       "status_default": "PARTIAL",
       "overrides": {},
-      "note": "route from milestone 04 to the mine entrance mapped leg by leg with player-tile coordinates (EXP-0035); a fifth scripted battle and a shaft dialogue gate the way; tileset/branch sweep still not done",
+      "note": "route from milestone 04 to the mine entrance encoded as 17 state-driven legs and reproduced three times (EXP-0036); a fifth scripted battle (formation 84) and a shaft dialogue gate the way. Tileset/branch sweep still not done.",
       "links": {
         "census": [
           "CEN-WORLD-0001",
@@ -252,7 +252,7 @@
       "name": "Mine entry and map transition",
       "status_default": "PARTIAL",
       "overrides": {},
-      "note": "mines transition reproduced from a scheduled power-on route (EXP-0036); detection is by the player position jump, since +$1EA5 reaches the mines value before the transition is visible. Milestone 05 still unclaimed pending three acceptance runs.",
+      "note": "milestone 05-mines-entry ESTABLISHED (EXP-0036): three power-on runs reach ($26,$1C) in the mines with byte-identical WRAM. Transition detected by the player position jump, since +$1EA5 reaches the mines value before the transition is visible. Map records behind the transition still unlocated.",
       "links": {
         "census": [
           "CEN-WORLD-0004",
@@ -587,8 +587,10 @@
       {
         "id": 4,
         "experiment": "EXP-0035 (recon) + EXP-0036 (scheduled)",
-        "status": "PARTIAL",
-        "milestones": [],
+        "status": "COMPLETE",
+        "milestones": [
+          "05-mines-entry"
+        ],
         "encoding": {
           "legs": 17,
           "model": "internal/scenario/route.MinesRoute",
@@ -633,8 +635,16 @@
           "battle_position_bytes": "not field-meaningful during battle (1E,00 at entry, 00,00 at end)"
         },
         "assertions": {
-          "runs_compared": 0,
-          "result": "16-leg encoding reached the mines interior once (screenshot-verified); 17-leg encoding adds the walk to the documented tile. The three required acceptance runs are outstanding, so milestone 05 is NOT claimed."
+          "runs_compared": 3,
+          "milestone_05_frame": 51578,
+          "final_position": "($26,$1C)",
+          "map_context_at_milestone": "$0D",
+          "battles_fought": 5,
+          "wram_05_sha256": "c26453d3664a4ec3178ad58634f93b972b61be278600f27ec85516ae34401fcf",
+          "battle5_entry_frame": 46802,
+          "transition_frame": 50913,
+          "leg17_end_frame": 50978,
+          "result": "all three power-on runs byte-identical in milestone WRAM with matching leg frames; screenshot channel differs on run1 only (CEN-QUIRK-0002 capture-phase effect, animated lamp glow), so WRAM is the assertion channel"
         }
       }
     ]

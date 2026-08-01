@@ -211,15 +211,17 @@ Map transition into the town proper.
   not performed, and static map/object data has not been inspected.
 
 ### B10 — Mine entry and map transition
-- runtime PARTIAL→advanced: **the transition was walked** —
-  ($1F,$16) exterior → ($26,$1C) mines interior (EXP-0035), with a
-  candidate map-id byte `WRAM:+$1EA5` reading `$05` on every Narshe
-  exterior state and `$0D` on both mines states (Tentative;
-  CEN-WORLD-0007).
-- Remaining rows PARTIAL: milestone `05-mines-entry` is **not** yet
-  captured from a scheduled run (deliberately not claimed from
-  interactive recon), and the map records behind the transition are
-  unlocated (CEN-WORLD-0004).
+- identified/runtime **COMPLETE**: milestone **`05-mines-entry`
+  established** (EXP-0036) — three power-on runs of the 17-leg
+  state-driven route reach (`$26`,`$1C`) inside the mines with
+  byte-identical WRAM (`c26453d3…`) and matching leg frames.
+- behavior PARTIAL: the transition is observable as a player-position
+  jump; `WRAM:+$1EA5` moves to the mines value `$0D` **before** the
+  transition is visible, so it is **not** a simple map-id byte
+  (CEN-WORLD-0007 — the EXP-0035 candidate reading is weakened, not
+  promoted).
+- Remaining rows PARTIAL: the map records, header, and tileset load
+  path behind the transition are still unlocated (CEN-WORLD-0004).
 
 ### B11 — Mine traversal
 **All rows PARTIAL:** cave tileset/rails/light observed (EXP-0025,

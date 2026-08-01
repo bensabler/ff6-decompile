@@ -920,7 +920,7 @@
       "name": "Map transitions (exits/entrances)",
       "description": "Not yet captured; mines/town doorways visible in both field states.",
       "reconstruction_status": "UNMAPPED",
-      "runtime_status": "NOT_ENCOUNTERED",
+      "runtime_status": "NORMAL_PATH_VERIFIED",
       "rom_revision": "0f51b4fca41b7fd509e4b8f9d543151f68efa5e97b08493e4b2a0c06f5d8d5e2",
       "rom_locations": [],
       "wram_locations": [],
@@ -932,7 +932,10 @@
       "pointer_tables": [],
       "consumers": [],
       "producers": [],
-      "related_experiments": [],
+      "related_experiments": [
+        "EXP-0035",
+        "EXP-0036"
+      ],
       "related_discoveries": [],
       "related_implementations": [],
       "related_tests": [],
@@ -941,8 +944,8 @@
       "confidence": "unknown",
       "unknown_fields": [],
       "contradictions": [],
-      "next_action": "Walk through one Narshe doorway and capture the transition inputs (map id, target position).",
-      "notes": ""
+      "next_action": "Write-watch ROMCPU:$C0B5B6 across the reproducible mines transition and follow it to the map header / tileset load path.",
+      "notes": "EXP-0036: the Narshe-exterior -> mines transition is now reproducible three times from power-on (milestone 05). The transition is observable as a player-position jump to ($26,$1C); +$1EA5 moves to $0D before it is visible. The map records/loading path themselves remain unlocated - that is this entry's target."
     },
     {
       "schema_version": "1.0",
@@ -2164,7 +2167,8 @@
       "consumers": [],
       "producers": [],
       "related_experiments": [
-        "EXP-0032"
+        "EXP-0032",
+        "EXP-0036"
       ],
       "related_discoveries": [],
       "related_implementations": [],
@@ -2181,12 +2185,12 @@
       "id": "CEN-QUIRK-0002",
       "domain": "QUIRK",
       "category": "timing behavior",
-      "name": "Milestone-01 frame capture not byte-stable while WRAM is",
-      "description": "At frame 15000 of the opening presentation (snowfield march credits), two independent power-on runs of an identical input schedule produce byte-identical 128 KB WRAM but different screenshots (11536 vs 11339 B; same scene/text, sub-frame vertical difference) and different savestate sizes. Candidate cause: per-scanline/HDMA scroll state outside WRAM sampled at an unfixed phase by the endFrame screenshot; genuine emulation nondeterminism not excluded.",
+      "name": "Milestone frame captures not byte-stable while WRAM is",
+      "description": "At two independent milestones the same scheduled power-on route produces byte-identical 128 KB WRAM but non-identical screenshots. Milestone 01 (frame 15000, snowfield credits): 11536 vs 11339 bytes, sub-frame vertical difference. Milestone 05 (frame 51578, mines interior, EXP-0036): run1 differs from run2/run3 which match each other; visual inspection shows the same scene differing only in the phase of the animated lamp glow. Two milestones with different content showing the same pattern strengthens the capture-phase reading over genuine state nondeterminism. WRAM is treated as the assertion channel; screenshots are not.",
       "reconstruction_status": "OBSERVED",
-      "runtime_status": "OUTPUTS_CAPTURED",
+      "runtime_status": "ALTERNATE_PATH_VERIFIED",
       "confidence": "tentative-hypothesis",
-      "next_action": "Capture PPU/HDMA registers alongside the frame buffer at frame 15000 across two runs: differing registers mean unstable state, identical registers mean an unstable capture phase."
+      "next_action": "Capture PPU/HDMA registers alongside the frame buffer at both milestone frames across runs: differing registers mean unstable state, identical registers mean an unstable capture phase."
     },
     {
       "schema_version": "1.0",

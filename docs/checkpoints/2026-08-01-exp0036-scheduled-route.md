@@ -1,17 +1,15 @@
-# Checkpoint 2026-08-01 — EXP-0036: scheduled route to the mines, partial (Unit 36)
+# Checkpoint 2026-08-01 — EXP-0036: scheduled route to the mines (Unit 36)
 
 ## Current question
-SCN-0001 segment 4. The route controller is built and works; the
-milestone-05 acceptance runs are outstanding.
+SCN-0001 segment 4 is **COMPLETE**. Next: EXP-0037, the map system.
 
 ## State
-The golden route now walks **power-on → mines interior** with no manual
-correction, via a 17-leg state-driven route controller. Milestone 05 is
-**deliberately not claimed**: the acceptance criteria require three
-scheduled power-on runs landing at (`$26`,`$1C`) in the mines, and the
-final 17-leg encoding has not completed that set. The milestone
-directory is empty; artifacts from the earlier, invalid 16-leg capture
-were discarded rather than kept.
+The golden route walks **power-on → mines interior** with no manual
+correction, via a 17-leg state-driven route controller, and
+**milestone `05-mines-entry` is established**: three power-on runs all
+reach (`$26`,`$1C`) inside the mines with byte-identical WRAM
+(`c26453d3…`) and matching leg frames. Artifacts from the earlier,
+invalid 16-leg capture were discarded rather than kept.
 
 Lab controls unchanged (AllZeros RAM, virgin SRAM; originals in
 `local_artifacts/backups/`).
@@ -61,8 +59,11 @@ EXP-0036 (record: docs/experiments/EXP-0036-scheduled-route-to-mines.md):
   two encodings cannot drift silently.
 
 ## What remains uncertain
-- **Milestone 05 unclaimed**: three acceptance runs outstanding.
-- `+$1EA5` semantics unresolved (map id vs map-load target).
+- `+$1EA5` semantics unresolved (map id vs map-load target) — the
+  EXP-0037 target.
+- Run 1's milestone-05 screenshot differs from runs 2/3 (animated
+  lamp-glow phase) while WRAM is identical — CEN-QUIRK-0002, now seen
+  at a second milestone.
 - Producers of `+$00AF`/`+$00B0` and alias-block ownership untraced.
 - Battle 5's invocation opcode unknown (shared with CEN-EVENT-0005).
 - Milestone-01 capture instability (CEN-QUIRK-0002) still open.
@@ -80,14 +81,20 @@ main; unit committed and pushed.
 `local_artifacts/experiments/EXP-0036/` holds every iteration's log,
 including the two timeout runs and the premature-transition run.
 
+## Acceptance result
+Three power-on runs, all successful and frame-identical: battle 5
+entry 46 802, transition (X→`$26`) 50 913, leg 17 end 50 978 at
+(`$26`,`$1C`), milestone 51 578 with map `$0D` and five battles.
+Milestone WRAM byte-identical across all three (`c26453d3…`).
+`05-mines-entry.mss` promoted from run 3; `hashes.sha256` written;
+segment 4 set COMPLETE in the scenario manifest with assertion hashes.
+
 ## Exact next action
-Run `mesen/probes/EXP-0036.lua` from power-on **three times**
-(`FF6_RUN=run1|run2|run3`, headless testrunner, `FF6_OUT` set), each
-taking ~13 minutes. Confirm all three log `LEG 17 END … pos=26,1C` and
-`MILESTONE 05 … map=0D`, then byte-compare the three
-`local_artifacts/scenarios/SCN-0001/05-mines-entry/run*-wram.bin`
-dumps. Only if all three agree: promote one savestate to
-`05-mines-entry.mss`, write `hashes.sha256`, set segment 4 to COMPLETE
-in `data/scenarios/opening-to-whelk.json` with the assertion hashes,
-and record milestone 05 in the scenario record. If any run diverges,
-record the earliest divergent leg — do not hand-correct and count it.
+EXP-0037 (write the record first): from the reproducible mines
+transition, arm a write-watch on `ROMCPU:$C0B5B6` (the single writer
+of every observed `+$1EA5` change) and capture what else it touches
+across the transition — specifically whether it drives tileset/tilemap
+or VRAM loading. That decides between the map-id and map-load-target
+readings of `+$1EA5` (CEN-WORLD-0007) and should expose the map header
+/ tileset load path (CEN-WORLD-0004). Bound it to the transition
+window; do not broaden into full map-format decoding in the same unit.
