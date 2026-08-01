@@ -2719,6 +2719,54 @@
       "runtime_status": "INPUTS_CAPTURED",
       "confidence": "strong-hypothesis",
       "next_action": "Write-watch +$00AF/+$00B0 during a single walked tile to capture their producers and settle the alias blocks' ownership."
+    },
+    {
+      "schema_version": "1.0",
+      "id": "CEN-MENU-0007",
+      "domain": "MENU",
+      "category": "configuration",
+      "name": "Config screen and its WRAM backing store",
+      "description": "The nine in-game Config settings (Bat.Mode, Bat.Speed, Msg.Speed, Cmd.Set, Gauge, Sound, Cursor, Reequip, Controller) and the three WRAM bytes that hold them. WRAM:+$1D4D bits 0-2 Bat.Speed (0-5, displayed 1-6), bit 3 Bat.Mode (1=Wait), bits 4-6 Msg.Speed (0-5), bit 7 Cmd.Set; WRAM:+$1D4E bit 4 Reequip, bit 5 Sound, bit 6 Cursor, bit 7 Gauge; WRAM:+$1D54 bit 7 Controller. Cleared bit = left-hand screen option. Screen cells mark the selected option with tile attribute $20 and the unselected with $28.",
+      "reconstruction_status": "FORMAT_DECODED",
+      "runtime_status": "NORMAL_PATH_VERIFIED",
+      "rom_revision": "0f51b4fca41b7fd509e4b8f9d543151f68efa5e97b08493e4b2a0c06f5d8d5e2",
+      "rom_locations": [],
+      "wram_locations": [
+        "WRAM:+$1D4D (Bat.Speed bits 0-2, Bat.Mode bit 3, Msg.Speed bits 4-6, Cmd.Set bit 7; default $2A)",
+        "WRAM:+$1D4E (Reequip bit 4, Sound bit 5, Cursor bit 6, Gauge bit 7; default $00)",
+        "WRAM:+$1D54 (Controller bit 7; default $00)"
+      ],
+      "cpu_routines": [],
+      "spc_locations": [],
+      "record_count_expected": 9,
+      "record_count_found": 9,
+      "record_size": null,
+      "pointer_tables": [],
+      "consumers": [],
+      "producers": [],
+      "related_experiments": [
+        "EXP-0041",
+        "EXP-0040"
+      ],
+      "related_discoveries": [],
+      "related_implementations": [],
+      "related_tests": [],
+      "runtime_scenarios": [
+        "local_artifacts/scenarios/SCN-0001/05-mines-entry/05-mines-entry.mss"
+      ],
+      "evidence": [
+        "local_artifacts/experiments/EXP-0041/ (17 artifacts; hashes.sha256)"
+      ],
+      "confidence": "confirmed",
+      "unknown_fields": [
+        "the routine that writes these bytes, and its callers",
+        "whether battle code reads them directly or a battle-local copy (EXP-0042)",
+        "WRAM:+$1D4E bits 0-3 and WRAM:+$1D54 bits 0-6",
+        "SRAM persistence - no save event has ever been captured (CEN-SAVE-0001)"
+      ],
+      "contradictions": [],
+      "next_action": "EXP-0042: read-watch WRAM:+$1D4D-+$1D4E across a battle entry to determine whether battle code consults them directly or a copy taken at entry.",
+      "notes": "Settles the Config screen's highlighting convention, which inverts the intuitive reading: selected = attribute $20, unselected = $28. EXP-0040 misread Bat.Mode from a screenshot on that basis; this unit confirms its correction from memory - Bat.Mode = Wait is where a new game arrives on this revision, not an operator change. Configuration is not SRAM-backed before a save: cart.saveRam was identical across a config change and virgin throughout."
     }
   ]
 }

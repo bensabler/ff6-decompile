@@ -21,10 +21,17 @@ operator-length pauses, so **none of it may be used to characterize
 Whelk's natural head/shell timing**. ACTIVE-mode and WAIT-mode timing
 must be treated as separate experimental conditions.
 
-**Whelk gameplay must not resume before this research.** Next action:
-audit existing battle infrastructure and ATB evidence, then propose the
-first bounded ATB baseline experiment before operating Mesen.
+**Whelk gameplay must not resume before this research.**
 Record: `docs/experiments/EXP-0040-whelk-victory.md`.
+
+**Status 2026-08-01:** the prerequisite audit is done and the ATB program
+has begun. EXP-0041 closed the configuration half of the blocker —
+`Bat.Mode` and `Bat.Speed` are now readable and settable from memory
+(`WRAM:+$1D4D` bits 3 and 0-2), so ACTIVE and WAIT can finally be
+*established* as controlled conditions rather than eyeballed. The
+blocker itself **remains open**: no timer domain, pause condition, or
+queue semantics is known yet. Next: EXP-0042 (battle-entry
+configuration sampling).
 
 Soft items:
 

@@ -40,6 +40,10 @@ addresses like `$C10DF3`. See
 | `$628D` | 1 | **Confirmed** (use) | Masking gate flag; meaning unknown. |
 | `$64DA` | 1? | Tentative | Counter (low nibble used ×5 as index), incremented by the unexplored 5-byte copy routine. |
 | `$E9EF` | 1 | **Confirmed** (use) | Masking gate / per-frame branch flag; meaning unknown. |
+| `WRAM:+$1D4D` | 1 | **Confirmed** (EXP-0041) | Config settings byte 1. Bits 0–2 Bat.Speed (0–5, displayed 1–6); bit 3 Bat.Mode (0 = Active, 1 = **Wait**); bits 4–6 Msg.Speed (0–5, displayed 1–6); bit 7 Cmd.Set (0 = Window, 1 = Short). New-game default `$2A`. Both speed fields swept to their clamps. Writer routine unknown. |
+| `WRAM:+$1D4E` | 1 | **Confirmed** (EXP-0041) | Config settings byte 2. Bit 4 Reequip (0 = Optimum), bit 5 Sound (0 = Stereo), bit 6 Cursor (0 = Reset, 1 = Memory), bit 7 Gauge (0 = On). Default `$00`. Bits 0–3 untouched by the nine Config settings; meaning unknown. |
+| `WRAM:+$1D54` | 1 | **Confirmed** (EXP-0041) | Config settings byte 3. Bit 7 Controller (0 = Single, 1 = Multiple). Default `$00`. Bits 0–6 untouched by the nine Config settings; meaning unknown. Not adjacent to `+$1D4D`/`+$1D4E` — the configuration block is **not** contiguous. |
+| `WRAM:+$39A6`, `+$39B6`, `+$3A2E`, `+$3A32`, `+$3AAE`, `+$3AB2`, `+$3B26`, `+$3B36`, `+$3BA6`, `+$3BB6`, `+$3C26`, `+$3C36`, `+$3CA6`, `+$3CB6`, `+$3D26`, `+$3D36`, `+$3DA6`, `+$3DB6` | — | **Confirmed** (EXP-0041) | Config screen text cells, character byte interleaved with a tile attribute byte. The **selected** option's cells carry attribute `$20`, the unselected `$28` — the inverse of the intuitive reading, and the reason EXP-0040 misread `Bat.Mode` from a screenshot. Renderer unmapped. |
 
 Note: `$2EB5` lies above the low-RAM mirror (`$0000–$1FFF`), so absolute
 addressing reaches WRAM only when `DB = $7E`. **Confirmed** in Session 002:

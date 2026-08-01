@@ -68,15 +68,34 @@ Ordered next units (reorder when evidence exposes a better chain):
   `10-whelk-victory` and B19 remain open. Stopped by operator directive
   on a **methodological blocker** — see below
   ([record](../docs/experiments/EXP-0040-whelk-victory.md)).
-- [ ] **P0 NEXT — bounded ATB research program (blocks all further
-  Whelk execution).** The project has no model of FF6's ATB:
-  ACTIVE/WAIT semantics, which submenu states qualify as pausing, the
-  relevant timer domains, and action-queue ordering/resolution are all
-  Unknown. EXP-0040 could not operate the battle reliably or interpret
-  its timing without one. **Whelk gameplay must not resume before this
-  program produces a usable model.** First action: audit existing
-  battle infrastructure and ATB evidence, then propose the first
-  bounded ATB baseline experiment before operating Mesen.
+- [~] **P0 — bounded ATB research program (blocks all further Whelk
+  execution).** Started 2026-08-01. The project still has no model of
+  ACTIVE/WAIT semantics, qualifying submenu pause states, timer domains,
+  or action-queue ordering. **Whelk gameplay must not resume before this
+  program produces a usable model.** Progress below.
+- [x] **EXP-0041: battle configuration storage** — done: all nine Config
+  settings located and bit-decoded across `WRAM:+$1D4D`, `+$1D4E` and
+  `+$1D54` (the block is not contiguous); both speed fields swept to
+  their clamps; the Config screen's selected/unselected attribute
+  convention settled (`$20`/`$28`), independently confirming EXP-0040's
+  `Bat.Mode = Wait` correction; configuration shown not SRAM-backed
+  before a save. Prerequisites landed with it: an audited
+  battle-configuration fingerprint field, and `ff6lab state` for reading
+  preserved `.mss` files without an emulator
+  ([record](../docs/experiments/EXP-0041-battle-config-storage.md)).
+- [ ] **P0 NEXT — EXP-0042: battle-entry configuration sampling.** Do
+  the battle routines read `WRAM:+$1D4D`/`+$1D4E` directly, or a copy
+  taken at battle entry? Decides whether mid-battle configuration
+  changes are a legitimate technique, and how every later ATB experiment
+  must be staged. Method: read-watch those bytes across a battle entry
+  from the mines random encounter (milestone 06); no Whelk state needed.
+- [ ] **ATB program, remaining units** (ordered): locate the ATB gauges
+  (substrate already on disk — `exp10-battle.mss` plus the
+  byte-identical milestone-03/06 WRAM dumps, now diffable offline);
+  identify the tick site among the **eight undumped callees of
+  `ROMCPU:$C101FB`** (also resolves open question #18, the sub-1.0
+  per-frame rate); then the ACTIVE/WAIT pause matrix, which is the first
+  unit warranting `/battle-baseline` and parallel read-only observers.
 - [ ] Whelk formation monster-id extension: reading formation 432's
   record bytes 2-7 as ids yields record 0 (the opening guard), so the
   id field must carry a high-bit/extension not yet decoded (FF6

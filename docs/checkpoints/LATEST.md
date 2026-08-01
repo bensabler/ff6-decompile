@@ -1,30 +1,38 @@
 # Latest Checkpoint
 
-**[2026-08-01 — EXP-0040: Whelk attempt stopped on ATB blocker](2026-08-01-exp0040-whelk-stopped-atb-blocker.md)**
+**[2026-08-01 — EXP-0041: battle configuration storage](2026-08-01-exp0041-battle-config-storage.md)**
 
-State: **Whelk was attacked correctly and NOT defeated.** Two piloted
-GUI attempts from the preserved pre-Whelk state, both under
-`Bat.Mode = Wait`. The branch-A premises were verified — **Whelk is two
-battle slots** (shell 50000 HP, head 1600 HP; new CEN-BATTLE-0009),
-striking the visibly extended head reduces the head and **never** the
-shell (six hits, 162-186), head/shell state is **visually
-classifiable**, and a **field healing route** exists (Tonic ×4 →
-76/105/106). Also corrected: MagiTek sets are character-specific
-(leader eight, escorts four — EXP-0039's list was a non-leader's), and
-the guard/Esper beat **precedes** Whelk on a clean run (CEN-EVENT-0011
-resolved). **Milestone `10-whelk-victory` and B19 remain open.**
+State: the **ATB research program is open and has produced its first
+result.** All nine in-game Config settings are located and bit-decoded:
+`WRAM:+$1D4D` (bits 0-2 Bat.Speed 0-5, **bit 3 Bat.Mode**, bits 4-6
+Msg.Speed, bit 7 Cmd.Set, default `$2A`), `WRAM:+$1D4E` (bits 4-7
+Reequip/Sound/Cursor/Gauge, default `$00`), and `WRAM:+$1D54` (bit 7
+Controller). The block is **not contiguous** — a narrow read window hid
+Controller until the full-WRAM diff caught it. Both speed fields were
+swept to their clamps rather than inferred.
 
-Stopped by operator directive on a **hard methodological blocker: the
-project has no ATB model** (ACTIVE/WAIT semantics, qualifying submenu
-pause states, timer domains, action-queue ordering). All head/shell
-timing collected is **menu-pause-contaminated and unusable**;
-ACTIVE and WAIT are separate experimental conditions. **Whelk gameplay
-must not resume before the ATB research program.**
+The Config screen marks the **selected** option with tile attribute `$20`
+and the unselected with `$28` — the inverse of the intuitive reading, and
+the exact cause of EXP-0040's `Bat.Mode` misread. That correction is now
+**independently confirmed from memory**: `Wait` is where a new game
+arrives. Configuration is **not** SRAM-backed before a save.
 
-45 evidence artifacts preserved with hashes and unambiguous savestate
-lineage. No background processes running; SRAM still virgin. All gates
-clean (gofmt/build/vet/test, `ff6lab audit`, census, archive verify 8/8,
-restricted-file scan). Exact next action: **start a new session, resume
-from this checkpoint, audit existing battle infrastructure and ATB
-evidence, and propose the first bounded ATB experiment before operating
-Mesen.**
+Two enabling changes landed first, each its own commit: the
+battle-configuration fingerprint is now a **required, audited** record
+field (`internal/audit.CheckBattleExperimentConfig`, EXP-0041 onward),
+and **`ff6lab state`** reads work RAM and save RAM straight out of
+preserved `.mss` files — trial 0 used it to extract the Cursor candidate
+from EXP-0040's savestate pair *before Mesen was launched*, and the live
+falsifier run reproduced it exactly.
+
+**The hard ATB blocker remains open**: no timer domain, pause condition,
+or action-queue semantics is known. Whelk was not resumed and its
+savestates were not reloaded. 17 evidence artifacts preserved with
+hashes; no background processes; SRAM still virgin. All gates clean
+(gofmt/build/vet/test, `ff6lab audit`, census sync 62 entries,
+restricted-file scan).
+
+Exact next action: **EXP-0042 — battle-entry configuration sampling.**
+Read-watch `WRAM:+$1D4D`-`+$1D4E` across a battle entry from the mines
+random encounter to determine whether battle code consults these bytes
+directly or a copy taken at entry.

@@ -1,5 +1,25 @@
 # Activity Log
 
+- 2026-08-01 (headless) — **ATB program opened; EXP-0041: battle
+  configuration located and decoded.** All nine Config settings mapped
+  to bits across `WRAM:+$1D4D`, `+$1D4E` and `+$1D54` — the block is
+  **not contiguous**, which a three-byte read window initially hid
+  (Controller looked like a null result until the read was widened).
+  `Bat.Mode` = bit 3 of `+$1D4D`, `Bat.Speed` = bits 0-2; both speed
+  fields swept to their clamps (0-5, displayed 1-6). The Config screen
+  marks the **selected** option with tile attribute `$20` and the
+  unselected with `$28` — the inverse of the intuitive reading, and the
+  precise cause of EXP-0040's `Bat.Mode` misread, whose correction is
+  now **independently confirmed from memory**. Configuration is **not**
+  SRAM-backed before a save. Two enabling changes shipped first: the
+  battle-configuration fingerprint became a required, audited record
+  field (from EXP-0041 onward), and `ff6lab state` now reads work RAM
+  and save RAM out of preserved `.mss` files with no emulator — trial 0
+  used it to pull the `+$1D4E` Cursor candidate out of EXP-0040's
+  savestate pair *before Mesen was launched*, and the live falsifier run
+  reproduced it exactly. New CEN-MENU-0007. Blocker remains open: no
+  timer domain or queue semantics known yet. 17 artifacts preserved with
+  hashes; no background processes; SRAM still virgin.
 - 2026-08-01 (piloted) — **EXP-0040: Whelk victory attempted, NOT
   achieved; stopped on an ATB methodological blocker.** Two attempts
   from the preserved pre-Whelk state, both under `Bat.Mode = Wait`.

@@ -108,9 +108,40 @@ reliably without that. All of its head/shell transitions are
 menu-pause-contaminated and **must not** be used as timing evidence.
 See BLOCKERS.md.
 
+## ATB program started — EXP-0041 (2026-08-01)
+
+The blocker's prerequisite audit is done and the program's **first
+bounded unit is complete**. Battle configuration is no longer read off
+the screen with our eyes:
+
+| Byte | Contents | Default |
+|---|---|---|
+| `WRAM:+$1D4D` | bits 0-2 Bat.Speed (0-5 → 1-6), bit 3 **Bat.Mode** (1 = Wait), bits 4-6 Msg.Speed, bit 7 Cmd.Set | `$2A` |
+| `WRAM:+$1D4E` | bit 4 Reequip, bit 5 Sound, bit 6 Cursor, bit 7 Gauge | `$00` |
+| `WRAM:+$1D54` | bit 7 Controller | `$00` |
+
+The block is **not contiguous**. Cleared bit = the left-hand screen
+option. The Config screen marks the **selected** option with tile
+attribute `$20` and the unselected with `$28` — the inverse of the
+intuitive reading, and exactly why EXP-0040 misread `Bat.Mode`. That
+correction is now confirmed from memory: **`Wait` is where a new game
+arrives**, not an operator change. Configuration is **not** SRAM-backed
+before a save.
+
+Two supporting changes landed first: the battle-configuration
+fingerprint is now a required, audited record field
+(`internal/audit.CheckBattleExperimentConfig`, from EXP-0041 onward), and
+`ff6lab state` reads work RAM and save RAM straight out of preserved
+`.mss` files, so earlier captures can be mined without an emulator.
+Trial 0 used it to extract the `+$1D4E` candidate from EXP-0040's
+savestate pair before Mesen was ever launched.
+
 ## Next exact action
 
-Start a new session, resume from the latest checkpoint, audit existing
-battle infrastructure and ATB evidence, and **propose the first bounded
-ATB experiment before operating Mesen**. Do not resume Whelk gameplay
-first.
+**EXP-0042 — battle-entry configuration sampling.** Determine whether
+battle code reads `WRAM:+$1D4D`/`+$1D4E` directly or a copy taken at
+battle entry. This decides whether configuration may be changed
+mid-battle, and therefore how every later ATB experiment is staged.
+Method: read-watch those bytes across a battle entry from the mines
+random encounter (milestone 06, reproducible on demand). Whelk remains
+deferred.

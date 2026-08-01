@@ -681,6 +681,42 @@
       "falsifying_outcome": "Repeated head-only attempts still end in defeat; head/shell state not visually classifiable; attacking the extended head does not reduce enemy HP; or victory yields no stable post-battle state",
       "status": "blocked",
       "record": "docs/experiments/EXP-0040-whelk-victory.md"
+    },
+    {
+      "schema_version": "1.0",
+      "id": "EXP-0041",
+      "domain": "battle",
+      "question": "Where are the nine in-game Config settings stored in memory, and which byte and bit encodes each - in particular Bat.Mode (Active/Wait) and Bat.Speed?",
+      "starting_state": {
+        "emulator": "Mesen 2.1.1 macOS, --testrunner headless (--timeout=7200, FF6_OUT set), bridge v2; one instance",
+        "rom_sha256": "0f51b4fca41b7fd509e4b8f9d543151f68efa5e97b08493e4b2a0c06f5d8d5e2",
+        "state": "local_artifacts/scenarios/SCN-0001/05-mines-entry/05-mines-entry.mss (milestone 05, frame 51578, EXP-0036, three byte-identical runs); plus offline trial 0 over EXP-0040's preserved config pair",
+        "battle_config": {
+          "battle_mode": "Wait",
+          "battle_speed": 3,
+          "message_speed": 3,
+          "command_set": "Window",
+          "gauge": "On",
+          "sound": "Stereo",
+          "cursor": "Reset",
+          "reequip": "Optimum",
+          "controller": "Single",
+          "source": "memory-read",
+          "raw": {
+            "WRAM:+$1D4D": "0x2A",
+            "WRAM:+$1D4E": "0x00",
+            "WRAM:+$1D54": "0x00"
+          }
+        }
+      },
+      "expected_outcomes": [
+        "each of the nine settings maps to a byte and bit; Bat.Mode and Bat.Speed located and encoded",
+        "partial: some settings packed or table-mapped in a way this unit can bound but not decode",
+        "refuted: settings not held in WRAM before a save, or the Config screen writes nothing until exit"
+      ],
+      "falsifying_outcome": "A controlled Cursor Reset->Memory toggle does not flip bit 6 of WRAM:+$1D4E (refuting trial 0's retrospective inference); or a setting's storage lies outside the located block; or toggling a setting changes no WRAM byte at all",
+      "status": "completed",
+      "record": "docs/experiments/EXP-0041-battle-config-storage.md"
     }
   ]
 }
