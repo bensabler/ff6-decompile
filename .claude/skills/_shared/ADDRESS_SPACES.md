@@ -11,5 +11,6 @@ Always prefix an address with its domain:
 - `OAM:$0120`
 - `ARAM:$3000`
 - `DSP:$5D`
+- `SRAM:+$0000`
 
 A naked hexadecimal number is not acceptable in canonical documentation.

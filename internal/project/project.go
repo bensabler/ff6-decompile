@@ -22,6 +22,15 @@ Usage:
   ff6lab attackdata scan <hexdump>      decode a $C46AC0 table dump
                                         (bridge "read cpu" hex format)
 
+Preserved savestates (local artifacts; no emulator needed):
+  ff6lab state list <file.mss>          block names and sizes
+  ff6lab state wram|sram <file.mss> -o <out.bin>
+                                        write a memory image to disk
+  ff6lab state read <file.mss> wram|sram <hexaddr> <length>
+                                        hexdump a range
+  ff6lab state diff <a.mss> <b.mss> [wram|sram]
+                                        differing byte runs between two states
+
 Archival extraction (needs the user-supplied verified ROM):
   ff6lab extract all                    regenerate the whole local archive
                                         and refresh the tracked manifest
