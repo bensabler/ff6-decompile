@@ -89,6 +89,10 @@ func run(args []string) error {
 			return brrInfo(args[2], os.Stdout)
 		}
 		return fmt.Errorf("usage: ff6lab brr info <hexdump-file>")
+	case "extract":
+		return runExtract(args[1:], os.Stdout)
+	case "archive":
+		return runArchive(args[1:], os.Stdout)
 	case "help", "-h", "--help":
 		fmt.Print(project.Help())
 		return nil

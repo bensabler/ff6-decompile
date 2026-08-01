@@ -247,11 +247,28 @@ Also run applicable:
 - Internal-link checks
 - Evidence metadata checks
 - ROM-region overlap checks
+- Archive verification (`ff6lab archive verify`, needs `FF6_ROM`)
+- Restricted-file check (no asset extensions in `git ls-files`)
 
 After changes to `.gitignore`, CI, repository structure, required source
 files, manifests, or generated indexes, verify the project from a clean
 tracked-only checkout. A working local tree is not sufficient proof that a
 fresh clone works.
+
+## Asset policy
+
+The project is **extractor-first**: the public repository carries the
+reconstruction (complete named inventories, IDs, statistics, mechanics,
+addresses, layouts, hashes, opcode definitions, Go code, extractors,
+manifests), and substantial graphics, audio, dialogue, maps, scripts and
+raw binary material are generated locally under `local_artifacts/archive/`
+from a user-supplied verified ROM.
+
+Names, labels, and complete structured gameplay databases are **permitted
+in Git**. The policy may not be used to hide ordinary reconstruction data
+behind placeholders; that is enforced by a test.
+
+See `docs/legal/ASSET_POLICY.md`.
 
 ## Checkpoints and commits
 

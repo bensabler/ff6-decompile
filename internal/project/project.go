@@ -22,8 +22,21 @@ Usage:
   ff6lab attackdata scan <hexdump>      decode a $C46AC0 table dump
                                         (bridge "read cpu" hex format)
 
+Archival extraction (needs the user-supplied verified ROM):
+  ff6lab extract all                    regenerate the whole local archive
+                                        and refresh the tracked manifest
+  ff6lab extract <category>...          one or more of: data graphics audio
+                                        dialogue maps raw
+  ff6lab archive verify                 regenerate in memory and compare
+                                        against manifest + on-disk bytes
+  ff6lab archive inventory              list tracked assets (no ROM needed)
+
+  ROM path comes from -rom <path> or $FF6_ROM. Unsupported revisions are
+  refused. Existing archive files whose bytes differ are never silently
+  overwritten; pass -force to replace them.
+
 Planned command groups:
-  rom, evidence, asset, graphics, audio, validate, report
+  evidence, validate, report
 
 ROM-derived files remain local and are never embedded in the executable.
 `

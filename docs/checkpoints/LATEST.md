@@ -1,15 +1,15 @@
 # Latest Checkpoint
 
-**[2026-08-01 — CONTRA-0002 resolved: `+$1EA5` is an event-flag byte](2026-08-01-contra0002-event-flags.md)**
+**[2026-08-01 — extractor-first archival architecture](2026-08-01-extractor-first-migration.md)**
 
-State: the `+$1EA5` contradiction is resolved — **both** the "map id"
-(EXP-0035) and "map-load target" (EXP-0036) readings are refuted. A
-static decode of the writer shows `ORA $C0BAFC,X / STA $1EA0,Y`: the
-byte is byte 5 of an **event-flag bit array** at `WRAM:+$1EA0`, and its
-values accumulate bits rather than naming a map. The event-flag system
-(three arrays, set/clear routines, mask tables, index decoder at
-`$BAED`) is located as a by-product — CEN-EVENT-0008. Dependent code
-renamed and unfrozen; no golden-route result changed. Note:
-CEN-WORLD-0004 (map header / tileset path) is now genuinely unstarted.
-Exact next action: EXP-0037 — write-watch all three flag arrays across
-the scheduled route to inventory which flags the opening sets, and when.
+State: the project is now extractor-first. The asset policy permits
+names, labels and complete structured gameplay databases in Git, and
+forbids using the policy to hide ordinary reconstruction data; a test
+enforces it. All 54 spell names restored (cross-checked against
+EXP-0027; the `$FE` narrow-space rendering discrepancy resolved with
+EXP-0026 evidence). New `internal/rom`, `internal/game/textenc` and
+`internal/extract` packages, 8 deterministic extractors, and
+`ff6lab extract` / `ff6lab archive verify|inventory`. A fresh clone plus
+the verified ROM regenerates the archive byte-for-byte. Exact next
+action: EXP-0037 — inventory the opening's event flags
+(`WRAM:+$1E80`/`+$1EA0`/`+$1EC0`).

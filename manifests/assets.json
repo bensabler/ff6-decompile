@@ -1,4 +1,184 @@
 {
   "schema_version": "1.0",
-  "assets": []
+  "rom_revision": "0f51b4fca41b7fd509e4b8f9d543151f68efa5e97b08493e4b2a0c06f5d8d5e2",
+  "archive_root": "local_artifacts/archive",
+  "note": "Locally generated archival assets. The files themselves are never committed (see docs/legal/ASSET_POLICY.md); this manifest records their identity, provenance and hashes so a fresh clone with the verified ROM can regenerate them byte-for-byte via `ff6lab extract all` and prove it with `ff6lab archive verify`.",
+  "assets": [
+    {
+      "id": "ASSET-AUD-0001",
+      "name": "SFX BRR sample pack (samples 0-7)",
+      "category": "audio",
+      "rom_revision": "0f51b4fca41b7fd509e4b8f9d543151f68efa5e97b08493e4b2a0c06f5d8d5e2",
+      "rom_source": "ROMFILE:0x051EC9-0x051FE8",
+      "extractor_id": "sfx-pack",
+      "extractor_version": "1.0.0",
+      "output_path": "local_artifacts/archive/audio/sfx-pack.brr",
+      "output_format": "audio/x-brr",
+      "properties": "288 bytes; 9-byte BRR blocks; byte-identical to ARAM $4800-$491F",
+      "sha256": "62f24201651a4401ef613f48c5ef1e5cda01c107f49dfc90f72df0bcf6ae59ba",
+      "runtime_consumer": "S-DSP voices via sample directory ARAM $1B00",
+      "census_refs": [
+        "CEN-AUDIO-0001"
+      ],
+      "experiment_refs": [
+        "EXP-0024"
+      ],
+      "verification_status": "hash-verified against tracked manifest; ARAM<->ROM identity proven in EXP-0024"
+    },
+    {
+      "id": "ASSET-AUD-0002",
+      "name": "Battle confirm cue (SFX sample 5), decoded PCM",
+      "category": "audio",
+      "rom_revision": "0f51b4fca41b7fd509e4b8f9d543151f68efa5e97b08493e4b2a0c06f5d8d5e2",
+      "rom_source": "ROMFILE:0x051FA1-0x051FB2",
+      "extractor_id": "sfx-pack",
+      "extractor_version": "1.0.0",
+      "output_path": "local_artifacts/archive/audio/sfx-05-confirm.pcm",
+      "output_format": "audio/L16 (raw, little-endian, mono)",
+      "properties": "32 samples; 16-bit signed mono; source 18 bytes = 2 BRR blocks; nominal 32000 Hz S-DSP rate before pitch scaling",
+      "sha256": "093bab902b9222b6104f87fa351ce93a3d209f8073b963e5cd13e281b9641f77",
+      "runtime_consumer": "DSP voice 7 (SRCN 5) on battle command confirm",
+      "census_refs": [
+        "CEN-AUDIO-0001"
+      ],
+      "experiment_refs": [
+        "EXP-0024"
+      ],
+      "verification_status": "hash-verified against tracked manifest; decoded by internal/audio/brr"
+    },
+    {
+      "id": "ASSET-DATA-0001",
+      "name": "Spell name and record table (54 entries)",
+      "category": "data",
+      "rom_revision": "0f51b4fca41b7fd509e4b8f9d543151f68efa5e97b08493e4b2a0c06f5d8d5e2",
+      "rom_source": "ROMFILE:0x26F567-0x26F6E0 + ROMFILE:0x046AC0-0x046DB3",
+      "extractor_id": "spells",
+      "extractor_version": "1.0.0",
+      "output_path": "local_artifacts/archive/raw/spells.json",
+      "output_format": "application/json",
+      "properties": "54 records; 7-byte name stride, 14-byte data stride",
+      "sha256": "8b0bfa39d8bd03547f1f92edebca50a381d5a5a5e0ed5406822676b9792db483",
+      "runtime_consumer": "magic menu list renderer; battle spell dispatch",
+      "census_refs": [
+        "CEN-MAGIC-0002",
+        "CEN-MAGIC-0003"
+      ],
+      "experiment_refs": [
+        "EXP-0026",
+        "EXP-0027"
+      ],
+      "verification_status": "hash-verified against tracked manifest"
+    },
+    {
+      "id": "ASSET-DATA-0002",
+      "name": "Esper name table (27 entries)",
+      "category": "data",
+      "rom_revision": "0f51b4fca41b7fd509e4b8f9d543151f68efa5e97b08493e4b2a0c06f5d8d5e2",
+      "rom_source": "ROMFILE:0x26F6E1-0x26F7B8",
+      "extractor_id": "espers",
+      "extractor_version": "1.0.0",
+      "output_path": "local_artifacts/archive/raw/espers.json",
+      "output_format": "application/json",
+      "properties": "27 records; 8-byte stride",
+      "sha256": "c2b3ef4db53e0877b607955ea81e63fe41d13fbd8907d15c93c057d1a273431b",
+      "runtime_consumer": "esper menu list renderer",
+      "census_refs": [
+        "CEN-MAGIC-0002"
+      ],
+      "experiment_refs": [
+        "EXP-0027"
+      ],
+      "verification_status": "hash-verified against tracked manifest"
+    },
+    {
+      "id": "ASSET-GFX-0001",
+      "name": "Battle HUD fixed 8x8 font sheet",
+      "category": "graphics",
+      "rom_revision": "0f51b4fca41b7fd509e4b8f9d543151f68efa5e97b08493e4b2a0c06f5d8d5e2",
+      "rom_source": "ROMFILE:0x046FC0-0x047FCF",
+      "extractor_id": "hud-font",
+      "extractor_version": "1.0.0",
+      "output_path": "local_artifacts/archive/graphics/hud-font-sheet.png",
+      "output_format": "image/png",
+      "properties": "128x136 px; 257 tiles of 8x8; 2bpp planar; palette BGR555 0000/0000/5294/7FFF (index 0 transparent)",
+      "sha256": "551d29cccd5a6342437d14eb12e3f23c5062154e469ea3644c5e5b705d5ecc5f",
+      "runtime_consumer": "battle HUD BG3 text layer (VRAM tiles $FF-$1FF)",
+      "census_refs": [
+        "CEN-GFX-0001"
+      ],
+      "experiment_refs": [
+        "EXP-0023"
+      ],
+      "verification_status": "hash-verified against tracked manifest; ROM block proven byte-identical to live VRAM in EXP-0023"
+    },
+    {
+      "id": "ASSET-RAW-0001",
+      "name": "Monster stat record table",
+      "category": "raw",
+      "rom_revision": "0f51b4fca41b7fd509e4b8f9d543151f68efa5e97b08493e4b2a0c06f5d8d5e2",
+      "rom_source": "ROMFILE:0x0F0000-0x0F2FFF",
+      "extractor_id": "raw-tables",
+      "extractor_version": "1.0.0",
+      "output_path": "local_artifacts/archive/raw/monsters.bin",
+      "output_format": "application/octet-stream",
+      "properties": "384 records x 32 bytes; +$08 current/max HP, +$0A MP, +$01 power (Confirmed); remaining fields Unknown",
+      "sha256": "696d4d76be50ae3278fb3247c106faef1ca2c8582318a3af7145874968067681",
+      "runtime_consumer": "battle init per-slot loader $C22C30 / staging copy $C2315C",
+      "census_refs": [
+        "CEN-MONSTER-0001",
+        "CEN-MONSTER-0004"
+      ],
+      "experiment_refs": [
+        "EXP-0028",
+        "EXP-0030"
+      ],
+      "verification_status": "hash-verified against tracked manifest"
+    },
+    {
+      "id": "ASSET-RAW-0002",
+      "name": "Battle formation table",
+      "category": "raw",
+      "rom_revision": "0f51b4fca41b7fd509e4b8f9d543151f68efa5e97b08493e4b2a0c06f5d8d5e2",
+      "rom_source": "ROMFILE:0x0F6200-0x0F83BF",
+      "extractor_id": "raw-tables",
+      "extractor_version": "1.0.0",
+      "output_path": "local_artifacts/archive/raw/formations.bin",
+      "output_format": "application/octet-stream",
+      "properties": "576 records x 15 bytes; bytes 2-7 monster ids ($FF empty); id x15 addressing (Confirmed)",
+      "sha256": "5b318bc7c70463a09f74bf8cbec608c9e735f58d93578cf6181e82ec919dad80",
+      "runtime_consumer": "battle init per-slot loader $C22C30 / staging copy $C2315C",
+      "census_refs": [
+        "CEN-EVENT-0005",
+        "CEN-EVENT-0006"
+      ],
+      "experiment_refs": [
+        "EXP-0030",
+        "EXP-0032",
+        "EXP-0034",
+        "EXP-0036"
+      ],
+      "verification_status": "hash-verified against tracked manifest"
+    },
+    {
+      "id": "ASSET-RAW-0003",
+      "name": "Formation flags table",
+      "category": "raw",
+      "rom_revision": "0f51b4fca41b7fd509e4b8f9d543151f68efa5e97b08493e4b2a0c06f5d8d5e2",
+      "rom_source": "ROMFILE:0x0F5900-0x0F61FF",
+      "extractor_id": "raw-tables",
+      "extractor_version": "1.0.0",
+      "output_path": "local_artifacts/archive/raw/formation-flags.bin",
+      "output_format": "application/octet-stream",
+      "properties": "4-byte stride, id x4 addressing; location Confirmed, semantics Unknown",
+      "sha256": "78927cf74bf22e01fdd95e9f15b8c6ac777c2070bbd8fe997ef7fdd3c7061776",
+      "runtime_consumer": "battle init per-slot loader $C22C30 / staging copy $C2315C",
+      "census_refs": [
+        "CEN-EVENT-0005"
+      ],
+      "experiment_refs": [
+        "EXP-0030"
+      ],
+      "verification_status": "hash-verified against tracked manifest"
+    }
+  ]
 }
