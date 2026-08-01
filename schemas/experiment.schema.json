@@ -22,7 +22,67 @@
       "type": "string"
     },
     "starting_state": {
-      "type": "object"
+      "type": "object",
+      "properties": {
+        "battle_config": {
+          "type": "object",
+          "description": "In-game Config-screen settings in force for the run. Required for battle experiments from EXP-0041 onward; enforced by internal/audit.CheckBattleExperimentConfig, not by this schema.",
+          "required": [
+            "source"
+          ],
+          "properties": {
+            "battle_mode": {
+              "enum": [
+                "Active",
+                "Wait"
+              ]
+            },
+            "battle_speed": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 6
+            },
+            "message_speed": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 6
+            },
+            "command_set": {
+              "type": "string"
+            },
+            "gauge": {
+              "type": "string"
+            },
+            "sound": {
+              "type": "string"
+            },
+            "cursor": {
+              "type": "string"
+            },
+            "reequip": {
+              "type": "string"
+            },
+            "controller": {
+              "type": "string"
+            },
+            "source": {
+              "description": "How the values were obtained. 'screen-read' is unreliable: EXP-0040 misread Bat.Mode from a screenshot because the hand cursor marks the row, not the selection.",
+              "enum": [
+                "memory-read",
+                "screen-read",
+                "mixed"
+              ]
+            },
+            "raw": {
+              "type": "object",
+              "description": "Domain-prefixed address to observed value, e.g. {\"WRAM:+$1D4E\": \"0x40\"}. Present when source includes memory-read.",
+              "additionalProperties": {
+                "type": "string"
+              }
+            }
+          }
+        }
+      }
     },
     "expected_outcomes": {
       "type": "array"

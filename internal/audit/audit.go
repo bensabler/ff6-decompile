@@ -13,6 +13,7 @@ import (
 	"os/exec"
 	"path/filepath"
 	"regexp"
+	"strconv"
 	"strings"
 
 	"github.com/bensabler/ff6-decompile/internal/census"
@@ -33,6 +34,7 @@ func Run(root string) ([]Finding, error) {
 		CheckManifests,
 		CheckExperimentRecordsInManifest,
 		CheckExperimentIndexSync,
+		CheckBattleExperimentConfig,
 		CheckCensus,
 		CheckMarkdownLinks,
 		CheckRestrictedTracked,
@@ -50,9 +52,14 @@ func Run(root string) ([]Finding, error) {
 type experimentsManifest struct {
 	SchemaVersion string `json:"schema_version"`
 	Experiments   []struct {
-		ID     string `json:"id"`
-		Status string `json:"status"`
-		Record string `json:"record"`
+		ID            string `json:"id"`
+		Status        string `json:"status"`
+		Record        string `json:"record"`
+		Question      string `json:"question"`
+		Domain        string `json:"domain"`
+		StartingState struct {
+			BattleConfig map[string]any `json:"battle_config"`
+		} `json:"starting_state"`
 	} `json:"experiments"`
 }
 
@@ -106,6 +113,65 @@ func loadExperiments(root string) (experimentsManifest, error) {
 		return em, fmt.Errorf("experiments.json invalid: %w", err)
 	}
 	return em, nil
+}
+
+// battleConfigFirstID is the experiment number from which battle
+// experiments must carry an in-game configuration fingerprint. Earlier
+// records predate the requirement and are not retrofitted, matching the
+// "applies from EXP-NNNN onward" cutover docs/research/EVIDENCE_LAYOUT.md
+// already uses.
+const battleConfigFirstID = 41
+
+var (
+	expNumRe     = regexp.MustCompile(`^EXP-(\d{4})$`)
+	battleWordRe = regexp.MustCompile(`(?i)\bbattles?\b|\bATB\b|\bcombat\b`)
+)
+
+// CheckBattleExperimentConfig requires every battle experiment from
+// EXP-0041 onward to record starting_state.battle_config. Without it a
+// run cannot say which Battle Mode or Battle Speed was in force, so its
+// timing observations cannot be compared against another run's — the
+// gap that stopped EXP-0040.
+func CheckBattleExperimentConfig(root string) ([]Finding, error) {
+	em, err := loadExperiments(root)
+	if err != nil {
+		return []Finding{{"battle-config", err.Error()}}, nil
+	}
+	var fs []Finding
+	for _, e := range em.Experiments {
+		m := expNumRe.FindStringSubmatch(e.ID)
+		if m == nil {
+			continue
+		}
+		n, err := strconv.Atoi(m[1])
+		if err != nil || n < battleConfigFirstID {
+			continue
+		}
+		if !isBattleExperiment(e.Domain, e.Question, e.Record) {
+			continue
+		}
+		if len(e.StartingState.BattleConfig) == 0 {
+			fs = append(fs, Finding{"battle-config", fmt.Sprintf(
+				"experiments.json: %s is a battle experiment but starting_state.battle_config is missing", e.ID)})
+			continue
+		}
+		if src, _ := e.StartingState.BattleConfig["source"].(string); src == "" {
+			fs = append(fs, Finding{"battle-config", fmt.Sprintf(
+				"experiments.json: %s battle_config needs a source (memory-read, screen-read, or mixed)", e.ID)})
+		}
+	}
+	return fs, nil
+}
+
+// isBattleExperiment reports whether an experiment must carry a battle
+// configuration fingerprint. An explicit domain wins, so a record can
+// opt out deliberately; otherwise the question and record path decide,
+// so a battle experiment cannot escape the requirement by omission.
+func isBattleExperiment(domain, question, record string) bool {
+	if domain != "" {
+		return strings.EqualFold(domain, "battle")
+	}
+	return battleWordRe.MatchString(question) || battleWordRe.MatchString(record)
 }
 
 var expRecordIDRe = regexp.MustCompile(`^EXP-\d{4}`)

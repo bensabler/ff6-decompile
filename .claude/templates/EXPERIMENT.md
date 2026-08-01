@@ -4,6 +4,7 @@
 ## Starting state
 ## ROM identity
 ## Emulator identity
+## Battle configuration
 ## Independent variable
 ## Controlled variables
 ## Instrumentation
