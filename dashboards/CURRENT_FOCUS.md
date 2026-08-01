@@ -136,12 +136,41 @@ fingerprint is now a required, audited record field
 Trial 0 used it to extract the `+$1D4E` candidate from EXP-0040's
 savestate pair before Mesen was ever launched.
 
+## EXP-0042 — configuration is sampled at battle entry (2026-08-01)
+
+Answered **mixed, and the split falls exactly where it matters.** At
+battle entry `ROMCPU:$C22472` reads the two config bytes **once each**
+and decomposes them into battle-local cells:
+
+| Setting | Battle-local cell | Value |
+|---|---|---|
+| Bat.Mode (bit 3) | `WRAM:+$3A8F` | `01` = Wait, `00` = Active |
+| Bat.Speed (bits 0-2) | `WRAM:+$3A90` | `255 − 24 × speed` (Fast `$FF` … Slow `$87`) |
+| Cmd.Set | `WRAM:+$2F2E` | cleared when Window |
+| Gauge | `WRAM:+$2021` | cleared when Off |
+| `+$1D4E` bits 0-2 | `WRAM:+$2F34` | at `$C10FF7` |
+
+`Bat.Mode` and `Bat.Speed` are **never re-read for timing** during the
+battle. `Msg.Speed` and `Cursor` *are* read live, by `$C198AC` (message
+delay table at `ROMCPU:$C19872`) and `$C159D6` (clears the `$5C`-byte
+cursor-memory block at `+$890F` when Cursor = Reset — the mechanism
+behind EXP-0040's `Cursor = Memory` observation).
+
+Both `$3A8F`/`$3A90` values were **predicted from the disassembly before
+the second run** and matched exactly.
+
+**Staging rule for the whole ATB program:** ACTIVE/WAIT and Battle Speed
+must be established **before battle entry** — or injected directly at
+`+$3A8F`/`+$3A90`, which is a far better controlled handle than driving
+menus.
+
 ## Next exact action
 
-**EXP-0042 — battle-entry configuration sampling.** Determine whether
-battle code reads `WRAM:+$1D4D`/`+$1D4E` directly or a copy taken at
-battle entry. This decides whether configuration may be changed
-mid-battle, and therefore how every later ATB experiment is staged.
-Method: read-watch those bytes across a battle entry from the mines
-random encounter (milestone 06, reproducible on demand). Whelk remains
-deferred.
+**EXP-0043 — locate the consumer of `WRAM:+$3A90`, and the ATB gauges.**
+`$3A90` is the sharpest lead the project has into battle timing: a
+battle-local value derived from Battle Speed whose reader is unknown.
+Read-watch `+$3A8F`–`+$3A90` across a battle and follow the reader to
+whatever it advances. Expected to converge with the other standing lead,
+the **eight undumped callees of `ROMCPU:$C101FB`** (open question #6).
+Substrate is already on disk: `EXP-0042/in-battle-formation14.mss` is a
+preserved live battle. Whelk remains deferred.

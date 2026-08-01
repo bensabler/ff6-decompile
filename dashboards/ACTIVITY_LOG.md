@@ -1,5 +1,26 @@
 # Activity Log
 
+- 2026-08-01 (headless) — **EXP-0042: configuration is sampled at battle
+  entry; first battle-local timing cells found.** Answered **mixed**, and
+  the split falls exactly where it matters. `ROMCPU:$C22472` reads the
+  two config bytes **once each** at the battle-entry frame and
+  **decomposes** them: Bat.Mode (bit 3) → `WRAM:+$3A8F` (`01` = Wait,
+  `00` = Active), Bat.Speed (bits 0-2) → `WRAM:+$3A90` = `255 − 24 ×
+  speed` (Fast `$FF` … Slow `$87`), Cmd.Set → `+$2F2E`, Gauge →
+  `+$2021`, and `+$1D4E` bits 0-2 → `+$2F34` at `$C10FF7`. Neither
+  Bat.Mode nor Bat.Speed is re-read for timing during the battle.
+  `Msg.Speed` and `Cursor` **are** read live, by `$C198AC` (delay table
+  `ROMCPU:$C19872`) and `$C159D6` (clears the `$5C`-byte cursor-memory
+  block at `+$890F` when Cursor = Reset — the mechanism behind
+  EXP-0040's `Cursor = Memory` observation). Both derived values were
+  **predicted from the disassembly before the second run** and matched
+  exactly, across two configurations and two live encounters (formation
+  14, twice, reproducing EXP-0038). Establishes the ATB program's
+  **staging rule**: ACTIVE/WAIT and Battle Speed must be set before
+  battle entry, or injected at `+$3A8F`/`+$3A90`. `+$3A90`'s consumer is
+  unlocated and is the sharpest lead into ATB rate — registered as a
+  Tentative hypothesis, not a conclusion. New CEN-BATTLE-0010; new
+  `watchreads`/`watchdump` in `probes/common.lua`. Blocker still open.
 - 2026-08-01 (headless) — **ATB program opened; EXP-0041: battle
   configuration located and decoded.** All nine Config settings mapped
   to bits across `WRAM:+$1D4D`, `+$1D4E` and `+$1D54` — the block is

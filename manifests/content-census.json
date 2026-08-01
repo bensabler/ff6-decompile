@@ -2767,6 +2767,67 @@
       "contradictions": [],
       "next_action": "EXP-0042: read-watch WRAM:+$1D4D-+$1D4E across a battle entry to determine whether battle code consults them directly or a copy taken at entry.",
       "notes": "Settles the Config screen's highlighting convention, which inverts the intuitive reading: selected = attribute $20, unselected = $28. EXP-0040 misread Bat.Mode from a screenshot on that basis; this unit confirms its correction from memory - Bat.Mode = Wait is where a new game arrives on this revision, not an operator change. Configuration is not SRAM-backed before a save: cart.saveRam was identical across a config change and virgin throughout."
+    },
+    {
+      "schema_version": "1.0",
+      "id": "CEN-BATTLE-0010",
+      "domain": "BATTLE",
+      "category": "battle setup",
+      "name": "Battle-entry configuration sampling and battle-local timing state",
+      "description": "At battle entry ROMCPU:$C22472 reads the persistent config bytes once and decomposes them into battle-local cells: Cmd.Set -> WRAM:+$2F2E, Bat.Mode -> WRAM:+$3A8F (INC iff Wait), Bat.Speed -> WRAM:+$3A90 as 255 - 24 x speed, Gauge -> WRAM:+$2021; battle init also stores +$1D4E bits 0-2 into WRAM:+$2F34. Bat.Mode and Bat.Speed are NOT re-read during battle. Msg.Speed and Cursor are read live from the persistent bytes by ROMCPU:$C198AC and $C159D6, which are presentation consumers only.",
+      "reconstruction_status": "FORMAT_DECODED",
+      "runtime_status": "NORMAL_PATH_VERIFIED",
+      "rom_revision": "0f51b4fca41b7fd509e4b8f9d543151f68efa5e97b08493e4b2a0c06f5d8d5e2",
+      "rom_locations": [],
+      "wram_locations": [
+        "WRAM:+$3A8F (battle-local Bat.Mode flag: 01=Wait, 00=Active)",
+        "WRAM:+$3A90 (battle-local Bat.Speed value = 255 - 24 x stored speed; consumer unknown)",
+        "WRAM:+$2F2E (Cmd.Set destination)",
+        "WRAM:+$2021 (Gauge destination)",
+        "WRAM:+$2F34 (+$1D4E bits 0-2 destination)",
+        "WRAM:+$890F-+$896A (cursor-memory block cleared when Cursor=Reset)"
+      ],
+      "cpu_routines": [
+        "ROMCPU:$C22472-$C22497 battle-entry configuration sampler",
+        "ROMCPU:$C10FF7 stores +$1D4E bits 0-2 into +$2F34 at battle init",
+        "ROMCPU:$C198AC-$C198C3 in-battle Msg.Speed consumer (delay table ROMCPU:$C19872)",
+        "ROMCPU:$C159D6-$C159EA in-battle Cursor consumer (clears +$890F)"
+      ],
+      "spc_locations": [],
+      "record_count_expected": null,
+      "record_count_found": null,
+      "record_size": null,
+      "pointer_tables": [
+        "ROMCPU:$C19872 message-delay table indexed by Msg.Speed (0-5)"
+      ],
+      "consumers": [],
+      "producers": [
+        "ROMCPU:$C22472"
+      ],
+      "related_experiments": [
+        "EXP-0042",
+        "EXP-0041"
+      ],
+      "related_discoveries": [],
+      "related_implementations": [],
+      "related_tests": [],
+      "runtime_scenarios": [
+        "local_artifacts/experiments/EXP-0042/in-battle-formation14.mss"
+      ],
+      "evidence": [
+        "local_artifacts/experiments/EXP-0042/ (8 artifacts; hashes.sha256)"
+      ],
+      "confidence": "confirmed",
+      "unknown_fields": [
+        "the consumer of WRAM:+$3A90 - the sharpest current lead into ATB rate",
+        "the consumer of WRAM:+$3A8F",
+        "consumers of +$2F2E, +$2021, +$2F34",
+        "whether battle types other than random encounters sample configuration differently",
+        "whether $3A8F can be incremented more than once"
+      ],
+      "contradictions": [],
+      "next_action": "EXP-0043: read-watch WRAM:+$3A8F-+$3A90 across a battle to find their consumer; expected to converge with the eight undumped callees of ROMCPU:$C101FB (open question #6) on the ATB tick site.",
+      "notes": "Establishes the ATB program's staging rule: ACTIVE/WAIT and Battle Speed conditions must be set BEFORE battle entry, or injected directly at +$3A8F/+$3A90. $3A90 decreases as the displayed speed number rises (Fast=$FF, Slow=$87), which is consistent with an addend rather than a threshold - registered as a Tentative hypothesis, not a conclusion, since no consumer is located."
     }
   ]
 }

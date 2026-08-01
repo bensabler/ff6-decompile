@@ -34,6 +34,55 @@ function probelog(tag)
   end)
 end
 
+-- watchreads(name, lo, hi): read watch over a WRAM range, aggregated per
+-- reading PC in _G[name.."_seen"] as
+-- {count, firstFrame, lastFrame, lastAddr, lastVal}.
+--
+-- Reads fire far more often than writes, so only the first hit per PC is
+-- logged; the frame bounds are what let a later phase boundary (battle
+-- entry, say) sort each PC into before and after.
+function watchreads(name, lo, hi)
+  _G[name .. "_seen"] = {}
+  _G[name .. "_ref"] = emu.addMemoryCallback(function(a, v)
+    local c = emu.getCpuState(emu.cpuType.snes)
+    local pc = (c.k << 16) | c.pc
+    local k = string.format("%06X", pc)
+    local seen = _G[name .. "_seen"]
+    local f = emu.getState().frameCount
+    local e = seen[k]
+    if e then
+      e.count = e.count + 1
+      e.lastFrame = f
+      e.lastAddr = a
+      e.lastVal = v
+      return
+    end
+    seen[k] = { count = 1, firstFrame = f, lastFrame = f, lastAddr = a, lastVal = v }
+    probelog(string.format("%s READ a=%06X v=%s", name, a, tostring(v)))
+  end, emu.callbackType.read, lo, hi, emu.cpuType.snes, emu.memType.snesWorkRam)
+end
+
+-- watchdump(name): render a watch table as sorted text. Handles both the
+-- plain per-PC counts watchwrites stores and the richer records
+-- watchreads stores.
+function watchdump(name)
+  local seen = _G[name .. "_seen"]
+  if not seen then return name .. ": not armed" end
+  local rows = {}
+  for pc, e in pairs(seen) do
+    if type(e) == "number" then
+      rows[#rows + 1] = string.format("pc=$%s count=%d", pc, e)
+    else
+      rows[#rows + 1] = string.format(
+        "pc=$%s count=%d first=%d last=%d addr=$%06X val=%s",
+        pc, e.count, e.firstFrame, e.lastFrame, e.lastAddr, tostring(e.lastVal))
+    end
+  end
+  table.sort(rows)
+  if #rows == 0 then return name .. ": no hits" end
+  return name .. ":\n" .. table.concat(rows, "\n")
+end
+
 -- watchwrites(name, lo, hi, cap): first-capture-per-PC write watch over a
 -- WRAM range with per-PC counts in _G[name.."_seen"].
 function watchwrites(name, lo, hi, cap)

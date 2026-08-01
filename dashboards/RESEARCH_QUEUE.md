@@ -83,19 +83,31 @@ Ordered next units (reorder when evidence exposes a better chain):
   battle-configuration fingerprint field, and `ff6lab state` for reading
   preserved `.mss` files without an emulator
   ([record](../docs/experiments/EXP-0041-battle-config-storage.md)).
-- [ ] **P0 NEXT — EXP-0042: battle-entry configuration sampling.** Do
-  the battle routines read `WRAM:+$1D4D`/`+$1D4E` directly, or a copy
-  taken at battle entry? Decides whether mid-battle configuration
-  changes are a legitimate technique, and how every later ATB experiment
-  must be staged. Method: read-watch those bytes across a battle entry
-  from the mines random encounter (milestone 06); no Whelk state needed.
-- [ ] **ATB program, remaining units** (ordered): locate the ATB gauges
-  (substrate already on disk — `exp10-battle.mss` plus the
-  byte-identical milestone-03/06 WRAM dumps, now diffable offline);
-  identify the tick site among the **eight undumped callees of
-  `ROMCPU:$C101FB`** (also resolves open question #18, the sub-1.0
-  per-frame rate); then the ACTIVE/WAIT pause matrix, which is the first
-  unit warranting `/battle-baseline` and parallel read-only observers.
+- [x] **EXP-0042: battle-entry configuration sampling** — done, answered
+  **mixed**. `Bat.Mode` and `Bat.Speed` are read **once** at battle entry
+  by `ROMCPU:$C22472` and decomposed into `WRAM:+$3A8F` (Wait flag) and
+  `WRAM:+$3A90` (`255 − 24 × speed`), never re-read for timing;
+  `Msg.Speed` and `Cursor` *are* read live by `$C198AC`/`$C159D6`
+  (presentation only). Both derived values were predicted from the
+  disassembly and matched. **Staging rule established:** ACTIVE/WAIT and
+  Battle Speed must be set before battle entry, or injected at
+  `+$3A8F`/`+$3A90`
+  ([record](../docs/experiments/EXP-0042-battle-entry-config-sampling.md)).
+- [ ] **P0 NEXT — EXP-0043: the consumer of `WRAM:+$3A90`, and the ATB
+  gauges.** `$3A90` is the sharpest lead into battle timing the project
+  has: a battle-local value derived from Battle Speed whose reader is
+  unknown. Read-watch `+$3A8F`–`+$3A90` across a battle and follow the
+  reader to what it advances. Expected to converge with the **eight
+  undumped callees of `ROMCPU:$C101FB`** (open question #6), and to
+  resolve open question #18 (the sub-1.0 per-frame rate). Substrate is
+  on disk: `EXP-0042/in-battle-formation14.mss` plus the byte-identical
+  milestone-03/06 WRAM dumps, now diffable offline with `ff6lab state`.
+- [ ] **ATB program, after that:** gauge storage and increment
+  arithmetic; then the ACTIVE/WAIT pause matrix, the first unit
+  warranting `/battle-baseline` and parallel read-only observers.
+- [ ] Whether battle types other than random encounters sample
+  configuration differently (scripted, pincer, back, boss) — cheap to
+  re-check at the first scripted battle rather than as its own unit.
 - [ ] Whelk formation monster-id extension: reading formation 432's
   record bytes 2-7 as ids yields record 0 (the opening guard), so the
   id field must carry a high-bit/extension not yet decoded (FF6
