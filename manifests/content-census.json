@@ -3,6 +3,220 @@
   "entries": [
     {
       "schema_version": "1.0",
+      "id": "CEN-AUDIO-0001",
+      "domain": "AUDIO",
+      "category": "sound effects",
+      "name": "Battle-menu confirm SFX cue",
+      "description": "Press -> $21 to $2140 from $C117CC -> DSP voice 7 -> SRCN 5 -> ARAM $48D8 click.",
+      "reconstruction_status": "REGRESSION_TESTED",
+      "runtime_status": "NORMAL_PATH_VERIFIED",
+      "rom_revision": "0f51b4fca41b7fd509e4b8f9d543151f68efa5e97b08493e4b2a0c06f5d8d5e2",
+      "rom_locations": [
+        "ROM-0017"
+      ],
+      "wram_locations": [],
+      "cpu_routines": [
+        "ROMCPU:$C117CC"
+      ],
+      "spc_locations": [
+        "ARAM:$48D8",
+        "DSP voice 7"
+      ],
+      "record_count_expected": null,
+      "record_count_found": null,
+      "record_size": null,
+      "pointer_tables": [],
+      "consumers": [],
+      "producers": [],
+      "related_experiments": [
+        "EXP-0024"
+      ],
+      "related_discoveries": [],
+      "related_implementations": [
+        "internal/audio/brr.Decode",
+        "ff6lab brr info"
+      ],
+      "related_tests": [
+        "brr hand-computed vectors + fuzz"
+      ],
+      "runtime_scenarios": [
+        "mesen/out/exp10-battle.mss"
+      ],
+      "evidence": [
+        "docs/audio/AUD-0001-battle-confirm-sfx.md"
+      ],
+      "confidence": "confirmed",
+      "unknown_fields": [],
+      "contradictions": [],
+      "next_action": "SPC-side dispatch trace for port-0 command $21.",
+      "notes": ""
+    },
+    {
+      "schema_version": "1.0",
+      "id": "CEN-AUDIO-0002",
+      "domain": "AUDIO",
+      "category": "BRR samples",
+      "name": "SFX BRR sample pack and sample directory",
+      "description": "Directory at ARAM $1B00 (DIR=$1B); contiguous SFX pack at ARAM $4800 == ROM 0x051EC9 (288 bytes verified).",
+      "reconstruction_status": "EXTRACTED_PARTIAL",
+      "runtime_status": "OUTPUTS_CAPTURED",
+      "rom_revision": "0f51b4fca41b7fd509e4b8f9d543151f68efa5e97b08493e4b2a0c06f5d8d5e2",
+      "rom_locations": [
+        "ROM-0017"
+      ],
+      "wram_locations": [],
+      "cpu_routines": [],
+      "spc_locations": [
+        "ARAM:$1B00 directory",
+        "ARAM:$4800-$491F verified"
+      ],
+      "record_count_expected": null,
+      "record_count_found": null,
+      "record_size": null,
+      "pointer_tables": [],
+      "consumers": [],
+      "producers": [],
+      "related_experiments": [
+        "EXP-0024"
+      ],
+      "related_discoveries": [],
+      "related_implementations": [],
+      "related_tests": [],
+      "runtime_scenarios": [],
+      "evidence": [
+        "docs/audio/AUD-0001-battle-confirm-sfx.md"
+      ],
+      "confidence": "confirmed",
+      "unknown_fields": [
+        "full pack extent",
+        "samples 0-4,6,7+ cue assignments",
+        "music sample provenance"
+      ],
+      "contradictions": [],
+      "next_action": "Bound the full pack extent and per-sample cues; map remaining directory entries.",
+      "notes": ""
+    },
+    {
+      "schema_version": "1.0",
+      "id": "CEN-AUDIO-0003",
+      "domain": "AUDIO",
+      "category": "CPU/APU communication",
+      "name": "Main-CPU to SPC port command protocol",
+      "description": "Confirm SFX command $21 on port 0; periodic background triples ($E4/id/$18) and $28 heartbeat observed, uninterpreted.",
+      "reconstruction_status": "LOCATED",
+      "runtime_status": "OUTPUTS_CAPTURED",
+      "rom_revision": "0f51b4fca41b7fd509e4b8f9d543151f68efa5e97b08493e4b2a0c06f5d8d5e2",
+      "rom_locations": [],
+      "wram_locations": [],
+      "cpu_routines": [
+        "ROMCPU:$C117CC",
+        "ROMCPU:$C117E8",
+        "ROMCPU:$C11811-$C1181F"
+      ],
+      "spc_locations": [],
+      "record_count_expected": null,
+      "record_count_found": null,
+      "record_size": null,
+      "pointer_tables": [],
+      "consumers": [],
+      "producers": [],
+      "related_experiments": [
+        "EXP-0024"
+      ],
+      "related_discoveries": [],
+      "related_implementations": [],
+      "related_tests": [],
+      "runtime_scenarios": [],
+      "evidence": [
+        "local_artifacts/experiments/EXP-0024/exp24-ports.log (hashes in AUD-0001)"
+      ],
+      "confidence": "tentative-hypothesis",
+      "unknown_fields": [
+        "command encoding",
+        "background triple semantics",
+        "port 1-3 roles"
+      ],
+      "contradictions": [],
+      "next_action": "Delta-map more commands (different SFX/music events) before touching the SPC driver.",
+      "notes": ""
+    },
+    {
+      "schema_version": "1.0",
+      "id": "CEN-AUDIO-0004",
+      "domain": "AUDIO",
+      "category": "music tracks",
+      "name": "Battle music track (opening guard fight)",
+      "description": "Music voices active during battle trials (DSP snapshot: voices 2/5, SRCN $23/$22, EXP-0024); sequence data and driver state in ARAM unlocated.",
+      "reconstruction_status": "OBSERVED",
+      "runtime_status": "ENCOUNTERED",
+      "rom_revision": "0f51b4fca41b7fd509e4b8f9d543151f68efa5e97b08493e4b2a0c06f5d8d5e2",
+      "rom_locations": [],
+      "wram_locations": [],
+      "cpu_routines": [],
+      "spc_locations": [
+        "DSP voices 2/5 (SRCN $22/$23 observed mid-battle)"
+      ],
+      "record_count_expected": null,
+      "record_count_found": null,
+      "record_size": null,
+      "pointer_tables": [],
+      "consumers": [],
+      "producers": [],
+      "related_experiments": [
+        "EXP-0024",
+        "EXP-0025"
+      ],
+      "related_discoveries": [],
+      "related_implementations": [],
+      "related_tests": [],
+      "runtime_scenarios": [],
+      "evidence": [
+        "local_artifacts/experiments/EXP-0024/exp24-dsp.hex (hashes in AUD-0001)"
+      ],
+      "confidence": "confirmed",
+      "unknown_fields": [
+        "sequence format/location",
+        "track id mapping",
+        "instrument tables"
+      ],
+      "contradictions": [],
+      "next_action": "Delta-map the music-start APU command at a field-to-battle transition; locate the sequence pointer in ARAM.",
+      "notes": ""
+    },
+    {
+      "schema_version": "1.0",
+      "id": "CEN-AUDIO-0005",
+      "domain": "AUDIO",
+      "category": "map music",
+      "name": "Field/event music selection",
+      "description": "Not yet captured headless (no DSP snapshot taken on a field state).",
+      "reconstruction_status": "UNMAPPED",
+      "runtime_status": "NOT_ENCOUNTERED",
+      "rom_revision": "0f51b4fca41b7fd509e4b8f9d543151f68efa5e97b08493e4b2a0c06f5d8d5e2",
+      "rom_locations": [],
+      "wram_locations": [],
+      "cpu_routines": [],
+      "spc_locations": [],
+      "record_count_expected": null,
+      "record_count_found": null,
+      "record_size": null,
+      "pointer_tables": [],
+      "consumers": [],
+      "producers": [],
+      "related_experiments": [],
+      "related_discoveries": [],
+      "related_implementations": [],
+      "related_tests": [],
+      "runtime_scenarios": [],
+      "evidence": [],
+      "confidence": "unknown",
+      "unknown_fields": [],
+      "contradictions": [],
+      "next_action": "DSP snapshot on checkpoint2; compare voice/SRCN set against the battle snapshot.",
+      "notes": ""
+    },
+    {
+      "schema_version": "1.0",
       "id": "CEN-BATTLE-0001",
       "domain": "BATTLE",
       "category": "damage formulas",
@@ -188,7 +402,7 @@
       "id": "CEN-BATTLE-0004",
       "domain": "BATTLE",
       "category": "attack records",
-      "name": "Attack/spell record table ($C46AC0) \u2014 the global spell database",
+      "name": "Attack/spell record table ($C46AC0) — the global spell database",
       "description": "MVN-loaded per action into WRAM +$11A0-+$11AD; records 0-53 are the 54 magic spells (ids match the spell name table, EXP-0026). 8 of 14 bytes mapped: byte 5 = MP cost (Confirmed for id 45: menu readout + targeting gate text + live deduction, EXP-0027; families coherent).",
       "reconstruction_status": "FORMAT_PARTIAL",
       "runtime_status": "NORMAL_PATH_VERIFIED",
@@ -292,6 +506,156 @@
     },
     {
       "schema_version": "1.0",
+      "id": "CEN-BATTLE-0007",
+      "domain": "BATTLE",
+      "category": "death",
+      "name": "Defeat flow ('Annihilated')",
+      "description": "Party wipe produces an 'Annihilated' banner and an enemy-name window listing the formation (Were-Rat, Repo Man) before the battle ends.",
+      "reconstruction_status": "OBSERVED",
+      "runtime_status": "ENCOUNTERED",
+      "rom_revision": "0f51b4fca41b7fd509e4b8f9d543151f68efa5e97b08493e4b2a0c06f5d8d5e2",
+      "rom_locations": [],
+      "wram_locations": [],
+      "cpu_routines": [],
+      "spc_locations": [],
+      "record_count_expected": null,
+      "record_count_found": null,
+      "record_size": null,
+      "pointer_tables": [],
+      "consumers": [],
+      "producers": [],
+      "related_experiments": [
+        "EXP-0027",
+        "EXP-0039"
+      ],
+      "related_discoveries": [],
+      "related_implementations": [],
+      "related_tests": [],
+      "runtime_scenarios": [
+        "mesen/out/exp10-battle.mss"
+      ],
+      "evidence": [
+        "local_artifacts/experiments/EXP-0027/ (boundary/esper decodes, cast screenshots, WRAM diff; hashes.sha256)"
+      ],
+      "confidence": "confirmed",
+      "unknown_fields": [],
+      "contradictions": [],
+      "next_action": "Capture the post-defeat transition (game over vs retry) in a dedicated run.",
+      "notes": "EXP-0039 OBSERVED the defeat flow live: the Whelk shell counter killed one member outright and then wiped the party; the screen went black (game-over transition) with party HP reading 0. First capture of this flow."
+    },
+    {
+      "schema_version": "1.0",
+      "rom_revision": "0f51b4fca41b7fd509e4b8f9d543151f68efa5e97b08493e4b2a0c06f5d8d5e2",
+      "rom_locations": [],
+      "wram_locations": [
+        "WRAM:+$1609",
+        "WRAM:+$160C",
+        "WRAM:+$160D",
+        "WRAM:+$1610",
+        "WRAM:+$1611",
+        "WRAM:+$1613",
+        "WRAM:+$1614"
+      ],
+      "cpu_routines": [
+        "ROMCPU:$C2496E",
+        "ROMCPU:$C24979",
+        "ROMCPU:$C24968",
+        "ROMCPU:$C2626D",
+        "ROMCPU:$C26274",
+        "ROMCPU:$C20F04",
+        "ROMCPU:$C20F15"
+      ],
+      "spc_locations": [],
+      "record_count_expected": null,
+      "record_count_found": null,
+      "record_size": null,
+      "pointer_tables": [],
+      "consumers": [],
+      "producers": [],
+      "related_experiments": [
+        "EXP-0027",
+        "EXP-0033",
+        "EXP-0038"
+      ],
+      "related_discoveries": [],
+      "related_implementations": [],
+      "related_tests": [],
+      "runtime_scenarios": [],
+      "evidence": [
+        "local_artifacts/experiments/EXP-0033/ (probe logs, reward-window screenshots; hashes.sha256)"
+      ],
+      "unknown_fields": [
+        "experience/gil storage offsets",
+        "level-up path",
+        "item/steal reward path",
+        "per-character stride of the writeback"
+      ],
+      "contradictions": [],
+      "notes": "",
+      "id": "CEN-BATTLE-0008",
+      "domain": "BATTLE",
+      "category": "rewards",
+      "name": "Victory processing and reward windows (EXP/GP), battle-to-field writeback",
+      "description": "On victory the game shows input-waiting reward windows in order: experience ('Got 32 Exp. point(s)'), then GP ('Got 96 GP'), then a screen transition. During that window, writers hit the field character-record block ~WRAM:+$1600: $C2496E stores +$1609/+$160A (=55, the first member's post-battle HP) and $C24979 stores +$160D/+$160E (=24, its MP) — the same offsets EXP-0027 identified as field current HP/MP, so battle results are written back to the field records. Other post-victory writers ($C2626D->+$1613, $C26274->+$1611/12, $C24968->+$1614/15, $C20F04->+$1610, $C20F15->+$160C) are reward-adjacent with unknown meaning.",
+      "reconstruction_status": "CANDIDATE_LOCATION",
+      "runtime_status": "OUTPUTS_CAPTURED",
+      "confidence": "strong-hypothesis",
+      "next_action": "Widen the post-victory write watch across the whole +$1600 block for all three members and correlate offsets against on-screen EXP/GP/level values."
+    },
+    {
+      "schema_version": "1.0",
+      "id": "CEN-BATTLE-0009",
+      "domain": "BATTLE",
+      "category": "multi-entity enemies",
+      "name": "Multi-part enemy: Whelk shell and head as separate battle slots",
+      "description": "Formation 432 (Whelk) occupies TWO entries of the DISC-0001 ten-slot battle arrays: slot 4 with 50000/50000 HP (the shell) and slot 5 with 1600/1600 HP (the head). Both are selectable targets; the target cursor moves between them and the head is only selectable while visibly extended. Damage dealt to the visibly extended head reduces slot 5 and never slot 4 (six measured hits, 162-186 each, shell invariant at 50000 throughout). MP candidates read 120/120 (slot 4) and 1000/1000 (slot 5). The in-battle dialogue warns that the creature eats lightning and stores the energy in its shell, and instructs the player not to attack the shell; EXP-0039 observed a punishing counter from a shell strike.",
+      "reconstruction_status": "OBSERVED",
+      "runtime_status": "ENCOUNTERED",
+      "rom_revision": "0f51b4fca41b7fd509e4b8f9d543151f68efa5e97b08493e4b2a0c06f5d8d5e2",
+      "rom_locations": [],
+      "wram_locations": [
+        "WRAM:+$3BF4 (current HP, 2B x 10)",
+        "WRAM:+$3C1C (max HP)",
+        "WRAM:+$3C08 / +$3C30 (MP candidates)"
+      ],
+      "cpu_routines": [],
+      "spc_locations": [],
+      "record_count_expected": null,
+      "record_count_found": 2,
+      "record_size": null,
+      "pointer_tables": [],
+      "consumers": [],
+      "producers": [],
+      "related_experiments": [
+        "EXP-0039",
+        "EXP-0040"
+      ],
+      "related_discoveries": [
+        "DISC-0001"
+      ],
+      "related_implementations": [],
+      "related_tests": [],
+      "runtime_scenarios": [
+        "local_artifacts/experiments/EXP-0040/pre-whelk-healed-wait.mss",
+        "local_artifacts/experiments/EXP-0040/attempt2-frozen-f182248.mss"
+      ],
+      "evidence": [
+        "local_artifacts/experiments/EXP-0040/ (45 artifacts; hashes.sha256)",
+        "docs/experiments/EXP-0040-whelk-victory.md"
+      ],
+      "confidence": "confirmed",
+      "unknown_fields": [
+        "head/shell state timing and its controlling timer",
+        "which slot the shell counter is attributed to",
+        "elemental behavior (lightning absorption asserted only by in-game dialogue, untested)",
+        "monster ids for both slots (formation record id field needs a high-bit decode)"
+      ],
+      "contradictions": [],
+      "next_action": "Deferred behind the ATB research program: head/shell timing cannot be measured until submenu-pause and ATB semantics are modelled (see BLOCKERS.md).",
+      "notes": "Entity split and head-only damage behavior are Confirmed by direct HP-array reads. ALL head/shell TIMING observed in EXP-0040 is contaminated by menu-induced pauses and must not be used to characterize the natural cycle."
+    },
+    {
+      "schema_version": "1.0",
       "id": "CEN-CHAR-0001",
       "domain": "CHAR",
       "category": "character records",
@@ -334,6 +698,644 @@
       "contradictions": [],
       "next_action": "Identify the full source character record layout beyond the copied fields.",
       "notes": ""
+    },
+    {
+      "schema_version": "1.0",
+      "id": "CEN-CHAR-0002",
+      "domain": "CHAR",
+      "category": "party formation",
+      "name": "Party formation and follower chain",
+      "description": "Three-member battle party ('?????', WEDGE, VICKS); field shows stacked/following armor sprites in the mines.",
+      "reconstruction_status": "OBSERVED",
+      "runtime_status": "ENCOUNTERED",
+      "rom_revision": "0f51b4fca41b7fd509e4b8f9d543151f68efa5e97b08493e4b2a0c06f5d8d5e2",
+      "rom_locations": [],
+      "wram_locations": [],
+      "cpu_routines": [
+        "ROMCPU:$C22899-$C2290F (party battle-stat init cluster, EXP-0028)"
+      ],
+      "spc_locations": [],
+      "record_count_expected": null,
+      "record_count_found": null,
+      "record_size": null,
+      "pointer_tables": [],
+      "consumers": [],
+      "producers": [],
+      "related_experiments": [
+        "EXP-0018",
+        "EXP-0025",
+        "EXP-0028"
+      ],
+      "related_discoveries": [],
+      "related_implementations": [],
+      "related_tests": [],
+      "runtime_scenarios": [
+        "mesen/out/exp10-battle.mss",
+        "mesen/out/checkpoint3-mines.mss"
+      ],
+      "evidence": [
+        "local_artifacts/experiments/EXP-0025/ (screenshots; hashes.sha256)"
+      ],
+      "confidence": "confirmed",
+      "unknown_fields": [],
+      "contradictions": [],
+      "next_action": "Locate the party-composition store consumed at battle init (slot staging producers from EXP-0018 are the thread).",
+      "notes": ""
+    },
+    {
+      "schema_version": "1.0",
+      "id": "CEN-CHAR-0003",
+      "domain": "CHAR",
+      "category": "field player object",
+      "name": "Field player/NPC objects (Magitek armor walker, guards, townsfolk)",
+      "description": "Player-controlled armor sprite with facing/walk animation; scripted guard and town NPCs.",
+      "reconstruction_status": "OBSERVED",
+      "runtime_status": "INPUTS_CAPTURED",
+      "rom_revision": "0f51b4fca41b7fd509e4b8f9d543151f68efa5e97b08493e4b2a0c06f5d8d5e2",
+      "rom_locations": [],
+      "wram_locations": [],
+      "cpu_routines": [],
+      "spc_locations": [],
+      "record_count_expected": null,
+      "record_count_found": null,
+      "record_size": null,
+      "pointer_tables": [],
+      "consumers": [],
+      "producers": [],
+      "related_experiments": [
+        "EXP-0025"
+      ],
+      "related_discoveries": [],
+      "related_implementations": [],
+      "related_tests": [],
+      "runtime_scenarios": [
+        "mesen/out/checkpoint2.mss"
+      ],
+      "evidence": [
+        "local_artifacts/experiments/EXP-0025/ (screenshots; hashes.sha256)"
+      ],
+      "confidence": "confirmed",
+      "unknown_fields": [],
+      "contradictions": [],
+      "next_action": "OAM capture on the field state to register the sprite composition (tiles, palettes, OAM layout).",
+      "notes": ""
+    },
+    {
+      "schema_version": "1.0",
+      "id": "CEN-CHAR-0004",
+      "domain": "CHAR",
+      "category": "character records",
+      "name": "Field character-record block (~WRAM:+$1600)",
+      "description": "Single-byte WRAM diff across the Cure cast isolates slot-0 current HP at +$1609 and current MP at +$160D — a field-side character record block distinct from the battle arrays.",
+      "reconstruction_status": "CANDIDATE_LOCATION",
+      "runtime_status": "OUTPUTS_CAPTURED",
+      "rom_revision": "0f51b4fca41b7fd509e4b8f9d543151f68efa5e97b08493e4b2a0c06f5d8d5e2",
+      "rom_locations": [],
+      "wram_locations": [
+        "WRAM:+$1609",
+        "WRAM:+$160D"
+      ],
+      "cpu_routines": [],
+      "spc_locations": [],
+      "record_count_expected": null,
+      "record_count_found": null,
+      "record_size": null,
+      "pointer_tables": [],
+      "consumers": [],
+      "producers": [],
+      "related_experiments": [
+        "EXP-0027"
+      ],
+      "related_discoveries": [],
+      "related_implementations": [],
+      "related_tests": [],
+      "runtime_scenarios": [],
+      "evidence": [
+        "local_artifacts/experiments/EXP-0027/ (boundary/esper decodes, cast screenshots, WRAM diff; hashes.sha256)"
+      ],
+      "confidence": "strong-hypothesis",
+      "unknown_fields": [],
+      "contradictions": [],
+      "next_action": "Map the record stride via a second character's values; relate to the $C10DF3 copy-loop source.",
+      "notes": ""
+    },
+    {
+      "schema_version": "1.0",
+      "id": "CEN-EVENT-0001",
+      "domain": "EVENT",
+      "category": "event bytecode",
+      "name": "Event scripting engine (opening scripted sequence)",
+      "description": "checkpoint1 shows a scripted guard-chase beat: dialogue + positioned actors; an event interpreter with flags and branching must exist.",
+      "reconstruction_status": "CANDIDATE_LOCATION",
+      "runtime_status": "ENCOUNTERED",
+      "rom_revision": "0f51b4fca41b7fd509e4b8f9d543151f68efa5e97b08493e4b2a0c06f5d8d5e2",
+      "rom_locations": [],
+      "wram_locations": [],
+      "cpu_routines": [
+        "ROMCPU:$C09B5C (candidate interpreter-advance: every decoded event-command handler ends LDA #$01|#$02 / JMP $C09B5C with A = plausible operand length)"
+      ],
+      "spc_locations": [],
+      "record_count_expected": null,
+      "record_count_found": null,
+      "record_size": null,
+      "pointer_tables": [],
+      "consumers": [],
+      "producers": [],
+      "related_experiments": [
+        "EXP-0025",
+        "EXP-0031",
+        "EXP-0037"
+      ],
+      "related_discoveries": [],
+      "related_implementations": [],
+      "related_tests": [],
+      "runtime_scenarios": [
+        "mesen/out/checkpoint1.mss"
+      ],
+      "evidence": [
+        "local_artifacts/experiments/EXP-0025/ (screenshots; hashes.sha256)"
+      ],
+      "confidence": "confirmed",
+      "unknown_fields": [
+        "dispatcher loop PC and opcode-table location",
+        "opcode set and operand formats",
+        "script pointer variable",
+        "script source in ROM (CEN-EVENT-0002 ties in)"
+      ],
+      "contradictions": [],
+      "next_action": "Static-decode ROMCPU:$C09B5C and its callers to find the dispatch loop and opcode table; then exec-census a dialogue advance to confirm live.",
+      "notes": "EXP-0031: the real opening auto-runs (timed dialogue) until the scripted Narshe-entry box, which waits for A indefinitely — the engine distinguishes timed from input-waiting boxes. EXP-0037 static decode: the 16 flag set/clear command handlers at ROMCPU:$C0B593-$C0B6D2 (and the $1EDF-bit7 copy handlers at $C0B940-$C0B9BF) all terminate in LDA #$01 or #$02 / JMP $C09B5C, consistent with an interpreter advancing its script pointer by the command length. $C09B5C is the first concrete code anchor for this engine; the flag number arrives in DP $EB, so $EB plausibly holds a fetched operand."
+    },
+    {
+      "schema_version": "1.0",
+      "id": "CEN-EVENT-0002",
+      "domain": "EVENT",
+      "category": "dialogue",
+      "name": "Dialogue text content and encoding",
+      "description": "English text rendered in a variable-width font ('GUARD: We've got 'em trapped, now!'); storage, encoding, and pointerization unknown. Extracted text stays in local artifacts per the asset policy.",
+      "reconstruction_status": "OBSERVED",
+      "runtime_status": "ENCOUNTERED",
+      "rom_revision": "0f51b4fca41b7fd509e4b8f9d543151f68efa5e97b08493e4b2a0c06f5d8d5e2",
+      "rom_locations": [],
+      "wram_locations": [],
+      "cpu_routines": [],
+      "spc_locations": [],
+      "record_count_expected": null,
+      "record_count_found": null,
+      "record_size": null,
+      "pointer_tables": [],
+      "consumers": [],
+      "producers": [],
+      "related_experiments": [
+        "EXP-0025"
+      ],
+      "related_discoveries": [],
+      "related_implementations": [],
+      "related_tests": [],
+      "runtime_scenarios": [
+        "mesen/out/checkpoint1.mss"
+      ],
+      "evidence": [
+        "local_artifacts/experiments/EXP-0025/ (screenshots; hashes.sha256)"
+      ],
+      "confidence": "confirmed",
+      "unknown_fields": [
+        "text encoding",
+        "string storage/pointer tables",
+        "control codes"
+      ],
+      "contradictions": [],
+      "next_action": "Capture the dialogue compose region + derive the glyph-to-byte mapping via the tilemap-affine technique (EXP-0023 pattern).",
+      "notes": ""
+    },
+    {
+      "schema_version": "1.0",
+      "id": "CEN-EVENT-0003",
+      "domain": "EVENT",
+      "category": "naming events",
+      "name": "Character naming state (Terra as '?????')",
+      "description": "The first battle-status row renders '?????' — the naming event has not run in these states; a name store with a pre-naming placeholder exists.",
+      "reconstruction_status": "OBSERVED",
+      "runtime_status": "ENCOUNTERED",
+      "rom_revision": "0f51b4fca41b7fd509e4b8f9d543151f68efa5e97b08493e4b2a0c06f5d8d5e2",
+      "rom_locations": [],
+      "wram_locations": [],
+      "cpu_routines": [],
+      "spc_locations": [],
+      "record_count_expected": null,
+      "record_count_found": null,
+      "record_size": null,
+      "pointer_tables": [],
+      "consumers": [],
+      "producers": [],
+      "related_experiments": [
+        "EXP-0025"
+      ],
+      "related_discoveries": [],
+      "related_implementations": [],
+      "related_tests": [],
+      "runtime_scenarios": [
+        "mesen/out/exp10-battle.mss"
+      ],
+      "evidence": [
+        "local_artifacts/experiments/EXP-0025/ (screenshots; hashes.sha256)"
+      ],
+      "confidence": "confirmed",
+      "unknown_fields": [
+        "name storage location/format",
+        "placeholder encoding"
+      ],
+      "contradictions": [],
+      "next_action": "Locate the character-name store: WRAM search for the rendered name tile sequence source when the status window composes.",
+      "notes": ""
+    },
+    {
+      "schema_version": "1.0",
+      "rom_revision": "0f51b4fca41b7fd509e4b8f9d543151f68efa5e97b08493e4b2a0c06f5d8d5e2",
+      "rom_locations": [],
+      "wram_locations": [],
+      "cpu_routines": [],
+      "spc_locations": [],
+      "record_count_expected": null,
+      "record_count_found": null,
+      "record_size": null,
+      "pointer_tables": [],
+      "consumers": [],
+      "producers": [],
+      "related_experiments": [
+        "EXP-0031"
+      ],
+      "related_discoveries": [],
+      "related_implementations": [],
+      "related_tests": [],
+      "runtime_scenarios": [
+        "local_artifacts/scenarios/SCN-0001/00-new-game/00-new-game.mss"
+      ],
+      "evidence": [
+        "local_artifacts/experiments/EXP-0031/ (phase A screenshots, events logs; hashes.sha256)",
+        "local_artifacts/scenarios/SCN-0001/00-new-game/ (run1/run2 dumps; hashes.sha256)"
+      ],
+      "unknown_fields": [
+        "which button (start vs a) the title accepts",
+        "exact input-acceptance window",
+        "attract dimming mechanism",
+        "flow with non-empty SRAM"
+      ],
+      "contradictions": [],
+      "notes": "",
+      "id": "CEN-EVENT-0004",
+      "domain": "EVENT",
+      "category": "cutscenes",
+      "name": "Title screen and attract-mode flow",
+      "description": "Power-on: title logo+(c) visible ~frame 2969, faded by ~3709; with no input an attract loop (~21000-frame period) alternates a dimmed-palette opening replay with a gameplay demo, dialogue auto-advancing, returning to the title each iteration. The title ignores long Start holds and sparse presses (input verifiably latched, $4219=$10) but accepts rapid start+a edge toggling; with virgin SRAM no save-select screen appears and the full-palette real opening begins directly, auto-running to the first input-waiting dialogue at scripted Narshe entry.",
+      "reconstruction_status": "OBSERVED",
+      "runtime_status": "INPUTS_CAPTURED",
+      "confidence": "confirmed",
+      "next_action": "Exec-trace the title input read to map the acceptance condition (edge requirement) and the start-vs-a discrimination."
+    },
+    {
+      "schema_version": "1.0",
+      "rom_revision": "0f51b4fca41b7fd509e4b8f9d543151f68efa5e97b08493e4b2a0c06f5d8d5e2",
+      "rom_locations": [],
+      "wram_locations": [
+        "WRAM:+$11E0",
+        "WRAM:+$3F44-+$3F53"
+      ],
+      "cpu_routines": [
+        "ROMCPU:$C22899"
+      ],
+      "spc_locations": [],
+      "record_count_expected": null,
+      "record_count_found": null,
+      "record_size": null,
+      "pointer_tables": [],
+      "consumers": [],
+      "producers": [],
+      "related_experiments": [
+        "EXP-0030",
+        "EXP-0032",
+        "EXP-0033"
+      ],
+      "related_discoveries": [],
+      "related_implementations": [],
+      "related_tests": [],
+      "runtime_scenarios": [
+        "local_artifacts/scenarios/SCN-0001/03-first-scripted-battle/03-first-scripted-battle.mss"
+      ],
+      "evidence": [
+        "local_artifacts/experiments/EXP-0032/ (probe logs, beat screenshots; hashes.sha256)",
+        "local_artifacts/scenarios/SCN-0001/03-first-scripted-battle/ (WRAM dumps, screens; hashes.sha256)"
+      ],
+      "unknown_fields": [
+        "the event opcode that invokes the battle",
+        "whether $0206/$3A97 (EXP-0029 event-battle path) is used here",
+        "formation flags record 2 semantics"
+      ],
+      "contradictions": [],
+      "notes": "EXP-0032's first draft misread record byte 1 ($0C) as a monster id; corrected in EXP-0033 from the milestone-03 WRAM dump.",
+      "id": "CEN-EVENT-0005",
+      "domain": "EVENT",
+      "category": "scripted battles",
+      "name": "Scripted battle invocation (Narshe gate guard, formation 2)",
+      "description": "The opening Narshe-gate beat is a chain of input-waiting dialogue boxes separated by player-controlled walking; walking north into the guards triggers a scripted battle. Live staging at WRAM:+$11E0=$0002 with the +$3F44 record byte-matching ROM formation record 2 (ROMFILE:0x0F621E): monster-id bytes (record bytes 2-7) = FF FF 00 00 FF FF: two entries of monster id 0, confirmed live as battle slots 6/7 with HP 40 / MP 15 matching monster record 0's +$08/+$0A. Scripted (non-random) origin: reached without the encounter-roll walk pattern.",
+      "reconstruction_status": "LOCATED",
+      "runtime_status": "NORMAL_PATH_VERIFIED",
+      "confidence": "confirmed",
+      "next_action": "Exec-watch the frames before battle detection to capture the event-script invocation site; compare against the $0206/$3A97 alternate id path."
+    },
+    {
+      "schema_version": "1.0",
+      "rom_revision": "0f51b4fca41b7fd509e4b8f9d543151f68efa5e97b08493e4b2a0c06f5d8d5e2",
+      "rom_locations": [],
+      "wram_locations": [],
+      "cpu_routines": [],
+      "spc_locations": [],
+      "record_count_expected": null,
+      "record_count_found": null,
+      "record_size": null,
+      "pointer_tables": [],
+      "consumers": [],
+      "producers": [],
+      "related_experiments": [
+        "EXP-0032",
+        "EXP-0033",
+        "EXP-0034"
+      ],
+      "related_discoveries": [],
+      "related_implementations": [],
+      "related_tests": [],
+      "runtime_scenarios": [
+        "local_artifacts/scenarios/SCN-0001/04-free-movement/04-free-movement.mss"
+      ],
+      "evidence": [
+        "local_artifacts/experiments/EXP-0033/postvictory-screen.png, run1-beat-*.png; hashes.sha256"
+      ],
+      "unknown_fields": [
+        "what event opcode invokes each battle",
+        "whether losing branches the script"
+      ],
+      "contradictions": [],
+      "notes": "",
+      "id": "CEN-EVENT-0006",
+      "domain": "EVENT",
+      "category": "scripted battles",
+      "name": "Multiple scripted battles precede free field movement in the opening",
+      "description": "The opening runs exactly FOUR scripted battles before player control: formations 2, 1, 2, 41 (entry frames 31557/34953/36828/39500, ends 32736/36004/38059/40975 - identical across two power-on runs). Every staged +$3F44 record matches the ROM formation table ($CF6200+id*15) byte-for-byte. Free movement follows the fourth battle; milestone 04-free-movement captured at frame 46375.",
+      "reconstruction_status": "LOCATED",
+      "runtime_status": "NORMAL_PATH_VERIFIED",
+      "confidence": "confirmed",
+      "next_action": "Exec-watch the frames before each battle entry to capture the scripted invocation site (CEN-EVENT-0005)."
+    },
+    {
+      "schema_version": "1.0",
+      "rom_revision": "0f51b4fca41b7fd509e4b8f9d543151f68efa5e97b08493e4b2a0c06f5d8d5e2",
+      "rom_locations": [],
+      "wram_locations": [
+        "WRAM:+$00AF",
+        "WRAM:+$00B0"
+      ],
+      "cpu_routines": [],
+      "spc_locations": [],
+      "record_count_expected": null,
+      "record_count_found": null,
+      "record_size": null,
+      "pointer_tables": [],
+      "consumers": [],
+      "producers": [],
+      "related_experiments": [
+        "EXP-0034",
+        "EXP-0035",
+        "EXP-0036"
+      ],
+      "related_discoveries": [],
+      "related_implementations": [],
+      "related_tests": [],
+      "runtime_scenarios": [],
+      "evidence": [
+        "local_artifacts/experiments/EXP-0035/recon-guard*.png, trial1-final.png; hashes.sha256"
+      ],
+      "unknown_fields": [
+        "the event opcode that invokes the battle",
+        "the trigger region's data source",
+        "whether the trigger is one-time"
+      ],
+      "contradictions": [],
+      "notes": "",
+      "id": "CEN-EVENT-0007",
+      "domain": "EVENT",
+      "category": "scripted battles",
+      "name": "Fifth scripted battle en route to the mines",
+      "description": "A contact trigger at player tile ($1E,$25) on the Narshe exterior - reached after the free-movement milestone, on the way to the mine entrance - starts a fifth scripted battle: FORMATION 84 ($0054), staged record byte-identical to ROMFILE:0x0F66EC, monster-id bytes 1B 1B 00 00 FF FF = two of record 27 and two of record 0. Record 27 (ROMFILE:0x0F0360) holds 115 HP / 30 MP, and the 115 matches the live enemy HP word seen in EXP-0035. The trigger is contact-based, not tile-occupancy based: standing on the tile tapping A never fires it; pushing into the guard does. A second scripted dialogue at ($1F,$16) gates the mine shaft itself.",
+      "reconstruction_status": "LOCATED",
+      "runtime_status": "NORMAL_PATH_VERIFIED",
+      "confidence": "confirmed",
+      "next_action": "Exec-watch the frames before this battle's entry to capture the scripted invocation site (shared with CEN-EVENT-0005)."
+    },
+    {
+      "schema_version": "1.0",
+      "rom_revision": "0f51b4fca41b7fd509e4b8f9d543151f68efa5e97b08493e4b2a0c06f5d8d5e2",
+      "rom_locations": [],
+      "wram_locations": [
+        "WRAM:+$1E80",
+        "WRAM:+$1EA0",
+        "WRAM:+$1EC0"
+      ],
+      "cpu_routines": [
+        "ROMCPU:$BAED (flag-number decoder: Y=flag/8, X=flag&7)",
+        "ROMCPU:$C0B593-$C0B6D2 (16 uniform script set/clear handlers; bases $1E80/$1EA0/$1EC0/$1EE0/$1F00/$1F20/$1F40/$1DC9; ROM-0027)",
+        "ROMCPU:$C0BAA9-$C0BAE9 (flag test routines for $1E80/$1EA0/$1EE0/$1F00/$1F20/$1F40; ROM-0028)",
+        "ROMCPU:$C0BB0C (boot clear of $1E80-$1EDF; live at frame 21)",
+        "ROMCPU:$C0BB18 (boot clear of $1E40-$1E6F, role unknown)",
+        "ROMCPU:$C0B943/$C0B97B/$C0B9A5 ($0205/$0200 bit-7 copy into $1EDF bit 7; ROM-0032)",
+        "ROMCPU:$C0BA81 ($1EB6 working-bit updater: facing nibble + bit 4; ROM-0031)",
+        "ROMCPU:$C0BFA6 region ($1EB6 bit-6 busy latch; STZ $1EBE/$1EBF)",
+        "ROMCPU:$C0C02D ($1EB9 bit-7 direct set)",
+        "ROMCPU:$C04A1D/$C04AF3 (battle-era RMW clears of $1EB6/$1EB7/$1ED8 bits)"
+      ],
+      "spc_locations": [],
+      "record_count_expected": 768,
+      "record_count_found": 20,
+      "record_size": null,
+      "pointer_tables": [
+        "ROMCPU:$C0BAFC (set masks)",
+        "ROMCPU:$C0BB04 (clear masks)"
+      ],
+      "consumers": [],
+      "producers": [],
+      "related_experiments": [
+        "EXP-0035",
+        "EXP-0036",
+        "EXP-0037"
+      ],
+      "related_discoveries": [
+        "DISC-0008"
+      ],
+      "related_implementations": [
+        "internal/game/eventflags (Ref, FlagAt, SetMasks/ClearMasks mirroring $C0BAFC/$C0BB04)"
+      ],
+      "related_tests": [
+        "internal/game/eventflags: TestRefDerivation, TestMaskTablesMatchROMDecode, TestFlagAtRoundTrip, TestMilestone05Value"
+      ],
+      "runtime_scenarios": [
+        "SCN-0001 golden route power-on..milestone 05 (EXP-0037: gui1 + run1 + run2)"
+      ],
+      "evidence": [
+        "docs/contradictions/CONTRA-0002-1ea5-map-id-vs-event-flags.md (static ROM decode; mask tables and decoder read from the verified ROM)",
+        "local_artifacts/experiments/EXP-0036/ (live EVFLAG/MAPC write log: $00->$01->$05->$0D, all from $C0B5B6)"
+      ],
+      "unknown_fields": [
+        "the meaning of individual flag numbers (identifiers stay address-anchored)",
+        "whether the arrays are SRAM-backed (needs a save-event capture)",
+        "whether the statically-decoded extra arrays ($1EE0-$1F5F, $1DC9-$1DE8) are used at runtime",
+        "the role of the $1E40-$1E6F region cleared at boot",
+        "the semantic source of the $0200/$0205 bit copied into EVF-1EC0-$FF",
+        "the flag-test routine callers (who reads these flags, and when)"
+      ],
+      "contradictions": [],
+      "notes": "EXP-0037 write-watched all 96 bytes of the three arrays across the scheduled opening route: 162 value-changing writes, identical across a GUI run and headless runs (frame+addr+old+new+PC), snapshots replay-consistent, final WRAM byte-identical to milestone 05. 20 flags touched: 11 latched story flags (all via the script handlers), 4 transient, 5 fast-toggling working bits ($1EB6 low nibble + bits 4/6 are engine working state living inside the flag address space). Boot clears the whole span at frame 21. Static decode extends the same handler family to five more bases ($1EE0/$1F00/$1F20/$1F40/$1DC9) — runtime-unobserved; and $1EC0 has set/clear handlers but no test routine in the decoded family. Tracked inventory: data/scenarios/opening-event-flags.json.",
+      "id": "CEN-EVENT-0008",
+      "domain": "EVENT",
+      "category": "event flags",
+      "name": "Event-flag bit arrays and their set/clear routines",
+      "description": "Three parallel bit arrays at WRAM:+$1E80, +$1EA0 and +$1EC0, each $20 bytes apart (256 flags each). A shared decoder at ROMCPU:$BAED converts a flag number to array indices: REP #$20 / TAX / LSR x3 / TAY (byte index = flag/8) / TDC / SEP #$20 / TXA / AND #$07 / TAX (bit index = flag&7). Set routines read-modify-write with ORA $C0BAFC,X (masks 01 02 04 08 10 20 40 80); clear routines use AND $C0BB04,X (masks FE FD FB F7 EF DF BF 7F, exact complements). Live-observed writer: STA $1EA0,Y at ROMCPU:$C0B5B3 (the probe reports the following PC, $C0B5B6). Access sites: LDA $1EA0,Y x5 / STA $1EA0,Y x4, with symmetric counts for the $1E80 and $1EC0 arrays. Located by CONTRA-0002 while refuting a map-id reading of WRAM:+$1EA5, which is byte 5 of the $1EA0 array (flags $28-$2F); at milestone 05 its bits 0, 2 and 3 are set, i.e. flags $28, $2A, $2B.",
+      "reconstruction_status": "FORMAT_DECODED",
+      "runtime_status": "NORMAL_PATH_VERIFIED",
+      "confidence": "confirmed",
+      "next_action": "Extend the write watch to the statically-decoded additional arrays ($1EE0-$1F5F, $1DC9) on a future route unit, and capture a save event to settle SRAM backing; correlate latched opening flags against the treasure/interaction beats (B16) as those systems come under test."
+    },
+    {
+      "schema_version": "1.0",
+      "rom_revision": "0f51b4fca41b7fd509e4b8f9d543151f68efa5e97b08493e4b2a0c06f5d8d5e2",
+      "rom_locations": [],
+      "wram_locations": [],
+      "cpu_routines": [],
+      "spc_locations": [],
+      "record_count_expected": null,
+      "record_count_found": null,
+      "record_size": null,
+      "pointer_tables": [],
+      "consumers": [],
+      "producers": [],
+      "related_experiments": [
+        "EXP-0038"
+      ],
+      "related_discoveries": [],
+      "related_implementations": [],
+      "related_tests": [],
+      "runtime_scenarios": [
+        "EXP-0038 recon from 05-mines-entry.mss"
+      ],
+      "evidence": [
+        "local_artifacts/experiments/EXP-0038/recon-stall-2A09.png",
+        "local_artifacts/experiments/EXP-0038/recon.log"
+      ],
+      "unknown_fields": [
+        "trigger tile/zone exact bounds",
+        "event script location",
+        "relation to the Whelk introduction (B17)"
+      ],
+      "contradictions": [],
+      "notes": "Registered from recon only; the scheduled EXP-0038 route deliberately stops at (28,09) to avoid it.",
+      "id": "CEN-EVENT-0009",
+      "domain": "EVENT",
+      "category": "scripted event",
+      "name": "Mines interior scripted event beyond the encounter corridor",
+      "description": "Reaching approximately (2A,09) in the mines interior (two turns past the encounter corridor) starts a scripted event: a dialogue box opens and the party splits, one walker advancing while movement input is consumed. Observed once during EXP-0038 recon from the milestone-05 state; screenshot archived locally. Plausibly the pre-Whelk beat sequence (B17 candidate) - unverified.",
+      "reconstruction_status": "OBSERVED",
+      "runtime_status": "ENCOUNTERED",
+      "confidence": "confirmed",
+      "next_action": "When SCN-0001 advances past milestone 06: scheduled approach to the trigger with the event-flag watch armed and position/frame capture (serves B17)."
+    },
+    {
+      "schema_version": "1.0",
+      "rom_revision": "0f51b4fca41b7fd509e4b8f9d543151f68efa5e97b08493e4b2a0c06f5d8d5e2",
+      "rom_locations": [],
+      "wram_locations": [],
+      "cpu_routines": [],
+      "spc_locations": [],
+      "record_count_expected": null,
+      "record_count_found": null,
+      "record_size": null,
+      "pointer_tables": [],
+      "consumers": [],
+      "producers": [],
+      "related_experiments": [
+        "EXP-0039",
+        "EXP-0040"
+      ],
+      "related_discoveries": [],
+      "related_implementations": [],
+      "related_tests": [],
+      "runtime_scenarios": [
+        "EXP-0039 GUI breadth pass from 05-mines-entry.mss"
+      ],
+      "evidence": [
+        "local_artifacts/experiments/EXP-0039/whelk-battle-entry.png",
+        "local_artifacts/experiments/EXP-0039/whelk-intro-3.png",
+        "local_artifacts/experiments/EXP-0039/recon.log",
+        "local_artifacts/scenarios/SCN-0001/07-pre-whelk/pre-whelk-recon.mss"
+      ],
+      "unknown_fields": [
+        "the formation record's monster-id extension (Whelk's actual monster ids)",
+        "head vs shell target modelling",
+        "counterattack selection and damage",
+        "the battle-invocation opcode (shared with CEN-EVENT-0005)"
+      ],
+      "contradictions": [],
+      "notes": "Reached for the first time in the project by EXP-0039. First attempt ended in defeat via the shell counter; a pre-Whelk savestate is preserved for the victory attempt. EXP-0040 reproduced the invocation twice from the preserved pre-Whelk state; staged +$3F44 record byte-identical to EXP-0039 (third confirmation).",
+      "id": "CEN-EVENT-0010",
+      "domain": "EVENT",
+      "category": "scripted event",
+      "name": "Whelk encounter beat and boss battle invocation",
+      "description": "A scripted beat fires on arriving at mines tile (2A,09): a party member steps forward and movement input is consumed. After it resolves, the Whelk boss battle is CONTACT-triggered by pushing north from (2A,07) - the same walk-into-it pattern EXP-0036 found for the fifth scripted battle. The battle is formation 432 ($01B0), staged record 80 03 00 34 FF FF FF FF 48 AB 00 00 00 00 3F, preceded by a multi-box introduction/warning dialogue. Enemy name window renders 'Whelk' (observational; name table unlocated).",
+      "reconstruction_status": "OBSERVED",
+      "runtime_status": "ENCOUNTERED",
+      "confidence": "confirmed",
+      "next_action": "EXP-0040: reload the pre-Whelk state, heal with Heal Force, attack only while the head is extended, and capture a first victory plus the post-battle state (B18/B19)."
+    },
+    {
+      "schema_version": "1.0",
+      "rom_revision": "0f51b4fca41b7fd509e4b8f9d543151f68efa5e97b08493e4b2a0c06f5d8d5e2",
+      "rom_locations": [],
+      "wram_locations": [],
+      "cpu_routines": [],
+      "spc_locations": [],
+      "record_count_expected": null,
+      "record_count_found": null,
+      "record_size": null,
+      "pointer_tables": [],
+      "consumers": [],
+      "producers": [],
+      "related_experiments": [
+        "EXP-0039",
+        "EXP-0040"
+      ],
+      "related_discoveries": [],
+      "related_implementations": [],
+      "related_tests": [],
+      "runtime_scenarios": [
+        "EXP-0039 GUI breadth pass"
+      ],
+      "evidence": [
+        "local_artifacts/experiments/EXP-0039/guard-esper-beat-2A07.png",
+        "local_artifacts/experiments/EXP-0039/post-whelk-guard-beat.mss",
+        "local_artifacts/experiments/EXP-0040/12-at-2A07.png",
+        "local_artifacts/experiments/EXP-0040/13-guard-dialog.png"
+      ],
+      "unknown_fields": [
+        "event script location"
+      ],
+      "contradictions": [],
+      "notes": "Sequence position RESOLVED by EXP-0040 (reproduced on both clean attempts, no defeat involved): the beat precedes the Whelk battle. Renamed from 'Post-Whelk' accordingly.",
+      "id": "CEN-EVENT-0011",
+      "domain": "EVENT",
+      "category": "scripted event",
+      "name": "Pre-Whelk guard/Esper scripted beat",
+      "description": "A scripted beat at mines tile (2A,07): a guard dialogue about not handing over the Esper. EXP-0040 reproduced it twice on a clean, never-defeated run and established that it fires BEFORE the Whelk battle as normal progression - it is not a post-defeat artifact. EXP-0039 had only seen it after a defeat-and-reload, leaving the position Unknown.",
+      "reconstruction_status": "OBSERVED",
+      "runtime_status": "ENCOUNTERED",
+      "confidence": "confirmed",
+      "next_action": "Locate its event script once the event interpreter is decoded (CEN-EVENT-0001)."
     },
     {
       "schema_version": "1.0",
@@ -386,116 +1388,17 @@
     },
     {
       "schema_version": "1.0",
-      "id": "CEN-AUDIO-0001",
-      "domain": "AUDIO",
-      "category": "sound effects",
-      "name": "Battle-menu confirm SFX cue",
-      "description": "Press -> $21 to $2140 from $C117CC -> DSP voice 7 -> SRCN 5 -> ARAM $48D8 click.",
-      "reconstruction_status": "REGRESSION_TESTED",
-      "runtime_status": "NORMAL_PATH_VERIFIED",
-      "rom_revision": "0f51b4fca41b7fd509e4b8f9d543151f68efa5e97b08493e4b2a0c06f5d8d5e2",
-      "rom_locations": [
-        "ROM-0017"
-      ],
-      "wram_locations": [],
-      "cpu_routines": [
-        "ROMCPU:$C117CC"
-      ],
-      "spc_locations": [
-        "ARAM:$48D8",
-        "DSP voice 7"
-      ],
-      "record_count_expected": null,
-      "record_count_found": null,
-      "record_size": null,
-      "pointer_tables": [],
-      "consumers": [],
-      "producers": [],
-      "related_experiments": [
-        "EXP-0024"
-      ],
-      "related_discoveries": [],
-      "related_implementations": [
-        "internal/audio/brr.Decode",
-        "ff6lab brr info"
-      ],
-      "related_tests": [
-        "brr hand-computed vectors + fuzz"
-      ],
-      "runtime_scenarios": [
-        "mesen/out/exp10-battle.mss"
-      ],
-      "evidence": [
-        "docs/audio/AUD-0001-battle-confirm-sfx.md"
-      ],
-      "confidence": "confirmed",
-      "unknown_fields": [],
-      "contradictions": [],
-      "next_action": "SPC-side dispatch trace for port-0 command $21.",
-      "notes": ""
-    },
-    {
-      "schema_version": "1.0",
-      "id": "CEN-AUDIO-0002",
-      "domain": "AUDIO",
-      "category": "BRR samples",
-      "name": "SFX BRR sample pack and sample directory",
-      "description": "Directory at ARAM $1B00 (DIR=$1B); contiguous SFX pack at ARAM $4800 == ROM 0x051EC9 (288 bytes verified).",
-      "reconstruction_status": "EXTRACTED_PARTIAL",
-      "runtime_status": "OUTPUTS_CAPTURED",
-      "rom_revision": "0f51b4fca41b7fd509e4b8f9d543151f68efa5e97b08493e4b2a0c06f5d8d5e2",
-      "rom_locations": [
-        "ROM-0017"
-      ],
-      "wram_locations": [],
-      "cpu_routines": [],
-      "spc_locations": [
-        "ARAM:$1B00 directory",
-        "ARAM:$4800-$491F verified"
-      ],
-      "record_count_expected": null,
-      "record_count_found": null,
-      "record_size": null,
-      "pointer_tables": [],
-      "consumers": [],
-      "producers": [],
-      "related_experiments": [
-        "EXP-0024"
-      ],
-      "related_discoveries": [],
-      "related_implementations": [],
-      "related_tests": [],
-      "runtime_scenarios": [],
-      "evidence": [
-        "docs/audio/AUD-0001-battle-confirm-sfx.md"
-      ],
-      "confidence": "confirmed",
-      "unknown_fields": [
-        "full pack extent",
-        "samples 0-4,6,7+ cue assignments",
-        "music sample provenance"
-      ],
-      "contradictions": [],
-      "next_action": "Bound the full pack extent and per-sample cues; map remaining directory entries.",
-      "notes": ""
-    },
-    {
-      "schema_version": "1.0",
-      "id": "CEN-AUDIO-0003",
-      "domain": "AUDIO",
-      "category": "CPU/APU communication",
-      "name": "Main-CPU to SPC port command protocol",
-      "description": "Confirm SFX command $21 on port 0; periodic background triples ($E4/id/$18) and $28 heartbeat observed, uninterpreted.",
-      "reconstruction_status": "LOCATED",
-      "runtime_status": "OUTPUTS_CAPTURED",
+      "id": "CEN-GFX-0002",
+      "domain": "GFX",
+      "category": "character sprites",
+      "name": "Field sprite assets (armor walker, NPCs, townsfolk)",
+      "description": "Multiple distinct field sprites with walk animation observed across the three field states.",
+      "reconstruction_status": "OBSERVED",
+      "runtime_status": "ENCOUNTERED",
       "rom_revision": "0f51b4fca41b7fd509e4b8f9d543151f68efa5e97b08493e4b2a0c06f5d8d5e2",
       "rom_locations": [],
       "wram_locations": [],
-      "cpu_routines": [
-        "ROMCPU:$C117CC",
-        "ROMCPU:$C117E8",
-        "ROMCPU:$C11811-$C1181F"
-      ],
+      "cpu_routines": [],
       "spc_locations": [],
       "record_count_expected": null,
       "record_count_found": null,
@@ -504,23 +1407,473 @@
       "consumers": [],
       "producers": [],
       "related_experiments": [
-        "EXP-0024"
+        "EXP-0025"
       ],
       "related_discoveries": [],
       "related_implementations": [],
       "related_tests": [],
       "runtime_scenarios": [],
       "evidence": [
-        "local_artifacts/experiments/EXP-0024/exp24-ports.log (hashes in AUD-0001)"
+        "local_artifacts/experiments/EXP-0025/ (screenshots; hashes.sha256)"
       ],
-      "confidence": "tentative-hypothesis",
+      "confidence": "confirmed",
+      "unknown_fields": [],
+      "contradictions": [],
+      "next_action": "OAM + chr capture on a field state; register the sprite sheet region.",
+      "notes": ""
+    },
+    {
+      "schema_version": "1.0",
+      "id": "CEN-GFX-0003",
+      "domain": "GFX",
+      "category": "battle backgrounds",
+      "name": "Battle background (cave scene)",
+      "description": "Layered cave background behind the guard fight.",
+      "reconstruction_status": "OBSERVED",
+      "runtime_status": "ENCOUNTERED",
+      "rom_revision": "0f51b4fca41b7fd509e4b8f9d543151f68efa5e97b08493e4b2a0c06f5d8d5e2",
+      "rom_locations": [],
+      "wram_locations": [],
+      "cpu_routines": [],
+      "spc_locations": [],
+      "record_count_expected": null,
+      "record_count_found": null,
+      "record_size": null,
+      "pointer_tables": [],
+      "consumers": [],
+      "producers": [],
+      "related_experiments": [
+        "EXP-0025"
+      ],
+      "related_discoveries": [],
+      "related_implementations": [],
+      "related_tests": [],
+      "runtime_scenarios": [
+        "mesen/out/exp10-battle.mss"
+      ],
+      "evidence": [
+        "local_artifacts/experiments/EXP-0025/ (screenshots; hashes.sha256)"
+      ],
+      "confidence": "confirmed",
+      "unknown_fields": [],
+      "contradictions": [],
+      "next_action": "BG1/BG2 VRAM + tilemap capture during battle; provenance search (EXP-0023 pattern).",
+      "notes": ""
+    },
+    {
+      "schema_version": "1.0",
+      "id": "CEN-GFX-0004",
+      "domain": "GFX",
+      "category": "fonts",
+      "name": "Variable-width dialogue font",
+      "description": "Proportional text in the dialogue window — a distinct asset from the fixed 8x8 HUD font (GFX-0001).",
+      "reconstruction_status": "OBSERVED",
+      "runtime_status": "ENCOUNTERED",
+      "rom_revision": "0f51b4fca41b7fd509e4b8f9d543151f68efa5e97b08493e4b2a0c06f5d8d5e2",
+      "rom_locations": [],
+      "wram_locations": [],
+      "cpu_routines": [],
+      "spc_locations": [],
+      "record_count_expected": null,
+      "record_count_found": null,
+      "record_size": null,
+      "pointer_tables": [],
+      "consumers": [],
+      "producers": [],
+      "related_experiments": [
+        "EXP-0025"
+      ],
+      "related_discoveries": [],
+      "related_implementations": [],
+      "related_tests": [],
+      "runtime_scenarios": [
+        "mesen/out/checkpoint1.mss"
+      ],
+      "evidence": [
+        "local_artifacts/experiments/EXP-0025/ (screenshots; hashes.sha256)"
+      ],
+      "confidence": "confirmed",
+      "unknown_fields": [],
+      "contradictions": [],
+      "next_action": "Capture the dialogue compose region; the fixed-font provenance technique should locate the glyph source.",
+      "notes": ""
+    },
+    {
+      "schema_version": "1.0",
+      "id": "CEN-MAGIC-0001",
+      "domain": "MAGIC",
+      "category": "magitek abilities",
+      "name": "Magitek command and ability set",
+      "description": "The battle command window shows the Magitek command; the Fire Beam action (power 60, fire element) was live-verified through the damage pipeline. Attack-record candidates for Fire Beam: indices 5 and 131 ($C46AC0 table). Ability sets are character-specific: the leader (Terra) shows EIGHT abilities, the Magitek escorts four.",
+      "reconstruction_status": "CANDIDATE_LOCATION",
+      "runtime_status": "NORMAL_PATH_VERIFIED",
+      "rom_revision": "0f51b4fca41b7fd509e4b8f9d543151f68efa5e97b08493e4b2a0c06f5d8d5e2",
+      "rom_locations": [
+        "ROM-0015"
+      ],
+      "wram_locations": [],
+      "cpu_routines": [],
+      "spc_locations": [],
+      "record_count_expected": null,
+      "record_count_found": null,
+      "record_size": null,
+      "pointer_tables": [],
+      "consumers": [],
+      "producers": [],
+      "related_experiments": [
+        "EXP-0011",
+        "EXP-0015",
+        "EXP-0022",
+        "EXP-0025",
+        "EXP-0039",
+        "EXP-0040"
+      ],
+      "related_discoveries": [],
+      "related_implementations": [],
+      "related_tests": [],
+      "runtime_scenarios": [
+        "mesen/out/exp10-battle.mss"
+      ],
+      "evidence": [
+        "local_artifacts/experiments/EXP-0025/ (screenshots; hashes.sha256)",
+        "docs/experiments/EXP-0022-record-crosscheck.md",
+        "local_artifacts/experiments/EXP-0040/25-magitek-list.png",
+        "local_artifacts/experiments/EXP-0040/30-vicks-magitek.png"
+      ],
+      "confidence": "strong-hypothesis",
       "unknown_fields": [
-        "command encoding",
-        "background triple semantics",
-        "port 1-3 roles"
+        "menu-to-record index mapping",
+        "why the escort set is a strict subset"
       ],
       "contradictions": [],
-      "next_action": "Delta-map more commands (different SFX/music events) before touching the SPC driver.",
+      "next_action": "Disambiguate the Fire Beam record index (menu-navigation press script; watch the MVN X source during the confirm).",
+      "notes": "EXP-0040 CORRECTS EXP-0039: the four-entry list EXP-0039 recorded was a non-leader's. Terra shows EIGHT: Fire Beam, Bolt Beam, Ice Beam, Bio Blast, Heal Force, Confuser, X-fer, TekMissile. Wedge and Vicks show FOUR: Fire Beam, Bolt Beam, Ice Beam, Heal Force. Command windows: Terra MagiTek/Magic/Item; escorts MagiTek/Item. Observation only - the attack-record index for Fire Beam remains ambiguous (EXP-0022 indices 5/131)."
+    },
+    {
+      "schema_version": "1.0",
+      "id": "CEN-MAGIC-0002",
+      "domain": "MAGIC",
+      "category": "spell availability",
+      "name": "Magic command and Terra's opening spell availability",
+      "description": "Field Skills menu shows Espers+Magic available for Terra ('?????'); the Magic list renders Cure (castable, MP 5, help 'Recovers HP') and Fire (dim, MP readout 0 in field) on a fixed grid with blank unlearned slots. Availability source located: per-character 54-byte arrays at WRAM +$1A6E ($FF = known; Terra = ids {0 Fire, 45 Cure}; next three windows zero for the magicless soldiers).",
+      "reconstruction_status": "LOCATED",
+      "runtime_status": "OUTPUTS_CAPTURED",
+      "rom_revision": "0f51b4fca41b7fd509e4b8f9d543151f68efa5e97b08493e4b2a0c06f5d8d5e2",
+      "rom_locations": [],
+      "wram_locations": [
+        "WRAM:+$1A6E (54-byte per-character spell-known array, stride hypothesis)"
+      ],
+      "cpu_routines": [],
+      "spc_locations": [],
+      "record_count_expected": null,
+      "record_count_found": null,
+      "record_size": null,
+      "pointer_tables": [],
+      "consumers": [],
+      "producers": [],
+      "related_experiments": [
+        "EXP-0026"
+      ],
+      "related_discoveries": [],
+      "related_implementations": [
+        "internal/extract (ASSET-DATA-0001)",
+        "internal/game/textenc"
+      ],
+      "related_tests": [],
+      "runtime_scenarios": [
+        "mesen/out/checkpoint2.mss"
+      ],
+      "evidence": [
+        "local_artifacts/experiments/EXP-0026/ (screenshots, tilemap/chr/cgram/wram dumps; hashes.sha256)",
+        "docs/experiments/EXP-0026-magic-census.md"
+      ],
+      "confidence": "strong-hypothesis",
+      "unknown_fields": [
+        "array count/character mapping beyond slot 0",
+        "non-$FF values (esper learning percentages?) unobserved",
+        "field dim/castability rule (Fire MP readout 0)",
+        "menu grid ordering vs id order (Cure rendered first)"
+      ],
+      "contradictions": [],
+      "next_action": "Observe a second magic-knowing character's array; capture the battle Magic menu for Fire's cost display.",
+      "notes": "2026-08-01 extractor-first migration: all 54 spell names restored to data/census/spells.json (previously placeholder-suppressed); regenerated by `ff6lab extract data`."
+    },
+    {
+      "schema_version": "1.0",
+      "id": "CEN-MAGIC-0003",
+      "domain": "MAGIC",
+      "category": "spell names",
+      "name": "Spell name table (0x26F567, 7-byte records)",
+      "description": "[class icon][6-char name] records; boundary Confirmed: exactly 54 entries (icons $E9 x24 black, $EA x21 grey, $E8 x9 white), the esper name table begins at 0x26F6E1. All 54 extracted to local artifacts (EXP-0027).",
+      "reconstruction_status": "EXTRACTED_COMPLETE",
+      "runtime_status": "OUTPUTS_CAPTURED",
+      "rom_revision": "0f51b4fca41b7fd509e4b8f9d543151f68efa5e97b08493e4b2a0c06f5d8d5e2",
+      "rom_locations": [
+        "ROM-0019"
+      ],
+      "wram_locations": [],
+      "cpu_routines": [],
+      "spc_locations": [],
+      "record_count_expected": 54,
+      "record_count_found": 54,
+      "record_size": 7,
+      "pointer_tables": [],
+      "consumers": [],
+      "producers": [],
+      "related_experiments": [
+        "EXP-0026",
+        "EXP-0027"
+      ],
+      "related_discoveries": [],
+      "related_implementations": [
+        "internal/extract (ASSET-DATA-0001)",
+        "internal/game/textenc"
+      ],
+      "related_tests": [],
+      "runtime_scenarios": [],
+      "evidence": [
+        "local_artifacts/experiments/EXP-0026/ (screenshots, tilemap/chr/cgram/wram dumps; hashes.sha256)",
+        "docs/experiments/EXP-0026-magic-census.md",
+        "local_artifacts/experiments/EXP-0027/ (boundary/esper decodes, cast screenshots, WRAM diff; hashes.sha256)"
+      ],
+      "confidence": "confirmed",
+      "unknown_fields": [
+        "digit glyphs beyond observed",
+        "icon rendering vs castability dimming"
+      ],
+      "contradictions": [],
+      "next_action": "Name-table consumers (menu renderer read-watch) when the menu system unit runs.",
+      "notes": "record_count_expected=54 rests on the class-icon structure and the id-45 Cure anchor (Tentative until the boundary is read). 2026-08-01 extractor-first migration: all 54 spell names restored to data/census/spells.json (previously placeholder-suppressed); regenerated by `ff6lab extract data`."
+    },
+    {
+      "schema_version": "1.0",
+      "id": "CEN-MAGIC-0004",
+      "domain": "MAGIC",
+      "category": "MP costs",
+      "name": "MP deduction and the cost field",
+      "description": "Field cast verified: Cure deducts exactly 5 MP (24->19) and heals to max (34->77/77). WRAM diff isolates single bytes: field current MP slot0 at +$160D, current HP at +$1609 (the field character-record block ~+$1600). Battle-side +$3C08 pool still unverified live.",
+      "reconstruction_status": "LOCATED",
+      "runtime_status": "NORMAL_PATH_VERIFIED",
+      "rom_revision": "0f51b4fca41b7fd509e4b8f9d543151f68efa5e97b08493e4b2a0c06f5d8d5e2",
+      "rom_locations": [
+        "ROM-0015"
+      ],
+      "wram_locations": [
+        "WRAM:+$160D (field MP slot 0, Strong hypothesis)",
+        "WRAM:+$1609 (field HP slot 0, Strong hypothesis)",
+        "WRAM:+$3C08 (battle MP pool, Strong hypothesis)"
+      ],
+      "cpu_routines": [],
+      "spc_locations": [],
+      "record_count_expected": null,
+      "record_count_found": null,
+      "record_size": null,
+      "pointer_tables": [],
+      "consumers": [],
+      "producers": [],
+      "related_experiments": [
+        "EXP-0001",
+        "EXP-0026",
+        "EXP-0027"
+      ],
+      "related_discoveries": [],
+      "related_implementations": [],
+      "related_tests": [],
+      "runtime_scenarios": [],
+      "evidence": [
+        "local_artifacts/experiments/EXP-0026/ (screenshots, tilemap/chr/cgram/wram dumps; hashes.sha256)",
+        "local_artifacts/experiments/EXP-0027/ (boundary/esper decodes, cast screenshots, WRAM diff; hashes.sha256)"
+      ],
+      "confidence": "strong-hypothesis",
+      "unknown_fields": [
+        "field record stride/full layout",
+        "deduction routine PC",
+        "battle-side deduction"
+      ],
+      "contradictions": [],
+      "next_action": "Watch the +$160D writer during a second cast to name the deduction routine.",
+      "notes": ""
+    },
+    {
+      "schema_version": "1.0",
+      "id": "CEN-MAGIC-0005",
+      "domain": "MAGIC",
+      "category": "targeting",
+      "name": "Spell targeting flags and menu targeting behavior",
+      "description": "Field targeting observed: party-member list with portraits, cursor default on the caster's slot, a '5 MP Needed' gating window naming the cost. Flags-to-behavior mapping unstarted.",
+      "reconstruction_status": "OBSERVED",
+      "runtime_status": "OUTPUTS_CAPTURED",
+      "rom_revision": "0f51b4fca41b7fd509e4b8f9d543151f68efa5e97b08493e4b2a0c06f5d8d5e2",
+      "rom_locations": [],
+      "wram_locations": [],
+      "cpu_routines": [],
+      "spc_locations": [],
+      "record_count_expected": null,
+      "record_count_found": null,
+      "record_size": null,
+      "pointer_tables": [],
+      "consumers": [],
+      "producers": [],
+      "related_experiments": [
+        "EXP-0027"
+      ],
+      "related_discoveries": [],
+      "related_implementations": [],
+      "related_tests": [],
+      "runtime_scenarios": [],
+      "evidence": [
+        "local_artifacts/experiments/EXP-0027/ (boundary/esper decodes, cast screenshots, WRAM diff; hashes.sha256)"
+      ],
+      "confidence": "confirmed",
+      "unknown_fields": [],
+      "contradictions": [],
+      "next_action": "Correlate record byte 3/4 bits against multi-target spells once more are castable.",
+      "notes": ""
+    },
+    {
+      "schema_version": "1.0",
+      "id": "CEN-MAGIC-0006",
+      "domain": "MAGIC",
+      "category": "effect routines",
+      "name": "Spell effect dispatch",
+      "description": "The battle pipeline dispatches on record flags (formula select bit 2.0, MP path 2.7 — Confirmed); a fuller effect-routine table (per-spell special effects) is unlocated.",
+      "reconstruction_status": "CANDIDATE_LOCATION",
+      "runtime_status": "NORMAL_PATH_VERIFIED",
+      "rom_revision": "0f51b4fca41b7fd509e4b8f9d543151f68efa5e97b08493e4b2a0c06f5d8d5e2",
+      "rom_locations": [
+        "ROM-0015"
+      ],
+      "wram_locations": [],
+      "cpu_routines": [],
+      "spc_locations": [],
+      "record_count_expected": null,
+      "record_count_found": null,
+      "record_size": null,
+      "pointer_tables": [],
+      "consumers": [],
+      "producers": [],
+      "related_experiments": [
+        "EXP-0010",
+        "EXP-0011",
+        "EXP-0017"
+      ],
+      "related_discoveries": [],
+      "related_implementations": [],
+      "related_tests": [],
+      "runtime_scenarios": [],
+      "evidence": [
+        "docs/experiments/EXP-0011-base-formulas.md"
+      ],
+      "confidence": "strong-hypothesis",
+      "unknown_fields": [
+        "per-spell effect routine linkage",
+        "record bytes 7/8"
+      ],
+      "contradictions": [],
+      "next_action": "Map record bytes 7/8 against effect variety once more spells are castable; hunt an effect-routine pointer table.",
+      "notes": ""
+    },
+    {
+      "schema_version": "1.0",
+      "id": "CEN-MAGIC-0007",
+      "domain": "MAGIC",
+      "category": "animation",
+      "name": "Spell animation data",
+      "description": "Not yet observed (no spell cast captured).",
+      "reconstruction_status": "UNMAPPED",
+      "runtime_status": "NOT_ENCOUNTERED",
+      "rom_revision": "0f51b4fca41b7fd509e4b8f9d543151f68efa5e97b08493e4b2a0c06f5d8d5e2",
+      "rom_locations": [],
+      "wram_locations": [],
+      "cpu_routines": [],
+      "spc_locations": [],
+      "record_count_expected": null,
+      "record_count_found": null,
+      "record_size": null,
+      "pointer_tables": [],
+      "consumers": [],
+      "producers": [],
+      "related_experiments": [],
+      "related_discoveries": [],
+      "related_implementations": [],
+      "related_tests": [],
+      "runtime_scenarios": [],
+      "evidence": [],
+      "confidence": "unknown",
+      "unknown_fields": [],
+      "contradictions": [],
+      "next_action": "Cast Fire in battle (after menu navigation) and capture the animation asset loads (VRAM deltas, DMA).",
+      "notes": ""
+    },
+    {
+      "schema_version": "1.0",
+      "id": "CEN-MAGIC-0008",
+      "domain": "MAGIC",
+      "category": "sound",
+      "name": "Spell audio cues",
+      "description": "Not yet observed; the EXP-0024 port-command technique applies directly.",
+      "reconstruction_status": "UNMAPPED",
+      "runtime_status": "NOT_ENCOUNTERED",
+      "rom_revision": "0f51b4fca41b7fd509e4b8f9d543151f68efa5e97b08493e4b2a0c06f5d8d5e2",
+      "rom_locations": [],
+      "wram_locations": [],
+      "cpu_routines": [],
+      "spc_locations": [],
+      "record_count_expected": null,
+      "record_count_found": null,
+      "record_size": null,
+      "pointer_tables": [],
+      "consumers": [],
+      "producers": [],
+      "related_experiments": [],
+      "related_discoveries": [],
+      "related_implementations": [],
+      "related_tests": [],
+      "runtime_scenarios": [],
+      "evidence": [],
+      "confidence": "unknown",
+      "unknown_fields": [],
+      "contradictions": [],
+      "next_action": "Delta-capture APU port commands during a spell cast (EXP-0024 pattern).",
+      "notes": ""
+    },
+    {
+      "schema_version": "1.0",
+      "id": "CEN-MAGIC-0009",
+      "domain": "MAGIC",
+      "category": "summons",
+      "name": "Esper name table (0x26F6E1, 8-byte records)",
+      "description": "27 esper names decode cleanly at stride 8 immediately after the spell name table; a further ability-name table (stride ~10) begins at 0x26F7B9 (candidate).",
+      "reconstruction_status": "FORMAT_DECODED",
+      "runtime_status": "NOT_ENCOUNTERED",
+      "rom_revision": "0f51b4fca41b7fd509e4b8f9d543151f68efa5e97b08493e4b2a0c06f5d8d5e2",
+      "rom_locations": [
+        "ROM-0021"
+      ],
+      "wram_locations": [],
+      "cpu_routines": [],
+      "spc_locations": [],
+      "record_count_expected": 27,
+      "record_count_found": 27,
+      "record_size": 8,
+      "pointer_tables": [],
+      "consumers": [],
+      "producers": [],
+      "related_experiments": [
+        "EXP-0027"
+      ],
+      "related_discoveries": [],
+      "related_implementations": [],
+      "related_tests": [],
+      "runtime_scenarios": [],
+      "evidence": [
+        "local_artifacts/experiments/EXP-0027/ (boundary/esper decodes, cast screenshots, WRAM diff; hashes.sha256)",
+        "docs/experiments/EXP-0027-spell-extraction.md"
+      ],
+      "confidence": "confirmed",
+      "unknown_fields": [],
+      "contradictions": [],
+      "next_action": "Extract the 27 records; bound the stride-10 ability-name table that follows.",
       "notes": ""
     },
     {
@@ -678,60 +2031,13 @@
     },
     {
       "schema_version": "1.0",
-      "id": "CEN-EVENT-0001",
-      "domain": "EVENT",
-      "category": "event bytecode",
-      "name": "Event scripting engine (opening scripted sequence)",
-      "description": "checkpoint1 shows a scripted guard-chase beat: dialogue + positioned actors; an event interpreter with flags and branching must exist.",
-      "reconstruction_status": "CANDIDATE_LOCATION",
-      "runtime_status": "ENCOUNTERED",
-      "rom_revision": "0f51b4fca41b7fd509e4b8f9d543151f68efa5e97b08493e4b2a0c06f5d8d5e2",
-      "rom_locations": [],
-      "wram_locations": [],
-      "cpu_routines": [
-        "ROMCPU:$C09B5C (candidate interpreter-advance: every decoded event-command handler ends LDA #$01|#$02 / JMP $C09B5C with A = plausible operand length)"
-      ],
-      "spc_locations": [],
-      "record_count_expected": null,
-      "record_count_found": null,
-      "record_size": null,
-      "pointer_tables": [],
-      "consumers": [],
-      "producers": [],
-      "related_experiments": [
-        "EXP-0025",
-        "EXP-0031",
-        "EXP-0037"
-      ],
-      "related_discoveries": [],
-      "related_implementations": [],
-      "related_tests": [],
-      "runtime_scenarios": [
-        "mesen/out/checkpoint1.mss"
-      ],
-      "evidence": [
-        "local_artifacts/experiments/EXP-0025/ (screenshots; hashes.sha256)"
-      ],
-      "confidence": "confirmed",
-      "unknown_fields": [
-        "dispatcher loop PC and opcode-table location",
-        "opcode set and operand formats",
-        "script pointer variable",
-        "script source in ROM (CEN-EVENT-0002 ties in)"
-      ],
-      "contradictions": [],
-      "next_action": "Static-decode ROMCPU:$C09B5C and its callers to find the dispatch loop and opcode table; then exec-census a dialogue advance to confirm live.",
-      "notes": "EXP-0031: the real opening auto-runs (timed dialogue) until the scripted Narshe-entry box, which waits for A indefinitely \u2014 the engine distinguishes timed from input-waiting boxes. EXP-0037 static decode: the 16 flag set/clear command handlers at ROMCPU:$C0B593-$C0B6D2 (and the $1EDF-bit7 copy handlers at $C0B940-$C0B9BF) all terminate in LDA #$01 or #$02 / JMP $C09B5C, consistent with an interpreter advancing its script pointer by the command length. $C09B5C is the first concrete code anchor for this engine; the flag number arrives in DP $EB, so $EB plausibly holds a fetched operand."
-    },
-    {
-      "schema_version": "1.0",
-      "id": "CEN-EVENT-0002",
-      "domain": "EVENT",
-      "category": "dialogue",
-      "name": "Dialogue text content and encoding",
-      "description": "English text rendered in a variable-width font ('GUARD: We've got 'em trapped, now!'); storage, encoding, and pointerization unknown. Extracted text stays in local artifacts per the asset policy.",
+      "id": "CEN-MENU-0005",
+      "domain": "MENU",
+      "category": "magic menu",
+      "name": "Field Magic menu (grid list, MP readout, help bar)",
+      "description": "Fixed spell grid with blank unlearned slots; leading bullet tile $E8 (castable) vs $E9 (dim); MP cost window and help-text bar track the cursor; scroll indicators present. Cure shows cost 5 + 'Recovers HP'; the dim Fire shows cost 0 and empty help in the field context.",
       "reconstruction_status": "OBSERVED",
-      "runtime_status": "ENCOUNTERED",
+      "runtime_status": "OUTPUTS_CAPTURED",
       "rom_revision": "0f51b4fca41b7fd509e4b8f9d543151f68efa5e97b08493e4b2a0c06f5d8d5e2",
       "rom_locations": [],
       "wram_locations": [],
@@ -744,34 +2050,196 @@
       "consumers": [],
       "producers": [],
       "related_experiments": [
-        "EXP-0025"
+        "EXP-0026"
       ],
       "related_discoveries": [],
       "related_implementations": [],
       "related_tests": [],
       "runtime_scenarios": [
-        "mesen/out/checkpoint1.mss"
+        "mesen/out/checkpoint2.mss"
       ],
       "evidence": [
-        "local_artifacts/experiments/EXP-0025/ (screenshots; hashes.sha256)"
+        "local_artifacts/experiments/EXP-0026/ (screenshots, tilemap/chr/cgram/wram dumps; hashes.sha256)"
       ],
       "confidence": "confirmed",
       "unknown_fields": [
-        "text encoding",
-        "string storage/pointer tables",
-        "control codes"
+        "grid ordering rule",
+        "help-text table location",
+        "castability predicate"
       ],
       "contradictions": [],
-      "next_action": "Capture the dialogue compose region + derive the glyph-to-byte mapping via the tilemap-affine technique (EXP-0023 pattern).",
+      "next_action": "Trace the list renderer's reads (name table + availability array consumers) with a read-watch during menu open.",
       "notes": ""
     },
     {
       "schema_version": "1.0",
-      "id": "CEN-EVENT-0003",
-      "domain": "EVENT",
-      "category": "naming events",
-      "name": "Character naming state (Terra as '?????')",
-      "description": "The first battle-status row renders '?????' \u2014 the naming event has not run in these states; a name store with a pre-naming placeholder exists.",
+      "id": "CEN-MENU-0006",
+      "domain": "MENU",
+      "category": "fonts",
+      "name": "Fixed-font text byte encoding (menu + battle HUD surfaces)",
+      "description": "Derived from two independent surfaces: tile index = text byte with A-Z=$80+n, a-z=$9A+n, '-'=$C4 ('X-Zone' in ROM, 'Were-Rat' in the battle HUD), narrow space $FE, digits '2'/'3'=$B6/$B7 observed, blank $FF. ROM name strings use the same byte values (search hits confirm).",
+      "reconstruction_status": "FORMAT_PARTIAL",
+      "runtime_status": "OUTPUTS_CAPTURED",
+      "rom_revision": "0f51b4fca41b7fd509e4b8f9d543151f68efa5e97b08493e4b2a0c06f5d8d5e2",
+      "rom_locations": [],
+      "wram_locations": [],
+      "cpu_routines": [],
+      "spc_locations": [],
+      "record_count_expected": null,
+      "record_count_found": null,
+      "record_size": null,
+      "pointer_tables": [],
+      "consumers": [],
+      "producers": [],
+      "related_experiments": [
+        "EXP-0023",
+        "EXP-0025",
+        "EXP-0026"
+      ],
+      "related_discoveries": [],
+      "related_implementations": [],
+      "related_tests": [],
+      "runtime_scenarios": [],
+      "evidence": [
+        "local_artifacts/experiments/EXP-0026/ (screenshots, tilemap/chr/cgram/wram dumps; hashes.sha256)",
+        "docs/experiments/EXP-0026-magic-census.md"
+      ],
+      "confidence": "confirmed",
+      "unknown_fields": [
+        "digits beyond 2/3",
+        "punctuation set",
+        "VWF dialogue encoding relationship"
+      ],
+      "contradictions": [],
+      "next_action": "Complete the glyph set (digits 0-9, punctuation) by decoding more rendered surfaces; check whether dialogue (VWF) shares the byte encoding.",
+      "notes": ""
+    },
+    {
+      "schema_version": "1.0",
+      "id": "CEN-MONSTER-0001",
+      "domain": "MONSTER",
+      "category": "stats",
+      "name": "Monster stat records ($CF0000, 32-byte stride)",
+      "description": "Battle-init populate routine ($C22CA3-$C22D8C) reads LDA $CF0000+off,X into the Confirmed battle arrays: +$08 HP (current+max), +$0A MP, +$01 battle power (formation 44 = monsters {19,77} with powers {13,19} — the exact EXP-0018 live pair (EXP-0030 correction: 78 was a coincidental match)), +$02/+$10/+$00 staging pairs, ten further mapped offsets. X=$09A0 observed (record 77); stride 32 Confirmed by the dual power cross-check. Closes EXP-0004 question 19b ($C22CCE = max-HP store). Five aux bank-$CF tables surfaced (semantics Unknown). EXP-0029: loader entry $C22C30 (A=id, Y=slot); $CF8400 = per-monster 16-bit attribute table (-> $3254,Y); aux x4/x8 tables id-scaled.",
+      "reconstruction_status": "FORMAT_PARTIAL",
+      "runtime_status": "OUTPUTS_CAPTURED",
+      "rom_revision": "0f51b4fca41b7fd509e4b8f9d543151f68efa5e97b08493e4b2a0c06f5d8d5e2",
+      "rom_locations": [
+        "ROM-0022"
+      ],
+      "wram_locations": [
+        "WRAM:+$3B18,X",
+        "WRAM:+$3B2C,X",
+        "WRAM:+$3B68,X"
+      ],
+      "cpu_routines": [
+        "ROMCPU:$C22CA3-$C22D8C populate",
+        "ROMCPU:$C22899-$C2290F party-side init"
+      ],
+      "spc_locations": [],
+      "record_count_expected": null,
+      "record_count_found": null,
+      "record_size": 32,
+      "pointer_tables": [],
+      "consumers": [],
+      "producers": [],
+      "related_experiments": [
+        "EXP-0017",
+        "EXP-0018",
+        "EXP-0019",
+        "EXP-0025",
+        "EXP-0028",
+        "EXP-0029",
+        "EXP-0030"
+      ],
+      "related_discoveries": [],
+      "related_implementations": [],
+      "related_tests": [],
+      "runtime_scenarios": [
+        "mesen/out/exp10-battle.mss"
+      ],
+      "evidence": [
+        "local_artifacts/experiments/EXP-0025/ (screenshots; hashes.sha256)",
+        "docs/experiments/EXP-0019-rng-state.md",
+        "local_artifacts/experiments/EXP-0028/ (probe slice, routine dumps; hashes.sha256)"
+      ],
+      "confidence": "confirmed",
+      "unknown_fields": [
+        "offsets +$06,+$0D,+$12,+$14-+$19,+$1B-+$1D,+$1F",
+        "aux tables $CF3000/$CF37C0/$CF8400/$CF8700/$CFC050",
+        "table length beyond 79 records",
+        "X-computation (formation->monster-id mapping)"
+      ],
+      "contradictions": [],
+      "next_action": "Decode the X-computation upstream (formation consumer); bulk-extract records with the mapped fields.",
+      "notes": ""
+    },
+    {
+      "schema_version": "1.0",
+      "id": "CEN-MONSTER-0002",
+      "domain": "MONSTER",
+      "category": "formations",
+      "name": "Battle formations (opening guard fight composition/layout)",
+      "description": "Formation records: 15 bytes at ROMCPU:$CF6200 + 15*id ([word][6 monster-id bytes, $FF empty][...]), staged to WRAM +$3F44-+$3F53 by $C2315C (id from +$11E0); parallel 4-byte flags table at $CF5900. Mines encounter = formation 44 = monsters {19, 77} — CORRECTION: not 77/78; EXP-0028's record-78 power match was coincidental. Verified against EXP-0018 live powers {13,19}.",
+      "reconstruction_status": "FORMAT_PARTIAL",
+      "runtime_status": "OUTPUTS_CAPTURED",
+      "rom_revision": "0f51b4fca41b7fd509e4b8f9d543151f68efa5e97b08493e4b2a0c06f5d8d5e2",
+      "rom_locations": [
+        "ROM-0024",
+        "ROM-0025"
+      ],
+      "wram_locations": [
+        "WRAM:+$3F46 (6-byte formation monster-id staging, $FF empty sentinel)",
+        "WRAM:+$3F52 (second formation field, x4-scaled)"
+      ],
+      "cpu_routines": [
+        "ROMCPU:$C22F22 caller loop",
+        "ROMCPU:$C22C30 per-slot loader"
+      ],
+      "spc_locations": [],
+      "record_count_expected": null,
+      "record_count_found": null,
+      "record_size": 15,
+      "pointer_tables": [],
+      "consumers": [],
+      "producers": [],
+      "related_experiments": [
+        "EXP-0002",
+        "EXP-0021",
+        "EXP-0025",
+        "EXP-0027",
+        "EXP-0029",
+        "EXP-0030"
+      ],
+      "related_discoveries": [],
+      "related_implementations": [],
+      "related_tests": [],
+      "runtime_scenarios": [
+        "mesen/out/exp10-battle.mss"
+      ],
+      "evidence": [
+        "local_artifacts/experiments/EXP-0025/ (screenshots; hashes.sha256)",
+        "local_artifacts/experiments/EXP-0029/decode-notes.txt",
+        "local_artifacts/experiments/EXP-0030/ (events-slice.log; hashes.sha256)"
+      ],
+      "confidence": "confirmed",
+      "unknown_fields": [
+        "record bytes +$00/01 and +$08..+$0E semantics",
+        "flags-table fields",
+        "table length",
+        "+$11E0 producer (encounter roll)"
+      ],
+      "contradictions": [],
+      "next_action": "Trace +$11E0's producer (encounter roll: zone data + step state).",
+      "notes": ""
+    },
+    {
+      "schema_version": "1.0",
+      "id": "CEN-MONSTER-0003",
+      "domain": "MONSTER",
+      "category": "graphics",
+      "name": "Enemy battle sprites and palettes (green guard)",
+      "description": "Enemy sprite rendered battle-left with its own palette.",
       "reconstruction_status": "OBSERVED",
       "runtime_status": "ENCOUNTERED",
       "rom_revision": "0f51b4fca41b7fd509e4b8f9d543151f68efa5e97b08493e4b2a0c06f5d8d5e2",
@@ -798,13 +2266,186 @@
         "local_artifacts/experiments/EXP-0025/ (screenshots; hashes.sha256)"
       ],
       "confidence": "confirmed",
+      "unknown_fields": [],
+      "contradictions": [],
+      "next_action": "VRAM/OAM capture during battle to register the enemy sprite asset (EXP-0023 pattern).",
+      "notes": ""
+    },
+    {
+      "schema_version": "1.0",
+      "rom_revision": "0f51b4fca41b7fd509e4b8f9d543151f68efa5e97b08493e4b2a0c06f5d8d5e2",
+      "rom_locations": [],
+      "wram_locations": [],
+      "cpu_routines": [],
+      "spc_locations": [],
+      "record_count_expected": null,
+      "record_count_found": null,
+      "record_size": 32,
+      "pointer_tables": [],
+      "consumers": [],
+      "producers": [],
+      "related_experiments": [
+        "EXP-0028",
+        "EXP-0030",
+        "EXP-0032",
+        "EXP-0033",
+        "EXP-0034",
+        "EXP-0036",
+        "EXP-0038",
+        "EXP-0039"
+      ],
+      "related_discoveries": [],
+      "related_implementations": [],
+      "related_tests": [],
+      "runtime_scenarios": [],
+      "evidence": [
+        "local_artifacts/experiments/EXP-0034/ (per-battle entry captures, logs; hashes.sha256)"
+      ],
       "unknown_fields": [
-        "name storage location/format",
-        "placeholder encoding"
+        "monster names",
+        "AI scripts",
+        "rewards fields",
+        "elements/status/resistances",
+        "graphics and palettes",
+        "the remaining 30 fields of each record"
       ],
       "contradictions": [],
-      "next_action": "Locate the character-name store: WRAM search for the rendered name tile sequence source when the status window composes.",
-      "notes": ""
+      "notes": "EXP-0038: formation 14 = three of monster record 19 (ROM record: HP 24, MP 0). Monster 19 was already known from the EXP-0030 mines encounter (formation 44), so the mines interior yields at least two distinct formations (14 and 44) - a B13 datum. EXP-0039: the Whelk formation (432) stages monster-id bytes 00 34 FF FF FF FF. Reading byte 2 as an id gives record 0 - the opening guard - which is implausible for a boss, so the formation record's monster-id field must carry a high-bit/extension not yet decoded (FF6 exceeds 256 monsters). Whelk's monster ids are Unknown pending that decode. On-screen enemy name 'Whelk' observed; the name table remains unlocated.",
+      "id": "CEN-MONSTER-0004",
+      "domain": "MONSTER",
+      "category": "monster records",
+      "name": "Opening-area monsters reachable before Whelk (records 0 and 25)",
+      "description": "The five scripted opening-area battles stage three distinct monster records. Record 0 (ROMFILE:0x0F0000): +$08=40 HP, +$0A=15 MP - verified live as battle slots 6/7 in formation 2. Record 25 (ROMFILE:0x0F0320): +$08=27 HP, +$0A=5 MP - seen in formations 1 and 41, record fields read statically. The random mines encounter (formation 44) additionally stages records 19 and 77 (EXP-0030). Monster names are unknown: the name table is unlocated, so on-screen labels are observational only. Record 27 (ROMFILE:0x0F0360): +$08=115 HP, +$0A=30 MP - staged by formation 84, the fifth scripted battle, with its 115 HP anchored to a live enemy HP word (EXP-0036).",
+      "reconstruction_status": "LOCATED",
+      "runtime_status": "ENCOUNTERED",
+      "confidence": "confirmed",
+      "next_action": "Bulk-extract records 0, 19, 25, 77 and map fields beyond +$08/+$0A against observed battle behaviour (B14)."
+    },
+    {
+      "schema_version": "1.0",
+      "rom_revision": "0f51b4fca41b7fd509e4b8f9d543151f68efa5e97b08493e4b2a0c06f5d8d5e2",
+      "rom_locations": [],
+      "wram_locations": [
+        "WRAM:+$7BF7",
+        "WRAM:+$7BF8",
+        "WRAM:+$7CAD",
+        "WRAM:+$7CAE",
+        "WRAM:+$7DB2"
+      ],
+      "cpu_routines": [],
+      "spc_locations": [],
+      "record_count_expected": null,
+      "record_count_found": null,
+      "record_size": null,
+      "pointer_tables": [],
+      "consumers": [],
+      "producers": [],
+      "related_experiments": [
+        "EXP-0031",
+        "EXP-0037"
+      ],
+      "related_discoveries": [],
+      "related_implementations": [],
+      "related_tests": [],
+      "runtime_scenarios": [],
+      "evidence": [
+        "local_artifacts/experiments/EXP-0031/mesen-exp31-phaseA.log (boot warnings)"
+      ],
+      "unknown_fields": [
+        "reading routines",
+        "whether the values seed RNG or are dead reads"
+      ],
+      "contradictions": [],
+      "notes": "EXP-0037 side observation (register-only): --testrunner stdout emits [CPU] Uninitialized memory read diagnostics at boot under AllZeros RAM; 127 events across WRAM:+$1A6D, +$1D54, +$1F6E/+$1F6F and the contiguous run +$1FD3-+$1FF2 — all disjoint from the five previously registered addresses. +$1A6D is later the gate byte (CMP #$01) of the battle-era flag-clear routine at ROMCPU:$C04AF0 (EXP-0037 static decode); +$1F6E/6F sit past the statically-decoded flag bases. Raw diagnostic preserved in local_artifacts/experiments/EXP-0037/testrunner-stdout-run1.log.",
+      "id": "CEN-QUIRK-0001",
+      "domain": "QUIRK",
+      "category": "hardware assumptions",
+      "name": "Boot-time uninitialized WRAM reads (entropy candidates)",
+      "description": "Mesen's boot log flags uninitialized reads at $7E7DB2, $7E7CAD, $7E7CAE, $7E7BF7, $7E7BF8 during power-on before first write. On hardware these are unpredictable; with RamPowerOnState=AllZeros (the SCN-0001 controlled lab default) they read 0. Candidate RNG-seed or scratch reads; consumers undecoded.",
+      "reconstruction_status": "OBSERVED",
+      "runtime_status": "ENCOUNTERED",
+      "confidence": "confirmed",
+      "next_action": "Read-callback on the five addresses during a fresh boot to capture the reader PCs."
+    },
+    {
+      "schema_version": "1.0",
+      "rom_revision": "0f51b4fca41b7fd509e4b8f9d543151f68efa5e97b08493e4b2a0c06f5d8d5e2",
+      "rom_locations": [],
+      "wram_locations": [],
+      "cpu_routines": [],
+      "spc_locations": [],
+      "record_count_expected": null,
+      "record_count_found": null,
+      "record_size": null,
+      "pointer_tables": [],
+      "consumers": [],
+      "producers": [],
+      "related_experiments": [
+        "EXP-0032",
+        "EXP-0036"
+      ],
+      "related_discoveries": [],
+      "related_implementations": [],
+      "related_tests": [],
+      "runtime_scenarios": [],
+      "evidence": [
+        "local_artifacts/scenarios/SCN-0001/01-opening-cinematic/ (run1/run2 dumps+screens; hashes.sha256)"
+      ],
+      "unknown_fields": [
+        "whether PPU/HDMA registers differ across runs at this frame"
+      ],
+      "contradictions": [],
+      "notes": "",
+      "id": "CEN-QUIRK-0002",
+      "domain": "QUIRK",
+      "category": "timing behavior",
+      "name": "Milestone frame captures not byte-stable while WRAM is",
+      "description": "At two independent milestones the same scheduled power-on route produces byte-identical 128 KB WRAM but non-identical screenshots. Milestone 01 (frame 15000, snowfield credits): 11536 vs 11339 bytes, sub-frame vertical difference. Milestone 05 (frame 51578, mines interior, EXP-0036): run1 differs from run2/run3 which match each other; visual inspection shows the same scene differing only in the phase of the animated lamp glow. Two milestones with different content showing the same pattern strengthens the capture-phase reading over genuine state nondeterminism. WRAM is treated as the assertion channel; screenshots are not.",
+      "reconstruction_status": "OBSERVED",
+      "runtime_status": "ALTERNATE_PATH_VERIFIED",
+      "confidence": "tentative-hypothesis",
+      "next_action": "Capture PPU/HDMA registers alongside the frame buffer at both milestone frames across runs: differing registers mean unstable state, identical registers mean an unstable capture phase."
+    },
+    {
+      "schema_version": "1.0",
+      "id": "CEN-SAVE-0001",
+      "domain": "SAVE",
+      "category": "global state",
+      "name": "Opening-relevant persistent state (event progress, party, names)",
+      "description": "The four savestates differ in event progress (mid-event vs free walk vs mines vs battle) — persistent event/party state distinguishes them; its layout is unmapped.",
+      "reconstruction_status": "OBSERVED",
+      "runtime_status": "ENCOUNTERED",
+      "rom_revision": "0f51b4fca41b7fd509e4b8f9d543151f68efa5e97b08493e4b2a0c06f5d8d5e2",
+      "rom_locations": [],
+      "wram_locations": [],
+      "cpu_routines": [],
+      "spc_locations": [],
+      "record_count_expected": null,
+      "record_count_found": null,
+      "record_size": null,
+      "pointer_tables": [],
+      "consumers": [],
+      "producers": [],
+      "related_experiments": [
+        "EXP-0025",
+        "EXP-0031"
+      ],
+      "related_discoveries": [],
+      "related_implementations": [],
+      "related_tests": [],
+      "runtime_scenarios": [],
+      "evidence": [
+        "local_artifacts/experiments/EXP-0025/ (screenshots; hashes.sha256)"
+      ],
+      "confidence": "tentative-hypothesis",
+      "unknown_fields": [
+        "event-flag region",
+        "party/name persistent layout",
+        "SRAM mapping"
+      ],
+      "contradictions": [],
+      "next_action": "Diff WRAM snapshots across two field states to bound the event-flag region; then SRAM after a save event.",
+      "notes": "EXP-0031: deterministic virgin-SRAM power-on milestone (00-new-game.mss + full WRAM dump) available as the init-capture baseline."
     },
     {
       "schema_version": "1.0",
@@ -993,1010 +2634,6 @@
     },
     {
       "schema_version": "1.0",
-      "id": "CEN-CHAR-0002",
-      "domain": "CHAR",
-      "category": "party formation",
-      "name": "Party formation and follower chain",
-      "description": "Three-member battle party ('?????', WEDGE, VICKS); field shows stacked/following armor sprites in the mines.",
-      "reconstruction_status": "OBSERVED",
-      "runtime_status": "ENCOUNTERED",
-      "rom_revision": "0f51b4fca41b7fd509e4b8f9d543151f68efa5e97b08493e4b2a0c06f5d8d5e2",
-      "rom_locations": [],
-      "wram_locations": [],
-      "cpu_routines": [
-        "ROMCPU:$C22899-$C2290F (party battle-stat init cluster, EXP-0028)"
-      ],
-      "spc_locations": [],
-      "record_count_expected": null,
-      "record_count_found": null,
-      "record_size": null,
-      "pointer_tables": [],
-      "consumers": [],
-      "producers": [],
-      "related_experiments": [
-        "EXP-0018",
-        "EXP-0025",
-        "EXP-0028"
-      ],
-      "related_discoveries": [],
-      "related_implementations": [],
-      "related_tests": [],
-      "runtime_scenarios": [
-        "mesen/out/exp10-battle.mss",
-        "mesen/out/checkpoint3-mines.mss"
-      ],
-      "evidence": [
-        "local_artifacts/experiments/EXP-0025/ (screenshots; hashes.sha256)"
-      ],
-      "confidence": "confirmed",
-      "unknown_fields": [],
-      "contradictions": [],
-      "next_action": "Locate the party-composition store consumed at battle init (slot staging producers from EXP-0018 are the thread).",
-      "notes": ""
-    },
-    {
-      "schema_version": "1.0",
-      "id": "CEN-CHAR-0003",
-      "domain": "CHAR",
-      "category": "field player object",
-      "name": "Field player/NPC objects (Magitek armor walker, guards, townsfolk)",
-      "description": "Player-controlled armor sprite with facing/walk animation; scripted guard and town NPCs.",
-      "reconstruction_status": "OBSERVED",
-      "runtime_status": "INPUTS_CAPTURED",
-      "rom_revision": "0f51b4fca41b7fd509e4b8f9d543151f68efa5e97b08493e4b2a0c06f5d8d5e2",
-      "rom_locations": [],
-      "wram_locations": [],
-      "cpu_routines": [],
-      "spc_locations": [],
-      "record_count_expected": null,
-      "record_count_found": null,
-      "record_size": null,
-      "pointer_tables": [],
-      "consumers": [],
-      "producers": [],
-      "related_experiments": [
-        "EXP-0025"
-      ],
-      "related_discoveries": [],
-      "related_implementations": [],
-      "related_tests": [],
-      "runtime_scenarios": [
-        "mesen/out/checkpoint2.mss"
-      ],
-      "evidence": [
-        "local_artifacts/experiments/EXP-0025/ (screenshots; hashes.sha256)"
-      ],
-      "confidence": "confirmed",
-      "unknown_fields": [],
-      "contradictions": [],
-      "next_action": "OAM capture on the field state to register the sprite composition (tiles, palettes, OAM layout).",
-      "notes": ""
-    },
-    {
-      "schema_version": "1.0",
-      "id": "CEN-MONSTER-0001",
-      "domain": "MONSTER",
-      "category": "stats",
-      "name": "Monster stat records ($CF0000, 32-byte stride)",
-      "description": "Battle-init populate routine ($C22CA3-$C22D8C) reads LDA $CF0000+off,X into the Confirmed battle arrays: +$08 HP (current+max), +$0A MP, +$01 battle power (formation 44 = monsters {19,77} with powers {13,19} \u2014 the exact EXP-0018 live pair (EXP-0030 correction: 78 was a coincidental match)), +$02/+$10/+$00 staging pairs, ten further mapped offsets. X=$09A0 observed (record 77); stride 32 Confirmed by the dual power cross-check. Closes EXP-0004 question 19b ($C22CCE = max-HP store). Five aux bank-$CF tables surfaced (semantics Unknown). EXP-0029: loader entry $C22C30 (A=id, Y=slot); $CF8400 = per-monster 16-bit attribute table (-> $3254,Y); aux x4/x8 tables id-scaled.",
-      "reconstruction_status": "FORMAT_PARTIAL",
-      "runtime_status": "OUTPUTS_CAPTURED",
-      "rom_revision": "0f51b4fca41b7fd509e4b8f9d543151f68efa5e97b08493e4b2a0c06f5d8d5e2",
-      "rom_locations": [
-        "ROM-0022"
-      ],
-      "wram_locations": [
-        "WRAM:+$3B18,X",
-        "WRAM:+$3B2C,X",
-        "WRAM:+$3B68,X"
-      ],
-      "cpu_routines": [
-        "ROMCPU:$C22CA3-$C22D8C populate",
-        "ROMCPU:$C22899-$C2290F party-side init"
-      ],
-      "spc_locations": [],
-      "record_count_expected": null,
-      "record_count_found": null,
-      "record_size": 32,
-      "pointer_tables": [],
-      "consumers": [],
-      "producers": [],
-      "related_experiments": [
-        "EXP-0017",
-        "EXP-0018",
-        "EXP-0019",
-        "EXP-0025",
-        "EXP-0028",
-        "EXP-0029",
-        "EXP-0030"
-      ],
-      "related_discoveries": [],
-      "related_implementations": [],
-      "related_tests": [],
-      "runtime_scenarios": [
-        "mesen/out/exp10-battle.mss"
-      ],
-      "evidence": [
-        "local_artifacts/experiments/EXP-0025/ (screenshots; hashes.sha256)",
-        "docs/experiments/EXP-0019-rng-state.md",
-        "local_artifacts/experiments/EXP-0028/ (probe slice, routine dumps; hashes.sha256)"
-      ],
-      "confidence": "confirmed",
-      "unknown_fields": [
-        "offsets +$06,+$0D,+$12,+$14-+$19,+$1B-+$1D,+$1F",
-        "aux tables $CF3000/$CF37C0/$CF8400/$CF8700/$CFC050",
-        "table length beyond 79 records",
-        "X-computation (formation->monster-id mapping)"
-      ],
-      "contradictions": [],
-      "next_action": "Decode the X-computation upstream (formation consumer); bulk-extract records with the mapped fields.",
-      "notes": ""
-    },
-    {
-      "schema_version": "1.0",
-      "id": "CEN-MONSTER-0002",
-      "domain": "MONSTER",
-      "category": "formations",
-      "name": "Battle formations (opening guard fight composition/layout)",
-      "description": "Formation records: 15 bytes at ROMCPU:$CF6200 + 15*id ([word][6 monster-id bytes, $FF empty][...]), staged to WRAM +$3F44-+$3F53 by $C2315C (id from +$11E0); parallel 4-byte flags table at $CF5900. Mines encounter = formation 44 = monsters {19, 77} \u2014 CORRECTION: not 77/78; EXP-0028's record-78 power match was coincidental. Verified against EXP-0018 live powers {13,19}.",
-      "reconstruction_status": "FORMAT_PARTIAL",
-      "runtime_status": "OUTPUTS_CAPTURED",
-      "rom_revision": "0f51b4fca41b7fd509e4b8f9d543151f68efa5e97b08493e4b2a0c06f5d8d5e2",
-      "rom_locations": [
-        "ROM-0024",
-        "ROM-0025"
-      ],
-      "wram_locations": [
-        "WRAM:+$3F46 (6-byte formation monster-id staging, $FF empty sentinel)",
-        "WRAM:+$3F52 (second formation field, x4-scaled)"
-      ],
-      "cpu_routines": [
-        "ROMCPU:$C22F22 caller loop",
-        "ROMCPU:$C22C30 per-slot loader"
-      ],
-      "spc_locations": [],
-      "record_count_expected": null,
-      "record_count_found": null,
-      "record_size": 15,
-      "pointer_tables": [],
-      "consumers": [],
-      "producers": [],
-      "related_experiments": [
-        "EXP-0002",
-        "EXP-0021",
-        "EXP-0025",
-        "EXP-0027",
-        "EXP-0029",
-        "EXP-0030"
-      ],
-      "related_discoveries": [],
-      "related_implementations": [],
-      "related_tests": [],
-      "runtime_scenarios": [
-        "mesen/out/exp10-battle.mss"
-      ],
-      "evidence": [
-        "local_artifacts/experiments/EXP-0025/ (screenshots; hashes.sha256)",
-        "local_artifacts/experiments/EXP-0029/decode-notes.txt",
-        "local_artifacts/experiments/EXP-0030/ (events-slice.log; hashes.sha256)"
-      ],
-      "confidence": "confirmed",
-      "unknown_fields": [
-        "record bytes +$00/01 and +$08..+$0E semantics",
-        "flags-table fields",
-        "table length",
-        "+$11E0 producer (encounter roll)"
-      ],
-      "contradictions": [],
-      "next_action": "Trace +$11E0's producer (encounter roll: zone data + step state).",
-      "notes": ""
-    },
-    {
-      "schema_version": "1.0",
-      "id": "CEN-MONSTER-0003",
-      "domain": "MONSTER",
-      "category": "graphics",
-      "name": "Enemy battle sprites and palettes (green guard)",
-      "description": "Enemy sprite rendered battle-left with its own palette.",
-      "reconstruction_status": "OBSERVED",
-      "runtime_status": "ENCOUNTERED",
-      "rom_revision": "0f51b4fca41b7fd509e4b8f9d543151f68efa5e97b08493e4b2a0c06f5d8d5e2",
-      "rom_locations": [],
-      "wram_locations": [],
-      "cpu_routines": [],
-      "spc_locations": [],
-      "record_count_expected": null,
-      "record_count_found": null,
-      "record_size": null,
-      "pointer_tables": [],
-      "consumers": [],
-      "producers": [],
-      "related_experiments": [
-        "EXP-0025"
-      ],
-      "related_discoveries": [],
-      "related_implementations": [],
-      "related_tests": [],
-      "runtime_scenarios": [
-        "mesen/out/exp10-battle.mss"
-      ],
-      "evidence": [
-        "local_artifacts/experiments/EXP-0025/ (screenshots; hashes.sha256)"
-      ],
-      "confidence": "confirmed",
-      "unknown_fields": [],
-      "contradictions": [],
-      "next_action": "VRAM/OAM capture during battle to register the enemy sprite asset (EXP-0023 pattern).",
-      "notes": ""
-    },
-    {
-      "schema_version": "1.0",
-      "id": "CEN-GFX-0002",
-      "domain": "GFX",
-      "category": "character sprites",
-      "name": "Field sprite assets (armor walker, NPCs, townsfolk)",
-      "description": "Multiple distinct field sprites with walk animation observed across the three field states.",
-      "reconstruction_status": "OBSERVED",
-      "runtime_status": "ENCOUNTERED",
-      "rom_revision": "0f51b4fca41b7fd509e4b8f9d543151f68efa5e97b08493e4b2a0c06f5d8d5e2",
-      "rom_locations": [],
-      "wram_locations": [],
-      "cpu_routines": [],
-      "spc_locations": [],
-      "record_count_expected": null,
-      "record_count_found": null,
-      "record_size": null,
-      "pointer_tables": [],
-      "consumers": [],
-      "producers": [],
-      "related_experiments": [
-        "EXP-0025"
-      ],
-      "related_discoveries": [],
-      "related_implementations": [],
-      "related_tests": [],
-      "runtime_scenarios": [],
-      "evidence": [
-        "local_artifacts/experiments/EXP-0025/ (screenshots; hashes.sha256)"
-      ],
-      "confidence": "confirmed",
-      "unknown_fields": [],
-      "contradictions": [],
-      "next_action": "OAM + chr capture on a field state; register the sprite sheet region.",
-      "notes": ""
-    },
-    {
-      "schema_version": "1.0",
-      "id": "CEN-GFX-0003",
-      "domain": "GFX",
-      "category": "battle backgrounds",
-      "name": "Battle background (cave scene)",
-      "description": "Layered cave background behind the guard fight.",
-      "reconstruction_status": "OBSERVED",
-      "runtime_status": "ENCOUNTERED",
-      "rom_revision": "0f51b4fca41b7fd509e4b8f9d543151f68efa5e97b08493e4b2a0c06f5d8d5e2",
-      "rom_locations": [],
-      "wram_locations": [],
-      "cpu_routines": [],
-      "spc_locations": [],
-      "record_count_expected": null,
-      "record_count_found": null,
-      "record_size": null,
-      "pointer_tables": [],
-      "consumers": [],
-      "producers": [],
-      "related_experiments": [
-        "EXP-0025"
-      ],
-      "related_discoveries": [],
-      "related_implementations": [],
-      "related_tests": [],
-      "runtime_scenarios": [
-        "mesen/out/exp10-battle.mss"
-      ],
-      "evidence": [
-        "local_artifacts/experiments/EXP-0025/ (screenshots; hashes.sha256)"
-      ],
-      "confidence": "confirmed",
-      "unknown_fields": [],
-      "contradictions": [],
-      "next_action": "BG1/BG2 VRAM + tilemap capture during battle; provenance search (EXP-0023 pattern).",
-      "notes": ""
-    },
-    {
-      "schema_version": "1.0",
-      "id": "CEN-GFX-0004",
-      "domain": "GFX",
-      "category": "fonts",
-      "name": "Variable-width dialogue font",
-      "description": "Proportional text in the dialogue window \u2014 a distinct asset from the fixed 8x8 HUD font (GFX-0001).",
-      "reconstruction_status": "OBSERVED",
-      "runtime_status": "ENCOUNTERED",
-      "rom_revision": "0f51b4fca41b7fd509e4b8f9d543151f68efa5e97b08493e4b2a0c06f5d8d5e2",
-      "rom_locations": [],
-      "wram_locations": [],
-      "cpu_routines": [],
-      "spc_locations": [],
-      "record_count_expected": null,
-      "record_count_found": null,
-      "record_size": null,
-      "pointer_tables": [],
-      "consumers": [],
-      "producers": [],
-      "related_experiments": [
-        "EXP-0025"
-      ],
-      "related_discoveries": [],
-      "related_implementations": [],
-      "related_tests": [],
-      "runtime_scenarios": [
-        "mesen/out/checkpoint1.mss"
-      ],
-      "evidence": [
-        "local_artifacts/experiments/EXP-0025/ (screenshots; hashes.sha256)"
-      ],
-      "confidence": "confirmed",
-      "unknown_fields": [],
-      "contradictions": [],
-      "next_action": "Capture the dialogue compose region; the fixed-font provenance technique should locate the glyph source.",
-      "notes": ""
-    },
-    {
-      "schema_version": "1.0",
-      "id": "CEN-AUDIO-0004",
-      "domain": "AUDIO",
-      "category": "music tracks",
-      "name": "Battle music track (opening guard fight)",
-      "description": "Music voices active during battle trials (DSP snapshot: voices 2/5, SRCN $23/$22, EXP-0024); sequence data and driver state in ARAM unlocated.",
-      "reconstruction_status": "OBSERVED",
-      "runtime_status": "ENCOUNTERED",
-      "rom_revision": "0f51b4fca41b7fd509e4b8f9d543151f68efa5e97b08493e4b2a0c06f5d8d5e2",
-      "rom_locations": [],
-      "wram_locations": [],
-      "cpu_routines": [],
-      "spc_locations": [
-        "DSP voices 2/5 (SRCN $22/$23 observed mid-battle)"
-      ],
-      "record_count_expected": null,
-      "record_count_found": null,
-      "record_size": null,
-      "pointer_tables": [],
-      "consumers": [],
-      "producers": [],
-      "related_experiments": [
-        "EXP-0024",
-        "EXP-0025"
-      ],
-      "related_discoveries": [],
-      "related_implementations": [],
-      "related_tests": [],
-      "runtime_scenarios": [],
-      "evidence": [
-        "local_artifacts/experiments/EXP-0024/exp24-dsp.hex (hashes in AUD-0001)"
-      ],
-      "confidence": "confirmed",
-      "unknown_fields": [
-        "sequence format/location",
-        "track id mapping",
-        "instrument tables"
-      ],
-      "contradictions": [],
-      "next_action": "Delta-map the music-start APU command at a field-to-battle transition; locate the sequence pointer in ARAM.",
-      "notes": ""
-    },
-    {
-      "schema_version": "1.0",
-      "id": "CEN-AUDIO-0005",
-      "domain": "AUDIO",
-      "category": "map music",
-      "name": "Field/event music selection",
-      "description": "Not yet captured headless (no DSP snapshot taken on a field state).",
-      "reconstruction_status": "UNMAPPED",
-      "runtime_status": "NOT_ENCOUNTERED",
-      "rom_revision": "0f51b4fca41b7fd509e4b8f9d543151f68efa5e97b08493e4b2a0c06f5d8d5e2",
-      "rom_locations": [],
-      "wram_locations": [],
-      "cpu_routines": [],
-      "spc_locations": [],
-      "record_count_expected": null,
-      "record_count_found": null,
-      "record_size": null,
-      "pointer_tables": [],
-      "consumers": [],
-      "producers": [],
-      "related_experiments": [],
-      "related_discoveries": [],
-      "related_implementations": [],
-      "related_tests": [],
-      "runtime_scenarios": [],
-      "evidence": [],
-      "confidence": "unknown",
-      "unknown_fields": [],
-      "contradictions": [],
-      "next_action": "DSP snapshot on checkpoint2; compare voice/SRCN set against the battle snapshot.",
-      "notes": ""
-    },
-    {
-      "schema_version": "1.0",
-      "id": "CEN-MAGIC-0001",
-      "domain": "MAGIC",
-      "category": "magitek abilities",
-      "name": "Magitek command and ability set",
-      "description": "The battle command window shows the Magitek command; the Fire Beam action (power 60, fire element) was live-verified through the damage pipeline. Attack-record candidates for Fire Beam: indices 5 and 131 ($C46AC0 table).",
-      "reconstruction_status": "CANDIDATE_LOCATION",
-      "runtime_status": "NORMAL_PATH_VERIFIED",
-      "rom_revision": "0f51b4fca41b7fd509e4b8f9d543151f68efa5e97b08493e4b2a0c06f5d8d5e2",
-      "rom_locations": [
-        "ROM-0015"
-      ],
-      "wram_locations": [],
-      "cpu_routines": [],
-      "spc_locations": [],
-      "record_count_expected": null,
-      "record_count_found": null,
-      "record_size": null,
-      "pointer_tables": [],
-      "consumers": [],
-      "producers": [],
-      "related_experiments": [
-        "EXP-0011",
-        "EXP-0015",
-        "EXP-0022",
-        "EXP-0025",
-        "EXP-0039"
-      ],
-      "related_discoveries": [],
-      "related_implementations": [],
-      "related_tests": [],
-      "runtime_scenarios": [
-        "mesen/out/exp10-battle.mss"
-      ],
-      "evidence": [
-        "local_artifacts/experiments/EXP-0025/ (screenshots; hashes.sha256)",
-        "docs/experiments/EXP-0022-record-crosscheck.md"
-      ],
-      "confidence": "strong-hypothesis",
-      "unknown_fields": [
-        "ability list per armor rider",
-        "menu-to-record index mapping"
-      ],
-      "contradictions": [],
-      "next_action": "Disambiguate the Fire Beam record index (menu-navigation press script; watch the MVN X source during the confirm).",
-      "notes": "EXP-0039 CAPTURED the Magitek ability list on screen: Fire Beam, Bolt Beam, Ice Beam, Heal Force (two-column list). Observation only - the attack-record index for Fire Beam remains ambiguous (EXP-0022 indices 5/131)."
-    },
-    {
-      "schema_version": "1.0",
-      "id": "CEN-MAGIC-0002",
-      "domain": "MAGIC",
-      "category": "spell availability",
-      "name": "Magic command and Terra's opening spell availability",
-      "description": "Field Skills menu shows Espers+Magic available for Terra ('?????'); the Magic list renders Cure (castable, MP 5, help 'Recovers HP') and Fire (dim, MP readout 0 in field) on a fixed grid with blank unlearned slots. Availability source located: per-character 54-byte arrays at WRAM +$1A6E ($FF = known; Terra = ids {0 Fire, 45 Cure}; next three windows zero for the magicless soldiers).",
-      "reconstruction_status": "LOCATED",
-      "runtime_status": "OUTPUTS_CAPTURED",
-      "rom_revision": "0f51b4fca41b7fd509e4b8f9d543151f68efa5e97b08493e4b2a0c06f5d8d5e2",
-      "rom_locations": [],
-      "wram_locations": [
-        "WRAM:+$1A6E (54-byte per-character spell-known array, stride hypothesis)"
-      ],
-      "cpu_routines": [],
-      "spc_locations": [],
-      "record_count_expected": null,
-      "record_count_found": null,
-      "record_size": null,
-      "pointer_tables": [],
-      "consumers": [],
-      "producers": [],
-      "related_experiments": [
-        "EXP-0026"
-      ],
-      "related_discoveries": [],
-      "related_implementations": [
-        "internal/extract (ASSET-DATA-0001)",
-        "internal/game/textenc"
-      ],
-      "related_tests": [],
-      "runtime_scenarios": [
-        "mesen/out/checkpoint2.mss"
-      ],
-      "evidence": [
-        "local_artifacts/experiments/EXP-0026/ (screenshots, tilemap/chr/cgram/wram dumps; hashes.sha256)",
-        "docs/experiments/EXP-0026-magic-census.md"
-      ],
-      "confidence": "strong-hypothesis",
-      "unknown_fields": [
-        "array count/character mapping beyond slot 0",
-        "non-$FF values (esper learning percentages?) unobserved",
-        "field dim/castability rule (Fire MP readout 0)",
-        "menu grid ordering vs id order (Cure rendered first)"
-      ],
-      "contradictions": [],
-      "next_action": "Observe a second magic-knowing character's array; capture the battle Magic menu for Fire's cost display.",
-      "notes": "2026-08-01 extractor-first migration: all 54 spell names restored to data/census/spells.json (previously placeholder-suppressed); regenerated by `ff6lab extract data`."
-    },
-    {
-      "schema_version": "1.0",
-      "id": "CEN-SAVE-0001",
-      "domain": "SAVE",
-      "category": "global state",
-      "name": "Opening-relevant persistent state (event progress, party, names)",
-      "description": "The four savestates differ in event progress (mid-event vs free walk vs mines vs battle) \u2014 persistent event/party state distinguishes them; its layout is unmapped.",
-      "reconstruction_status": "OBSERVED",
-      "runtime_status": "ENCOUNTERED",
-      "rom_revision": "0f51b4fca41b7fd509e4b8f9d543151f68efa5e97b08493e4b2a0c06f5d8d5e2",
-      "rom_locations": [],
-      "wram_locations": [],
-      "cpu_routines": [],
-      "spc_locations": [],
-      "record_count_expected": null,
-      "record_count_found": null,
-      "record_size": null,
-      "pointer_tables": [],
-      "consumers": [],
-      "producers": [],
-      "related_experiments": [
-        "EXP-0025",
-        "EXP-0031"
-      ],
-      "related_discoveries": [],
-      "related_implementations": [],
-      "related_tests": [],
-      "runtime_scenarios": [],
-      "evidence": [
-        "local_artifacts/experiments/EXP-0025/ (screenshots; hashes.sha256)"
-      ],
-      "confidence": "tentative-hypothesis",
-      "unknown_fields": [
-        "event-flag region",
-        "party/name persistent layout",
-        "SRAM mapping"
-      ],
-      "contradictions": [],
-      "next_action": "Diff WRAM snapshots across two field states to bound the event-flag region; then SRAM after a save event.",
-      "notes": "EXP-0031: deterministic virgin-SRAM power-on milestone (00-new-game.mss + full WRAM dump) available as the init-capture baseline."
-    },
-    {
-      "schema_version": "1.0",
-      "id": "CEN-MAGIC-0003",
-      "domain": "MAGIC",
-      "category": "spell names",
-      "name": "Spell name table (0x26F567, 7-byte records)",
-      "description": "[class icon][6-char name] records; boundary Confirmed: exactly 54 entries (icons $E9 x24 black, $EA x21 grey, $E8 x9 white), the esper name table begins at 0x26F6E1. All 54 extracted to local artifacts (EXP-0027).",
-      "reconstruction_status": "EXTRACTED_COMPLETE",
-      "runtime_status": "OUTPUTS_CAPTURED",
-      "rom_revision": "0f51b4fca41b7fd509e4b8f9d543151f68efa5e97b08493e4b2a0c06f5d8d5e2",
-      "rom_locations": [
-        "ROM-0019"
-      ],
-      "wram_locations": [],
-      "cpu_routines": [],
-      "spc_locations": [],
-      "record_count_expected": 54,
-      "record_count_found": 54,
-      "record_size": 7,
-      "pointer_tables": [],
-      "consumers": [],
-      "producers": [],
-      "related_experiments": [
-        "EXP-0026",
-        "EXP-0027"
-      ],
-      "related_discoveries": [],
-      "related_implementations": [
-        "internal/extract (ASSET-DATA-0001)",
-        "internal/game/textenc"
-      ],
-      "related_tests": [],
-      "runtime_scenarios": [],
-      "evidence": [
-        "local_artifacts/experiments/EXP-0026/ (screenshots, tilemap/chr/cgram/wram dumps; hashes.sha256)",
-        "docs/experiments/EXP-0026-magic-census.md",
-        "local_artifacts/experiments/EXP-0027/ (boundary/esper decodes, cast screenshots, WRAM diff; hashes.sha256)"
-      ],
-      "confidence": "confirmed",
-      "unknown_fields": [
-        "digit glyphs beyond observed",
-        "icon rendering vs castability dimming"
-      ],
-      "contradictions": [],
-      "next_action": "Name-table consumers (menu renderer read-watch) when the menu system unit runs.",
-      "notes": "record_count_expected=54 rests on the class-icon structure and the id-45 Cure anchor (Tentative until the boundary is read). 2026-08-01 extractor-first migration: all 54 spell names restored to data/census/spells.json (previously placeholder-suppressed); regenerated by `ff6lab extract data`."
-    },
-    {
-      "schema_version": "1.0",
-      "id": "CEN-MENU-0005",
-      "domain": "MENU",
-      "category": "magic menu",
-      "name": "Field Magic menu (grid list, MP readout, help bar)",
-      "description": "Fixed spell grid with blank unlearned slots; leading bullet tile $E8 (castable) vs $E9 (dim); MP cost window and help-text bar track the cursor; scroll indicators present. Cure shows cost 5 + 'Recovers HP'; the dim Fire shows cost 0 and empty help in the field context.",
-      "reconstruction_status": "OBSERVED",
-      "runtime_status": "OUTPUTS_CAPTURED",
-      "rom_revision": "0f51b4fca41b7fd509e4b8f9d543151f68efa5e97b08493e4b2a0c06f5d8d5e2",
-      "rom_locations": [],
-      "wram_locations": [],
-      "cpu_routines": [],
-      "spc_locations": [],
-      "record_count_expected": null,
-      "record_count_found": null,
-      "record_size": null,
-      "pointer_tables": [],
-      "consumers": [],
-      "producers": [],
-      "related_experiments": [
-        "EXP-0026"
-      ],
-      "related_discoveries": [],
-      "related_implementations": [],
-      "related_tests": [],
-      "runtime_scenarios": [
-        "mesen/out/checkpoint2.mss"
-      ],
-      "evidence": [
-        "local_artifacts/experiments/EXP-0026/ (screenshots, tilemap/chr/cgram/wram dumps; hashes.sha256)"
-      ],
-      "confidence": "confirmed",
-      "unknown_fields": [
-        "grid ordering rule",
-        "help-text table location",
-        "castability predicate"
-      ],
-      "contradictions": [],
-      "next_action": "Trace the list renderer's reads (name table + availability array consumers) with a read-watch during menu open.",
-      "notes": ""
-    },
-    {
-      "schema_version": "1.0",
-      "id": "CEN-MENU-0006",
-      "domain": "MENU",
-      "category": "fonts",
-      "name": "Fixed-font text byte encoding (menu + battle HUD surfaces)",
-      "description": "Derived from two independent surfaces: tile index = text byte with A-Z=$80+n, a-z=$9A+n, '-'=$C4 ('X-Zone' in ROM, 'Were-Rat' in the battle HUD), narrow space $FE, digits '2'/'3'=$B6/$B7 observed, blank $FF. ROM name strings use the same byte values (search hits confirm).",
-      "reconstruction_status": "FORMAT_PARTIAL",
-      "runtime_status": "OUTPUTS_CAPTURED",
-      "rom_revision": "0f51b4fca41b7fd509e4b8f9d543151f68efa5e97b08493e4b2a0c06f5d8d5e2",
-      "rom_locations": [],
-      "wram_locations": [],
-      "cpu_routines": [],
-      "spc_locations": [],
-      "record_count_expected": null,
-      "record_count_found": null,
-      "record_size": null,
-      "pointer_tables": [],
-      "consumers": [],
-      "producers": [],
-      "related_experiments": [
-        "EXP-0023",
-        "EXP-0025",
-        "EXP-0026"
-      ],
-      "related_discoveries": [],
-      "related_implementations": [],
-      "related_tests": [],
-      "runtime_scenarios": [],
-      "evidence": [
-        "local_artifacts/experiments/EXP-0026/ (screenshots, tilemap/chr/cgram/wram dumps; hashes.sha256)",
-        "docs/experiments/EXP-0026-magic-census.md"
-      ],
-      "confidence": "confirmed",
-      "unknown_fields": [
-        "digits beyond 2/3",
-        "punctuation set",
-        "VWF dialogue encoding relationship"
-      ],
-      "contradictions": [],
-      "next_action": "Complete the glyph set (digits 0-9, punctuation) by decoding more rendered surfaces; check whether dialogue (VWF) shares the byte encoding.",
-      "notes": ""
-    },
-    {
-      "schema_version": "1.0",
-      "id": "CEN-MAGIC-0004",
-      "domain": "MAGIC",
-      "category": "MP costs",
-      "name": "MP deduction and the cost field",
-      "description": "Field cast verified: Cure deducts exactly 5 MP (24->19) and heals to max (34->77/77). WRAM diff isolates single bytes: field current MP slot0 at +$160D, current HP at +$1609 (the field character-record block ~+$1600). Battle-side +$3C08 pool still unverified live.",
-      "reconstruction_status": "LOCATED",
-      "runtime_status": "NORMAL_PATH_VERIFIED",
-      "rom_revision": "0f51b4fca41b7fd509e4b8f9d543151f68efa5e97b08493e4b2a0c06f5d8d5e2",
-      "rom_locations": [
-        "ROM-0015"
-      ],
-      "wram_locations": [
-        "WRAM:+$160D (field MP slot 0, Strong hypothesis)",
-        "WRAM:+$1609 (field HP slot 0, Strong hypothesis)",
-        "WRAM:+$3C08 (battle MP pool, Strong hypothesis)"
-      ],
-      "cpu_routines": [],
-      "spc_locations": [],
-      "record_count_expected": null,
-      "record_count_found": null,
-      "record_size": null,
-      "pointer_tables": [],
-      "consumers": [],
-      "producers": [],
-      "related_experiments": [
-        "EXP-0001",
-        "EXP-0026",
-        "EXP-0027"
-      ],
-      "related_discoveries": [],
-      "related_implementations": [],
-      "related_tests": [],
-      "runtime_scenarios": [],
-      "evidence": [
-        "local_artifacts/experiments/EXP-0026/ (screenshots, tilemap/chr/cgram/wram dumps; hashes.sha256)",
-        "local_artifacts/experiments/EXP-0027/ (boundary/esper decodes, cast screenshots, WRAM diff; hashes.sha256)"
-      ],
-      "confidence": "strong-hypothesis",
-      "unknown_fields": [
-        "field record stride/full layout",
-        "deduction routine PC",
-        "battle-side deduction"
-      ],
-      "contradictions": [],
-      "next_action": "Watch the +$160D writer during a second cast to name the deduction routine.",
-      "notes": ""
-    },
-    {
-      "schema_version": "1.0",
-      "id": "CEN-MAGIC-0005",
-      "domain": "MAGIC",
-      "category": "targeting",
-      "name": "Spell targeting flags and menu targeting behavior",
-      "description": "Field targeting observed: party-member list with portraits, cursor default on the caster's slot, a '5 MP Needed' gating window naming the cost. Flags-to-behavior mapping unstarted.",
-      "reconstruction_status": "OBSERVED",
-      "runtime_status": "OUTPUTS_CAPTURED",
-      "rom_revision": "0f51b4fca41b7fd509e4b8f9d543151f68efa5e97b08493e4b2a0c06f5d8d5e2",
-      "rom_locations": [],
-      "wram_locations": [],
-      "cpu_routines": [],
-      "spc_locations": [],
-      "record_count_expected": null,
-      "record_count_found": null,
-      "record_size": null,
-      "pointer_tables": [],
-      "consumers": [],
-      "producers": [],
-      "related_experiments": [
-        "EXP-0027"
-      ],
-      "related_discoveries": [],
-      "related_implementations": [],
-      "related_tests": [],
-      "runtime_scenarios": [],
-      "evidence": [
-        "local_artifacts/experiments/EXP-0027/ (boundary/esper decodes, cast screenshots, WRAM diff; hashes.sha256)"
-      ],
-      "confidence": "confirmed",
-      "unknown_fields": [],
-      "contradictions": [],
-      "next_action": "Correlate record byte 3/4 bits against multi-target spells once more are castable.",
-      "notes": ""
-    },
-    {
-      "schema_version": "1.0",
-      "id": "CEN-MAGIC-0006",
-      "domain": "MAGIC",
-      "category": "effect routines",
-      "name": "Spell effect dispatch",
-      "description": "The battle pipeline dispatches on record flags (formula select bit 2.0, MP path 2.7 \u2014 Confirmed); a fuller effect-routine table (per-spell special effects) is unlocated.",
-      "reconstruction_status": "CANDIDATE_LOCATION",
-      "runtime_status": "NORMAL_PATH_VERIFIED",
-      "rom_revision": "0f51b4fca41b7fd509e4b8f9d543151f68efa5e97b08493e4b2a0c06f5d8d5e2",
-      "rom_locations": [
-        "ROM-0015"
-      ],
-      "wram_locations": [],
-      "cpu_routines": [],
-      "spc_locations": [],
-      "record_count_expected": null,
-      "record_count_found": null,
-      "record_size": null,
-      "pointer_tables": [],
-      "consumers": [],
-      "producers": [],
-      "related_experiments": [
-        "EXP-0010",
-        "EXP-0011",
-        "EXP-0017"
-      ],
-      "related_discoveries": [],
-      "related_implementations": [],
-      "related_tests": [],
-      "runtime_scenarios": [],
-      "evidence": [
-        "docs/experiments/EXP-0011-base-formulas.md"
-      ],
-      "confidence": "strong-hypothesis",
-      "unknown_fields": [
-        "per-spell effect routine linkage",
-        "record bytes 7/8"
-      ],
-      "contradictions": [],
-      "next_action": "Map record bytes 7/8 against effect variety once more spells are castable; hunt an effect-routine pointer table.",
-      "notes": ""
-    },
-    {
-      "schema_version": "1.0",
-      "id": "CEN-MAGIC-0007",
-      "domain": "MAGIC",
-      "category": "animation",
-      "name": "Spell animation data",
-      "description": "Not yet observed (no spell cast captured).",
-      "reconstruction_status": "UNMAPPED",
-      "runtime_status": "NOT_ENCOUNTERED",
-      "rom_revision": "0f51b4fca41b7fd509e4b8f9d543151f68efa5e97b08493e4b2a0c06f5d8d5e2",
-      "rom_locations": [],
-      "wram_locations": [],
-      "cpu_routines": [],
-      "spc_locations": [],
-      "record_count_expected": null,
-      "record_count_found": null,
-      "record_size": null,
-      "pointer_tables": [],
-      "consumers": [],
-      "producers": [],
-      "related_experiments": [],
-      "related_discoveries": [],
-      "related_implementations": [],
-      "related_tests": [],
-      "runtime_scenarios": [],
-      "evidence": [],
-      "confidence": "unknown",
-      "unknown_fields": [],
-      "contradictions": [],
-      "next_action": "Cast Fire in battle (after menu navigation) and capture the animation asset loads (VRAM deltas, DMA).",
-      "notes": ""
-    },
-    {
-      "schema_version": "1.0",
-      "id": "CEN-MAGIC-0008",
-      "domain": "MAGIC",
-      "category": "sound",
-      "name": "Spell audio cues",
-      "description": "Not yet observed; the EXP-0024 port-command technique applies directly.",
-      "reconstruction_status": "UNMAPPED",
-      "runtime_status": "NOT_ENCOUNTERED",
-      "rom_revision": "0f51b4fca41b7fd509e4b8f9d543151f68efa5e97b08493e4b2a0c06f5d8d5e2",
-      "rom_locations": [],
-      "wram_locations": [],
-      "cpu_routines": [],
-      "spc_locations": [],
-      "record_count_expected": null,
-      "record_count_found": null,
-      "record_size": null,
-      "pointer_tables": [],
-      "consumers": [],
-      "producers": [],
-      "related_experiments": [],
-      "related_discoveries": [],
-      "related_implementations": [],
-      "related_tests": [],
-      "runtime_scenarios": [],
-      "evidence": [],
-      "confidence": "unknown",
-      "unknown_fields": [],
-      "contradictions": [],
-      "next_action": "Delta-capture APU port commands during a spell cast (EXP-0024 pattern).",
-      "notes": ""
-    },
-    {
-      "schema_version": "1.0",
-      "id": "CEN-MAGIC-0009",
-      "domain": "MAGIC",
-      "category": "summons",
-      "name": "Esper name table (0x26F6E1, 8-byte records)",
-      "description": "27 esper names decode cleanly at stride 8 immediately after the spell name table; a further ability-name table (stride ~10) begins at 0x26F7B9 (candidate).",
-      "reconstruction_status": "FORMAT_DECODED",
-      "runtime_status": "NOT_ENCOUNTERED",
-      "rom_revision": "0f51b4fca41b7fd509e4b8f9d543151f68efa5e97b08493e4b2a0c06f5d8d5e2",
-      "rom_locations": [
-        "ROM-0021"
-      ],
-      "wram_locations": [],
-      "cpu_routines": [],
-      "spc_locations": [],
-      "record_count_expected": 27,
-      "record_count_found": 27,
-      "record_size": 8,
-      "pointer_tables": [],
-      "consumers": [],
-      "producers": [],
-      "related_experiments": [
-        "EXP-0027"
-      ],
-      "related_discoveries": [],
-      "related_implementations": [],
-      "related_tests": [],
-      "runtime_scenarios": [],
-      "evidence": [
-        "local_artifacts/experiments/EXP-0027/ (boundary/esper decodes, cast screenshots, WRAM diff; hashes.sha256)",
-        "docs/experiments/EXP-0027-spell-extraction.md"
-      ],
-      "confidence": "confirmed",
-      "unknown_fields": [],
-      "contradictions": [],
-      "next_action": "Extract the 27 records; bound the stride-10 ability-name table that follows.",
-      "notes": ""
-    },
-    {
-      "schema_version": "1.0",
-      "id": "CEN-CHAR-0004",
-      "domain": "CHAR",
-      "category": "character records",
-      "name": "Field character-record block (~WRAM:+$1600)",
-      "description": "Single-byte WRAM diff across the Cure cast isolates slot-0 current HP at +$1609 and current MP at +$160D \u2014 a field-side character record block distinct from the battle arrays.",
-      "reconstruction_status": "CANDIDATE_LOCATION",
-      "runtime_status": "OUTPUTS_CAPTURED",
-      "rom_revision": "0f51b4fca41b7fd509e4b8f9d543151f68efa5e97b08493e4b2a0c06f5d8d5e2",
-      "rom_locations": [],
-      "wram_locations": [
-        "WRAM:+$1609",
-        "WRAM:+$160D"
-      ],
-      "cpu_routines": [],
-      "spc_locations": [],
-      "record_count_expected": null,
-      "record_count_found": null,
-      "record_size": null,
-      "pointer_tables": [],
-      "consumers": [],
-      "producers": [],
-      "related_experiments": [
-        "EXP-0027"
-      ],
-      "related_discoveries": [],
-      "related_implementations": [],
-      "related_tests": [],
-      "runtime_scenarios": [],
-      "evidence": [
-        "local_artifacts/experiments/EXP-0027/ (boundary/esper decodes, cast screenshots, WRAM diff; hashes.sha256)"
-      ],
-      "confidence": "strong-hypothesis",
-      "unknown_fields": [],
-      "contradictions": [],
-      "next_action": "Map the record stride via a second character's values; relate to the $C10DF3 copy-loop source.",
-      "notes": ""
-    },
-    {
-      "schema_version": "1.0",
-      "id": "CEN-BATTLE-0007",
-      "domain": "BATTLE",
-      "category": "death",
-      "name": "Defeat flow ('Annihilated')",
-      "description": "Party wipe produces an 'Annihilated' banner and an enemy-name window listing the formation (Were-Rat, Repo Man) before the battle ends.",
-      "reconstruction_status": "OBSERVED",
-      "runtime_status": "ENCOUNTERED",
-      "rom_revision": "0f51b4fca41b7fd509e4b8f9d543151f68efa5e97b08493e4b2a0c06f5d8d5e2",
-      "rom_locations": [],
-      "wram_locations": [],
-      "cpu_routines": [],
-      "spc_locations": [],
-      "record_count_expected": null,
-      "record_count_found": null,
-      "record_size": null,
-      "pointer_tables": [],
-      "consumers": [],
-      "producers": [],
-      "related_experiments": [
-        "EXP-0027",
-        "EXP-0039"
-      ],
-      "related_discoveries": [],
-      "related_implementations": [],
-      "related_tests": [],
-      "runtime_scenarios": [
-        "mesen/out/exp10-battle.mss"
-      ],
-      "evidence": [
-        "local_artifacts/experiments/EXP-0027/ (boundary/esper decodes, cast screenshots, WRAM diff; hashes.sha256)"
-      ],
-      "confidence": "confirmed",
-      "unknown_fields": [],
-      "contradictions": [],
-      "next_action": "Capture the post-defeat transition (game over vs retry) in a dedicated run.",
-      "notes": "EXP-0039 OBSERVED the defeat flow live: the Whelk shell counter killed one member outright and then wiped the party; the screen went black (game-over transition) with party HP reading 0. First capture of this flow."
-    },
-    {
-      "schema_version": "1.0",
       "id": "CEN-WORLD-0006",
       "domain": "WORLD",
       "category": "encounter zones",
@@ -2035,337 +2672,6 @@
       "contradictions": [],
       "next_action": "Watch the step counter and encounter-check reads during a walk to locate the zone/rate data.",
       "notes": "EXP-0038 recon: a mines random encounter fired at trigger tile (26,0B) walking north from milestone 05; +$11E0=$000E (formation 14) - second observed mines formation after 44 (EXP-0030). Scheduled-run determinism of the encounter is the EXP-0038 question. EXP-0038: the scheduled route reproduced a mines random encounter at frame 51307 (formation 14) while walking the corridor near tile (26,0B); the GUI recon independently triggered formation 14 in the same one-tile neighbourhood walking the same stretch. Both fired after a comparable number of steps from the milestone-05 tile, consistent with a step-counter check - recorded as an observation, not a mechanism claim. EXP-0039 DISCRIMINATOR: a third mines encounter (formation 14 again) fired at (26,15), nine tiles from the (26,0B) tile of the two scheduled runs, after a different step count (exterior round-trip). Fixed-tile triggering is REFUTED; step/zone counting survives. Producer still unlocated."
-    },
-    {
-      "schema_version": "1.0",
-      "rom_revision": "0f51b4fca41b7fd509e4b8f9d543151f68efa5e97b08493e4b2a0c06f5d8d5e2",
-      "rom_locations": [],
-      "wram_locations": [],
-      "cpu_routines": [],
-      "spc_locations": [],
-      "record_count_expected": null,
-      "record_count_found": null,
-      "record_size": null,
-      "pointer_tables": [],
-      "consumers": [],
-      "producers": [],
-      "related_experiments": [
-        "EXP-0031"
-      ],
-      "related_discoveries": [],
-      "related_implementations": [],
-      "related_tests": [],
-      "runtime_scenarios": [
-        "local_artifacts/scenarios/SCN-0001/00-new-game/00-new-game.mss"
-      ],
-      "evidence": [
-        "local_artifacts/experiments/EXP-0031/ (phase A screenshots, events logs; hashes.sha256)",
-        "local_artifacts/scenarios/SCN-0001/00-new-game/ (run1/run2 dumps; hashes.sha256)"
-      ],
-      "unknown_fields": [
-        "which button (start vs a) the title accepts",
-        "exact input-acceptance window",
-        "attract dimming mechanism",
-        "flow with non-empty SRAM"
-      ],
-      "contradictions": [],
-      "notes": "",
-      "id": "CEN-EVENT-0004",
-      "domain": "EVENT",
-      "category": "cutscenes",
-      "name": "Title screen and attract-mode flow",
-      "description": "Power-on: title logo+(c) visible ~frame 2969, faded by ~3709; with no input an attract loop (~21000-frame period) alternates a dimmed-palette opening replay with a gameplay demo, dialogue auto-advancing, returning to the title each iteration. The title ignores long Start holds and sparse presses (input verifiably latched, $4219=$10) but accepts rapid start+a edge toggling; with virgin SRAM no save-select screen appears and the full-palette real opening begins directly, auto-running to the first input-waiting dialogue at scripted Narshe entry.",
-      "reconstruction_status": "OBSERVED",
-      "runtime_status": "INPUTS_CAPTURED",
-      "confidence": "confirmed",
-      "next_action": "Exec-trace the title input read to map the acceptance condition (edge requirement) and the start-vs-a discrimination."
-    },
-    {
-      "schema_version": "1.0",
-      "rom_revision": "0f51b4fca41b7fd509e4b8f9d543151f68efa5e97b08493e4b2a0c06f5d8d5e2",
-      "rom_locations": [],
-      "wram_locations": [
-        "WRAM:+$7BF7",
-        "WRAM:+$7BF8",
-        "WRAM:+$7CAD",
-        "WRAM:+$7CAE",
-        "WRAM:+$7DB2"
-      ],
-      "cpu_routines": [],
-      "spc_locations": [],
-      "record_count_expected": null,
-      "record_count_found": null,
-      "record_size": null,
-      "pointer_tables": [],
-      "consumers": [],
-      "producers": [],
-      "related_experiments": [
-        "EXP-0031",
-        "EXP-0037"
-      ],
-      "related_discoveries": [],
-      "related_implementations": [],
-      "related_tests": [],
-      "runtime_scenarios": [],
-      "evidence": [
-        "local_artifacts/experiments/EXP-0031/mesen-exp31-phaseA.log (boot warnings)"
-      ],
-      "unknown_fields": [
-        "reading routines",
-        "whether the values seed RNG or are dead reads"
-      ],
-      "contradictions": [],
-      "notes": "EXP-0037 side observation (register-only): --testrunner stdout emits [CPU] Uninitialized memory read diagnostics at boot under AllZeros RAM; 127 events across WRAM:+$1A6D, +$1D54, +$1F6E/+$1F6F and the contiguous run +$1FD3-+$1FF2 \u2014 all disjoint from the five previously registered addresses. +$1A6D is later the gate byte (CMP #$01) of the battle-era flag-clear routine at ROMCPU:$C04AF0 (EXP-0037 static decode); +$1F6E/6F sit past the statically-decoded flag bases. Raw diagnostic preserved in local_artifacts/experiments/EXP-0037/testrunner-stdout-run1.log.",
-      "id": "CEN-QUIRK-0001",
-      "domain": "QUIRK",
-      "category": "hardware assumptions",
-      "name": "Boot-time uninitialized WRAM reads (entropy candidates)",
-      "description": "Mesen's boot log flags uninitialized reads at $7E7DB2, $7E7CAD, $7E7CAE, $7E7BF7, $7E7BF8 during power-on before first write. On hardware these are unpredictable; with RamPowerOnState=AllZeros (the SCN-0001 controlled lab default) they read 0. Candidate RNG-seed or scratch reads; consumers undecoded.",
-      "reconstruction_status": "OBSERVED",
-      "runtime_status": "ENCOUNTERED",
-      "confidence": "confirmed",
-      "next_action": "Read-callback on the five addresses during a fresh boot to capture the reader PCs."
-    },
-    {
-      "schema_version": "1.0",
-      "rom_revision": "0f51b4fca41b7fd509e4b8f9d543151f68efa5e97b08493e4b2a0c06f5d8d5e2",
-      "rom_locations": [],
-      "wram_locations": [
-        "WRAM:+$11E0",
-        "WRAM:+$3F44-+$3F53"
-      ],
-      "cpu_routines": [
-        "ROMCPU:$C22899"
-      ],
-      "spc_locations": [],
-      "record_count_expected": null,
-      "record_count_found": null,
-      "record_size": null,
-      "pointer_tables": [],
-      "consumers": [],
-      "producers": [],
-      "related_experiments": [
-        "EXP-0030",
-        "EXP-0032",
-        "EXP-0033"
-      ],
-      "related_discoveries": [],
-      "related_implementations": [],
-      "related_tests": [],
-      "runtime_scenarios": [
-        "local_artifacts/scenarios/SCN-0001/03-first-scripted-battle/03-first-scripted-battle.mss"
-      ],
-      "evidence": [
-        "local_artifacts/experiments/EXP-0032/ (probe logs, beat screenshots; hashes.sha256)",
-        "local_artifacts/scenarios/SCN-0001/03-first-scripted-battle/ (WRAM dumps, screens; hashes.sha256)"
-      ],
-      "unknown_fields": [
-        "the event opcode that invokes the battle",
-        "whether $0206/$3A97 (EXP-0029 event-battle path) is used here",
-        "formation flags record 2 semantics"
-      ],
-      "contradictions": [],
-      "notes": "EXP-0032's first draft misread record byte 1 ($0C) as a monster id; corrected in EXP-0033 from the milestone-03 WRAM dump.",
-      "id": "CEN-EVENT-0005",
-      "domain": "EVENT",
-      "category": "scripted battles",
-      "name": "Scripted battle invocation (Narshe gate guard, formation 2)",
-      "description": "The opening Narshe-gate beat is a chain of input-waiting dialogue boxes separated by player-controlled walking; walking north into the guards triggers a scripted battle. Live staging at WRAM:+$11E0=$0002 with the +$3F44 record byte-matching ROM formation record 2 (ROMFILE:0x0F621E): monster-id bytes (record bytes 2-7) = FF FF 00 00 FF FF: two entries of monster id 0, confirmed live as battle slots 6/7 with HP 40 / MP 15 matching monster record 0's +$08/+$0A. Scripted (non-random) origin: reached without the encounter-roll walk pattern.",
-      "reconstruction_status": "LOCATED",
-      "runtime_status": "NORMAL_PATH_VERIFIED",
-      "confidence": "confirmed",
-      "next_action": "Exec-watch the frames before battle detection to capture the event-script invocation site; compare against the $0206/$3A97 alternate id path."
-    },
-    {
-      "schema_version": "1.0",
-      "rom_revision": "0f51b4fca41b7fd509e4b8f9d543151f68efa5e97b08493e4b2a0c06f5d8d5e2",
-      "rom_locations": [],
-      "wram_locations": [],
-      "cpu_routines": [],
-      "spc_locations": [],
-      "record_count_expected": null,
-      "record_count_found": null,
-      "record_size": null,
-      "pointer_tables": [],
-      "consumers": [],
-      "producers": [],
-      "related_experiments": [
-        "EXP-0032",
-        "EXP-0036"
-      ],
-      "related_discoveries": [],
-      "related_implementations": [],
-      "related_tests": [],
-      "runtime_scenarios": [],
-      "evidence": [
-        "local_artifacts/scenarios/SCN-0001/01-opening-cinematic/ (run1/run2 dumps+screens; hashes.sha256)"
-      ],
-      "unknown_fields": [
-        "whether PPU/HDMA registers differ across runs at this frame"
-      ],
-      "contradictions": [],
-      "notes": "",
-      "id": "CEN-QUIRK-0002",
-      "domain": "QUIRK",
-      "category": "timing behavior",
-      "name": "Milestone frame captures not byte-stable while WRAM is",
-      "description": "At two independent milestones the same scheduled power-on route produces byte-identical 128 KB WRAM but non-identical screenshots. Milestone 01 (frame 15000, snowfield credits): 11536 vs 11339 bytes, sub-frame vertical difference. Milestone 05 (frame 51578, mines interior, EXP-0036): run1 differs from run2/run3 which match each other; visual inspection shows the same scene differing only in the phase of the animated lamp glow. Two milestones with different content showing the same pattern strengthens the capture-phase reading over genuine state nondeterminism. WRAM is treated as the assertion channel; screenshots are not.",
-      "reconstruction_status": "OBSERVED",
-      "runtime_status": "ALTERNATE_PATH_VERIFIED",
-      "confidence": "tentative-hypothesis",
-      "next_action": "Capture PPU/HDMA registers alongside the frame buffer at both milestone frames across runs: differing registers mean unstable state, identical registers mean an unstable capture phase."
-    },
-    {
-      "schema_version": "1.0",
-      "rom_revision": "0f51b4fca41b7fd509e4b8f9d543151f68efa5e97b08493e4b2a0c06f5d8d5e2",
-      "rom_locations": [],
-      "wram_locations": [
-        "WRAM:+$1609",
-        "WRAM:+$160C",
-        "WRAM:+$160D",
-        "WRAM:+$1610",
-        "WRAM:+$1611",
-        "WRAM:+$1613",
-        "WRAM:+$1614"
-      ],
-      "cpu_routines": [
-        "ROMCPU:$C2496E",
-        "ROMCPU:$C24979",
-        "ROMCPU:$C24968",
-        "ROMCPU:$C2626D",
-        "ROMCPU:$C26274",
-        "ROMCPU:$C20F04",
-        "ROMCPU:$C20F15"
-      ],
-      "spc_locations": [],
-      "record_count_expected": null,
-      "record_count_found": null,
-      "record_size": null,
-      "pointer_tables": [],
-      "consumers": [],
-      "producers": [],
-      "related_experiments": [
-        "EXP-0027",
-        "EXP-0033",
-        "EXP-0038"
-      ],
-      "related_discoveries": [],
-      "related_implementations": [],
-      "related_tests": [],
-      "runtime_scenarios": [],
-      "evidence": [
-        "local_artifacts/experiments/EXP-0033/ (probe logs, reward-window screenshots; hashes.sha256)"
-      ],
-      "unknown_fields": [
-        "experience/gil storage offsets",
-        "level-up path",
-        "item/steal reward path",
-        "per-character stride of the writeback"
-      ],
-      "contradictions": [],
-      "notes": "",
-      "id": "CEN-BATTLE-0008",
-      "domain": "BATTLE",
-      "category": "rewards",
-      "name": "Victory processing and reward windows (EXP/GP), battle-to-field writeback",
-      "description": "On victory the game shows input-waiting reward windows in order: experience ('Got 32 Exp. point(s)'), then GP ('Got 96 GP'), then a screen transition. During that window, writers hit the field character-record block ~WRAM:+$1600: $C2496E stores +$1609/+$160A (=55, the first member's post-battle HP) and $C24979 stores +$160D/+$160E (=24, its MP) \u2014 the same offsets EXP-0027 identified as field current HP/MP, so battle results are written back to the field records. Other post-victory writers ($C2626D->+$1613, $C26274->+$1611/12, $C24968->+$1614/15, $C20F04->+$1610, $C20F15->+$160C) are reward-adjacent with unknown meaning.",
-      "reconstruction_status": "CANDIDATE_LOCATION",
-      "runtime_status": "OUTPUTS_CAPTURED",
-      "confidence": "strong-hypothesis",
-      "next_action": "Widen the post-victory write watch across the whole +$1600 block for all three members and correlate offsets against on-screen EXP/GP/level values."
-    },
-    {
-      "schema_version": "1.0",
-      "rom_revision": "0f51b4fca41b7fd509e4b8f9d543151f68efa5e97b08493e4b2a0c06f5d8d5e2",
-      "rom_locations": [],
-      "wram_locations": [],
-      "cpu_routines": [],
-      "spc_locations": [],
-      "record_count_expected": null,
-      "record_count_found": null,
-      "record_size": null,
-      "pointer_tables": [],
-      "consumers": [],
-      "producers": [],
-      "related_experiments": [
-        "EXP-0032",
-        "EXP-0033",
-        "EXP-0034"
-      ],
-      "related_discoveries": [],
-      "related_implementations": [],
-      "related_tests": [],
-      "runtime_scenarios": [
-        "local_artifacts/scenarios/SCN-0001/04-free-movement/04-free-movement.mss"
-      ],
-      "evidence": [
-        "local_artifacts/experiments/EXP-0033/postvictory-screen.png, run1-beat-*.png; hashes.sha256"
-      ],
-      "unknown_fields": [
-        "what event opcode invokes each battle",
-        "whether losing branches the script"
-      ],
-      "contradictions": [],
-      "notes": "",
-      "id": "CEN-EVENT-0006",
-      "domain": "EVENT",
-      "category": "scripted battles",
-      "name": "Multiple scripted battles precede free field movement in the opening",
-      "description": "The opening runs exactly FOUR scripted battles before player control: formations 2, 1, 2, 41 (entry frames 31557/34953/36828/39500, ends 32736/36004/38059/40975 - identical across two power-on runs). Every staged +$3F44 record matches the ROM formation table ($CF6200+id*15) byte-for-byte. Free movement follows the fourth battle; milestone 04-free-movement captured at frame 46375.",
-      "reconstruction_status": "LOCATED",
-      "runtime_status": "NORMAL_PATH_VERIFIED",
-      "confidence": "confirmed",
-      "next_action": "Exec-watch the frames before each battle entry to capture the scripted invocation site (CEN-EVENT-0005)."
-    },
-    {
-      "schema_version": "1.0",
-      "rom_revision": "0f51b4fca41b7fd509e4b8f9d543151f68efa5e97b08493e4b2a0c06f5d8d5e2",
-      "rom_locations": [],
-      "wram_locations": [],
-      "cpu_routines": [],
-      "spc_locations": [],
-      "record_count_expected": null,
-      "record_count_found": null,
-      "record_size": 32,
-      "pointer_tables": [],
-      "consumers": [],
-      "producers": [],
-      "related_experiments": [
-        "EXP-0028",
-        "EXP-0030",
-        "EXP-0032",
-        "EXP-0033",
-        "EXP-0034",
-        "EXP-0036",
-        "EXP-0038",
-        "EXP-0039"
-      ],
-      "related_discoveries": [],
-      "related_implementations": [],
-      "related_tests": [],
-      "runtime_scenarios": [],
-      "evidence": [
-        "local_artifacts/experiments/EXP-0034/ (per-battle entry captures, logs; hashes.sha256)"
-      ],
-      "unknown_fields": [
-        "monster names",
-        "AI scripts",
-        "rewards fields",
-        "elements/status/resistances",
-        "graphics and palettes",
-        "the remaining 30 fields of each record"
-      ],
-      "contradictions": [],
-      "notes": "EXP-0038: formation 14 = three of monster record 19 (ROM record: HP 24, MP 0). Monster 19 was already known from the EXP-0030 mines encounter (formation 44), so the mines interior yields at least two distinct formations (14 and 44) - a B13 datum. EXP-0039: the Whelk formation (432) stages monster-id bytes 00 34 FF FF FF FF. Reading byte 2 as an id gives record 0 - the opening guard - which is implausible for a boss, so the formation record's monster-id field must carry a high-bit/extension not yet decoded (FF6 exceeds 256 monsters). Whelk's monster ids are Unknown pending that decode. On-screen enemy name 'Whelk' observed; the name table remains unlocated.",
-      "id": "CEN-MONSTER-0004",
-      "domain": "MONSTER",
-      "category": "monster records",
-      "name": "Opening-area monsters reachable before Whelk (records 0 and 25)",
-      "description": "The five scripted opening-area battles stage three distinct monster records. Record 0 (ROMFILE:0x0F0000): +$08=40 HP, +$0A=15 MP - verified live as battle slots 6/7 in formation 2. Record 25 (ROMFILE:0x0F0320): +$08=27 HP, +$0A=5 MP - seen in formations 1 and 41, record fields read statically. The random mines encounter (formation 44) additionally stages records 19 and 77 (EXP-0030). Monster names are unknown: the name table is unlocated, so on-screen labels are observational only. Record 27 (ROMFILE:0x0F0360): +$08=115 HP, +$0A=30 MP - staged by formation 84, the fifth scripted battle, with its 115 HP anchored to a live enemy HP word (EXP-0036).",
-      "reconstruction_status": "LOCATED",
-      "runtime_status": "ENCOUNTERED",
-      "confidence": "confirmed",
-      "next_action": "Bulk-extract records 0, 19, 25, 77 and map fields beyond +$08/+$0A against observed battle behaviour (B14)."
     },
     {
       "schema_version": "1.0",
@@ -2413,255 +2719,6 @@
       "runtime_status": "INPUTS_CAPTURED",
       "confidence": "strong-hypothesis",
       "next_action": "Write-watch +$00AF/+$00B0 during a single walked tile to capture their producers and settle the alias blocks' ownership."
-    },
-    {
-      "schema_version": "1.0",
-      "rom_revision": "0f51b4fca41b7fd509e4b8f9d543151f68efa5e97b08493e4b2a0c06f5d8d5e2",
-      "rom_locations": [],
-      "wram_locations": [
-        "WRAM:+$00AF",
-        "WRAM:+$00B0"
-      ],
-      "cpu_routines": [],
-      "spc_locations": [],
-      "record_count_expected": null,
-      "record_count_found": null,
-      "record_size": null,
-      "pointer_tables": [],
-      "consumers": [],
-      "producers": [],
-      "related_experiments": [
-        "EXP-0034",
-        "EXP-0035",
-        "EXP-0036"
-      ],
-      "related_discoveries": [],
-      "related_implementations": [],
-      "related_tests": [],
-      "runtime_scenarios": [],
-      "evidence": [
-        "local_artifacts/experiments/EXP-0035/recon-guard*.png, trial1-final.png; hashes.sha256"
-      ],
-      "unknown_fields": [
-        "the event opcode that invokes the battle",
-        "the trigger region's data source",
-        "whether the trigger is one-time"
-      ],
-      "contradictions": [],
-      "notes": "",
-      "id": "CEN-EVENT-0007",
-      "domain": "EVENT",
-      "category": "scripted battles",
-      "name": "Fifth scripted battle en route to the mines",
-      "description": "A contact trigger at player tile ($1E,$25) on the Narshe exterior - reached after the free-movement milestone, on the way to the mine entrance - starts a fifth scripted battle: FORMATION 84 ($0054), staged record byte-identical to ROMFILE:0x0F66EC, monster-id bytes 1B 1B 00 00 FF FF = two of record 27 and two of record 0. Record 27 (ROMFILE:0x0F0360) holds 115 HP / 30 MP, and the 115 matches the live enemy HP word seen in EXP-0035. The trigger is contact-based, not tile-occupancy based: standing on the tile tapping A never fires it; pushing into the guard does. A second scripted dialogue at ($1F,$16) gates the mine shaft itself.",
-      "reconstruction_status": "LOCATED",
-      "runtime_status": "NORMAL_PATH_VERIFIED",
-      "confidence": "confirmed",
-      "next_action": "Exec-watch the frames before this battle's entry to capture the scripted invocation site (shared with CEN-EVENT-0005)."
-    },
-    {
-      "schema_version": "1.0",
-      "rom_revision": "0f51b4fca41b7fd509e4b8f9d543151f68efa5e97b08493e4b2a0c06f5d8d5e2",
-      "rom_locations": [],
-      "wram_locations": [
-        "WRAM:+$1E80",
-        "WRAM:+$1EA0",
-        "WRAM:+$1EC0"
-      ],
-      "cpu_routines": [
-        "ROMCPU:$BAED (flag-number decoder: Y=flag/8, X=flag&7)",
-        "ROMCPU:$C0B593-$C0B6D2 (16 uniform script set/clear handlers; bases $1E80/$1EA0/$1EC0/$1EE0/$1F00/$1F20/$1F40/$1DC9; ROM-0027)",
-        "ROMCPU:$C0BAA9-$C0BAE9 (flag test routines for $1E80/$1EA0/$1EE0/$1F00/$1F20/$1F40; ROM-0028)",
-        "ROMCPU:$C0BB0C (boot clear of $1E80-$1EDF; live at frame 21)",
-        "ROMCPU:$C0BB18 (boot clear of $1E40-$1E6F, role unknown)",
-        "ROMCPU:$C0B943/$C0B97B/$C0B9A5 ($0205/$0200 bit-7 copy into $1EDF bit 7; ROM-0032)",
-        "ROMCPU:$C0BA81 ($1EB6 working-bit updater: facing nibble + bit 4; ROM-0031)",
-        "ROMCPU:$C0BFA6 region ($1EB6 bit-6 busy latch; STZ $1EBE/$1EBF)",
-        "ROMCPU:$C0C02D ($1EB9 bit-7 direct set)",
-        "ROMCPU:$C04A1D/$C04AF3 (battle-era RMW clears of $1EB6/$1EB7/$1ED8 bits)"
-      ],
-      "spc_locations": [],
-      "record_count_expected": 768,
-      "record_count_found": 20,
-      "record_size": null,
-      "pointer_tables": [
-        "ROMCPU:$C0BAFC (set masks)",
-        "ROMCPU:$C0BB04 (clear masks)"
-      ],
-      "consumers": [],
-      "producers": [],
-      "related_experiments": [
-        "EXP-0035",
-        "EXP-0036",
-        "EXP-0037"
-      ],
-      "related_discoveries": [
-        "DISC-0008"
-      ],
-      "related_implementations": [
-        "internal/game/eventflags (Ref, FlagAt, SetMasks/ClearMasks mirroring $C0BAFC/$C0BB04)"
-      ],
-      "related_tests": [
-        "internal/game/eventflags: TestRefDerivation, TestMaskTablesMatchROMDecode, TestFlagAtRoundTrip, TestMilestone05Value"
-      ],
-      "runtime_scenarios": [
-        "SCN-0001 golden route power-on..milestone 05 (EXP-0037: gui1 + run1 + run2)"
-      ],
-      "evidence": [
-        "docs/contradictions/CONTRA-0002-1ea5-map-id-vs-event-flags.md (static ROM decode; mask tables and decoder read from the verified ROM)",
-        "local_artifacts/experiments/EXP-0036/ (live EVFLAG/MAPC write log: $00->$01->$05->$0D, all from $C0B5B6)"
-      ],
-      "unknown_fields": [
-        "the meaning of individual flag numbers (identifiers stay address-anchored)",
-        "whether the arrays are SRAM-backed (needs a save-event capture)",
-        "whether the statically-decoded extra arrays ($1EE0-$1F5F, $1DC9-$1DE8) are used at runtime",
-        "the role of the $1E40-$1E6F region cleared at boot",
-        "the semantic source of the $0200/$0205 bit copied into EVF-1EC0-$FF",
-        "the flag-test routine callers (who reads these flags, and when)"
-      ],
-      "contradictions": [],
-      "notes": "EXP-0037 write-watched all 96 bytes of the three arrays across the scheduled opening route: 162 value-changing writes, identical across a GUI run and headless runs (frame+addr+old+new+PC), snapshots replay-consistent, final WRAM byte-identical to milestone 05. 20 flags touched: 11 latched story flags (all via the script handlers), 4 transient, 5 fast-toggling working bits ($1EB6 low nibble + bits 4/6 are engine working state living inside the flag address space). Boot clears the whole span at frame 21. Static decode extends the same handler family to five more bases ($1EE0/$1F00/$1F20/$1F40/$1DC9) \u2014 runtime-unobserved; and $1EC0 has set/clear handlers but no test routine in the decoded family. Tracked inventory: data/scenarios/opening-event-flags.json.",
-      "id": "CEN-EVENT-0008",
-      "domain": "EVENT",
-      "category": "event flags",
-      "name": "Event-flag bit arrays and their set/clear routines",
-      "description": "Three parallel bit arrays at WRAM:+$1E80, +$1EA0 and +$1EC0, each $20 bytes apart (256 flags each). A shared decoder at ROMCPU:$BAED converts a flag number to array indices: REP #$20 / TAX / LSR x3 / TAY (byte index = flag/8) / TDC / SEP #$20 / TXA / AND #$07 / TAX (bit index = flag&7). Set routines read-modify-write with ORA $C0BAFC,X (masks 01 02 04 08 10 20 40 80); clear routines use AND $C0BB04,X (masks FE FD FB F7 EF DF BF 7F, exact complements). Live-observed writer: STA $1EA0,Y at ROMCPU:$C0B5B3 (the probe reports the following PC, $C0B5B6). Access sites: LDA $1EA0,Y x5 / STA $1EA0,Y x4, with symmetric counts for the $1E80 and $1EC0 arrays. Located by CONTRA-0002 while refuting a map-id reading of WRAM:+$1EA5, which is byte 5 of the $1EA0 array (flags $28-$2F); at milestone 05 its bits 0, 2 and 3 are set, i.e. flags $28, $2A, $2B.",
-      "reconstruction_status": "FORMAT_DECODED",
-      "runtime_status": "NORMAL_PATH_VERIFIED",
-      "confidence": "confirmed",
-      "next_action": "Extend the write watch to the statically-decoded additional arrays ($1EE0-$1F5F, $1DC9) on a future route unit, and capture a save event to settle SRAM backing; correlate latched opening flags against the treasure/interaction beats (B16) as those systems come under test."
-    },
-    {
-      "schema_version": "1.0",
-      "rom_revision": "0f51b4fca41b7fd509e4b8f9d543151f68efa5e97b08493e4b2a0c06f5d8d5e2",
-      "rom_locations": [],
-      "wram_locations": [],
-      "cpu_routines": [],
-      "spc_locations": [],
-      "record_count_expected": null,
-      "record_count_found": null,
-      "record_size": null,
-      "pointer_tables": [],
-      "consumers": [],
-      "producers": [],
-      "related_experiments": [
-        "EXP-0038"
-      ],
-      "related_discoveries": [],
-      "related_implementations": [],
-      "related_tests": [],
-      "runtime_scenarios": [
-        "EXP-0038 recon from 05-mines-entry.mss"
-      ],
-      "evidence": [
-        "local_artifacts/experiments/EXP-0038/recon-stall-2A09.png",
-        "local_artifacts/experiments/EXP-0038/recon.log"
-      ],
-      "unknown_fields": [
-        "trigger tile/zone exact bounds",
-        "event script location",
-        "relation to the Whelk introduction (B17)"
-      ],
-      "contradictions": [],
-      "notes": "Registered from recon only; the scheduled EXP-0038 route deliberately stops at (28,09) to avoid it.",
-      "id": "CEN-EVENT-0009",
-      "domain": "EVENT",
-      "category": "scripted event",
-      "name": "Mines interior scripted event beyond the encounter corridor",
-      "description": "Reaching approximately (2A,09) in the mines interior (two turns past the encounter corridor) starts a scripted event: a dialogue box opens and the party splits, one walker advancing while movement input is consumed. Observed once during EXP-0038 recon from the milestone-05 state; screenshot archived locally. Plausibly the pre-Whelk beat sequence (B17 candidate) - unverified.",
-      "reconstruction_status": "OBSERVED",
-      "runtime_status": "ENCOUNTERED",
-      "confidence": "confirmed",
-      "next_action": "When SCN-0001 advances past milestone 06: scheduled approach to the trigger with the event-flag watch armed and position/frame capture (serves B17)."
-    },
-    {
-      "schema_version": "1.0",
-      "rom_revision": "0f51b4fca41b7fd509e4b8f9d543151f68efa5e97b08493e4b2a0c06f5d8d5e2",
-      "rom_locations": [],
-      "wram_locations": [],
-      "cpu_routines": [],
-      "spc_locations": [],
-      "record_count_expected": null,
-      "record_count_found": null,
-      "record_size": null,
-      "pointer_tables": [],
-      "consumers": [],
-      "producers": [],
-      "related_experiments": [
-        "EXP-0039"
-      ],
-      "related_discoveries": [],
-      "related_implementations": [],
-      "related_tests": [],
-      "runtime_scenarios": [
-        "EXP-0039 GUI breadth pass from 05-mines-entry.mss"
-      ],
-      "evidence": [
-        "local_artifacts/experiments/EXP-0039/whelk-battle-entry.png",
-        "local_artifacts/experiments/EXP-0039/whelk-intro-3.png",
-        "local_artifacts/experiments/EXP-0039/recon.log",
-        "local_artifacts/scenarios/SCN-0001/07-pre-whelk/pre-whelk-recon.mss"
-      ],
-      "unknown_fields": [
-        "the formation record's monster-id extension (Whelk's actual monster ids)",
-        "head vs shell target modelling",
-        "counterattack selection and damage",
-        "the battle-invocation opcode (shared with CEN-EVENT-0005)"
-      ],
-      "contradictions": [],
-      "notes": "Reached for the first time in the project by EXP-0039. First attempt ended in defeat via the shell counter; a pre-Whelk savestate is preserved for the victory attempt.",
-      "id": "CEN-EVENT-0010",
-      "domain": "EVENT",
-      "category": "scripted event",
-      "name": "Whelk encounter beat and boss battle invocation",
-      "description": "A scripted beat fires on arriving at mines tile (2A,09): a party member steps forward and movement input is consumed. After it resolves, the Whelk boss battle is CONTACT-triggered by pushing north from (2A,07) - the same walk-into-it pattern EXP-0036 found for the fifth scripted battle. The battle is formation 432 ($01B0), staged record 80 03 00 34 FF FF FF FF 48 AB 00 00 00 00 3F, preceded by a multi-box introduction/warning dialogue. Enemy name window renders 'Whelk' (observational; name table unlocated).",
-      "reconstruction_status": "OBSERVED",
-      "runtime_status": "ENCOUNTERED",
-      "confidence": "confirmed",
-      "next_action": "EXP-0040: reload the pre-Whelk state, heal with Heal Force, attack only while the head is extended, and capture a first victory plus the post-battle state (B18/B19)."
-    },
-    {
-      "schema_version": "1.0",
-      "rom_revision": "0f51b4fca41b7fd509e4b8f9d543151f68efa5e97b08493e4b2a0c06f5d8d5e2",
-      "rom_locations": [],
-      "wram_locations": [],
-      "cpu_routines": [],
-      "spc_locations": [],
-      "record_count_expected": null,
-      "record_count_found": null,
-      "record_size": null,
-      "pointer_tables": [],
-      "consumers": [],
-      "producers": [],
-      "related_experiments": [
-        "EXP-0039"
-      ],
-      "related_discoveries": [],
-      "related_implementations": [],
-      "related_tests": [],
-      "runtime_scenarios": [
-        "EXP-0039 GUI breadth pass"
-      ],
-      "evidence": [
-        "local_artifacts/experiments/EXP-0039/guard-esper-beat-2A07.png",
-        "local_artifacts/experiments/EXP-0039/post-whelk-guard-beat.mss"
-      ],
-      "unknown_fields": [
-        "position in the scenario sequence",
-        "whether it gates or follows the Whelk victory",
-        "event script location"
-      ],
-      "contradictions": [],
-      "notes": "Registered from one observation; not pursued (breadth-pass bounds).",
-      "id": "CEN-EVENT-0011",
-      "domain": "EVENT",
-      "category": "scripted event",
-      "name": "Post-Whelk guard/Esper scripted beat",
-      "description": "A further scripted beat observed at mines tile (2A,07) after the Whelk encounter point: a guard dialogue about not handing over the Esper. Its true position in the sequence is Unknown - EXP-0039 reached it after a defeat-and-reload, so whether it is the normal post-Whelk progression or an alternate path is unresolved.",
-      "reconstruction_status": "OBSERVED",
-      "runtime_status": "ENCOUNTERED",
-      "confidence": "tentative-hypothesis",
-      "next_action": "Re-reach it on a clean run (no defeat/reload) to establish its true sequence position."
     }
   ]
 }

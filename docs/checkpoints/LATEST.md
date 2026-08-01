@@ -1,18 +1,30 @@
 # Latest Checkpoint
 
-**[2026-08-01 — EXP-0039: Whelk reached (breadth pass)](2026-08-01-exp0039-whelk-breadth-recon.md)**
+**[2026-08-01 — EXP-0040: Whelk attempt stopped on ATB blocker](2026-08-01-exp0040-whelk-stopped-atb-blocker.md)**
 
-State: **Whelk has been reached, entered and observed** — the
-scenario's furthest point to date. A deliberate breadth-first GUI pass
-mapped the mines corridor (branches, dead ends, a **bidirectional**
-exterior transition), **refuted fixed-tile encounter triggering**,
-captured the **Magitek ability list**, and made first contact with
-Whelk: formation 432, contact-triggered from `(2A,07)`, with its
-introduction dialogue and **shell counterattack** observed. The first
-attempt **ended in defeat**, capturing the defeat flow. New bounded
-question: the formation record's monster-id field needs a high-bit
-extension decode (Whelk's ids read implausibly as record 0). No
-background processes running. Exact next action: **EXP-0040 — Whelk
-victory attempt (branch A)**: reload the pre-Whelk savestate, Heal
-Force first, strike only while the head is extended, and capture
-milestone `10-whelk-victory` plus the first stable post-battle state.
+State: **Whelk was attacked correctly and NOT defeated.** Two piloted
+GUI attempts from the preserved pre-Whelk state, both under
+`Bat.Mode = Wait`. The branch-A premises were verified — **Whelk is two
+battle slots** (shell 50000 HP, head 1600 HP; new CEN-BATTLE-0009),
+striking the visibly extended head reduces the head and **never** the
+shell (six hits, 162-186), head/shell state is **visually
+classifiable**, and a **field healing route** exists (Tonic ×4 →
+76/105/106). Also corrected: MagiTek sets are character-specific
+(leader eight, escorts four — EXP-0039's list was a non-leader's), and
+the guard/Esper beat **precedes** Whelk on a clean run (CEN-EVENT-0011
+resolved). **Milestone `10-whelk-victory` and B19 remain open.**
+
+Stopped by operator directive on a **hard methodological blocker: the
+project has no ATB model** (ACTIVE/WAIT semantics, qualifying submenu
+pause states, timer domains, action-queue ordering). All head/shell
+timing collected is **menu-pause-contaminated and unusable**;
+ACTIVE and WAIT are separate experimental conditions. **Whelk gameplay
+must not resume before the ATB research program.**
+
+45 evidence artifacts preserved with hashes and unambiguous savestate
+lineage. No background processes running; SRAM still virgin. All gates
+clean (gofmt/build/vet/test, `ff6lab audit`, census, archive verify 8/8,
+restricted-file scan). Exact next action: **start a new session, resume
+from this checkpoint, audit existing battle infrastructure and ATB
+evidence, and propose the first bounded ATB experiment before operating
+Mesen.**

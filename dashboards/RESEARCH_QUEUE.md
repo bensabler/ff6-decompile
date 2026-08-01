@@ -57,16 +57,35 @@ Ordered next units (reorder when evidence exposes a better chain):
   encounter triggering **refuted**; Magitek ability list captured;
   first attempt lost to the shell counter, capturing the defeat flow
   ([record](../docs/experiments/EXP-0039-mines-to-whelk-breadth-recon.md)).
-- [ ] **EXP-0040 (next): Whelk victory attempt, branch A.** Reload the
-  pre-Whelk savestate, Heal Force first, strike only while the head is
-  extended; capture milestone `10-whelk-victory` and the first stable
-  post-battle state (B19).
+- [~] **EXP-0040: Whelk victory attempt, branch A — STOPPED, not
+  achieved.** Two attempts from the preserved pre-Whelk state, both
+  under `Bat.Mode = Wait`. Confirmed that Whelk is **two battle
+  entities** (shell slot 4 = 50000 HP, head slot 5 = 1600 HP), that
+  striking the visibly extended head damages the head and never the
+  shell (six measured deltas, 162-186 each), that head/shell state is
+  visually classifiable, and that a **field healing route** exists
+  (Tonic ×4) taking the party to 76/105/106. **No victory**; milestone
+  `10-whelk-victory` and B19 remain open. Stopped by operator directive
+  on a **methodological blocker** — see below
+  ([record](../docs/experiments/EXP-0040-whelk-victory.md)).
+- [ ] **P0 NEXT — bounded ATB research program (blocks all further
+  Whelk execution).** The project has no model of FF6's ATB:
+  ACTIVE/WAIT semantics, which submenu states qualify as pausing, the
+  relevant timer domains, and action-queue ordering/resolution are all
+  Unknown. EXP-0040 could not operate the battle reliably or interpret
+  its timing without one. **Whelk gameplay must not resume before this
+  program produces a usable model.** First action: audit existing
+  battle infrastructure and ATB evidence, then propose the first
+  bounded ATB baseline experiment before operating Mesen.
 - [ ] Whelk formation monster-id extension: reading formation 432's
   record bytes 2-7 as ids yields record 0 (the opening guard), so the
   id field must carry a high-bit/extension not yet decoded (FF6
   exceeds 256 monsters). Blocks Whelk's monster records (B18/B14).
-- [ ] Post-Whelk guard/Esper beat (CEN-EVENT-0011) — sequence position
-  unresolved; re-reach on a clean run.
+- [x] Post-Whelk guard/Esper beat (CEN-EVENT-0011) — **resolved by
+  EXP-0040**: the "We won't hand over the Esper!!" beat fires at
+  `(2A,07)` **before** the Whelk battle on a clean, never-defeated run,
+  reproduced on both attempts. It is normal pre-Whelk progression, not
+  a post-defeat artifact.
 - [ ] **Map header / tileset load path** (CEN-WORLD-0004) — still open
   and now genuinely unstarted; `+$1EA5` was a false lead. Needs its own
   discriminator (candidate: VRAM/DMA watch across the mines transition,

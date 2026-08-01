@@ -1,6 +1,30 @@
 # Blockers
 
-No hard blockers (2026-07-30 maintenance audit).
+## Hard blocker — no ATB model (2026-08-01, EXP-0040)
+
+**Further Whelk execution is deferred until the project establishes a
+usable ATB model.** Required before resuming: ACTIVE/WAIT behavior,
+which submenu states qualify as pausing, the relevant timer domains,
+and action-queue ordering/resolution semantics.
+
+EXP-0040 made two attempts on Whelk and could not operate the battle
+reliably: the head changed state between opening a submenu and reaching
+target selection, queued actions resolved out of issue order, heals
+landed on unintended allies, and on one occasion the target cursor was
+resting on the shell at the moment of confirmation and had to be
+cancelled. Those are operator/tooling failures against an unmodelled
+timing system, not facts about Whelk.
+
+Consequence for evidence: every head/shell transition observed in
+EXP-0040 occurred while the emulator was driven through menus with
+operator-length pauses, so **none of it may be used to characterize
+Whelk's natural head/shell timing**. ACTIVE-mode and WAIT-mode timing
+must be treated as separate experimental conditions.
+
+**Whelk gameplay must not resume before this research.** Next action:
+audit existing battle infrastructure and ATB evidence, then propose the
+first bounded ATB baseline experiment before operating Mesen.
+Record: `docs/experiments/EXP-0040-whelk-victory.md`.
 
 Soft items:
 

@@ -322,22 +322,54 @@ rewards.
   record — which is implausible for a boss, so the id field must carry
   a high-bit/extension not yet decoded (FF6 exceeds 256 monsters).
   This is a new bounded question, not a decoded fact.
-- A pre-Whelk savestate is preserved, so the victory attempt
-  (branch A: heal first, strike only while the head is extended)
-  costs nothing to set up. Downstream systems (formation load,
-  monster records, damage) remain Confirmed and carry over; the boss
-  AI interpreter is unlocated.
+- **EXP-0040 (two attempts, NO VICTORY)** advanced this row
+  substantially without closing it:
+  - **Whelk occupies two battle slots** (CEN-BATTLE-0009): shell
+    slot 4 = **50000/50000 HP**, head slot 5 = **1600/1600 HP**, read
+    directly from the DISC-0001 arrays. MP candidates 120/120 and
+    1000/1000.
+  - **Head-only targeting is Confirmed correct**: six measured hits on
+    the visibly extended head (162, 168, 171, 177, 181, 186) each
+    reduced slot 5; slot 4 held 50000 for the entire unit. No shell
+    strike occurred, so nothing new is claimed about the counter.
+  - **Head/shell state is visually classifiable** at 4× upscale
+    (extended = golden head with eye/mandibles clear of the shell;
+    retracted = shell only, dark cavity). The white target cursor
+    occupies the same screen region and must not be mistaken for the
+    head.
+  - The introduction dialogue states the creature **eats lightning and
+    stores the energy in its shell** and ends with an explicit
+    instruction not to attack the shell. Registered as on-screen
+    guidance; **no elemental behavior was tested**.
+  - A **field healing route exists before contact** — the field menu is
+    reachable and the party carries Tonic ×4 / Potion ×1; four Tonics
+    took the party from 26/19/56 to **76/77, 105/105, 106/107**.
+  - Enemy action name **"Slime"** observed; Whelk actions affected
+    multiple party members at once (contextual only).
+- data-records still PARTIAL: Whelk's monster ids remain **Unknown**.
+- **BLOCKED.** Further execution is deferred until the project has a
+  usable **ATB model** (ACTIVE/WAIT semantics, qualifying submenu pause
+  states, timer domains, action-queue ordering). EXP-0040 could not
+  operate the battle reliably without one, and **all head/shell timing
+  observed so far is menu-pause-contaminated and unusable** as evidence
+  for the natural cycle. See BLOCKERS.md.
 
 ### B19 — Stable post-Whelk state
-**All rows PARTIAL: not reached** — the first Whelk attempt ended in
-defeat (EXP-0039), so no post-victory state exists yet. Defines the
+**All rows PARTIAL: not reached.** EXP-0039 ended in defeat; EXP-0040
+made two attempts and was stopped without a victory on the ATB blocker.
+**Milestone `10-whelk-victory` is NOT established.** Defines the
 program's stopping boundary; requires victory processing capture
 (rewards, flags, music, return-to-field or next-event handoff). The
 "flags" part of that capture has a concrete substrate and baseline:
 the event-flag arrays and the milestone-05 inventory (EXP-0037,
-DISC-0008). A further scripted beat past the Whelk point
-(CEN-EVENT-0011) was glimpsed and may be the handoff, but its
-sequence position is unresolved.
+DISC-0008).
+
+**Correction to an earlier reading:** the guard/Esper beat
+(CEN-EVENT-0011) is **not** a post-Whelk handoff. EXP-0040 reproduced
+it twice on clean, never-defeated runs and established that it fires at
+`(2A,07)` **before** the Whelk battle as normal progression. EXP-0039
+had only seen it after a defeat-and-reload. The true post-victory
+handoff is still unobserved.
 
 ## Per-domain totals
 
@@ -364,8 +396,14 @@ sync with the beat matrices. As of creation: 0 beats COMPLETE,
    completeness claims.
 5. Monster names, AI scripts, and reward fields unmapped — blocks B14,
    B18.
-6. Magitek command/ability records unresolved (CEN-MAGIC-0001).
-7. Nothing from Whelk introduction onward has ever been observed live.
+6. Magitek command/ability records unresolved (CEN-MAGIC-0001) — the
+   on-screen sets are now known to be character-specific (leader eight,
+   escorts four; EXP-0040), but the menu-to-record mapping is not.
+7. **No ATB model** (ACTIVE/WAIT semantics, qualifying submenu pause
+   states, timer domains, action-queue ordering). This is now a hard
+   blocker: it stopped EXP-0040 and it invalidates every head/shell
+   timing observation collected so far. Whelk execution must not
+   resume before it is resolved.
 8. New-game initialization and RNG seeding unobserved (CEN-SAVE-0001).
 9. Music tracks (opening, field, mines, battle, boss, victory) not
    located (CEN-AUDIO-0004/0005); only the confirm SFX chain is done.

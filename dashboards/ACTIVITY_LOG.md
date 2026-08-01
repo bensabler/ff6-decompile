@@ -1,5 +1,32 @@
 # Activity Log
 
+- 2026-08-01 (piloted) — **EXP-0040: Whelk victory attempted, NOT
+  achieved; stopped on an ATB methodological blocker.** Two attempts
+  from the preserved pre-Whelk state, both under `Bat.Mode = Wait`.
+  Confirmed: **Whelk occupies two battle slots** — shell slot 4
+  = 50000/50000 HP, head slot 5 = 1600/1600 HP (new CEN-BATTLE-0009);
+  **head-only targeting is correct**, six measured hits (162-186) all
+  reduced the head while the shell's 50000 never moved, and no shell
+  strike occurred; head/shell state is **visually classifiable**; a
+  **field healing route** exists before contact (Tonic ×4 →
+  76/105/106); MagiTek sets are character-specific with **eight**
+  abilities for the leader and four for the escorts, **correcting
+  EXP-0039's four-entry record**; and the guard/Esper beat
+  (CEN-EVENT-0011) fires at `(2A,07)` **before** Whelk on a clean run,
+  **resolving** its sequence position and correcting the earlier
+  "post-Whelk" reading. Two operator errors were caught and corrected
+  in-session: a misread of the Config screen (Bat.Mode was **already
+  `Wait`**; the hand cursor is not a selection marker — the only
+  config change made was `Cursor: Reset → Memory`), and blind
+  multi-press batches that desynchronized from menu/dialogue
+  transitions. **Blocker recorded:** the project has no ATB model
+  (ACTIVE/WAIT semantics, qualifying submenu pause states, timer
+  domains, action-queue ordering), so the battle could not be operated
+  reliably and **all head/shell timing collected is menu-pause
+  contaminated and unusable**. Milestone `10-whelk-victory` and B19
+  remain open; Whelk gameplay must not resume before the ATB research
+  program. 45 artifacts preserved; Mesen terminated; SRAM still virgin.
+
 - 2026-08-01 (autonomous, breadth) — **EXP-0039: Whelk reached.** A
   deliberate breadth-first GUI pass explored the mines from milestone
   05 to the Whelk battle. Findings registered without decoding: the

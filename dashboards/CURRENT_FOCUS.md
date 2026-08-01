@@ -80,20 +80,37 @@ pre-Whelk savestate is preserved.
 Nothing in this stretch is gated behind an unsolved system — the only
 obstacle to a victory is party HP management (entering at 26/19/56).
 
+## EXP-0040 — Whelk victory attempted, not achieved (2026-08-01)
+
+Two piloted attempts from the preserved pre-Whelk state, both under
+`Bat.Mode = Wait`. **No victory**; milestone `10-whelk-victory` and B19
+remain open. Confirmed along the way:
+
+- **Whelk is two battle entities** — shell slot 4 = **50000/50000 HP**,
+  head slot 5 = **1600/1600 HP** (DISC-0001 arrays, formation 432).
+- **Head-only targeting works**: six measured hits (162-186 damage
+  each) all reduced the head; the shell's 50000 never moved. No shell
+  strike occurred, so EXP-0039's counter was not re-triggered.
+- **Head/shell state is visually classifiable** at 4× upscale.
+- **A field healing route exists** before contact — Tonic ×4 took the
+  party from 26/19/56 to **76/77, 105/105, 106/107** at no turn cost.
+- **MagiTek sets are character-specific and EXP-0039's list was
+  incomplete**: Terra has eight abilities, Wedge and Vicks four.
+- The **guard/Esper beat precedes Whelk** on a clean run
+  (CEN-EVENT-0011 resolved).
+
+## Blocked — no ATB model
+
+Whelk execution is **deferred**. The project cannot yet model
+ACTIVE/WAIT behavior, qualifying submenu pause states, timer domains,
+or action-queue ordering, and EXP-0040 could not operate the battle
+reliably without that. All of its head/shell transitions are
+menu-pause-contaminated and **must not** be used as timing evidence.
+See BLOCKERS.md.
+
 ## Next exact action
 
-**EXP-0040 — Whelk victory attempt (branch A).** Reload
-`local_artifacts/scenarios/SCN-0001/07-pre-whelk/pre-whelk-recon.mss`,
-use **Heal Force** before engaging, then strike **only while the head
-is extended**, verifying head state from a screenshot between actions
-rather than mashing A. On victory capture milestone
-`10-whelk-victory` and the first stable post-battle state (B19).
-Branch B (deliberate shell attack) is already partly recorded by this
-pass's defeat and should be re-run cleanly afterwards.
-
-Also newly available, not chosen: static-decode of the event
-interpreter from its first concrete anchor (`ROMCPU:$C09B5C`,
-EXP-0037) — high leverage on B02–B07 but not scenario-critical-path;
-and the map header / tileset question (CEN-WORLD-0004), still open and
-untouched, which needs its own discriminator (VRAM/DMA watch across
-the reproducible mines transition).
+Start a new session, resume from the latest checkpoint, audit existing
+battle infrastructure and ATB evidence, and **propose the first bounded
+ATB experiment before operating Mesen**. Do not resume Whelk gameplay
+first.

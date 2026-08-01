@@ -663,6 +663,24 @@
       "falsifying_outcome": "observations left unregistered, claims without captured evidence, or inline depth-decoding (scope violation)",
       "status": "completed",
       "record": "docs/experiments/EXP-0039-mines-to-whelk-breadth-recon.md"
+    },
+    {
+      "schema_version": "1.0",
+      "id": "EXP-0040",
+      "question": "Can Whelk be defeated reliably from the preserved pre-Whelk state by healing the party and attacking only while the head is exposed?",
+      "starting_state": {
+        "emulator": "Mesen 2.1.1 GUI (operator-visible), bridge; piloted; Bat.Mode=Wait throughout",
+        "rom_sha256": "0f51b4fca41b7fd509e4b8f9d543151f68efa5e97b08493e4b2a0c06f5d8d5e2",
+        "state": "local_artifacts/scenarios/SCN-0001/07-pre-whelk/pre-whelk-recon.mss (sha256 852c82a0...858), then field-healed derivatives"
+      },
+      "expected_outcomes": [
+        "Whelk defeated with head-only targeting; victory processing and first stable post-battle state captured; milestone 10-whelk-victory established",
+        "partial: victory only after retries, failed attempts preserved with tactical cause",
+        "refuted: head-only targeting insufficient, or head/shell state not visually classifiable"
+      ],
+      "falsifying_outcome": "Repeated head-only attempts still end in defeat; head/shell state not visually classifiable; attacking the extended head does not reduce enemy HP; or victory yields no stable post-battle state",
+      "status": "blocked",
+      "record": "docs/experiments/EXP-0040-whelk-victory.md"
     }
   ]
 }

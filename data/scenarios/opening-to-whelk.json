@@ -396,13 +396,14 @@
       "name": "Whelk introduction",
       "status_default": "PARTIAL",
       "overrides": {},
-      "note": "REACHED for the first time (EXP-0039): scripted beat at mines tile (2A,09), then Whelk contact-triggered from (2A,07); multi-box introduction/warning dialogue observed; enemy name window renders 'Whelk' (name table still unlocated).",
+      "note": "REACHED and REPRODUCED (EXP-0039, EXP-0040): scripted beat at mines tile (2A,09), a guard/Esper beat at (2A,07), then Whelk contact-triggered; multi-box introduction/warning dialogue observed in full. The dialogue states the creature eats lightning and stores the energy in its shell, and ends with an explicit instruction not to attack the shell. Enemy name window renders 'Whelk' (name table still unlocated).",
       "links": {
         "census": [
           "CEN-EVENT-0010"
         ],
         "experiments": [
-          "EXP-0039"
+          "EXP-0039",
+          "EXP-0040"
         ],
         "discoveries": []
       }
@@ -412,18 +413,20 @@
       "name": "Whelk battle",
       "status_default": "PARTIAL",
       "overrides": {},
-      "note": "FIRST CONTACT (EXP-0039): formation 432 ($01B0), staged record captured; shell counterattack confirmed behaviorally (killed one member outright, then wiped the party); battle lost on the first attempt; defeat flow observed (CEN-BATTLE-0007). Whelk's monster ids are Unknown - the formation record's id field needs a high-bit/extension decode. Pre-Whelk savestate preserved for the victory attempt.",
+      "note": "PARTIAL (EXP-0039 first contact, EXP-0040 two attempts, NO VICTORY). Formation 432 ($01B0); staged +$3F44 record reproduced byte-identically three times. EXP-0040 established that Whelk occupies TWO battle slots - shell slot 4 = 50000/50000 HP, head slot 5 = 1600/1600 HP (CEN-BATTLE-0009) - and that striking the visibly extended head reduces the head and never the shell (six hits, 162-186 damage each). Head/shell state is visually classifiable. A field healing route exists before contact (Tonic x4 -> 76/105/106). Whelk's monster ids remain Unknown (formation id field needs a high-bit decode). BLOCKED: further execution is deferred until an ATB model exists; all head/shell timing seen so far is menu-pause-contaminated.",
       "links": {
         "census": [
           "CEN-BATTLE-0001",
           "CEN-BATTLE-0007",
+          "CEN-BATTLE-0009",
           "CEN-EVENT-0010"
         ],
         "experiments": [
           "EXP-0028",
           "EXP-0029",
           "EXP-0030",
-          "EXP-0039"
+          "EXP-0039",
+          "EXP-0040"
         ],
         "discoveries": []
       }
@@ -433,7 +436,7 @@
       "name": "Stable post-Whelk state",
       "status_default": "PARTIAL",
       "overrides": {},
-      "note": "never reached; victory/reward processing partly captured (EXP-0033, CEN-BATTLE-0008) and the event-flag substrate is inventoried (EXP-0037). The first Whelk victory attempt ended in defeat (EXP-0039), so the post-battle state remains uncaptured.",
+      "note": "NOT REACHED. Victory processing partly captured elsewhere (EXP-0033, CEN-BATTLE-0008) and the event-flag substrate is inventoried (EXP-0037). EXP-0039 ended in defeat; EXP-0040 made two attempts under Bat.Mode=Wait and was stopped without a victory on a methodological blocker (no ATB model). Milestone 10-whelk-victory is NOT established.",
       "links": {
         "census": [
           "CEN-BATTLE-0008",
@@ -442,7 +445,8 @@
         "experiments": [
           "EXP-0033",
           "EXP-0037",
-          "EXP-0039"
+          "EXP-0039",
+          "EXP-0040"
         ],
         "discoveries": [
           "DISC-0008"
