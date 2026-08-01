@@ -2120,7 +2120,8 @@
       "producers": [],
       "related_experiments": [
         "EXP-0030",
-        "EXP-0032"
+        "EXP-0032",
+        "EXP-0033"
       ],
       "related_discoveries": [],
       "related_implementations": [],
@@ -2138,12 +2139,12 @@
         "formation flags record 2 semantics"
       ],
       "contradictions": [],
-      "notes": "",
+      "notes": "EXP-0032's first draft misread record byte 1 ($0C) as a monster id; corrected in EXP-0033 from the milestone-03 WRAM dump.",
       "id": "CEN-EVENT-0005",
       "domain": "EVENT",
       "category": "scripted battles",
       "name": "Scripted battle invocation (Narshe gate guard, formation 2)",
-      "description": "The opening Narshe-gate beat is a chain of input-waiting dialogue boxes separated by player-controlled walking; walking north into the guards triggers a scripted battle. Live staging at WRAM:+$11E0=$0002 with the +$3F44 record byte-matching ROM formation record 2 (ROMFILE:0x0F621E): monster-id bytes {12}, single enemy, matching the on-screen single Guard. Scripted (non-random) origin: reached without the encounter-roll walk pattern.",
+      "description": "The opening Narshe-gate beat is a chain of input-waiting dialogue boxes separated by player-controlled walking; walking north into the guards triggers a scripted battle. Live staging at WRAM:+$11E0=$0002 with the +$3F44 record byte-matching ROM formation record 2 (ROMFILE:0x0F621E): monster-id bytes (record bytes 2-7) = FF FF 00 00 FF FF: two entries of monster id 0, confirmed live as battle slots 6/7 with HP 40 / MP 15 matching monster record 0's +$08/+$0A. Scripted (non-random) origin: reached without the encounter-roll walk pattern.",
       "reconstruction_status": "LOCATED",
       "runtime_status": "NORMAL_PATH_VERIFIED",
       "confidence": "confirmed",
@@ -2186,6 +2187,105 @@
       "runtime_status": "OUTPUTS_CAPTURED",
       "confidence": "tentative-hypothesis",
       "next_action": "Capture PPU/HDMA registers alongside the frame buffer at frame 15000 across two runs: differing registers mean unstable state, identical registers mean an unstable capture phase."
+    },
+    {
+      "schema_version": "1.0",
+      "rom_revision": "0f51b4fca41b7fd509e4b8f9d543151f68efa5e97b08493e4b2a0c06f5d8d5e2",
+      "rom_locations": [],
+      "wram_locations": [
+        "WRAM:+$1609",
+        "WRAM:+$160C",
+        "WRAM:+$160D",
+        "WRAM:+$1610",
+        "WRAM:+$1611",
+        "WRAM:+$1613",
+        "WRAM:+$1614"
+      ],
+      "cpu_routines": [
+        "ROMCPU:$C2496E",
+        "ROMCPU:$C24979",
+        "ROMCPU:$C24968",
+        "ROMCPU:$C2626D",
+        "ROMCPU:$C26274",
+        "ROMCPU:$C20F04",
+        "ROMCPU:$C20F15"
+      ],
+      "spc_locations": [],
+      "record_count_expected": null,
+      "record_count_found": null,
+      "record_size": null,
+      "pointer_tables": [],
+      "consumers": [],
+      "producers": [],
+      "related_experiments": [
+        "EXP-0027",
+        "EXP-0033"
+      ],
+      "related_discoveries": [],
+      "related_implementations": [],
+      "related_tests": [],
+      "runtime_scenarios": [],
+      "evidence": [
+        "local_artifacts/experiments/EXP-0033/ (probe logs, reward-window screenshots; hashes.sha256)"
+      ],
+      "unknown_fields": [
+        "experience/gil storage offsets",
+        "level-up path",
+        "item/steal reward path",
+        "per-character stride of the writeback"
+      ],
+      "contradictions": [],
+      "notes": "",
+      "id": "CEN-BATTLE-0008",
+      "domain": "BATTLE",
+      "category": "rewards",
+      "name": "Victory processing and reward windows (EXP/GP), battle-to-field writeback",
+      "description": "On victory the game shows input-waiting reward windows in order: experience ('Got 32 Exp. point(s)'), then GP ('Got 96 GP'), then a screen transition. During that window, writers hit the field character-record block ~WRAM:+$1600: $C2496E stores +$1609/+$160A (=55, the first member's post-battle HP) and $C24979 stores +$160D/+$160E (=24, its MP) \u2014 the same offsets EXP-0027 identified as field current HP/MP, so battle results are written back to the field records. Other post-victory writers ($C2626D->+$1613, $C26274->+$1611/12, $C24968->+$1614/15, $C20F04->+$1610, $C20F15->+$160C) are reward-adjacent with unknown meaning.",
+      "reconstruction_status": "CANDIDATE_LOCATION",
+      "runtime_status": "OUTPUTS_CAPTURED",
+      "confidence": "strong-hypothesis",
+      "next_action": "Widen the post-victory write watch across the whole +$1600 block for all three members and correlate offsets against on-screen EXP/GP/level values."
+    },
+    {
+      "schema_version": "1.0",
+      "rom_revision": "0f51b4fca41b7fd509e4b8f9d543151f68efa5e97b08493e4b2a0c06f5d8d5e2",
+      "rom_locations": [],
+      "wram_locations": [],
+      "cpu_routines": [],
+      "spc_locations": [],
+      "record_count_expected": null,
+      "record_count_found": null,
+      "record_size": null,
+      "pointer_tables": [],
+      "consumers": [],
+      "producers": [],
+      "related_experiments": [
+        "EXP-0032",
+        "EXP-0033"
+      ],
+      "related_discoveries": [],
+      "related_implementations": [],
+      "related_tests": [],
+      "runtime_scenarios": [],
+      "evidence": [
+        "local_artifacts/experiments/EXP-0033/postvictory-screen.png, run1-beat-*.png; hashes.sha256"
+      ],
+      "unknown_fields": [
+        "how many scripted battles precede free movement",
+        "each battle's formation id",
+        "whether the party can lose and branch"
+      ],
+      "contradictions": [],
+      "notes": "",
+      "id": "CEN-EVENT-0006",
+      "domain": "EVENT",
+      "category": "scripted battles",
+      "name": "Multiple scripted battles precede free field movement in the opening",
+      "description": "After the first Narshe-gate battle (formation 2) is won and its reward windows dismissed, the scripted sequence transitions directly into a second scripted battle (two quadruped enemies) rather than returning control to the player. A fixed post-victory frame offset therefore cannot define the free-movement milestone; a state-driven detector is required.",
+      "reconstruction_status": "OBSERVED",
+      "runtime_status": "ENCOUNTERED",
+      "confidence": "confirmed",
+      "next_action": "Re-arm the battle-init detector after each battle end and count battles until none re-arms; capture each formation id from +$11E0."
     }
   ]
 }

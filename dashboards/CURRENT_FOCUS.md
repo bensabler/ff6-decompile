@@ -41,7 +41,23 @@ EXP-0030 formation table on a scripted (non-random) encounter.
 Controlled lab variables (whole program): RamPowerOnState=AllZeros,
 virgin SRAM — originals backed up under `local_artifacts/backups/`.
 
-**Next exact action:** EXP-0033 — golden route segment 3: from
-milestone 03, fight the Guard battle to victory (capturing victory /
-reward processing) and continue to free field movement (milestone
-`04-free-movement`), two-run determinism check.
+**Segment 3 (EXP-0033) — partial.** The first battle is won on
+schedule (frame 32 706; rewards **32 EXP / 96 GP**) and victory
+processing is captured: `$C2496E`/`$C24979` write the post-battle HP
+(55) and MP (24) back into the field character block at `+$1609`/
+`+$160D` (CEN-BATTLE-0008). **Milestone `04-free-movement` was not
+reached** — a second scripted battle follows the first
+(CEN-EVENT-0006), so a fixed post-victory offset cannot define it.
+The two-run determinism check for segment 3 is deferred.
+
+**Correction carried this session:** EXP-0032's first draft misread
+formation record byte 1 as a monster id. Formation 2 is **two
+monsters of record id 0** (live slots 6/7, HP 40 / MP 15 matching
+record 0's `+$08`/`+$0A`), not one monster 12. Records, census, and
+the scenario manifest are corrected with the correction preserved.
+
+**Next exact action:** EXP-0034 — segment 3b: state-driven
+free-movement detector (re-arm the battle-init watch after each
+battle end; advance until no battle re-arms for M frames), capture
+milestone `04-free-movement`, then run the deferred two-run
+determinism check for segments 3–3b.

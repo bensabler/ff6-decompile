@@ -13,8 +13,13 @@ Ordered next units (reorder when evidence exposes a better chain):
   `01`–`03`; first scripted battle = formation 2 / monster 12
   (Confirmed live+static)
   ([record](../docs/experiments/EXP-0032-golden-route-seg2.md)).
-- [ ] **EXP-0033: golden route segment 3** — Guard battle to victory
-  (victory/reward processing) → `04-free-movement`.
+- [x] **EXP-0033: golden route segment 3 (partial)** — battle won on
+  schedule, rewards 32 EXP / 96 GP, battle→field HP/MP writeback
+  captured; free movement NOT reached (more scripted battles follow)
+  ([record](../docs/experiments/EXP-0033-golden-route-seg3.md)).
+- [ ] **EXP-0034: segment 3b** — state-driven free-movement detector
+  → milestone `04-free-movement`; deferred two-run determinism check
+  for segments 3–3b.
 - [ ] Golden route segments 4..N → milestones `05`–`07-pre-whelk`,
   then Whelk branches A/B/C (SCN-0001 route plan).
 - [ ] Milestone-01 PPU/HDMA falsifier (CEN-QUIRK-0002): capture PPU

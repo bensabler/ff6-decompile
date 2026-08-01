@@ -544,6 +544,23 @@
       "falsifying_outcome": "fixed-schedule power-on runs diverge at any milestone assertion, or no battle-init write burst occurs within the run budget",
       "status": "completed",
       "record": "docs/experiments/EXP-0032-golden-route-seg2.md"
+    },
+    {
+      "schema_version": "1.0",
+      "id": "EXP-0033",
+      "question": "Can the schedule be extended through the first scripted battle to victory and on to the first stable player-controlled field state, and what does the victory/reward window write?",
+      "starting_state": {
+        "emulator": "Mesen 2.1.1 macOS x86_64 (--testrunner headless, bridge v2)",
+        "rom_sha256": "0f51b4fca41b7fd509e4b8f9d543151f68efa5e97b08493e4b2a0c06f5d8d5e2",
+        "state": "EXP-0032 route extended past battle entry (frame 31557); controlled lab (AllZeros RAM, virgin SRAM)"
+      },
+      "expected_outcomes": [
+        "battle ends in victory at the same frame both runs; milestone 04 WRAM byte-identical; reward writer set captured",
+        "battle does not end in budget, party defeated, or runs diverge"
+      ],
+      "falsifying_outcome": "the fixed schedule yields different battle outcomes or different milestone-04 WRAM across two power-on runs",
+      "status": "completed",
+      "record": "docs/experiments/EXP-0033-golden-route-seg3.md"
     }
   ]
 }

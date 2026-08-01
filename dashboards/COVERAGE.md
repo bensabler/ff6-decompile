@@ -6,13 +6,13 @@ Breadth without pretense: counts are census entries at or above each threshold (
 
 | Domain | Registered | Located | Decoded | Extracted | Implemented | Runtime verified |
 |---|---|---|---|---|---|---|
-| BATTLE | 6 | 5 | 3 | 3 | 3 | 5 |
+| BATTLE | 7 | 5 | 3 | 3 | 3 | 5 |
 | CHAR | 4 | 1 | 1 | 1 | 1 | 1 |
 | MAGIC | 9 | 4 | 2 | 1 | 0 | 3 |
 | MONSTER | 3 | 2 | 0 | 0 | 0 | 0 |
 | ITEM | 0 | 0 | 0 | 0 | 0 | 0 |
 | WORLD | 6 | 0 | 0 | 0 | 0 | 0 |
-| EVENT | 5 | 1 | 0 | 0 | 0 | 1 |
+| EVENT | 6 | 1 | 0 | 0 | 0 | 1 |
 | MENU | 6 | 1 | 0 | 0 | 0 | 0 |
 | GFX | 4 | 1 | 1 | 1 | 1 | 0 |
 | AUDIO | 5 | 3 | 2 | 2 | 1 | 1 |
@@ -27,9 +27,9 @@ Breadth without pretense: counts are census entries at or above each threshold (
 
 ## Census health
 
-- Entries with unresolved fields/formats: 22.
-- Observed but not yet located (breadth backlog): 33.
-- Runtime-only findings (seen live, no location): 24.
+- Entries with unresolved fields/formats: 24.
+- Observed but not yet located (breadth backlog): 35.
+- Runtime-only findings (seen live, no location): 25.
 - Static-only findings (located, never exercised live): 1.
 
 ## Open breadth targets (next_action of unlocated entries)
@@ -37,6 +37,7 @@ Breadth without pretense: counts are census entries at or above each threshold (
 - **CEN-AUDIO-0004** (Battle music track (opening guard fight)): Delta-map the music-start APU command at a field-to-battle transition; locate the sequence pointer in ARAM.
 - **CEN-AUDIO-0005** (Field/event music selection): DSP snapshot on checkpoint2; compare voice/SRCN set against the battle snapshot.
 - **CEN-BATTLE-0007** (Defeat flow ('Annihilated')): Capture the post-defeat transition (game over vs retry) in a dedicated run.
+- **CEN-BATTLE-0008** (Victory processing and reward windows (EXP/GP), battle-to-field writeback): Widen the post-victory write watch across the whole +$1600 block for all three members and correlate offsets against on-screen EXP/GP/level values.
 - **CEN-CHAR-0002** (Party formation and follower chain): Locate the party-composition store consumed at battle init (slot staging producers from EXP-0018 are the thread).
 - **CEN-CHAR-0003** (Field player/NPC objects (Magitek armor walker, guards, townsfolk)): OAM capture on the field state to register the sprite composition (tiles, palettes, OAM layout).
 - **CEN-CHAR-0004** (Field character-record block (~WRAM:+$1600)): Map the record stride via a second character's values; relate to the $C10DF3 copy-loop source.
@@ -44,6 +45,7 @@ Breadth without pretense: counts are census entries at or above each threshold (
 - **CEN-EVENT-0002** (Dialogue text content and encoding): Capture the dialogue compose region + derive the glyph-to-byte mapping via the tilemap-affine technique (EXP-0023 pattern).
 - **CEN-EVENT-0003** (Character naming state (Terra as '?????')): Locate the character-name store: WRAM search for the rendered name tile sequence source when the status window composes.
 - **CEN-EVENT-0004** (Title screen and attract-mode flow): Exec-trace the title input read to map the acceptance condition (edge requirement) and the start-vs-a discrimination.
+- **CEN-EVENT-0006** (Multiple scripted battles precede free field movement in the opening): Re-arm the battle-init detector after each battle end and count battles until none re-arms; capture each formation id from +$11E0.
 - **CEN-GFX-0002** (Field sprite assets (armor walker, NPCs, townsfolk)): OAM + chr capture on a field state; register the sprite sheet region.
 - **CEN-GFX-0003** (Battle background (cave scene)): BG1/BG2 VRAM + tilemap capture during battle; provenance search (EXP-0023 pattern).
 - **CEN-GFX-0004** (Variable-width dialogue font): Capture the dialogue compose region; the fixed-font provenance technique should locate the glyph source.

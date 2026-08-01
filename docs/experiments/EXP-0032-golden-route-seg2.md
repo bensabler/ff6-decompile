@@ -82,11 +82,35 @@
     `80 0C FF FF 00 00 FF FF 00 00 4B 87 00 00 33` — the first 15
     staged bytes byte-for-byte (the 16th, `$10`, is beyond the record:
     the copy loop moves 16 bytes from a 15-byte table, EXP-0030).
-    Monster-id bytes are `{12}` with `$FF` empties → **a single
-    enemy**, matching the on-screen single "Guard" — and monster id
-    12's record is at `ROMFILE:0x0F0180`. This closes B07's formation
-    identity and independently re-verifies the EXP-0030 formation
-    table on a second, scripted (non-random) encounter.
+    The staging copy and the table match is Confirmed; the **monster
+    identity stated in the first draft of this record was wrong and is
+    corrected below.**
+    This independently re-verifies the EXP-0030 formation table on a
+    second, scripted (non-random) encounter.
+  - **CORRECTION (same session, from the milestone-03 WRAM dump).**
+    The first draft of this record read byte 1 of the record (`$0C`)
+    as a monster id and claimed "a single enemy, monster id 12". That
+    was an error: per EXP-0030's decode, bytes 0-1 are a leading word
+    (here `$0C80`) and the **monster-id bytes are 2-7** =
+    `FF FF 00 00 FF FF` — i.e. **two entries of monster id 0**, at id
+    positions 2 and 3, with `$FF` empties elsewhere.
+    The live battle state confirms two enemies, not one:
+    - Battle HP words (`$3BF4`, word-per-slot): slots 0-2 =
+      63 / 68 / 70 (the on-screen party), **slots 6 and 7 = 40 and
+      40**; MP words (`$3C08`, EXP-0028): **slots 6 and 7 = 15 and
+      15**.
+    - **Monster record 0** (`ROMFILE:0x0F0000`) holds `+$08` = `$0028`
+      = **40** (HP) and `+$0A` = `$000F` = **15** (MP) — matching both
+      enemy slots exactly, on the two fields whose destinations
+      EXP-0028 established.
+    - The battle screen shows two grey guard sprites (walk-up recon
+      frame) under one enemy-name entry.
+    So: **formation 2 = two monsters of record id 0, occupying battle
+    slots 6 and 7.** The on-screen name association is observational
+    (the monster name table is still unlocated). Confidence for the
+    corrected identity: **Confirmed** (staged bytes + independent
+    record-field match on two fields + slot count on screen).
+    Byte-1's actual meaning remains Unknown, as in EXP-0030.
   - **Determinism:** WRAM byte-identical across runs at **all three**
     milestones (01 `011588bc…`, 02 `0f4369d5…`, 03 `24302078…`);
     screenshots identical at 02 and 03.
@@ -106,8 +130,10 @@
 - **Confidence:** milestone WRAM determinism at 01/02/03 —
   **Confirmed** (byte-identical across independent power-on runs).
   Battle-entry frame and detection PC — Confirmed. First scripted
-  battle = formation 2, single monster id 12 — **Confirmed** (live
-  staged bytes + independent static ROM record match). Milestone 01
+  battle = formation 2, **two monsters of record id 0 in slots 6/7**
+  — Confirmed (staged bytes + HP/MP record-field match; see the
+  correction above, which supersedes this record's first draft).
+  Milestone 01
   visual instability cause — Tentative (two live alternatives named).
   Input-chain structure (boxes + walking) — Confirmed behaviorally
   (three-way schedule discrimination).

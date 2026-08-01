@@ -167,22 +167,34 @@ Map transition into the town proper.
   the most-tested state in the project (EXP-0001..0022 window);
   on-screen formation names Were-Rat / Repo Man registered
   (EXP-0027, defeat flow).
-- data-records COMPLETE for identity: **formation id 2, single
-  monster id 12** — live staged `+$3F44` bytes match ROM record 2
-  (`ROMFILE:0x0F621E`) exactly (EXP-0032; second independent
-  verification of the EXP-0030 formation table, this time on a
-  scripted encounter). Monster record 12's fields are not yet
-  extracted (B14).
-- behavior PARTIAL: damage pipeline Confirmed+implemented; the
-  scripted-battle **invocation opcode** is still unknown
-  (`$0206`/`$3A97` lead, EXP-0029; CEN-EVENT-0005).
+- data-records COMPLETE for identity: **formation id 2 = two monsters
+  of record id 0** (staged `+$3F44` bytes match ROM record 2 at
+  `ROMFILE:0x0F621E`; live battle slots 6/7 carry HP 40 / MP 15,
+  matching monster record 0's `+$08`/`+$0A`). This corrects the first
+  draft of EXP-0032, which misread record byte 1 as a monster id and
+  claimed a single monster 12 — the correction is recorded in
+  EXP-0032 and EXP-0033, not silently patched. Second independent
+  verification of the EXP-0030 formation table, on a scripted
+  encounter.
+- behavior PARTIAL: damage pipeline Confirmed+implemented; the battle
+  is **won on schedule** (frame 32 706) with rewards **32 EXP /
+  96 GP** and a battle→field writeback into `~+$1600`
+  (`$C2496E`/`$C24979`; EXP-0033, CEN-BATTLE-0008). The scripted-
+  battle **invocation opcode** remains unknown (`$0206`/`$3A97` lead,
+  EXP-0029; CEN-EVENT-0005), and **further scripted battles follow
+  this one** (CEN-EVENT-0006) — the opening is not a single fight.
 - go-impl/tests PARTIAL: damage pipeline implemented and regression-
   tested; differential vs live for the standard path (EXP-0011..0016).
 
 ### B08 — Controllable field movement
-- runtime PARTIAL: checkpoint2 free walk verified, collision live
-  (EXP-0025); per-step logic unlocated (CEN-WORLD-0003).
-- Remaining rows PARTIAL (nothing yet).
+- runtime PARTIAL: free walk verified in an archived state, collision
+  live (EXP-0025), but **the golden route has not yet reached free
+  movement** — more scripted battles intervene after the first
+  (EXP-0033, CEN-EVENT-0006), so milestone `04-free-movement` is
+  still open and needs a state-driven detector rather than a fixed
+  frame offset.
+- Remaining rows PARTIAL: per-step/collision logic unlocated
+  (CEN-WORLD-0003).
 
 ### B09 — Narshe exterior traversal
 **All rows PARTIAL:** tileset/animated tiles observed only
