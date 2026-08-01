@@ -1,16 +1,16 @@
 # Latest Checkpoint
 
-**[2026-08-01 — EXP-0037: opening event-flag inventory](2026-08-01-exp0037-event-flag-inventory.md)**
+**[2026-08-01 — EXP-0038: mines encounter, milestone 06](2026-08-01-exp0038-mines-encounter.md)**
 
-State: the opening's event-flag behavior is inventoried and
-deterministic — 20 flags (11 latched story, 4 transient, 5 working
-bits), 162 value-changing writes, byte-identical across one GUI and
-two headless runs, final WRAM = milestone 05 (five byte-identical
-runs). Every writer statically decoded; 16-handler family over eight
-bases; event interpreter anchored at candidate `ROMCPU:$C09B5C`;
-GUI/testrunner parity verified for this schedule. New: DISC-0008,
-`internal/game/eventflags`, ROM-0027..0032,
-`data/scenarios/opening-event-flags.json`. Exact next action:
-EXP-0038 — golden route segment 5, mines traversal to milestone
-`06-random-encounter` with encounter-trigger context capture
-(CEN-WORLD-0006).
+State: SCN-0001 reaches **milestone `06-random-encounter`**. Two
+scheduled power-on runs reproduce the mines random encounter at frame
+51 307 — formation 14 (three of monster record 19), leg 19, near tile
+`(26,0B)` — with byte-identical milestone WRAM (`c6e69ad7…`) and
+identical event-flag timelines. Corridor `(26,1C)→(26,0B)→(28,0B)→
+(28,09)` mapped; scripted event at ~`(2A,09)` registered
+(CEN-EVENT-0009) and not entered; seventh verification of the
+formation table; traversal and encounters write no event flags. No
+background processes running. Exact next action: **EXP-0039 —
+mines-to-Whelk breadth reconnaissance in visible GUI Mesen** from
+`05-mines-entry.mss`: explore widely, register briefly, continue
+forward, and advance toward Whelk.

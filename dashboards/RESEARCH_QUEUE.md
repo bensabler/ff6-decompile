@@ -44,11 +44,20 @@ Ordered next units (reorder when evidence exposes a better chain):
   ([record](../docs/experiments/EXP-0037-opening-event-flags.md),
   [DISC-0008](../docs/discoveries/DISC-0008-event-flag-system.md),
   inventory `data/scenarios/opening-event-flags.json`).
-- [ ] **Golden route segment 5 (recommended next): mines traversal →
-  milestone `06-random-encounter`.** Extend the route controller into
-  the mines from milestone 05; capture the encounter trigger
-  (`+$11E0` producer context, CEN-WORLD-0006) on the way. Most direct
-  advance toward Whelk (B11-B13).
+- [x] **EXP-0038: golden route segment 5** — done: milestone
+  `06-random-encounter` established over two byte-identical scheduled
+  runs (frame 51 307, formation 14 = three of monster record 19, leg
+  19 near tile `(26,0B)`); corridor mapped; seventh verification of
+  the formation table; traversal and encounters write no event flags
+  ([record](../docs/experiments/EXP-0038-mines-route-to-encounter.md)).
+- [ ] **EXP-0039 (next, breadth-first): mines-to-Whelk
+  reconnaissance.** Visible GUI pass — sweep mines branches/dead ends,
+  register every visible system and content family, advance toward
+  Whelk and attempt a first visible victory. Explore widely, register
+  briefly, continue forward
+  ([record](../docs/experiments/EXP-0039-mines-to-whelk-breadth-recon.md)).
+- [ ] `(2A,09)` mines scripted event (CEN-EVENT-0009) — candidate
+  pre-Whelk beat (B17); observed once, uninvestigated.
 - [ ] **Map header / tileset load path** (CEN-WORLD-0004) — still open
   and now genuinely unstarted; `+$1EA5` was a false lead. Needs its own
   discriminator (candidate: VRAM/DMA watch across the mines transition,

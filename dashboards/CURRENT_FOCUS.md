@@ -67,13 +67,18 @@ non-byte-stable frame capture.
 
 ## Next exact action
 
-**Golden route segment 5 — mines traversal to milestone
-`06-random-encounter` (EXP-0038).** Milestone 05 is deterministic and
-the flag inventory gives every subsequent unit a persistent-state
-baseline. Extend the route controller into the mines, reach the first
-random encounter reproducibly, and capture the encounter trigger
-context on the way (`+$11E0` producer, CEN-WORLD-0006). Most direct
-advance toward Whelk (B11–B13).
+**EXP-0039 — mines-to-Whelk breadth reconnaissance** (deliberate mode
+change: breadth-first, not another deep subsystem unit). In
+**operator-visible GUI Mesen** from `05-mines-entry.mss`: sweep the
+mines branches and dead ends, register every visible system and
+content family in the census with one bounded future question each,
+and advance toward Whelk — preserving a pre-Whelk savestate, fighting
+head-only, and capturing the first stable post-battle state if it is
+defeated. Operating rule: **explore widely, register briefly, continue
+forward.**
+
+Milestone 06 (`06-random-encounter`, frame 51 307, formation 14) is
+established over two byte-identical scheduled runs (EXP-0038).
 
 Also newly available, not chosen: static-decode of the event
 interpreter from its first concrete anchor (`ROMCPU:$C09B5C`,

@@ -275,13 +275,15 @@
       "name": "Mine traversal",
       "status_default": "PARTIAL",
       "overrides": {},
-      "note": "observed only; no branch sweep or collision data",
+      "note": "entry corridor mapped and walked on schedule (EXP-0038): (26,1C)->(26,0B)->(28,0B)->(28,09), with a scripted event at ~(2A,09) (CEN-EVENT-0009, uninvestigated). Full branch sweep and collision data still open (EXP-0039 breadth pass).",
       "links": {
         "census": [
+          "CEN-EVENT-0009",
           "CEN-WORLD-0002"
         ],
         "experiments": [
-          "EXP-0025"
+          "EXP-0025",
+          "EXP-0038"
         ],
         "discoveries": []
       }
@@ -291,7 +293,7 @@
       "name": "Random encounter check and trigger",
       "status_default": "PARTIAL",
       "overrides": {},
-      "note": "one live trigger captured; chain downstream of +$11E0 Confirmed; roll producer open",
+      "note": "encounter now reproduced from power-on on the scheduled route (EXP-0038: frame 51307, formation 14, leg 19, near tile (26,0B)); +$11E0 producer still open (CEN-WORLD-0006). Encounters set no event flags.",
       "links": {
         "census": [
           "CEN-WORLD-0006"
@@ -299,7 +301,8 @@
         "experiments": [
           "EXP-0028",
           "EXP-0029",
-          "EXP-0030"
+          "EXP-0030",
+          "EXP-0038"
         ],
         "discoveries": []
       }
@@ -309,13 +312,14 @@
       "name": "Encounter packs in accessible opening zones",
       "status_default": "PARTIAL",
       "overrides": {},
-      "note": "formation table Confirmed; zone/pack selection structures unlocated",
+      "note": "mines pack membership known for two rolls: formation 44 (EXP-0030) and 14 (EXP-0038, three of monster record 19); zone->pack->formation structures unlocated.",
       "links": {
         "census": [
           "CEN-WORLD-0006"
         ],
         "experiments": [
-          "EXP-0030"
+          "EXP-0030",
+          "EXP-0038"
         ],
         "discoveries": []
       }

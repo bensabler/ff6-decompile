@@ -629,6 +629,40 @@
       "falsifying_outcome": "snapshot mismatch (unmonitored write path), cross-run timeline divergence, or failure to reproduce the CONTRA-0002/EXP-0036 $1EA5 observations",
       "status": "completed",
       "record": "docs/experiments/EXP-0037-opening-event-flags.md"
+    },
+    {
+      "schema_version": "1.0",
+      "id": "EXP-0038",
+      "question": "From milestone 05, where does the mines corridor lead, and does continued scheduled walking produce a reproducible first random encounter (milestone 06) with its trigger context captured?",
+      "starting_state": {
+        "emulator": "Mesen 2.1.1 (GUI recon + --testrunner evidence)",
+        "rom_sha256": "0f51b4fca41b7fd509e4b8f9d543151f68efa5e97b08493e4b2a0c06f5d8d5e2",
+        "state": "recon from archived 05-mines-entry.mss; scheduled runs from power-on, EXP-0037 route + appended mines legs"
+      },
+      "expected_outcomes": [
+        "corridor mapped; battle 6 (the encounter) at identical frame/position across >=2 power-on runs, milestone-06 WRAM byte-identical",
+        "no encounter within budget (negative recorded) or cross-run divergence (CEN-WORLD-0006 datum)"
+      ],
+      "falsifying_outcome": "leg timeout; cross-run disagreement on encounter frame/formation/position; milestone WRAM not byte-identical",
+      "status": "completed",
+      "record": "docs/experiments/EXP-0038-mines-route-to-encounter.md"
+    },
+    {
+      "schema_version": "1.0",
+      "id": "EXP-0039",
+      "question": "Starting from the furthest verified milestone, what systems, content families, branches, encounters, objects, interactions, graphics, audio and events are visible or reachable between the mines interior and Whelk, and can the scenario be advanced to a first visible Whelk victory?",
+      "starting_state": {
+        "emulator": "Mesen 2.1.1 GUI (operator-visible), bridge; piloted recon, interactive correction allowed",
+        "rom_sha256": "0f51b4fca41b7fd509e4b8f9d543151f68efa5e97b08493e4b2a0c06f5d8d5e2",
+        "state": "archived milestone 06 (or 05) savestate"
+      },
+      "expected_outcomes": [
+        "route map to the furthest point reached, every branch/dead end enumerated, all observed content families registered in the census, scenario advanced (ideally a Whelk victory)",
+        "partial: progress blocked at a specific fact, recorded with the smallest resolving experiment"
+      ],
+      "falsifying_outcome": "observations left unregistered, claims without captured evidence, or inline depth-decoding (scope violation)",
+      "status": "planned",
+      "record": "docs/experiments/EXP-0039-mines-to-whelk-breadth-recon.md"
     }
   ]
 }

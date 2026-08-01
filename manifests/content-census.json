@@ -865,7 +865,8 @@
       "consumers": [],
       "producers": [],
       "related_experiments": [
-        "EXP-0025"
+        "EXP-0025",
+        "EXP-0038"
       ],
       "related_discoveries": [],
       "related_implementations": [],
@@ -880,7 +881,7 @@
       "unknown_fields": [],
       "contradictions": [],
       "next_action": "Same capture pattern as the exterior; compare tileset bases to test per-map chr swapping.",
-      "notes": ""
+      "notes": "EXP-0038 recon mapped the entry corridor: (26,1C) north to (26,0B), east to (28,0B) across a rail trestle, north to (28,09), east toward (2A,09); junction screenshots archived under local_artifacts/experiments/EXP-0038/."
     },
     {
       "schema_version": "1.0",
@@ -2010,7 +2011,8 @@
       "consumers": [],
       "producers": [],
       "related_experiments": [
-        "EXP-0028"
+        "EXP-0028",
+        "EXP-0038"
       ],
       "related_discoveries": [],
       "related_implementations": [],
@@ -2026,7 +2028,7 @@
       "unknown_fields": [],
       "contradictions": [],
       "next_action": "Watch the step counter and encounter-check reads during a walk to locate the zone/rate data.",
-      "notes": ""
+      "notes": "EXP-0038 recon: a mines random encounter fired at trigger tile (26,0B) walking north from milestone 05; +$11E0=$000E (formation 14) - second observed mines formation after 44 (EXP-0030). Scheduled-run determinism of the encounter is the EXP-0038 question. EXP-0038: the scheduled route reproduced a mines random encounter at frame 51307 (formation 14) while walking the corridor near tile (26,0B); the GUI recon independently triggered formation 14 in the same one-tile neighbourhood walking the same stretch. Both fired after a comparable number of steps from the milestone-05 tile, consistent with a step-counter check - recorded as an observation, not a mechanism claim."
     },
     {
       "schema_version": "1.0",
@@ -2238,7 +2240,8 @@
       "producers": [],
       "related_experiments": [
         "EXP-0027",
-        "EXP-0033"
+        "EXP-0033",
+        "EXP-0038"
       ],
       "related_discoveries": [],
       "related_implementations": [],
@@ -2327,7 +2330,8 @@
         "EXP-0032",
         "EXP-0033",
         "EXP-0034",
-        "EXP-0036"
+        "EXP-0036",
+        "EXP-0038"
       ],
       "related_discoveries": [],
       "related_implementations": [],
@@ -2345,7 +2349,7 @@
         "the remaining 30 fields of each record"
       ],
       "contradictions": [],
-      "notes": "",
+      "notes": "EXP-0038: formation 14 = three of monster record 19 (ROM record: HP 24, MP 0). Monster 19 was already known from the EXP-0030 mines encounter (formation 44), so the mines interior yields at least two distinct formations (14 and 44) - a B13 datum.",
       "id": "CEN-MONSTER-0004",
       "domain": "MONSTER",
       "category": "monster records",
@@ -2519,6 +2523,49 @@
       "runtime_status": "NORMAL_PATH_VERIFIED",
       "confidence": "confirmed",
       "next_action": "Extend the write watch to the statically-decoded additional arrays ($1EE0-$1F5F, $1DC9) on a future route unit, and capture a save event to settle SRAM backing; correlate latched opening flags against the treasure/interaction beats (B16) as those systems come under test."
+    },
+    {
+      "schema_version": "1.0",
+      "rom_revision": "0f51b4fca41b7fd509e4b8f9d543151f68efa5e97b08493e4b2a0c06f5d8d5e2",
+      "rom_locations": [],
+      "wram_locations": [],
+      "cpu_routines": [],
+      "spc_locations": [],
+      "record_count_expected": null,
+      "record_count_found": null,
+      "record_size": null,
+      "pointer_tables": [],
+      "consumers": [],
+      "producers": [],
+      "related_experiments": [
+        "EXP-0038"
+      ],
+      "related_discoveries": [],
+      "related_implementations": [],
+      "related_tests": [],
+      "runtime_scenarios": [
+        "EXP-0038 recon from 05-mines-entry.mss"
+      ],
+      "evidence": [
+        "local_artifacts/experiments/EXP-0038/recon-stall-2A09.png",
+        "local_artifacts/experiments/EXP-0038/recon.log"
+      ],
+      "unknown_fields": [
+        "trigger tile/zone exact bounds",
+        "event script location",
+        "relation to the Whelk introduction (B17)"
+      ],
+      "contradictions": [],
+      "notes": "Registered from recon only; the scheduled EXP-0038 route deliberately stops at (28,09) to avoid it.",
+      "id": "CEN-EVENT-0009",
+      "domain": "EVENT",
+      "category": "scripted event",
+      "name": "Mines interior scripted event beyond the encounter corridor",
+      "description": "Reaching approximately (2A,09) in the mines interior (two turns past the encounter corridor) starts a scripted event: a dialogue box opens and the party splits, one walker advancing while movement input is consumed. Observed once during EXP-0038 recon from the milestone-05 state; screenshot archived locally. Plausibly the pre-Whelk beat sequence (B17 candidate) - unverified.",
+      "reconstruction_status": "OBSERVED",
+      "runtime_status": "ENCOUNTERED",
+      "confidence": "confirmed",
+      "next_action": "When SCN-0001 advances past milestone 06: scheduled approach to the trigger with the event-flag watch armed and position/frame capture (serves B17)."
     }
   ]
 }

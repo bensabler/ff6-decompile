@@ -229,21 +229,40 @@ Map transition into the town proper.
   path behind the transition are still unlocated (CEN-WORLD-0004).
 
 ### B11 — Mine traversal
-**All rows PARTIAL:** cave tileset/rails/light observed (EXP-0025,
-CEN-WORLD-0002); no branch sweep, no collision data.
+**All rows PARTIAL**, but the entry corridor is now mapped and walked
+on a schedule (EXP-0038): `(26,1C)` north to `(26,0B)` — up blocked
+there — east across a rail trestle to `(28,0B)`, north to `(28,09)`,
+and east toward `(2A,09)`, where a **scripted event** fires (dialogue,
+the party splits; registered as CEN-EVENT-0009 and left uninvestigated).
+Cave tileset/rails/light still observed only (EXP-0025,
+CEN-WORLD-0002); the full branch sweep and collision data remain open
+and are the subject of the EXP-0039 breadth pass.
 
 ### B12 — Random encounter check and trigger
-- runtime PARTIAL: an encounter triggered during the EXP-0028 walk;
-  the roll chain downstream of `WRAM:+$11E0` is Confirmed
+- runtime PARTIAL→advanced: an encounter is now **reproduced from
+  power-on on the scheduled route** (EXP-0038, frame 51 307,
+  formation 14, interrupting leg 19 near tile `(26,0B)`); the roll
+  chain downstream of `WRAM:+$11E0` was already Confirmed
   (EXP-0029/0030).
-- behavior PARTIAL: the `+$11E0` producer (zone data + step state) is
-  the open frontier (CEN-WORLD-0006).
-- Remaining rows PARTIAL (nothing yet).
+- behavior PARTIAL: the `+$11E0` producer (zone data + step state)
+  remains the open frontier (CEN-WORLD-0006). Two independent
+  triggers — piloted recon and the scheduled run — landed in the same
+  one-tile neighbourhood after comparable step counts, which is
+  consistent with a step-counter check but is recorded as observation
+  only.
+- persistence: **encounters set no event flags** — EXP-0038's flag
+  timeline is identical to EXP-0037's opening total, with no writes
+  after frame 50 880.
+- Remaining rows PARTIAL.
 
 ### B13 — Encounter packs in accessible opening zones
 - data-records PARTIAL: formation table Confirmed ($CF6200); the
   zone→pack→formation selection structures unlocated. Mines pack
-  membership known for one roll only (formation 44).
+  membership now known for **two** rolls: formation 44 (EXP-0030) and
+  **formation 14** (EXP-0038 — three of monster record 19; staged
+  record byte-identical to `ROMFILE:0x0F62D2`, the table's seventh
+  independent verification). One area therefore yields multiple
+  formations.
 - Remaining rows PARTIAL (nothing yet).
 
 ### B14 — Monsters reachable before Whelk

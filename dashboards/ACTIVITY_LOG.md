@@ -1,5 +1,20 @@
 # Activity Log
 
+- 2026-08-01 (autonomous) — **EXP-0038: milestone `06-random-encounter`
+  established.** Two scheduled power-on runs reproduce the mines random
+  encounter at frame 51 307 (formation 14 = three of monster record 19,
+  leg 19, near tile `(26,0B)`) with byte-identical milestone WRAM and
+  identical event-flag timelines. Corridor
+  `(26,1C)→(26,0B)→(28,0B)→(28,09)` mapped by GUI recon; scripted event
+  at ~`(2A,09)` registered (CEN-EVENT-0009) and not entered; seventh
+  verification of EXP-0030's formation table; mines yields two
+  formations (14, 44); traversal and encounters write **no** event
+  flags. Two probe defects (`shot`/`mkstate` dropped when EXP-0037 was
+  derived from EXP-0036) found and fixed; artifact writing is now
+  `pcall`-guarded. A background-task audit found and cleaned three
+  processes (one orphaned monitor, one hung run, one redundant
+  monitor). Next: EXP-0039, a deliberate **breadth-first** recon pass.
+
 - 2026-08-01 (autonomous) — **EXP-0037: opening event-flag inventory
   complete.** All writes to `$1E80`/`$1EA0`/`$1EC0` captured across
   the scheduled route (one visible GUI pass + two headless evidence

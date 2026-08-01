@@ -99,3 +99,64 @@ func MinesRoute() Route {
 		},
 	}
 }
+
+// MinesEncounterRoute is the SCN-0001 segment-5 route: milestone 05
+// onward into the mines toward the first random encounter (milestone
+// 06). It is MinesRoute plus nine legs over the corridor EXP-0038's
+// recon mapped: straight north from (26,1C) to (26,0B), east to
+// (28,0B), north to (28,09) — stopping short of (2A,09), where recon
+// tripped a scripted event (dialogue, party splits) that is out of
+// this unit's scope. Legs 21-26 patrol back down the corridor and up
+// again to extend the step budget without entering the event zone.
+//
+// The random encounter is expected to interrupt one of legs 18-26; the
+// controller suspends walk legs while a battle owns the screen and
+// restarts their timeout window afterwards, so an interrupted leg
+// resumes and completes. Completing all legs without a sixth battle is
+// the bounded negative result, not a route failure.
+func MinesEncounterRoute() Route {
+	base := MinesRoute()
+	return Route{
+		Name:          "SCN-0001 segment 5: mines corridor to the first random encounter",
+		StartFrame:    base.StartFrame,
+		NeutralFrames: base.NeutralFrames,
+		Legs: append(base.Legs, []Leg{
+			{Num: 18, Input: Up, Until: UntilPosition, Axis: AxisY,
+				Compare: AtMost, Target: 0x0B, Timeout: 1200,
+				ExpectX: 0x26, ExpectY: 0x0B,
+				Note: "north corridor from the mines-entry tile; any post-transition fade is absorbed by the hold"},
+			{Num: 19, Input: Right, Until: UntilPosition, Axis: AxisX,
+				Compare: AtLeast, Target: 0x28, Timeout: 900,
+				ExpectX: 0x28, ExpectY: 0x0B,
+				Note: "east along the trestle (up is blocked at 26,0B)"},
+			{Num: 20, Input: Up, Until: UntilPosition, Axis: AxisY,
+				Compare: AtMost, Target: 0x09, Timeout: 900,
+				ExpectX: 0x28, ExpectY: 0x09,
+				Note: "climb; stops one turn short of the (2A,09) event trigger"},
+			{Num: 21, Input: Down, Until: UntilPosition, Axis: AxisY,
+				Compare: AtLeast, Target: 0x0B, Timeout: 900,
+				ExpectX: 0x28, ExpectY: 0x0B,
+				Note: "patrol: back down the climb"},
+			{Num: 22, Input: Left, Until: UntilPosition, Axis: AxisX,
+				Compare: AtMost, Target: 0x26, Timeout: 900,
+				ExpectX: 0x26, ExpectY: 0x0B,
+				Note: "patrol: west to the corridor"},
+			{Num: 23, Input: Down, Until: UntilPosition, Axis: AxisY,
+				Compare: AtLeast, Target: 0x14, Timeout: 900,
+				ExpectX: 0x26, ExpectY: 0x14,
+				Note: "patrol: south down the corridor"},
+			{Num: 24, Input: Up, Until: UntilPosition, Axis: AxisY,
+				Compare: AtMost, Target: 0x0B, Timeout: 1200,
+				ExpectX: 0x26, ExpectY: 0x0B,
+				Note: "patrol: north again"},
+			{Num: 25, Input: Right, Until: UntilPosition, Axis: AxisX,
+				Compare: AtLeast, Target: 0x28, Timeout: 900,
+				ExpectX: 0x28, ExpectY: 0x0B,
+				Note: "patrol: east again"},
+			{Num: 26, Input: Up, Until: UntilPosition, Axis: AxisY,
+				Compare: AtMost, Target: 0x09, Timeout: 900,
+				ExpectX: 0x28, ExpectY: 0x09,
+				Note: "patrol: final climb; route end = bounded no-encounter budget exhausted"},
+		}...),
+	}
+}
