@@ -1,6 +1,26 @@
 # Research Queue
 
-## P0 — Active frontier
+## P0 — Active frontier: SCN-0001 opening-to-Whelk program
+
+Master record: `docs/scenarios/SCN-0001-opening-to-whelk.md`.
+Ordered next units (reorder when evidence exposes a better chain):
+
+- [ ] **EXP-0031: golden route segment 1** — power-on → New Game;
+  milestone `00-new-game`; determinism check (two runs).
+- [ ] Golden route segments 2..N → milestones `01`–`07-pre-whelk`,
+  then Whelk branches A/B/C (SCN-0001 route plan).
+- [ ] New-game initialization capture (B01; CEN-SAVE-0001).
+- [ ] Event dispatcher location (B03/B05; CEN-EVENT-0001) — largest
+  single blocker.
+- [ ] Map/transition/collision data (B06/B08–B11; CEN-WORLD-0001..0004).
+- [ ] `+$11E0` encounter-roll producer (B12; CEN-WORLD-0006).
+- [ ] Encounter packs + opening monster set, names, rewards, AI
+  (B13/B14).
+- [ ] Magitek command set (B15; CEN-MAGIC-0001, Fire Beam record).
+- [ ] Whelk formation/records/AI/state machine (B17/B18).
+- [ ] Opening graphics + audio families (SCN-0001 domain lists).
+
+## P0 — Prior frontier (closed)
 
 - [x] EXP-0020: `+$3A70` refuted as the varying state; question #30
   refined (scheduling interpretation).

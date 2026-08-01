@@ -1,0 +1,296 @@
+{
+  "schema_version": "1.0",
+  "id": "SCN-0001",
+  "name": "Opening scenario: New Game through the Whelk battle",
+  "record": "docs/scenarios/SCN-0001-opening-to-whelk.md",
+  "rom_sha256": "0f51b4fca41b7fd509e4b8f9d543151f68efa5e97b08493e4b2a0c06f5d8d5e2",
+  "boundary": {
+    "start": "New Game selected from a fresh boot or reproducible equivalent state",
+    "end": "Whelk defeated, rewards and victory processing complete, first stable post-battle state before the frozen Esper interaction"
+  },
+  "milestones": [
+    "00-new-game",
+    "01-opening-cinematic",
+    "02-narshe-entry",
+    "03-first-scripted-battle",
+    "04-free-movement",
+    "05-mines-entry",
+    "06-random-encounter",
+    "07-pre-whelk",
+    "08-whelk-head-test",
+    "09-whelk-shell-counter-test",
+    "10-whelk-victory"
+  ],
+  "milestone_artifact_root": "local_artifacts/scenarios/SCN-0001/",
+  "branches": [
+    {
+      "id": "A",
+      "name": "Whelk fought correctly (head attacks to victory)",
+      "status": "PARTIAL",
+      "note": "not started"
+    },
+    {
+      "id": "B",
+      "name": "Deliberate shell attack; full counter response captured",
+      "status": "PARTIAL",
+      "note": "not started"
+    },
+    {
+      "id": "C",
+      "name": "Full head-shell-head cycle observed without ending battle",
+      "status": "PARTIAL",
+      "note": "not started"
+    }
+  ],
+  "matrix_rows": [
+    "identified",
+    "runtime",
+    "event_script",
+    "data_records",
+    "behavior",
+    "graphics",
+    "audio",
+    "persistence",
+    "go_impl",
+    "tests",
+    "differential"
+  ],
+  "matrix_values": ["COMPLETE", "PARTIAL", "BLOCKED", "NOT_APPLICABLE"],
+  "beats": [
+    {
+      "id": "B01",
+      "name": "New Game initialization",
+      "status_default": "PARTIAL",
+      "overrides": {},
+      "note": "no power-on route or capture exists",
+      "links": {
+        "census": ["CEN-SAVE-0001"],
+        "experiments": [],
+        "discoveries": []
+      }
+    },
+    {
+      "id": "B02",
+      "name": "Opening cinematic / introductory presentation",
+      "status_default": "PARTIAL",
+      "overrides": {},
+      "note": "never captured; skippability unknown",
+      "links": { "census": [], "experiments": [], "discoveries": [] }
+    },
+    {
+      "id": "B03",
+      "name": "Snowfield march toward Narshe",
+      "status_default": "PARTIAL",
+      "overrides": {},
+      "note": "no capture; event engine unlocated",
+      "links": {
+        "census": ["CEN-EVENT-0001"],
+        "experiments": [],
+        "discoveries": []
+      }
+    },
+    {
+      "id": "B04",
+      "name": "Character and party initialization",
+      "status_default": "PARTIAL",
+      "overrides": {},
+      "note": "names observed on-screen; field block ~+$1600 located; initializer and name store unlocated",
+      "links": {
+        "census": ["CEN-CHAR-0002", "CEN-CHAR-0004", "CEN-EVENT-0003"],
+        "experiments": ["EXP-0018", "EXP-0025", "EXP-0027", "EXP-0028"],
+        "discoveries": []
+      }
+    },
+    {
+      "id": "B05",
+      "name": "Opening dialogue and scripted movement",
+      "status_default": "PARTIAL",
+      "overrides": {},
+      "note": "one mid-sequence dialogue beat archived; dispatcher and text table unlocated",
+      "links": {
+        "census": ["CEN-EVENT-0001", "CEN-EVENT-0002"],
+        "experiments": ["EXP-0025", "EXP-0026"],
+        "discoveries": []
+      }
+    },
+    {
+      "id": "B06",
+      "name": "Entry into Narshe",
+      "status_default": "PARTIAL",
+      "overrides": {},
+      "note": "transition never captured; map records unlocated",
+      "links": {
+        "census": ["CEN-WORLD-0004"],
+        "experiments": [],
+        "discoveries": []
+      }
+    },
+    {
+      "id": "B07",
+      "name": "Guard encounters / scripted battles",
+      "status_default": "PARTIAL",
+      "overrides": {
+        "behavior": "PARTIAL",
+        "go_impl": "PARTIAL",
+        "tests": "PARTIAL",
+        "differential": "PARTIAL"
+      },
+      "note": "damage pipeline Confirmed/implemented/regression-tested inside this battle; battle entry, formation id, and scripted invocation path open",
+      "links": {
+        "census": ["CEN-BATTLE-0001"],
+        "experiments": ["EXP-0001", "EXP-0019", "EXP-0021", "EXP-0022", "EXP-0027"],
+        "discoveries": [
+          "DISC-0001",
+          "DISC-0002",
+          "DISC-0003",
+          "DISC-0004",
+          "DISC-0005",
+          "DISC-0006",
+          "DISC-0007"
+        ]
+      }
+    },
+    {
+      "id": "B08",
+      "name": "Controllable field movement",
+      "status_default": "PARTIAL",
+      "overrides": {},
+      "note": "free walk verified live; per-step/collision logic unlocated",
+      "links": {
+        "census": ["CEN-WORLD-0003"],
+        "experiments": ["EXP-0025"],
+        "discoveries": []
+      }
+    },
+    {
+      "id": "B09",
+      "name": "Narshe exterior traversal",
+      "status_default": "PARTIAL",
+      "overrides": {},
+      "note": "tileset observed only; no branch sweep",
+      "links": {
+        "census": ["CEN-WORLD-0001"],
+        "experiments": ["EXP-0025"],
+        "discoveries": []
+      }
+    },
+    {
+      "id": "B10",
+      "name": "Mine entry and map transition",
+      "status_default": "PARTIAL",
+      "overrides": {},
+      "note": "mines state exists; transition never captured",
+      "links": {
+        "census": ["CEN-WORLD-0004"],
+        "experiments": ["EXP-0025"],
+        "discoveries": []
+      }
+    },
+    {
+      "id": "B11",
+      "name": "Mine traversal",
+      "status_default": "PARTIAL",
+      "overrides": {},
+      "note": "observed only; no branch sweep or collision data",
+      "links": {
+        "census": ["CEN-WORLD-0002"],
+        "experiments": ["EXP-0025"],
+        "discoveries": []
+      }
+    },
+    {
+      "id": "B12",
+      "name": "Random encounter check and trigger",
+      "status_default": "PARTIAL",
+      "overrides": {},
+      "note": "one live trigger captured; chain downstream of +$11E0 Confirmed; roll producer open",
+      "links": {
+        "census": ["CEN-WORLD-0006"],
+        "experiments": ["EXP-0028", "EXP-0029", "EXP-0030"],
+        "discoveries": []
+      }
+    },
+    {
+      "id": "B13",
+      "name": "Encounter packs in accessible opening zones",
+      "status_default": "PARTIAL",
+      "overrides": {},
+      "note": "formation table Confirmed; zone/pack selection structures unlocated",
+      "links": {
+        "census": ["CEN-WORLD-0006"],
+        "experiments": ["EXP-0030"],
+        "discoveries": []
+      }
+    },
+    {
+      "id": "B14",
+      "name": "Monsters reachable before Whelk",
+      "status_default": "PARTIAL",
+      "overrides": {},
+      "note": "monster db Confirmed; formation 44 = {19,77}; names/AI/rewards unmapped; full set pends B13",
+      "links": {
+        "census": ["CEN-MONSTER-0001"],
+        "experiments": ["EXP-0028", "EXP-0029", "EXP-0030"],
+        "discoveries": []
+      }
+    },
+    {
+      "id": "B15",
+      "name": "Accessible menus and commands",
+      "status_default": "PARTIAL",
+      "overrides": {},
+      "note": "field menu censused; spell db Confirmed; Magitek list never captured; command records unlocated",
+      "links": {
+        "census": ["CEN-MAGIC-0001", "CEN-MENU-0001", "CEN-MENU-0004"],
+        "experiments": ["EXP-0022", "EXP-0025", "EXP-0026", "EXP-0027"],
+        "discoveries": []
+      }
+    },
+    {
+      "id": "B16",
+      "name": "Chests, save points, NPCs, objects, branches",
+      "status_default": "PARTIAL",
+      "overrides": {},
+      "note": "nothing yet; requires branch sweep plus static object data",
+      "links": {
+        "census": ["CEN-WORLD-0005"],
+        "experiments": [],
+        "discoveries": []
+      }
+    },
+    {
+      "id": "B17",
+      "name": "Whelk introduction",
+      "status_default": "PARTIAL",
+      "overrides": {},
+      "note": "never reached in any archived state",
+      "links": { "census": [], "experiments": [], "discoveries": [] }
+    },
+    {
+      "id": "B18",
+      "name": "Whelk battle",
+      "status_default": "PARTIAL",
+      "overrides": {},
+      "note": "never reached; downstream battle systems Confirmed; boss AI interpreter unlocated",
+      "links": {
+        "census": ["CEN-BATTLE-0001"],
+        "experiments": ["EXP-0028", "EXP-0029", "EXP-0030"],
+        "discoveries": []
+      }
+    },
+    {
+      "id": "B19",
+      "name": "Stable post-Whelk state",
+      "status_default": "PARTIAL",
+      "overrides": {},
+      "note": "never reached; defines the stopping boundary",
+      "links": { "census": [], "experiments": [], "discoveries": [] }
+    }
+  ],
+  "domain_totals": {
+    "beats_total": 19,
+    "beats_complete": 0,
+    "beats_partial": 19,
+    "beats_blocked": 0
+  }
+}

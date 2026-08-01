@@ -1,26 +1,28 @@
 # Current Focus
 
-**State:** Autonomous resume session (2026-07-30 late). The battle
-damage/AI investigation is **paused at a natural boundary**: EXP-0021
-resolved question #30 for the tested window — action content is
-deterministic given the input frame schedule (all record loads index
-238, powers 13/0/19/0, miss at the same matched ordinal across
-frame-exact trials); GUI-era variance attributed to harness wall-clock
-jitter (Strong hypothesis). The lab now runs headless
-(`--testrunner --timeout=7200`, `FF6_OUT` env, frame-scheduled input)
-because the locked display breaks GUI Mesen.
+**State (2026-07-31): the opening-to-Whelk scenario program is
+active.** Operator directive: reconstruct the complete opening
+scenario — New Game selection through Whelk victory and the first
+stable post-battle state — as an evidence-backed vertical slice.
+Master record: `docs/scenarios/SCN-0001-opening-to-whelk.md`; machine
+manifest: `data/scenarios/opening-to-whelk.json`. 19 timeline beats
+(B01–B19), all PARTIAL at program start; per-beat gaps and links are
+in the scenario record.
 
-**State:** the content census system is live (2026-07-31): taxonomy,
-dual status ladders, ROM ownership ledger, coverage tooling in
-`ff6lab`, and the observe-register-return workflow wired into the
-stopping rules. EXP-0025/0026 registered the opening sequence and
-censused the magic system (spell name table located, $C46AC0 shown to
-be the spell database, availability array at +$1A6E). 43 census
-entries, 10 of 12 domains; ROM known 0.34%.
+**Program baseline:** formation chain Confirmed end-to-end down to
+`WRAM:+$11E0` (EXP-0028..0030: monster db $CF0000, loader $C22C30,
+staging +$3F46, formation table $CF6200); spell db extracted
+(EXP-0027); damage pipeline implemented + regression-tested
+(EXP-0001..0019). Largest scenario blockers: no power-on route, event
+engine unlocated (CEN-EVENT-0001), map/collision/encounter-zone
+systems unlocated (CEN-WORLD-0001..0006), nothing observed from Whelk
+introduction onward.
 
-**Next exact action:** EXP-0030 done — the formation table is
-Confirmed (0x0F6200, 15-byte; mines = formation 44 = monsters
-{19,77}). Next candidates: the +$11E0 encounter-roll producer
-(closes the walk->battle chain, CEN-WORLD-0006), or rotate to the
-HUD font load-path (GFX) / SPC dispatch (AUDIO) after four
-consecutive monster-adjacent units.
+**Lab constraint:** unattended sessions run headless Mesen
+(`--testrunner --timeout=7200`, `FF6_OUT` env, frame-scheduled input);
+see BLOCKERS.md.
+
+**Next exact action:** EXP-0031 — golden route segment 1: reproducible
+frame-scheduled route from power-on through New Game selection;
+milestone `00-new-game` savestate + input transcript + determinism
+check (two identical runs).
