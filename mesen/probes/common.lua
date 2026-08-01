@@ -34,6 +34,38 @@ function probelog(tag)
   end)
 end
 
+-- battleconfig(): the battle-configuration fingerprint, decoded.
+--
+-- Persistent settings live in WRAM:+$1D4D/+$1D4E/+$1D54 (EXP-0041). In a
+-- battle the timing settings are NOT read from there — battle entry
+-- decomposes them into +$3A8F (Wait flag) and +$3A90 (255 - 24 x speed),
+-- and those are what battle timing runs on (EXP-0042). Both layers are
+-- reported so a mismatch is visible rather than assumed away.
+function battleconfig()
+  local r = function(a) return emu.read(a, emu.memType.snesWorkRam) end
+  local c1, c2, c3 = r(0x1D4D), r(0x1D4E), r(0x1D54)
+  local waitFlag, speedVal = r(0x3A8F), r(0x3A90)
+  local onoff = function(bit, lo, hi)
+    if (c2 & bit) ~= 0 then return hi else return lo end
+  end
+  return table.concat({
+    string.format("1D4D=%02X 1D4E=%02X 1D54=%02X 3A8F=%02X 3A90=%02X",
+      c1, c2, c3, waitFlag, speedVal),
+    string.format("Bat.Mode=%s Bat.Speed=%d Msg.Speed=%d Cmd.Set=%s",
+      ((c1 & 0x08) ~= 0) and "Wait" or "Active",
+      (c1 & 0x07) + 1, ((c1 >> 4) & 0x07) + 1,
+      ((c1 & 0x80) ~= 0) and "Short" or "Window"),
+    string.format("Gauge=%s Sound=%s Cursor=%s Reequip=%s Controller=%s",
+      onoff(0x80, "On", "Off"), onoff(0x20, "Stereo", "Mono"),
+      onoff(0x40, "Reset", "Memory"), onoff(0x10, "Optimum", "Empty"),
+      ((c3 & 0x80) ~= 0) and "Multiple" or "Single"),
+    string.format("battle-local: mode=%s expectedSpeedVal=%02X %s",
+      (waitFlag ~= 0) and "Wait" or "Active",
+      (255 - 24 * (c1 & 0x07)) & 0xFF,
+      (speedVal == ((255 - 24 * (c1 & 0x07)) & 0xFF)) and "(agrees)" or "(MISMATCH)"),
+  }, "\n")
+end
+
 -- watchreads(name, lo, hi): read watch over a WRAM range, aggregated per
 -- reading PC in _G[name.."_seen"] as
 -- {count, firstFrame, lastFrame, lastAddr, lastVal}.
