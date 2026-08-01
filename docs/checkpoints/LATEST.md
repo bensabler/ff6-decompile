@@ -1,49 +1,54 @@
 # Latest Checkpoint
 
-**[2026-08-01 — EXP-0043: the ATB layer is located](2026-08-01-exp0043-atb-layer-located.md)**
+**[2026-08-01 — EXP-0044: the ACTIVE/WAIT pause matrix](2026-08-01-exp0044-active-wait-pause-matrix.md)**
 
-State: **the ATB layer is located.** Every timer domain the master
-program asked for now has an address:
+State: **the ATB blocker raised by EXP-0040 is discharged.** Across
+EXP-0041..0044 the project now has configuration storage and encoding,
+battle-entry sampling, gauges, increments, the tick counter, and the
+exact ACTIVE/WAIT pause condition.
 
-| Address | Role |
-|---|---|
-| `WRAM:+$3AB4` | **ATB gauge array** — 10 entries, **stride 2**, 16-bit; party 0-3, enemies 4-9 |
-| `WRAM:+$3AC8` | per-slot **increment**; gauge += `$3AC8,X >> 1` at `ROMCPU:$C21195` |
-| `WRAM:+$3AA0` | per-slot scheduler **flags** |
-| `WRAM:+$3A3E` | 16-bit **battle tick counter**, one per non-gated frame |
-| `WRAM:+$3218` | second accumulator, gated on `$3219,X` |
-| `ROMCPU:$C21124` | **the gate** — `LDA $2F41 / AND $3A8F / BNE` |
+`WRAM:+$2F41` is the **battle submenu flag** — resting `$00`, cleared
+per-frame at `ROMCPU:$C17A92`, raised at `ROMCPU:$C17C01` when a
+qualifying submenu opens. `ROMCPU:$C21124` ANDs it with the Wait flag
+`+$3A8F` and skips the entire per-frame battle update.
 
-Two headline results. **`$C21124` is where ACTIVE and WAIT diverge**:
-that one branch skips the entire per-frame battle update, with `$3A8F`
-the Wait flag from EXP-0042 and `$2F41` the untested other half.
-And **Battle Speed scales enemy gauges only** — the `CPX #$08 / BCC`
-branch skips the `$3A90` multiply for party slots, confirmed
-numerically: party increments byte-identical at Bat.Speed 3 and 6
-(318/330/336) while enemy increments went 240 → 156.
+| State | ACTIVE | WAIT |
+|---|---|---|
+| Battle running, no menu | advances | advances |
+| **Main command window open** | advances | **advances** |
+| Ability list open | advances* | **paused** |
+| Target selection | advances* | **paused** |
+| Action resolving / animation | advances* | **advances** |
+| Item / Magic / Row / Defend, dialogue, damage display, victory, defeat | not sampled | not sampled |
 
-Three instruments were required to converge before anything was claimed —
-read watch, static ROM decode, and live sampling showing `+$3AB4` advance
-by exactly the predicted `$4E` = `$9C >> 1`, including a wrap. No
-falsifier fired.
+\* structurally implied — the gate is an `AND`; verified directly for the
+ability-list row.
 
-**Correction to carry forward:** the ATB family is **stride 2**, not the
-`$14` of the HP/stat family. DISC-0001's unified layout governs slot
-assignment, not stride.
+All four located domains (`+$3A3E`, `+$3AB4`, `+$3AA0`, `+$3218`) froze
+and resumed **together**; no independent clock was found among them.
+**The pause is narrower than the folk model**: the command window is on
+screen for most of a WAIT battle and does not pause, and neither does
+action resolution.
 
-**The blocker is now narrow rather than total.** Still unknown: the pause
-condition (`$2F41` never observed non-zero), the exact increment and
-threshold arithmetic, and the action queue. Whelk stays deferred until
-the pause matrix exists.
+Method: the mode was flipped **in place** by patching `+$3A8F`, making
+ACTIVE-versus-WAIT a one-variable comparison inside a single savestate;
+the patch was then validated against genuinely configured WAIT, which
+froze identically.
 
-8 evidence artifacts with hashes; no background processes; SRAM virgin.
-All gates clean (gofmt/build/vet/test, `ff6lab audit`, census sync 64
+**Whelk is no longer blocked by an absent model.** EXP-0040's timing is
+now *scoped* rather than dismissed: only intervals inside the ability
+list and target selection were paused.
+
+Carried forward honestly: six matrix rows are `not sampled`; a settling
+transient just after the gate engages is unresolved at this sampling
+resolution; unlocated domains (animation, AI script, status, boss-state)
+were not covered; and Whelk is a boss with its own script, untested here.
+
+10 evidence artifacts with hashes; no background processes; SRAM virgin.
+All gates clean (gofmt/build/vet/test, `ff6lab audit`, census sync 65
 entries, restricted-file scan).
 
-Exact next action: **EXP-0044 — the ACTIVE/WAIT pause matrix.**
-Write-watch `WRAM:+$2F41` across opening and closing each battle submenu,
-then build the matrix of menu states against timer domains, reading
-`+$3AB4`, `+$3A3E`, `+$3AA0` and `+$3218` directly. `$3A8F`/`$3A90` can
-be patched in place, making ACTIVE versus WAIT a one-variable comparison
-inside a single savestate lineage. First unit warranting
-`/battle-baseline` and bounded parallel observers.
+Exact next action: **EXP-0045 — finish the matrix and settle the
+transient.** Walk the remaining menu and presentation states sampling
+`+$2F41`, and frame-step the gate transition with an `endFrame` callback
+rather than bridge round-trips.

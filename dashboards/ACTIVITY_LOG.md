@@ -1,5 +1,28 @@
 # Activity Log
 
+- 2026-08-01 (headless) — **EXP-0044: the ACTIVE/WAIT pause matrix; the
+  ATB blocker is discharged.** `WRAM:+$2F41` is the **battle submenu
+  flag** — resting `$00`, cleared per-frame at `ROMCPU:$C17A92` (`STZ`),
+  raised at `ROMCPU:$C17C01` (`INC`) when a qualifying submenu opens,
+  with a second clear at `ROMCPU:$C14434`. `ROMCPU:$C21124` ANDs it with
+  the Wait flag `+$3A8F` and skips the **entire** per-frame battle
+  update. All four located domains — tick `+$3A3E`, gauges `+$3AB4`,
+  flags `+$3AA0`, accumulator `+$3218` — froze and resumed **together**
+  across nine trials; no independent clock was found among them.
+  **The pause is narrower than the folk model**: the main battle command
+  window is on screen for most of a WAIT battle and does **not** pause,
+  and action animations do **not** pause either (`$2F41` reads `00` in
+  both). Only the ability list and target selection paused. Proven by an
+  **in-place one-variable flip** of `+$3A8F` inside a single savestate —
+  same submenu, `$2F41` = `01` throughout, frozen at Wait and resuming at
+  Active — and cross-checked against **genuinely configured WAIT**
+  (falsifier 2, tick stuck at `$17C7`). One unresolved signal recorded
+  rather than smoothed over: a settling transient just after the gate
+  engages, which this sampling resolution cannot separate from the last
+  un-gated frame. Six matrix rows honestly marked `not sampled`.
+  **Consequence: EXP-0040's Whelk timing can now be scoped rather than
+  dismissed**, and Whelk is no longer blocked by an absent model. New
+  CEN-BATTLE-0012; `/battle-baseline` added first as its own commit.
 - 2026-08-01 (headless) — **EXP-0043: the ATB layer is located.** Gauge
   array **`WRAM:+$3AB4`** (10 entries, **stride 2**, 16-bit; party 0-3,
   enemies 4-9), advanced by `$3AC8,X >> 1` at

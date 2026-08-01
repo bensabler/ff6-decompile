@@ -47,3 +47,4 @@
 | EXP-0041 | battle-config-storage | completed | see record | [EXP-0041-battle-config-storage](../docs/experiments/EXP-0041-battle-config-storage.md) |
 | EXP-0042 | battle-entry-config-sampling | completed | see record | [EXP-0042-battle-entry-config-sampling](../docs/experiments/EXP-0042-battle-entry-config-sampling.md) |
 | EXP-0043 | atb-gauges-and-speed-consumer | completed | see record | [EXP-0043-atb-gauges-and-speed-consumer](../docs/experiments/EXP-0043-atb-gauges-and-speed-consumer.md) |
+| EXP-0044 | active-wait-pause-matrix | completed | see record | [EXP-0044-active-wait-pause-matrix](../docs/experiments/EXP-0044-active-wait-pause-matrix.md) |

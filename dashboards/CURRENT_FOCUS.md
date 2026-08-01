@@ -99,14 +99,18 @@ remain open. Confirmed along the way:
 - The **guard/Esper beat precedes Whelk** on a clean run
   (CEN-EVENT-0011 resolved).
 
-## Blocked — no ATB model
+## ~~Blocked — no ATB model~~ → resolved by EXP-0041..0044
 
-Whelk execution is **deferred**. The project cannot yet model
-ACTIVE/WAIT behavior, qualifying submenu pause states, timer domains,
-or action-queue ordering, and EXP-0040 could not operate the battle
-reliably without that. All of its head/shell transitions are
-menu-pause-contaminated and **must not** be used as timing evidence.
-See BLOCKERS.md.
+Whelk execution was deferred from 2026-08-01 because the project could
+not model ACTIVE/WAIT, qualifying submenu pause states, timer domains or
+action-queue ordering. **EXP-0041 through EXP-0044 supplied all of those
+except the action queue**, and the pause condition is now known
+precisely.
+
+EXP-0040's head/shell transitions remain **unusable as natural timing**,
+but they can now be *scoped* rather than merely dismissed: only intervals
+inside the ability list and target selection were paused. See BLOCKERS.md
+for the discharge note and the remaining non-blocking work.
 
 ## ATB program started — EXP-0041 (2026-08-01)
 
@@ -187,16 +191,45 @@ Watch the stride: the ATB family is **stride 2**, not the `$14` of the
 HP/stat family. DISC-0001's unified layout governs slot *assignment*, not
 stride.
 
+## EXP-0044 — the ACTIVE/WAIT pause matrix (2026-08-01)
+
+`WRAM:+$2F41` is the **battle submenu flag**: resting `$00`, cleared
+per-frame at `ROMCPU:$C17A92`, raised at `ROMCPU:$C17C01` when a
+qualifying submenu opens. `ROMCPU:$C21124` ANDs it with the Wait flag and
+skips the entire per-frame battle update.
+
+| State | ACTIVE | WAIT |
+|---|---|---|
+| Battle running, no menu | advances | advances |
+| **Main command window open** | advances | **advances** |
+| Ability list open | advances* | **paused** |
+| Target selection | advances* | **paused** |
+| Action resolving / animation | advances* | **advances** |
+| Item / Magic / Row / Defend, dialogue, damage display, victory, defeat | not sampled | not sampled |
+
+\* structurally implied — the gate is an `AND`, so ACTIVE can never pause;
+verified directly for the ability-list row.
+
+All four located domains — tick `+$3A3E`, gauges `+$3AB4`, flags
+`+$3AA0`, accumulator `+$3218` — froze and resumed **together**. No
+independent clock was found among them.
+
+**The pause is narrower than the folk model.** The command window is on
+screen for most of a WAIT battle and does not pause; neither do action
+animations. Verified by an in-place one-variable flip of `+$3A8F` inside
+a single savestate, cross-checked against genuinely configured WAIT.
+
+**This scopes EXP-0040.** Its Whelk intervals inside the ability list and
+target selection were paused; intervals at the command window and during
+action resolution were not. Whether that is enough to reinterpret those
+captures or whether the fight should be re-run is an orchestration call,
+not a blocked one.
+
 ## Next exact action
 
-**EXP-0044 — the ACTIVE/WAIT pause matrix.** Find what sets and clears
-`WRAM:+$2F41` (write-watch across opening and closing each battle
-submenu), then build the matrix of menu and presentation states against
-timer domains — now cheap, because every domain has an address:
-`+$3AB4`, `+$3A3E`, `+$3AA0`, `+$3218`.
-
-This is the unit the ATB program has been aiming at, and the first that
-genuinely warrants `/battle-baseline` and parallel read-only observers.
-`$3A8F`/`$3A90` can now be patched directly, making ACTIVE-versus-WAIT a
-one-variable comparison inside a single savestate lineage. Whelk remains
-deferred.
+**EXP-0045 — finish the matrix and settle the transient.** Walk every
+remaining battle menu and presentation state sampling `+$2F41` (six rows
+currently read `not sampled`), and frame-step the gate transition with an
+`endFrame` callback to decide whether the settling transient is queued
+work resolving past the gate or simply the last un-gated frame. Bridge
+round-trips are far too coarse for the latter.

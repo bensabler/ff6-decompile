@@ -103,18 +103,30 @@ Ordered next units (reorder when evidence exposes a better chain):
   **Battle Speed scales enemy gauges only** (party increments identical
   at Bat.Speed 3 and 6; enemy 240 vs 156)
   ([record](../docs/experiments/EXP-0043-atb-gauges-and-speed-consumer.md)).
-- [ ] **P0 NEXT — EXP-0044: the ACTIVE/WAIT pause matrix.** Find what
-  sets and clears `WRAM:+$2F41`, the untested half of the `$C21124` gate
-  (write-watch across opening and closing each battle submenu), then
-  build the matrix of menu and presentation states against timer domains.
-  Now cheap: every domain has an address (`+$3AB4`, `+$3A3E`, `+$3AA0`,
-  `+$3218`), and `$3A8F`/`$3A90` can be patched directly, making
-  ACTIVE-versus-WAIT a one-variable comparison inside one savestate
-  lineage. First unit warranting `/battle-baseline` and parallel
-  read-only observers.
-- [ ] **ATB program, after that:** the exact increment formula, threshold
-  and gauge reset; `+$3AA0` bit semantics; the action queue and readiness
-  arbitration; status modifiers (Haste/Slow/Stop).
+- [x] **EXP-0044: the ACTIVE/WAIT pause matrix** — done. `WRAM:+$2F41`
+  is the **battle submenu flag** (cleared per-frame at `ROMCPU:$C17A92`,
+  raised at `ROMCPU:$C17C01` on submenu open); `ROMCPU:$C21124` ANDs it
+  with the Wait flag and skips the whole per-frame battle update. All
+  four located domains freeze and resume **together**. The pause is
+  **narrower than assumed**: the main command window does **not** pause
+  under WAIT, and neither do action animations — only the ability list
+  and target selection did. Verified by an in-place one-variable flip of
+  `+$3A8F` and cross-checked against genuinely configured WAIT
+  ([record](../docs/experiments/EXP-0044-active-wait-pause-matrix.md)).
+- [ ] **P0 NEXT — EXP-0045: finish the matrix, settle the transient.**
+  Six matrix rows read `not sampled` (Item, Magic, Row, Defend, dialogue,
+  damage display, victory, defeat) — walk each sampling `+$2F41`. Then
+  frame-step the gate transition with an `endFrame` callback to decide
+  whether the settling transient is queued work resolving past the gate
+  or the last un-gated frame; bridge round-trips are far too coarse.
+- [ ] **ATB program, remaining (none blocking):** the exact increment
+  formula, threshold and gauge reset; `+$3AA0` bit semantics; the action
+  queue and readiness arbitration; status modifiers (Haste/Slow/Stop);
+  battle types other than random encounters — Whelk is a boss with its
+  own script, the one caveat for any Whelk re-run.
+- [ ] **Whelk (B17/B18/B19, milestone `10-whelk-victory`) — unblocked.**
+  The ATB model exists. Decide whether to reinterpret EXP-0040's scoped
+  captures or re-run the fight with the model in hand.
 - [ ] Whether battle types other than random encounters sample
   configuration differently (scripted, pincer, back, boss) — cheap to
   re-check at the first scripted battle rather than as its own unit.

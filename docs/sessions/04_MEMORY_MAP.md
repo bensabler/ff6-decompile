@@ -59,7 +59,8 @@ addresses like `$C10DF3`. See
 | `ROMCPU:$C2111B–$C21192` | — | **Confirmed** (byte-exact, EXP-0043) | **Per-frame battle scheduler.** Gated at `$C21124` by `LDA $2F41 / AND $3A8F / BNE` — with `$3A8F` the Wait flag, this is where ACTIVE and WAIT diverge. Increments the tick counter, then loops X = `$12` down to 0 step 2 over the ten slots. |
 | `ROMCPU:$C21193–$C211BA`, `$C211BB–$C211C9` | — | **Confirmed** (byte-exact, EXP-0043) | Gauge advance and second accumulator, respectively. |
 | `ROMCPU:$C209E0–$C20A0E` | — | **Confirmed** (byte-exact, EXP-0043) | Per-slot ATB increment builder; consumes `+$3A90` for enemy slots only. |
-| `WRAM:+$2F41` | 1 | Tentative (EXP-0043) | The other half of the `$C21124` pause gate. Zeroed at battle entry by `$C22498` (EXP-0042); read `00` throughout a free-running battle. Menu-state flag candidate — **untested**. |
+| `WRAM:+$2F41` | 1 | **Confirmed** (EXP-0044) | **Battle submenu flag** — the other half of the `$C21124` pause gate. Resting state `$00`, cleared per-frame by `ROMCPU:$C17A92` (`STZ`) and raised by `ROMCPU:$C17C01` (`INC`) when a qualifying submenu opens; second clear path `ROMCPU:$C14434`. Also zeroed at battle entry by `$C22498`. **Not** set by the main battle command window, and **not** set during action resolution. |
+| `ROMCPU:$C17A92`, `$C17C01`, `$C14434` | — | **Confirmed** (byte-exact, EXP-0044) | The three writers of `+$2F41`: per-frame clear, submenu set (`INC`, fired exactly once per submenu open), and a second clear that fired once and is unexplained. |
 | `WRAM:+$322C` | `$14` (10 × 2)? | Tentative (EXP-0043) | Comparand and target on the gauge threshold path (`CMP $322C,X`, `STA $322C,X` with `#$FF`). Purpose unknown. |
 
 Note: `$2EB5` lies above the low-RAM mirror (`$0000–$1FFF`), so absolute

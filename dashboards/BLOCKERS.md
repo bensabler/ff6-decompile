@@ -38,16 +38,31 @@ entries, stride 2, 16-bit), per-slot increment `+$3AC8`, scheduler flags
 `ROMCPU:$C21124`, `LDA $2F41 / AND $3A8F / BNE`, which is **where ACTIVE
 and WAIT diverge**. Battle Speed was found to scale **enemy gauges only**.
 
-**Status: the blocker is now narrow rather than total.** The timer
-domains are named and directly readable. What remains unknown is the
-pause *condition* (`$2F41` is untested), the exact increment/threshold
-arithmetic, and the action queue. Next: **EXP-0044, the ACTIVE/WAIT
-pause matrix** — the unit this blocker has been asking for since
-EXP-0040, and now cheap because every quantity in the matrix has an
-address.
+EXP-0044 then built the **pause matrix**. `WRAM:+$2F41` is the battle
+submenu flag; `ROMCPU:$C21124` ANDs it with the Wait flag and skips the
+whole per-frame battle update. All four located timer domains freeze and
+resume together. Crucially the pause is **narrower than assumed**: the
+main battle command window does **not** pause under WAIT, and neither do
+action animations — only the ability list and target selection did.
 
-Whelk stays deferred until that matrix exists: EXP-0040's head/shell
-timing can only be reinterpreted once the pause semantics are known.
+**Status: this blocker is DISCHARGED for its original purpose.** A usable
+ATB model exists — configuration, entry sampling, gauges, increments,
+tick counter, and the ACTIVE/WAIT pause condition are all located and
+verified.
+
+**Whelk is no longer blocked by an absent model.** EXP-0040's timing can
+now be *scoped* rather than merely dismissed: intervals inside the
+ability list and target selection were paused; intervals at the command
+window and during action resolution were not. Whether to reinterpret
+those captures or re-run the fight is now an ordinary orchestration
+decision.
+
+Remaining ATB work, none of it blocking: the full set of qualifying
+submenus (six matrix rows unsampled), the increment formula and
+threshold, the action queue and readiness arbitration, status modifiers,
+and battle types other than random encounters — Whelk is a boss with its
+own script, which is the one caveat worth carrying into any Whelk
+re-run.
 
 Soft items:
 

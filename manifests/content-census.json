@@ -2888,6 +2888,60 @@
       "contradictions": [],
       "next_action": "EXP-0044: find what sets/clears WRAM:+$2F41, then build the ACTIVE/WAIT pause matrix reading +$3AB4, +$3A3E, +$3AA0 and +$3218 directly.",
       "notes": "Battle Speed scales ENEMY gauges only - the CPX #$08 / BCC branch skips the $3A90 multiply for party slots, and party increments were byte-identical at Bat.Speed 3 and 6 (318/330/336) while enemy increments went 240 -> 156. Confirmed for the tested formation and two speeds. Also: the ATB family uses stride 2, so DISC-0001's unified layout governs slot assignment but NOT stride - do not assume $14 for new battle arrays."
+    },
+    {
+      "schema_version": "1.0",
+      "id": "CEN-BATTLE-0012",
+      "domain": "BATTLE",
+      "category": "ATB scheduler",
+      "name": "ACTIVE/WAIT pause gate and the submenu flag",
+      "description": "WRAM:+$2F41 is the battle submenu flag: resting $00, cleared per-frame at ROMCPU:$C17A92 (STZ), raised at ROMCPU:$C17C01 (INC) when a qualifying submenu opens, with a second clear path at ROMCPU:$C14434. ROMCPU:$C21124 ANDs it with the Wait flag +$3A8F and skips the entire per-frame battle update when both are set. All four located timer domains - battle tick +$3A3E, ATB gauges +$3AB4, scheduler flags +$3AA0, second accumulator +$3218 - freeze and resume together. The main battle command window does NOT raise the flag, and action animations do NOT pause; only the ability list and target selection were observed to pause.",
+      "reconstruction_status": "FORMAT_DECODED",
+      "runtime_status": "ALTERNATE_PATH_VERIFIED",
+      "rom_revision": "0f51b4fca41b7fd509e4b8f9d543151f68efa5e97b08493e4b2a0c06f5d8d5e2",
+      "rom_locations": [],
+      "wram_locations": [
+        "WRAM:+$2F41 battle submenu flag (gate partner of +$3A8F)"
+      ],
+      "cpu_routines": [
+        "ROMCPU:$C21124 the AND gate on the per-frame battle update",
+        "ROMCPU:$C17A92 STZ $2F41 (per-frame clear)",
+        "ROMCPU:$C17C01 INC $2F41 (submenu set)",
+        "ROMCPU:$C14434 STZ $2F41 (second clear path, unexplained)"
+      ],
+      "spc_locations": [],
+      "record_count_expected": null,
+      "record_count_found": null,
+      "record_size": null,
+      "pointer_tables": [],
+      "consumers": [],
+      "producers": [],
+      "related_experiments": [
+        "EXP-0044",
+        "EXP-0043",
+        "EXP-0042",
+        "EXP-0040"
+      ],
+      "related_discoveries": [],
+      "related_implementations": [],
+      "related_tests": [],
+      "runtime_scenarios": [
+        "local_artifacts/experiments/EXP-0042/in-battle-active-speed6.mss"
+      ],
+      "evidence": [
+        "local_artifacts/experiments/EXP-0044/ (10 artifacts; hashes.sha256)"
+      ],
+      "confidence": "confirmed",
+      "unknown_fields": [
+        "the full set of qualifying submenus - Item, Magic, Row, Defend, dialogue, damage display, victory and defeat presentations were not sampled",
+        "whether any unlocated domain (animation, AI script, status, boss-state timers) advances during a paused interval",
+        "the settling transient after the gate engages - queued work resolving, or the last un-gated frame",
+        "ROMCPU:$C14434, the second clear path",
+        "battle types other than random encounters"
+      ],
+      "contradictions": [],
+      "next_action": "EXP-0045: walk every reachable battle menu and presentation state sampling +$2F41 to complete the matrix, and frame-step the gate transition to settle the transient.",
+      "notes": "The pause is NARROWER than the folk model: the main battle command window is on screen for most of a WAIT battle and does not pause, and action animations do not pause either. This scopes EXP-0040's contamination - intervals inside the ability list and target selection were paused; intervals at the command window and during action resolution were not. Verified by an in-place one-variable flip of +$3A8F inside a single savestate, and cross-checked against genuinely configured WAIT."
     }
   ]
 }
