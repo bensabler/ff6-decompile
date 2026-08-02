@@ -1,60 +1,64 @@
 # Latest Checkpoint
 
-**[2026-08-02 — Units 10-14, the compression premise tested and refuted](2026-08-02-units10-14-content-parity-session.md)**
-(preceding: [Unit 10, records reconciled](2026-08-02-unit10-records-reconciled.md))
+**[2026-08-02 — Units 15-16, a negative result and the missing implementations](2026-08-02-units15-16-negative-result-and-tooling.md)**
+(preceding: [Units 10-14, the compression premise tested and refuted](2026-08-02-units10-14-content-parity-session.md))
 
-State: branch `demo/whelk-content-parity`, six commits ahead of `main` at
-`297ba88`, worktree clean, not pushed. No emulator running, no resident
-instrumentation, no background processes.
+State: branch `demo/whelk-content-parity`, nine commits ahead of `main` at
+`297ba88`, worktree clean, not pushed. No emulator running, no background
+processes.
 
-**The session's result is not the code it wrote. It is that the program's
-stated keystone was wrong, and the evidence to show that was already on disk.**
+**Unit 15 is a negative result.** The map header that selects the tile blocks
+EXP-0050 located does not exist in the form the search assumed. Four
+meaningfully different encodings were tried — 3-byte LE pointers in the upper
+window, a structural scan for aligned pointer runs, 2-byte offsets with an
+implied bank requiring Narshe and mines to co-occur, and the lower HiROM mirror
+in both byte orders. None found a table. The one relaxed-scan "hit" is noise:
+452 such runs exist by chance and it holds neither Narshe block. **The loader
+computes these addresses**, and the next instrument is the routine, not a
+search.
 
-Readiness X1 said FF6's compression format gates maps, field sprites, battle
-backgrounds, enemy graphics and party sprites. **EXP-0050 tested it.** A
-verbatim search against preserved VRAM — no emulator, no new capture — finds
-the BG tile data for milestones 02, 04 and 05 present in the ROM
-**uncompressed**, in three contiguous spans totalling 20 KB:
-`ROMFILE:0x208460`, `0x223000`, `0x224F00`, the first two **shared between the
-Narshe exterior and the mines interior**. Verbatim coverage of the whole 64 KB
-image: field 47-52 %, battle 38 %, Mode 7 opening 0 %.
+**EXP-0050 carried a claim that was never measured, and now carries the
+correction.** It said `0x208460` and `0x223000` are "shared with the mines
+interior". They are not — the mines uses `0x20DFA0` and `0x23C0C0`, verified on
+both mines savestates. The claim came from running `state ppu` on the mines
+state and `state origin` on the Narshe exterior and conflating the two. What is
+actually shared is milestone 02 with 04, the same town, which is a weak
+discriminator rather than the strong one Unit 15 was planned around.
 
-Compression was **withdrawn** from the route matrix's pressure table rather
-than re-ranked: 48-62 % is unmatched, but a verbatim search is defeated by
-bit-plane reordering, runtime composition and WRAM-built tilemaps as readily as
-by compression, so ranking it on the unmatched fraction would repeat the
-original error inverted. **Map headers now lead at 6 beats**, and F1 has
-concrete anchors for the first time.
+Two measured by-products: three blocks are common to all three field scenes and
+so are **not** map tilesets; and `0x0487C0` + 2048 = `0x048FC0`, exactly the
+end of the HUD font block, so the field loads its **last 128 tiles** to
+`VRAM:$B800` while the battle loads its start to `VRAM:$AFF0`. T1's load path
+now has both destinations.
 
-That was possible because Unit 12 exposed what `internal/mesenstate` had been
-parsing and hiding since it was written: `ppu.vram`, `ppu.cgram`, `ppu.oamRam`,
-`spc.ram` and the full PPU/DMA register state, in every preserved savestate.
-`ff6lab state` reads all of them now, plus `state ppu` and `state origin`.
+**Unit 16 put implementations under doctrine that had none.** `/trace-dma`, the
+`dma-tracer` skill, the `dma-researcher` agent and `TRACE_DMA.md` had all
+existed while nothing read a DMA register. `internal/platform/snesdma` is the
+half testable without an emulator, and it encodes two hardware rules that
+change conclusions: a raw size of **zero means 65536** — `mesenstate` had this
+wrong and `ff6lab state ppu` printed `0` for a full 64 KB VRAM upload — and the
+16-bit source address wraps **within its bank**, so `SourceSpan` refuses
+bank-crossing transfers rather than pointing a provenance search at a region
+the hardware never touched. `mesen/probes/dma-trace.lua` captures registers on
+`$420B`/`$420C` writes and is marked **UNEXERCISED** everywhere it is
+referenced; writing a probe is not running one.
 
-**A parity-blocking defect was found and fixed.** `BlitTile` adds `PaletteBase`
-to ink values 1-3; both scenes passed `white = 3` / `gray = 2` as if it were a
-brightness level; `GrayPalette` defined only entries 0-3. Measured on the real
-font: **32 % of drawn ink resolved to a visible colour** — two thirds of what
-the demo drew was invisible, since Unit 4. The frame goldens structurally could
-not see it, because `Sum256` hashes indices and is deliberately
-palette-independent. `content.SubPalette` makes the units explicit, and the
-same mistake now fails a test. Visible ink 32 % → 63 %, ink mask byte-identical.
+Five commands that did not exist were created with playbooks —
+`recover-compression`, `recover-map`, `recover-text`, `recover-event-opcode`,
+`capture-frame` — and three that existed only as `reconstruct-*` are aliased so
+both spellings resolve. The playbooks carry this session's lessons:
+`RECOVER_COMPRESSION` step 1 is "establish that the data is compressed at all".
 
-**Three records disagreed with themselves**, all D1's failure mode: the
-readiness summary vs its own tables (53 claimed, 55 actual, since `969b5dd`,
-propagated into four checkpoints and three dashboards);
-`MESEN_CAPABILITY_MATRIX.md` recording VRAM/CGRAM/OAM/ARAM as `Unknown` while
-`bridge.lua` had them wired and two experiments had used them; and a stale
-`STATISTICS.md`. All recounted from source, and the readiness comparison is now
-`audit.CheckReadinessSummary`, which caught a bad status token this same
-session had introduced.
+Gates: gofmt clean; build/vet/test on both variants including two new fuzz
+targets; `ff6lab audit` clean; census clean; restricted scan clean.
 
-Gates: gofmt clean; build/vet/test on both variants; `ff6lab audit` clean
-(eleven checks); census clean; archive verify 8/8; restricted scan clean.
+Exact next action: **test EXP-0051's "block boundaries are wrong" alternative
+— it is nearly free and needs no instrument.** Probe the ROM immediately before
+`0x208460` and `0x20DFA0` to find where each block really starts, then re-run
+the pointer search against the true starts. `state origin` anchors runs at the
+image start and cannot see past it, so this alternative has never been tested
+and would invalidate all four of Unit 15's searches if it holds.
 
-Exact next action: **Unit 15 — find the map header record that selects
-`ROMFILE:0x208460` and `0x223000`.** Two field maps share those two blocks and
-differ in a third, which is a strong discriminator for the selecting record.
-Falsifier: no candidate reproduces both maps' block sets. Cheaper fallback if
-it stalls: **read OAM from milestone 04** — every savestate carries it,
-`ff6lab state oam` reaches it, and no experiment has ever looked.
+Fallback: **read OAM from milestone 04** — every savestate carries it,
+`ff6lab state oam` reaches it, and no experiment has ever looked. Needing the
+operator: **run `probe dma-trace` over a map load.**

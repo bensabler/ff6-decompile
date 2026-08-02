@@ -275,42 +275,43 @@ The **immediate predecessor is unresolved**.
 
 ## Next exact action
 
-**DEMO-0001 Unit 15 — find the map header record that selects
-`ROMFILE:0x208460` and `0x223000`.**
+**Test EXP-0051's "block boundaries are wrong" alternative.** Nearly
+free, needs no instrument, and it would invalidate four searches if it
+holds. `ff6lab state origin` anchors a matched run where the *image*
+begins, so a ROM block starting before `VRAM:$0000`'s source is reported
+from its midpoint and its true start is never searched for. Probe the ROM
+immediately before `0x208460` and `0x20DFA0` to find the real block
+starts, then re-run the pointer search against those.
 
-EXP-0050 gave readiness F1 anchors it never had. Two field maps — the
-Narshe exterior (milestone 04) and the mines interior (milestone 05) —
-share those two 8 KB uncompressed tile blocks and differ only in a third.
-A record that agrees on two of three entries across two maps is a strong
-discriminator: search the ROM for pointer or id patterns that reproduce
-both observed triples. Falsifier: no candidate record does.
+**Unit 15 was a negative result.** No pointer table selects the map tile
+blocks, under four meaningfully different encodings. The loader computes
+the addresses, so the next instrument is the routine — Ghidra outward
+from the VRAM upload, or the DMA trace — not another search. Recorded
+under the three-attempts stopping rule rather than by guessing further
+encodings.
 
-Cheaper unit if that stalls: **read OAM from milestone 04**
+Fallback if the boundary test fails: **read OAM from milestone 04**
 (CEN-GFX-0008). Every preserved savestate carries `ppu.oamRam`,
-`ff6lab state oam` now reaches it, and **no experiment has ever looked at
+`ff6lab state oam` reaches it, and **no experiment has ever looked at
 it**. Readiness F6 depends on it.
 
-**Units 0-14 are complete.** The demo runs windowed and headless, renders
-real extracted FF6 data, shows a battle screen driven by real formations
-and monster records with a live ATB layer — and, since Unit 11, actually
-renders its text visibly.
+Needing one operator session: **run `probe dma-trace` over a map load.**
+The probe exists as of Unit 16 and is **unexercised**. One run would name
+the source address and the routine that set it up in a single
+observation.
 
-**The compression keystone is gone.** EXP-0050 tested readiness X1's
-premise and refuted it for the map tile graphics on this route: 47-52 %
-of a field scene's VRAM is verbatim ROM, including all three contiguous
-BG tile blocks. Compression is withdrawn from the route matrix's pressure
-table rather than re-ranked, because "unmatched" is not "compressed" —
-a verbatim search is defeated by bit-plane reordering, runtime
-composition and WRAM-built tilemaps too. Map headers now lead at 6 beats.
+**Units 0-16 are complete.** The demo runs windowed and headless, renders
+real extracted FF6 data visibly, and shows a battle screen driven by real
+formations and monster records with a live ATB layer.
 
-Carrying forward, and now three instances deep: **two records of one fact
-are worth nothing unless something compares them.** The `hud-font`
-extractor vs ROM-0016 (D1, Unit 1). The readiness summary vs its own
-tables (Unit 10). `BlitOptions.PaletteBase`'s doc comment vs its callers
-(D0, Unit 11) — which left two thirds of the demo's drawn ink invisible
-for seven units while the frame goldens passed, because `Sum256` hashes
-indices and is deliberately palette-independent. Each is now a check or a
-test.
+Carrying forward, now four instances deep: **two records of one fact are
+worth nothing unless something compares them.** The `hud-font` extractor
+vs ROM-0016 (D1). The readiness summary vs its own tables (Unit 10).
+`BlitOptions.PaletteBase`'s doc comment vs its callers (D0, Unit 11). And
+EXP-0050's "shared with the mines interior", which was never measured at
+all and was corrected by EXP-0051 the same day. The first three are now
+checks or tests; the fourth is why `state origin` is run per scene rather
+than assumed across scenes.
 
 ### Research actions, now sequenced behind the demo's critical path
 
