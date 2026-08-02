@@ -21,9 +21,10 @@ DEMO-0001 **consumes** SCN-0001; it does not replace it.
 
 Decided 2026-08-02. The milestone ladder reads in route order (shell →
 opening → first map → events → battle), but the project's evidence is
-distributed almost inversely: a field room needs the map system and a
-compression format, both at **zero records**, while a battle needs
-systems already Confirmed and partly in Go.
+distributed almost inversely: a field room needed the map system and,
+it was assumed, a compression format — both at zero records — while a
+battle needs systems already Confirmed and partly in Go. EXP-0050 has
+since removed the compression half of that assumption.
 
 1. **Technical shell** — executable, deterministic loop, input, indexed
    framebuffer, archive-backed asset loading, headless frame capture.
@@ -39,14 +40,21 @@ summary said "53 / 33 Unknown / 7 Evidence Ready"; those figures were
 wrong and propagated. Unit 10 recounted from the table — see the
 correction note in `DEMO-0001-READINESS.md`.)
 
-After units 0–10: **14 Integrated, 1 Validated, 6 Implemented**, 29
+After units 0–14: **14 Integrated, 1 Validated, 6 Implemented**, 29
 Unknown, of 57 rows. Every Integrated row is engine, text, or
 battle-table plumbing — **no Field or Audio row has moved**. The demo has
 a spine, not yet a game.
 
-The route content matrix measures the same fact by dependency pressure:
-**compression (X1) blocks 8 of the 19 route beats**, more than any other
-single dependency, and it still has zero records and zero code.
+The route content matrix measures the same fact by dependency pressure,
+re-derived after EXP-0050: **map headers (F1) lead at 6 of 19 beats**,
+then field sprites (F6) and music sequences (A3) at 5 each, event
+dispatch (F8) at 4, the dialogue corpus (F10) at 3.
+
+Compression is **withdrawn** from that table. It was ranked first at 8
+beats when the matrix was created, on readiness X1's prose rather than on
+evidence; EXP-0050 tested the premise and refuted it for the map tile
+graphics on this route. What X1 gates is Unknown and is recorded as
+Unknown.
 
 **Defect D1 (parity-blocking) — found at program start, fixed in Unit 1.**
 The `hud-font` extractor read `ROMFILE:0x046FC0` as a block start, but
@@ -267,41 +275,42 @@ The **immediate predecessor is unresolved**.
 
 ## Next exact action
 
-**DEMO-0001 Unit 11 — fix the palette defect that makes the demo's own
-text invisible.** `framebuf.BlitTile` adds `PaletteBase` to each
-non-transparent ink value; HUD font ink values are 1–3; both scenes pass
-`white = 3` / `gray = 2`; and `GrayPalette()` defines only indices 1–3,
-leaving 4–255 black. So every "white" string in the running demo resolves
-to black on black, and "gray" strings draw one of their three ink levels.
-`cmd/ff6demo` passes `nil` for the palette, so `GrayPalette` is what
-ships. The frame-hash goldens cannot see this: `Sum256` hashes indices and
-is deliberately palette-independent. Fix the convention, add the
-assertion, regenerate the goldens.
+**DEMO-0001 Unit 15 — find the map header record that selects
+`ROMFILE:0x208460` and `0x223000`.**
 
-Then **Unit 12** — expose `ppu.vram` / `ppu.cgram` / `ppu.oamRam` /
-`spc.ram` and the PPU/DMA scalars through `internal/mesenstate` and
-`ff6lab state`. Every preserved savestate already carries them; only WRAM
-and SRAM are reachable today. This turns maps, sprites, backgrounds and
-the audio driver into work that needs **no live emulator session**.
+EXP-0050 gave readiness F1 anchors it never had. Two field maps — the
+Narshe exterior (milestone 04) and the mines interior (milestone 05) —
+share those two 8 KB uncompressed tile blocks and differ only in a third.
+A record that agrees on two of three entries across two maps is a strong
+discriminator: search the ROM for pointer or id patterns that reproduce
+both observed triples. Falsifier: no candidate record does.
 
-Then **Unit 13 — X1, the FF6 compression format**, the keystone: recover
-it offline by reproducing captured VRAM byte-exactly from a ROM span.
-Falsifier is byte-exactness, or a recorded negative result.
+Cheaper unit if that stalls: **read OAM from milestone 04**
+(CEN-GFX-0008). Every preserved savestate carries `ppu.oamRam`,
+`ff6lab state oam` now reaches it, and **no experiment has ever looked at
+it**. Readiness F6 depends on it.
 
-**Units 0–9 are complete and merged.** DEMO-0001A is done: the demo runs
-windowed and headless, renders real extracted FF6 data, and now shows a
-battle screen driven by real formations, real monster records and a live
-ATB layer with an operable ACTIVE/WAIT gate.
+**Units 0-14 are complete.** The demo runs windowed and headless, renders
+real extracted FF6 data, shows a battle screen driven by real formations
+and monster records with a live ATB layer — and, since Unit 11, actually
+renders its text visibly.
 
-Carrying forward: the `hud-font` extractor had been reading the wrong ROM
-range since 2026-07-30 (255 of 257 tiles were attack-table bytes), which
-ROM-0016 had recorded correctly the whole time — fixed, and now asserted.
-EXP-0049 closed the glyph mapping the census carried as Unknown. Unit 10
-found the same class twice more: the readiness summary disagreed with its
-own table, and `MESEN_CAPABILITY_MATRIX.md` recorded VRAM/CGRAM/OAM/ARAM
-as `Unknown` while `bridge.lua` had them wired and two experiments had
-already used them. **Two records of one fact are worth nothing unless
-something compares them.**
+**The compression keystone is gone.** EXP-0050 tested readiness X1's
+premise and refuted it for the map tile graphics on this route: 47-52 %
+of a field scene's VRAM is verbatim ROM, including all three contiguous
+BG tile blocks. Compression is withdrawn from the route matrix's pressure
+table rather than re-ranked, because "unmatched" is not "compressed" —
+a verbatim search is defeated by bit-plane reordering, runtime
+composition and WRAM-built tilemaps too. Map headers now lead at 6 beats.
+
+Carrying forward, and now three instances deep: **two records of one fact
+are worth nothing unless something compares them.** The `hud-font`
+extractor vs ROM-0016 (D1, Unit 1). The readiness summary vs its own
+tables (Unit 10). `BlitOptions.PaletteBase`'s doc comment vs its callers
+(D0, Unit 11) — which left two thirds of the demo's drawn ink invisible
+for seven units while the frame goldens passed, because `Sum256` hashes
+indices and is deliberately palette-independent. Each is now a check or a
+test.
 
 ### Research actions, now sequenced behind the demo's critical path
 

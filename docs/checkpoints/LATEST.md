@@ -1,62 +1,60 @@
 # Latest Checkpoint
 
-**[2026-08-02 — Unit 10, records reconciled and the route matrix built](2026-08-02-unit10-records-reconciled.md)**
-(preceding: [DEMO-0001A complete, the demo runs](2026-08-02-demo0001a-shell-complete.md))
+**[2026-08-02 — Units 10-14, the compression premise tested and refuted](2026-08-02-units10-14-content-parity-session.md)**
+(preceding: [Unit 10, records reconciled](2026-08-02-unit10-records-reconciled.md))
 
-State: DEMO-0001 is in its third phase, **field/event content recovery**, on
-branch `demo/whelk-content-parity`. The foundation (units 0–9) is merged to
-`main` at `297ba88`, tagged `demo-0001-foundation-v0.1`. Worktree clean, no
-emulator running, no resident instrumentation. SCN-0001 remains the evidence
-program that DEMO-0001 consumes.
+State: branch `demo/whelk-content-parity`, six commits ahead of `main` at
+`297ba88`, worktree clean, not pushed. No emulator running, no resident
+instrumentation, no background processes.
 
-Units 8 and 9 landed in that merge but were never checkpointed, so the
-checkpoint chain and `CURRENT_FOCUS.md` still said "next action: Unit 8" while
-the readiness matrix and deviations register described a completed Unit 9. This
-unit closed that gap and three more found alongside it.
+**The session's result is not the code it wrote. It is that the program's
+stated keystone was wrong, and the evidence to show that was already on disk.**
 
-**The route content matrix now puts a number on the critical path.**
-`docs/demo/DEMO-0001-CONTENT-MATRIX.md` is keyed by the 19 SCN-0001 beats
-rather than by subsystem, and counts how many beats each unresolved dependency
-blocks. **Compression (X1) blocks 8 of 19** — B02, B03, B06, B07, B09, B11,
-B14, B18 — more than any other single dependency, and it still has zero records
-and zero code. Map headers block 6; field sprites and music sequences 5 each;
-event dispatch 4; the dialogue corpus 3. The matrix also surfaced two
-requirements nobody owned, now added to readiness: **B19 action animations** and
-**X4 transition effects**.
+Readiness X1 said FF6's compression format gates maps, field sprites, battle
+backgrounds, enemy graphics and party sprites. **EXP-0050 tested it.** A
+verbatim search against preserved VRAM — no emulator, no new capture — finds
+the BG tile data for milestones 02, 04 and 05 present in the ROM
+**uncompressed**, in three contiguous spans totalling 20 KB:
+`ROMFILE:0x208460`, `0x223000`, `0x224F00`, the first two **shared between the
+Narshe exterior and the mines interior**. Verbatim coverage of the whole 64 KB
+image: field 47-52 %, battle 38 %, Mode 7 opening 0 %.
 
-**The finding that re-sequences the program: the evidence is already frozen.**
-Every preserved Mesen savestate carries `ppu.vram` (64 KiB), `ppu.cgram`,
-`ppu.oamRam`, `spc.ram` (64 KiB ARAM), `memoryManager.workRam` and the full
-PPU/DMA register state. `internal/mesenstate` parses those files today but
-exposes only WRAM and SRAM. The corpus covers field, battle and post-victory
-states — so **a decompressed FF6 tileset is already in hand, hashed, and
-reproducible with no emulator**, which is exactly the known-good output a
-compression recovery needs on the far side of its falsifier. Maps, sprites,
-backgrounds and the audio driver become analysis rather than sessions.
-EXP-0048 does need a live session and is re-ordered behind that work — deferred,
-not blocked.
+Compression was **withdrawn** from the route matrix's pressure table rather
+than re-ranked: 48-62 % is unmatched, but a verbatim search is defeated by
+bit-plane reordering, runtime composition and WRAM-built tilemaps as readily as
+by compression, so ranking it on the unmatched fraction would repeat the
+original error inverted. **Map headers now lead at 6 beats**, and F1 has
+concrete anchors for the first time.
 
-**Three counting errors, corrected from source, all the same failure mode as
-retired deviation D1** — two records of one fact, disagreeing, with nothing
-comparing them. (1) The readiness summary claimed 53 requirements when the file
-has carried 55 since `969b5dd`, with Unknown 33 vs 36 and Evidence Ready 7 vs
-6; the wrong figure had propagated into four checkpoints and three dashboards.
-Both columns are now recounted: **57 rows — 1 Validated, 14 Integrated, 6
-Implemented, 29 Unknown**. (2) `MESEN_CAPABILITY_MATRIX.md` recorded VRAM,
-CGRAM, OAM, ARAM and DSP access as `Unknown` although `bridge.lua:238` has had
-all five wired since it was written and two experiments had already used them —
-work was being deferred as "needs instrumentation" when the instrument existed.
-(3) `STATISTICS.md` was stale on every count. Rows now distinguish
-wired-and-exercised, wired-but-never-exercised (OAM — never once read), and
-genuinely absent (live DMA register capture, which no probe or Go path
-implements despite a command, a skill, an agent and a playbook for it).
+That was possible because Unit 12 exposed what `internal/mesenstate` had been
+parsing and hiding since it was written: `ppu.vram`, `ppu.cgram`, `ppu.oamRam`,
+`spc.ram` and the full PPU/DMA register state, in every preserved savestate.
+`ff6lab state` reads all of them now, plus `state ppu` and `state origin`.
 
-No Go code changed. All gates green.
+**A parity-blocking defect was found and fixed.** `BlitTile` adds `PaletteBase`
+to ink values 1-3; both scenes passed `white = 3` / `gray = 2` as if it were a
+brightness level; `GrayPalette` defined only entries 0-3. Measured on the real
+font: **32 % of drawn ink resolved to a visible colour** — two thirds of what
+the demo drew was invisible, since Unit 4. The frame goldens structurally could
+not see it, because `Sum256` hashes indices and is deliberately
+palette-independent. `content.SubPalette` makes the units explicit, and the
+same mistake now fails a test. Visible ink 32 % → 63 %, ink mask byte-identical.
 
-Exact next action: **Unit 11 — fix the palette defect that makes the demo's own
-text invisible.** `BlitTile` adds `PaletteBase` to ink values 1–3, both scenes
-pass `white = 3` / `gray = 2`, and `GrayPalette()` defines only indices 1–3, so
-every "white" string resolves to black on black. `Sum256` hashes indices and is
-deliberately palette-independent, so the frame goldens structurally cannot see
-it. Fix the convention, add the missing assertion, regenerate the goldens, and
-record the project-authored palette as a deviation retired by F2.
+**Three records disagreed with themselves**, all D1's failure mode: the
+readiness summary vs its own tables (53 claimed, 55 actual, since `969b5dd`,
+propagated into four checkpoints and three dashboards);
+`MESEN_CAPABILITY_MATRIX.md` recording VRAM/CGRAM/OAM/ARAM as `Unknown` while
+`bridge.lua` had them wired and two experiments had used them; and a stale
+`STATISTICS.md`. All recounted from source, and the readiness comparison is now
+`audit.CheckReadinessSummary`, which caught a bad status token this same
+session had introduced.
+
+Gates: gofmt clean; build/vet/test on both variants; `ff6lab audit` clean
+(eleven checks); census clean; archive verify 8/8; restricted scan clean.
+
+Exact next action: **Unit 15 — find the map header record that selects
+`ROMFILE:0x208460` and `0x223000`.** Two field maps share those two blocks and
+differ in a third, which is a strong discriminator for the selecting record.
+Falsifier: no candidate reproduces both maps' block sets. Cheaper fallback if
+it stalls: **read OAM from milestone 04** — every savestate carries it,
+`ff6lab state oam` reaches it, and no experiment has ever looked.
