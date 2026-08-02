@@ -1,8 +1,12 @@
 # DEMO-0001 acceptance criteria
 
 - **Milestone:** [DEMO-0001](DEMO-0001-new-game-to-whelk.md)
-- **Updated:** 2026-08-02 (Unit 6 — windowed host)
-- **Overall:** **NOT PASSING** — 1 of 17 progression steps, 3 of 6 gates
+- **Updated:** 2026-08-02 (Unit 10 — records reconciliation)
+- **Overall:** **NOT PASSING** — 1 of 17 progression steps; gates 4 PASS, 1 PARTIAL (G4), 1 FAIL (G3)
+
+The gate line previously read "3 of 6 gates" while the table below showed four
+PASS. The table is authoritative and the header now agrees with it; no gate
+changed state.
 
 DEMO-0001 is complete only when every required criterion passes. This file is
 the scorecard. A step flips to PASS only when it has a recorded evidence path;

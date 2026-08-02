@@ -1,63 +1,62 @@
 # Latest Checkpoint
 
-**[2026-08-02 — DEMO-0001A complete, the demo runs](2026-08-02-demo0001a-shell-complete.md)**
-(preceding: [CORR-0001 pointer advance at ROMCPU:$C09B5C](2026-08-01-corr0001-c09b5c-pointer-advance.md))
+**[2026-08-02 — Unit 10, records reconciled and the route matrix built](2026-08-02-unit10-records-reconciled.md)**
+(preceding: [DEMO-0001A complete, the demo runs](2026-08-02-demo0001a-shell-complete.md))
 
-State: the project has shifted into **playable-vertical-slice production**.
-`DEMO-0001 — New Game to Whelk Victory` is the active program, on branch
-`demo/new-game-to-whelk` (8 commits, worktree clean, not pushed). SCN-0001
-remains the evidence program that DEMO-0001 consumes.
+State: DEMO-0001 is in its third phase, **field/event content recovery**, on
+branch `demo/whelk-content-parity`. The foundation (units 0–9) is merged to
+`main` at `297ba88`, tagged `demo-0001-foundation-v0.1`. Worktree clean, no
+emulator running, no resident instrumentation. SCN-0001 remains the evidence
+program that DEMO-0001 consumes.
 
-**The demo runs.** `go run -tags gui ./cmd/ff6demo` opens a window;
-`go run ./cmd/ff6demo -headless -frames 120 -capture-last` needs no display and
-is the authoritative mode for any frame-exact claim. It renders real FF6 text
-from the battle HUD font extracted from the operator's own ROM. The binary
-**cannot read a ROM**: `internal/rom` is barred transitively from `cmd/ff6demo`,
-`internal/content` and `internal/engine`, and `ff6lab audit` walks the import
-graph to enforce it.
+Units 8 and 9 landed in that merge but were never checkpointed, so the
+checkpoint chain and `CURRENT_FOCUS.md` still said "next action: Unit 8" while
+the readiness matrix and deviations register described a completed Unit 9. This
+unit closed that gap and three more found alongside it.
 
-Two findings are worth carrying forward.
+**The route content matrix now puts a number on the critical path.**
+`docs/demo/DEMO-0001-CONTENT-MATRIX.md` is keyed by the 19 SCN-0001 beats
+rather than by subsystem, and counts how many beats each unresolved dependency
+blocks. **Compression (X1) blocks 8 of 19** — B02, B03, B06, B07, B09, B11,
+B14, B18 — more than any other single dependency, and it still has zero records
+and zero code. Map headers block 6; field sprites and music sequences 5 each;
+event dispatch 4; the dialogue corpus 3. The matrix also surfaced two
+requirements nobody owned, now added to readiness: **B19 action animations** and
+**X4 transition effects**.
 
-**A parity-blocking defect, found and fixed.** The `hud-font` extractor read
-`ROMFILE:0x046FC0` as a block start. That address is only the back-projected
-anchor for VRAM tile `$000`; the real block starts at `0x047FB0`. **255 of the
-257 tiles in the shipped font sheet were attack-table bytes rendered as tiles**,
-and had been since 2026-07-30. `manifests/rom-regions.json` ROM-0016 recorded
-the correct span the whole time — the extractor and the ledger were two
-independent records of one fact that disagreed, and nothing compared them. Now
-`TestHUDFontMatchesROMLedger` does, and a skip-guarded archive-vs-ROM
-differential covers the general case across all 256 glyphs.
+**The finding that re-sequences the program: the evidence is already frozen.**
+Every preserved Mesen savestate carries `ppu.vram` (64 KiB), `ppu.cgram`,
+`ppu.oamRam`, `spc.ram` (64 KiB ARAM), `memoryManager.workRam` and the full
+PPU/DMA register state. `internal/mesenstate` parses those files today but
+exposes only WRAM and SRAM. The corpus covers field, battle and post-victory
+states — so **a decompressed FF6 tileset is already in hand, hashed, and
+reproducible with no emulator**, which is exactly the known-good output a
+compression recovery needs on the far side of its falsifier. Maps, sprites,
+backgrounds and the audio driver become analysis rather than sessions.
+EXP-0048 does need a live session and is re-ordered behind that work — deferred,
+not blocked.
 
-**EXP-0049 closed a mapping the census carried as Unknown**, from tracked
-evidence with no emulator run: `VRAM tile = $100 + encoded byte`. The
-discriminating trial decoded the whole EXP-0023 HUD tilemap through the
-relation and got coherent game text across all 37 referenced tiles —
-"Were-Rat", "Repo Man", "WEDGE", "VICKS", "MagiTek", "Item", "Row", "Tek", HP
-digits. That also promotes `textenc` itself from "derived from a menu tilemap"
-to "verified against rendered output". Secondary: `$BF` = `?`; five HP/ATB
-gauge tiles identified (CEN-GFX-0005); the HUD layout registered
-(CEN-BATTLE-0014); **47 tiles recorded as deliberately unidentified**, with a
-test asserting the classifier never guesses one.
+**Three counting errors, corrected from source, all the same failure mode as
+retired deviation D1** — two records of one fact, disagreeing, with nothing
+comparing them. (1) The readiness summary claimed 53 requirements when the file
+has carried 55 since `969b5dd`, with Unknown 33 vs 36 and Evidence Ready 7 vs
+6; the wrong figure had propagated into four checkpoints and three dashboards.
+Both columns are now recounted: **57 rows — 1 Validated, 14 Integrated, 6
+Implemented, 29 Unknown**. (2) `MESEN_CAPABILITY_MATRIX.md` recorded VRAM,
+CGRAM, OAM, ARAM and DSP access as `Unknown` although `bridge.lua:238` has had
+all five wired since it was written and two experiments had already used them —
+work was being deferred as "needs instrumentation" when the instrument existed.
+(3) `STATISTICS.md` was stale on every count. Rows now distinguish
+wired-and-exercised, wired-but-never-exercised (OAM — never once read), and
+genuinely absent (live DMA register capture, which no probe or Go path
+implements despite a command, a skill, an agent and a playbook for it).
 
-Readiness: **7 of 53 requirements Integrated, 1 Validated, 10 Implemented** —
-from 0 Integrated at program start. Every Integrated row is engine or text
-plumbing. No Field or Audio row has moved, and the map system, dialogue corpus,
-event opcode table, sprite formats, audio sequences and FF6's compression
-format all remain at zero records. The demo has a spine, not yet a game, and
-`docs/demo/DEMO-0001-READINESS.md` says so per requirement.
+No Go code changed. All gates green.
 
-ADR-0001 adopts Ebitengine, confined to `internal/engine/ebitenhost` (enforced
-as a direct-import rule) and behind a `gui` build tag. Measured: v2.9.9 needs
-cgo on **both** macOS and Linux, so the tag is what keeps every default gate
-free of system libraries. The headless host and the whole test surface landed
-one commit *before* ebiten entered `go.mod`, which is what makes the dependency
-provably optional.
-
-Nothing in flight: no emulator, no resident instrumentation, worktree clean.
-All gates green on both build variants, including `go mod verify`, and the
-restricted-file scan now also rejects tracked rendered images.
-
-Exact next action: **Unit 8 — decode formations and monster records into Go**
-(`internal/content/battledata`) from the already-archived `formations.bin` and
-`monsters.bin`. Both formats are Confirmed (EXP-0028/0029/0030). Then Unit 9, a
-battle HUD scene consuming the font, the ATB layer and those tables.
+Exact next action: **Unit 11 — fix the palette defect that makes the demo's own
+text invisible.** `BlitTile` adds `PaletteBase` to ink values 1–3, both scenes
+pass `white = 3` / `gray = 2`, and `GrayPalette()` defines only indices 1–3, so
+every "white" string resolves to black on black. `Sum256` hashes indices and is
+deliberately palette-independent, so the frame goldens structurally cannot see
+it. Fix the convention, add the missing assertion, regenerate the goldens, and
+record the project-authored palette as a deviation retired by F2.

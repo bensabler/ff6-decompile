@@ -1,11 +1,13 @@
 # Current Focus
 
 **Active program:** DEMO-0001 — produce a **playable Go demo** of New
-Game through Whelk victory. Started 2026-08-02 on branch
-`demo/new-game-to-whelk`. The deliverable is a runnable program;
-research, extraction, and documentation are supporting activities.
-Records: `docs/demo/DEMO-0001-new-game-to-whelk.md`,
-`DEMO-0001-READINESS.md` (the critical-path instrument),
+Game through Whelk victory. Started 2026-08-02. The foundation (units
+0–9) is merged to `main` at `297ba88`, tagged `demo-0001-foundation-v0.1`;
+work continues on branch `demo/whelk-content-parity`. The deliverable is a
+runnable program; research, extraction, and documentation are supporting
+activities. Records: `docs/demo/DEMO-0001-new-game-to-whelk.md`,
+`DEMO-0001-READINESS.md` (the critical-path instrument, by subsystem),
+`DEMO-0001-CONTENT-MATRIX.md` (the route view, by beat),
 `DEMO-0001-ACCEPTANCE.md`, `DEMO-0001-DEVIATIONS.md`.
 
 **Evidence program:** SCN-0001 — reconstruct the opening scenario, New
@@ -30,13 +32,21 @@ systems already Confirmed and partly in Go.
 3. **Field/event vertical** — gated behind research into the map system,
    the dialogue corpus, and the event opcode table.
 
-Readiness at program start was **0 of 53 requirements Integrated** — 5
-Implemented, 7 Evidence Ready, 2 Extractor Ready, 3 Researching, 2
-Blocked, 1 Deferred, **33 Unknown**. ROM ownership 0.49 %.
+Readiness at program start was **0 of 55 requirements Integrated** — 5
+Implemented, 6 Evidence Ready, 2 Extractor Ready, 3 Researching, 2
+Blocked, 1 Deferred, **36 Unknown**. ROM ownership 0.49 %. (Unit 0's own
+summary said "53 / 33 Unknown / 7 Evidence Ready"; those figures were
+wrong and propagated. Unit 10 recounted from the table — see the
+correction note in `DEMO-0001-READINESS.md`.)
 
-After units 0–7: **7 Integrated, 1 Validated, 10 Implemented**, 25
-Unknown. Every Integrated row is engine or text plumbing — no Field or
-Audio row has moved. The demo has a spine, not yet a game.
+After units 0–10: **14 Integrated, 1 Validated, 6 Implemented**, 29
+Unknown, of 57 rows. Every Integrated row is engine, text, or
+battle-table plumbing — **no Field or Audio row has moved**. The demo has
+a spine, not yet a game.
+
+The route content matrix measures the same fact by dependency pressure:
+**compression (X1) blocks 8 of the 19 route beats**, more than any other
+single dependency, and it still has zero records and zero code.
 
 **Defect D1 (parity-blocking) — found at program start, fixed in Unit 1.**
 The `hud-font` extractor read `ROMFILE:0x046FC0` as a block start, but
@@ -257,26 +267,41 @@ The **immediate predecessor is unresolved**.
 
 ## Next exact action
 
-**DEMO-0001 Unit 8 — decode formations and monster records into Go.**
-Both tables are already in the archive and both formats are Confirmed
-(EXP-0028/0029/0030): `formations.bin` (`ROMCPU:$CF6200` + 15×id,
-verified against seven encounters) and `monsters.bin` (`ROMCPU:$CF0000`,
-32-byte stride, `+$08` HP / `+$0A` MP / `+$01` power). New package
-`internal/content/battledata`, read through the archive — the import
-boundary forbids touching the ROM. Targets readiness rows B7 and B8.
+**DEMO-0001 Unit 11 — fix the palette defect that makes the demo's own
+text invisible.** `framebuf.BlitTile` adds `PaletteBase` to each
+non-transparent ink value; HUD font ink values are 1–3; both scenes pass
+`white = 3` / `gray = 2`; and `GrayPalette()` defines only indices 1–3,
+leaving 4–255 black. So every "white" string in the running demo resolves
+to black on black, and "gray" strings draw one of their three ink levels.
+`cmd/ff6demo` passes `nil` for the palette, so `GrayPalette` is what
+ships. The frame-hash goldens cannot see this: `Sum256` hashes indices and
+is deliberately palette-independent. Fix the convention, add the
+assertion, regenerate the goldens.
 
-Then Unit 9: a battle HUD scene consuming the font, the ATB layer, and
-those tables — the first player-visible battle screen.
+Then **Unit 12** — expose `ppu.vram` / `ppu.cgram` / `ppu.oamRam` /
+`spc.ram` and the PPU/DMA scalars through `internal/mesenstate` and
+`ff6lab state`. Every preserved savestate already carries them; only WRAM
+and SRAM are reachable today. This turns maps, sprites, backgrounds and
+the audio driver into work that needs **no live emulator session**.
 
-**Units 0–7 are complete** (branch `demo/new-game-to-whelk`, 8 commits,
-worktree clean, not pushed). DEMO-0001A is done: the demo runs windowed
-and headless and renders real extracted FF6 data. Readiness moved from
-0 Integrated to 7 Integrated + 1 Validated + 10 Implemented.
+Then **Unit 13 — X1, the FF6 compression format**, the keystone: recover
+it offline by reproducing captured VRAM byte-exactly from a ROM span.
+Falsifier is byte-exactness, or a recorded negative result.
+
+**Units 0–9 are complete and merged.** DEMO-0001A is done: the demo runs
+windowed and headless, renders real extracted FF6 data, and now shows a
+battle screen driven by real formations, real monster records and a live
+ATB layer with an operable ACTIVE/WAIT gate.
 
 Carrying forward: the `hud-font` extractor had been reading the wrong ROM
 range since 2026-07-30 (255 of 257 tiles were attack-table bytes), which
 ROM-0016 had recorded correctly the whole time — fixed, and now asserted.
-EXP-0049 closed the glyph mapping the census carried as Unknown.
+EXP-0049 closed the glyph mapping the census carried as Unknown. Unit 10
+found the same class twice more: the readiness summary disagreed with its
+own table, and `MESEN_CAPABILITY_MATRIX.md` recorded VRAM/CGRAM/OAM/ARAM
+as `Unknown` while `bridge.lua` had them wired and two experiments had
+already used them. **Two records of one fact are worth nothing unless
+something compares them.**
 
 ### Research actions, now sequenced behind the demo's critical path
 

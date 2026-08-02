@@ -139,11 +139,48 @@ Ordered next units (reorder when evidence exposes a better chain):
   `$C20EB6` is not a call frame, and `$C20016` never executed despite
   holding a plausible `JSR`
   ([record](../docs/experiments/EXP-0047-execution-path-invocation.md)).
-- [ ] **P0 NEXT — EXP-0048: name the invoker, with a different
-  instrument.** Stack archaeology has failed twice on this path. Exec
-  -watch outward from the confirmed `$C2141D`, or trace a single
-  invocation. Narrow question: one routine, ~every 100 frames, confirmed
-  sites to walk from.
+- [ ] **EXP-0048: name the invoker, with a different instrument.** Stack
+  archaeology has failed twice on this path. Exec-watch outward from the
+  confirmed `$C2141D`, or trace a single invocation. Narrow question: one
+  routine, ~every 100 frames, confirmed sites to walk from. **Requires a
+  live emulator session**, so it is deferred behind the offline-capable
+  units below; it is not blocked, only re-ordered.
+
+### P0 NEXT — the compression keystone, and the offline work that enables it
+
+Re-sequenced 2026-08-02 (Unit 10) on two findings.
+
+**(a) Dependency pressure is measurable now.** The
+[route content matrix](../docs/demo/DEMO-0001-CONTENT-MATRIX.md) counts, per
+route beat, which content dependencies gate it. **Compression (readiness X1)
+blocks 8 of the 19 beats** — more than any other single dependency — and it
+still has zero records and zero code.
+
+**(b) Most of the missing evidence is already captured and frozen.** Every
+preserved Mesen savestate under `local_artifacts/experiments/` and
+`mesen/out/` carries `ppu.vram` (64 KiB), `ppu.cgram` (512 B), `ppu.oamRam`
+(544 B), `spc.ram` (64 KiB ARAM), `memoryManager.workRam` (128 KiB), the full
+PPU register set and per-channel `dmaController.*` state. `internal/mesenstate`
+parses those files today but exposes only WRAM and SRAM. The corpus covers
+field (`EXP-0035/recon-mines-inside.mss`, `mesen/out/checkpoint3-mines.mss`),
+battle and post-victory states. **A decompressed FF6 tileset is therefore
+already in hand, hashed, and reproducible without an emulator.**
+
+- [ ] **P0 NEXT — expose the preserved PPU/ARAM state.** Add
+  `VideoRAM`/`CGRAM`/`OAM`/`AudioRAM` and the PPU/DMA scalars to
+  `internal/mesenstate`, and surface them through `ff6lab state`. Small,
+  synthetic-fixture testable, and it converts Tracks A/C/D/E from
+  "needs a session" to "needs analysis".
+- [ ] **P0 — X1: the FF6 compression format.** Recover it offline:
+  captured VRAM is the known-good output, `ff6lab rom gaps` narrows the
+  candidate source spans, and the falsifier is **byte-exact reproduction
+  of the captured bytes from a ROM span**. Cross-check against the
+  static side; the decompressor is reachable from the DMA source fields.
+  A negative result is a result: record the surviving alternatives and
+  do not implement on a hypothesis.
+- [ ] **P0 — read OAM out of a preserved capture.** Wired in
+  `bridge.lua` since it was written, and in every savestate, but **never
+  once examined**. Readiness F6 (field sprites) depends on it.
 - [ ] **ATB program, remaining (none blocking):** the exact increment
   formula, threshold and gauge reset; `+$3AA0` bit semantics; the action
   queue and readiness arbitration; status modifiers (Haste/Slow/Stop);

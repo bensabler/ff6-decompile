@@ -4,11 +4,12 @@
 - **Kind:** Production milestone (deliverable is a runnable program, not a record)
 - **Scenario record:** [SCN-0001](../scenarios/SCN-0001-opening-to-whelk.md)
 - **Machine manifest:** `data/scenarios/opening-to-whelk.json` (19 beats B01–B19)
-- **Readiness matrix:** [DEMO-0001-READINESS.md](DEMO-0001-READINESS.md)
+- **Readiness matrix:** [DEMO-0001-READINESS.md](DEMO-0001-READINESS.md) (by subsystem)
+- **Route content matrix:** [DEMO-0001-CONTENT-MATRIX.md](DEMO-0001-CONTENT-MATRIX.md) (by beat)
 - **Acceptance criteria:** [DEMO-0001-ACCEPTANCE.md](DEMO-0001-ACCEPTANCE.md)
 - **Deviations register:** [DEMO-0001-DEVIATIONS.md](DEMO-0001-DEVIATIONS.md)
 - **ROM revision:** SHA-256 `0f51b4fca41b7fd509e4b8f9d543151f68efa5e97b08493e4b2a0c06f5d8d5e2`
-- **Branch:** `demo/new-game-to-whelk`
+- **Branch:** `demo/whelk-content-parity` (foundation merged to `main` at `297ba88`, tagged `demo-0001-foundation-v0.1`)
 
 ## Deliverable
 
@@ -132,30 +133,43 @@ go run ./cmd/ff6lab extract all
 | Unit 3 | EXP-0049 — the encoding indexes the font block directly | `aabad71` |
 | Unit 4 | Engine core: framebuffer, scene machine, content layer | `2febc83` |
 | Unit 5 | **The demo runs.** Headless `cmd/ff6demo` renders real FF6 text | `5a8ffd8` |
-| Unit 6 | Windowed host (Ebitengine, confined + build-tagged) and ADR-0001 | — |
+| Unit 6 | Windowed host (Ebitengine, confined + build-tagged) and ADR-0001 | `a3c9797` |
+| Unit 7 | ATB layer ported to Go (`internal/game/atb`) | `726f20e` |
+| Unit 8 | Formation and monster decoders (`internal/game/battledata`) | `a4bf261` |
+| Unit 9 | **The demo runs a battle screen.** Battle HUD scene from extracted data; D2–D5 recorded | `a5ed352` |
+| — | Foundation merged to `main`, tagged `demo-0001-foundation-v0.1` | `297ba88` |
+| Unit 10 | Records reconciled; [route content matrix](DEMO-0001-CONTENT-MATRIX.md) created; readiness recount corrected | — |
 
 ## Exact next action
 
-**DEMO-0001A is complete.** The shell exists, runs windowed and headless,
-renders real extracted FF6 data, and every engine row of the readiness matrix
-is Integrated.
+**DEMO-0001A and the battle vertical's first pass are complete.** The shell
+runs windowed and headless, every engine row is Integrated, and Unit 9 put a
+battle screen on that shell driven by real formations, real monster records and
+a live ATB layer.
 
-Unit 7 — **port the ATB layer into Go**, the first battle-vertical unit and
-the first that moves a Battle row. Everything it needs is already Confirmed
-(EXP-0041…0047) and none of it needs an asset:
+The program is now on branch `demo/whelk-content-parity`, working the third
+phase: **field/event content recovery**. Two things changed the shape of that
+phase, both established during Unit 10 planning:
 
-- gauges `WRAM:+$3AB4`, 10 entries, **stride 2** — not the `$14` of the
-  HP/stat family;
-- per-slot increment `+$3AC8`, `gauge += $3AC8,X >> 1` at `ROMCPU:$C21195`;
-- config sampled once at entry (`ROMCPU:$C22472`) into `+$3A8F` (Wait flag)
-  and `+$3A90` (`255 − 24 × speed`), with Battle Speed scaling **enemy gauges
-  only**;
-- the ACTIVE/WAIT gate at `ROMCPU:$C21124`, `LDA $2F41 / AND $3A8F / BNE`.
+1. **Compression is the keystone, measured.** The
+   [route content matrix](DEMO-0001-CONTENT-MATRIX.md) counts dependency
+   pressure across the 19 beats: X1 blocks **8 of 19**, more than any other
+   single dependency, and it still has zero records and zero code.
+2. **The evidence for most of the missing families is already captured.** Every
+   preserved Mesen savestate under `local_artifacts/experiments/` carries
+   `ppu.vram` (64 KiB), `ppu.cgram`, `ppu.oamRam`, `spc.ram` (64 KiB ARAM) and
+   the full PPU/DMA register set. `internal/mesenstate` parses those files
+   already but exposes only WRAM and SRAM. Exposing the rest turns maps,
+   sprites, backgrounds and the audio driver into work that needs **no live
+   emulator session** — the decompressed output is already frozen and hashed.
 
-`internal/engine`'s `LiveScene` interface already exists to express that gate:
-EXP-0044 established that a battle keeps advancing under the command window
-but pauses under the ability list.
+Unit sequence from here:
 
-Then Unit 8 (formation and monster decoders from the archived `.bin` tables)
-and Unit 9 (a battle HUD scene using the font and the gauge tiles EXP-0049
-identified).
+- **Unit 11** — fix the palette defect that renders the demo's text black on
+  black, and add the assertion that would have caught it.
+- **Unit 12** — expose VRAM/CGRAM/OAM/ARAM and the PPU/DMA scalars from
+  preserved savestates through `internal/mesenstate` and `ff6lab state`.
+- **Unit 13** — **X1, the FF6 compression format**, recovered offline by
+  differential reproduction of captured VRAM from a ROM span. Falsifier:
+  byte-exact reproduction, or a recorded negative result.
+- **Unit 14** — F1/F2, the first authentic field scene.

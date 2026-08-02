@@ -1,11 +1,18 @@
 # DEMO-0001 readiness matrix
 
 - **Milestone:** [DEMO-0001](DEMO-0001-new-game-to-whelk.md)
-- **Updated:** 2026-08-02 (Unit 9 — battle HUD scene)
+- **Route view:** [DEMO-0001-CONTENT-MATRIX.md](DEMO-0001-CONTENT-MATRIX.md)
+- **Updated:** 2026-08-02 (Unit 10 — records reconciliation)
 
 Every player-visible requirement of the acceptance run appears here exactly
 once. This file is the demo's critical-path instrument: unit selection reads it,
 and every completed unit updates it.
+
+It is organized **by subsystem**. The route view of the same work — which
+content each of the 19 SCN-0001 beats needs before it can be played — lives in
+[DEMO-0001-CONTENT-MATRIX.md](DEMO-0001-CONTENT-MATRIX.md). That file
+references these rows; it never restates their status. Where the two disagree,
+this file wins.
 
 ## Status vocabulary
 
@@ -72,6 +79,7 @@ retired that deviation; see DEVIATIONS D1.
 | B16 | Party battle sprites | Battle graphics | — | ROM location, format | — | — | — | compression | `Unknown` | research unit not yet scheduled |
 | B17 | Battle HUD (names, HP, gauges, damage numerals) | Battle UI | HUD font + glyph mapping Confirmed; EXP-0049 decoded the layout (CEN-BATTLE-0014) and identified the five gauge tiles (CEN-GFX-0005) | the compose routine; per-field cell addresses; gauge fill quantisation (**D5**); damage numerals; **party side (D4)** | — | `internal/game/scenes.Battle` | enemy rows, HP and live gauges render from extracted data using the identified tiles | T1, T3, B4 | `Integrated` (enemy side) | party side needs F14 |
 | B18 | Victory detection, rewards, battle exit | Battle flow | EXP-0033: battle 1 gives 32 EXP / 96 GP; writeback `ROMCPU:$C2496E`/`$C24979` → `WRAM:+$1609`/`+$160D` | reward field layout in monster records | — | — | — | B8 | `Evidence Ready` | Unit 8+ |
+| B19 | Action animations and effects | Battle graphics | — | everything: attack/spell/damage effect graphics, frame tables, timing | — | — | — | compression | `Unknown` | research unit not yet scheduled |
 
 ## Field, event, and world
 
@@ -111,30 +119,58 @@ retired that deviation; see DEVIATIONS D1.
 | X1 | FF6 compression format | **none** — never investigated, zero records, zero code | identification, algorithm, decompressor | `Unknown` | **Highest-leverage unscheduled research.** Gates F1, F6, B14, B15, B16 |
 | X2 | Reproducible one-command asset generation | `ff6lab extract all` + `archive verify` 8/8 | dialogue/maps/animations/scripts categories are empty | `Extractor Ready` | extend per family as formats land |
 | X3 | Whelk victory observed at all | **never achieved.** EXP-0040 lost twice; ATB blocker since discharged | a completed Branch-A run | `Blocked` | re-run with the ATB model in hand |
+| X4 | Scene transition effects (fades, battle-entry wipes) | **none** — named by the route, owned by no other row until now | which effects the route uses, their driver, their timing | `Unknown` | research unit not yet scheduled |
 
-## Summary at Unit 0
+## Summary
 
-| Status | Unit 0 | Now (Unit 9) |
+Both columns are **counted from the tables above**, not carried forward from
+prose.
+
+| Status | Unit 0 (`969b5dd`) | Now (Unit 10) |
 |---|---|---|
 | `Validated` | 0 | **1** |
-| `Integrated` | 0 | **13** |
+| `Integrated` | 0 | **14** |
 | `Implemented` | 5 | 6 |
-| `Evidence Ready` | 7 | 2 |
+| `Evidence Ready` | 6 | 1 |
 | `Extractor Ready` | 2 | 1 |
 | `Researching` | 3 | 2 |
 | `Blocked` | 2 | 2 |
 | `Deferred` | 1 | 1 |
-| `Unknown` | 33 | 25 |
+| `Unknown` | 36 | 29 |
+| **Total rows** | **55** | **57** |
+
+B17 carries `Integrated` (enemy side) and is counted as Integrated; its party
+half is deviation D4.
+
+Unit 10 added two rows — B19 (action animations) and X4 (transition effects) —
+which the [route content matrix](DEMO-0001-CONTENT-MATRIX.md) found were named
+by the route and owned by no requirement. Both are `Unknown`. Nothing regressed.
+
+### A correction, recorded rather than patched
+
+**Unit 0's summary was wrong, and every record that quoted it inherited the
+error.** This file has carried **55** rows since `969b5dd`, not 53; Unit 0's
+Unknown count was 36, not 33; its Evidence Ready count was 6, not 7. The figure
+"53 requirements" then propagated into the milestone record, `MILESTONES.md`,
+`CURRENT_FOCUS.md` and the checkpoint chain.
+
+This is the failure mode of deviation D1 again: two independent records of one
+fact, disagreeing, with nothing comparing them. Dated historical claims about
+the *start* state are left as written and annotated; the live figures here are
+recounted. An audit check asserting this table against the actual row counts is
+scheduled, so the class cannot recur silently.
 
 **The demo now runs a battle screen.** Unit 9 moved six Battle rows into the
 executable: real formations, real monster HP from the real records, and live
 ATB gauges drawn with the tiles EXP-0049 identified, with the ACTIVE/WAIT gate
-operable from the pad.
+operable from the pad. Units 5–6 had moved the first eight rows in and one to
+Validated — T1, whose archive-vs-ROM differential passes on all 256 glyphs.
 
-Units 5-6 moved the first eight rows into the executable and one to Validated — T1, whose archive-vs-ROM differential passes on all
-256 glyphs.
+**Every Integrated row is still engine, text, or battle-table plumbing.** Not
+one row of the Field or Audio sections has moved, and none will until the
+research that unblocks the field half lands. The
+[route content matrix](DEMO-0001-CONTENT-MATRIX.md) measures the same fact from
+the other direction: **X1, compression, blocks 8 of the 19 route beats** — more
+than any other single dependency — and it remains at zero records.
 
-Every Integrated row is engine or text plumbing. No row of the Battle, Field,
-or Audio sections has moved, and none will until either the ATB port (Unit 7)
-or the research that unblocks the field half lands. That is the honest shape
-of the progress: the demo has a spine, not yet a game.
+That is the honest shape of the progress: the demo has a spine, not yet a game.
