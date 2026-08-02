@@ -1,10 +1,47 @@
 # Current Focus
 
-**Program:** SCN-0001 — reconstruct the opening scenario, New Game
-through Whelk victory, as an evidence-backed vertical slice.
+**Active program:** DEMO-0001 — produce a **playable Go demo** of New
+Game through Whelk victory. Started 2026-08-02 on branch
+`demo/new-game-to-whelk`. The deliverable is a runnable program;
+research, extraction, and documentation are supporting activities.
+Records: `docs/demo/DEMO-0001-new-game-to-whelk.md`,
+`DEMO-0001-READINESS.md` (the critical-path instrument),
+`DEMO-0001-ACCEPTANCE.md`, `DEMO-0001-DEVIATIONS.md`.
+
+**Evidence program:** SCN-0001 — reconstruct the opening scenario, New
+Game through Whelk victory, as an evidence-backed vertical slice.
 Master record: `docs/scenarios/SCN-0001-opening-to-whelk.md`;
 machine manifest: `data/scenarios/opening-to-whelk.json`
 (19 beats B01–B19, per-beat status and links live there).
+DEMO-0001 **consumes** SCN-0001; it does not replace it.
+
+## DEMO-0001 build order — evidence-led, not route-ordered
+
+Decided 2026-08-02. The milestone ladder reads in route order (shell →
+opening → first map → events → battle), but the project's evidence is
+distributed almost inversely: a field room needs the map system and a
+compression format, both at **zero records**, while a battle needs
+systems already Confirmed and partly in Go.
+
+1. **Technical shell** — executable, deterministic loop, input, indexed
+   framebuffer, archive-backed asset loading, headless frame capture.
+2. **Battle vertical** — ATB model into Go, formation/monster decoders,
+   battle HUD scene, then a playable encounter.
+3. **Field/event vertical** — gated behind research into the map system,
+   the dialogue corpus, and the event opcode table.
+
+Readiness at program start: **0 of 53 requirements Integrated** — 5
+Implemented, 7 Evidence Ready, 2 Extractor Ready, 3 Researching, 2
+Blocked, 1 Deferred, **33 Unknown**. ROM ownership 0.49 %.
+
+**Defect found at program start (D1, parity-blocking):** the `hud-font`
+extractor reads `ROMFILE:0x046FC0` as a block start, but that address is
+only the arithmetic anchor for tile index 0. The real block is
+`ROMFILE:0x047FB0-0x048FBF`, which `manifests/rom-regions.json` ROM-0016
+already records correctly — so the manifest and the extractor contradict
+each other. **255 of 257 tiles in the shipped `hud-font-sheet.png` are
+attack-table bytes rendered as tiles.** Verified by decoding the tracked
+EXP-0023 dump.
 
 ## Golden route — power-on through milestone 05
 
@@ -208,6 +245,20 @@ being dereferenced: event-script pointer, command length, script frame-wait.
 The **immediate predecessor is unresolved**.
 
 ## Next exact action
+
+**DEMO-0001 Unit 1 — correct the HUD font extractor's ROM range**
+(`ROMFILE:0x046FC0` → `0x047FB0`), regenerate the archive, and
+synchronize GFX-0001 / EXP-0023 / CEN-GFX-0001 with ROM-0016. Nothing
+visual can be built on that asset until it lands. Then Unit 2
+(`internal/platform/snesaddr`), Unit 3 (EXP-0049 glyph mapping), Unit 4
+(engine core), Unit 5 (headless `cmd/ff6demo`), Unit 6 (Ebitengine host
++ ADR-0001).
+
+### Research actions, now sequenced behind the demo's critical path
+
+These remain the correct next research units, and each is named in the
+readiness matrix against the demo requirement it unblocks. They are no
+longer the *first* action, because implementation-ready work exists.
 
 **Name the immediate predecessor at `ROMCPU:$C09B59`.** Exec-watch the
 dispatcher's `JMP ($002A)` alongside `$C09B5C`, capturing DP `$2A`/`$2B`
