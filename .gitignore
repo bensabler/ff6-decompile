@@ -35,3 +35,10 @@ coverage.out
 Thumbs.db
 .idea/
 .vscode/
+
+# External/static-analysis work products
+local_artifacts/static-analysis/
+*.gpr
+*.rep/
+*.lock
+*.lock~

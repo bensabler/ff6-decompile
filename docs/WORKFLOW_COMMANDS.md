@@ -5,6 +5,7 @@
 **Use:** Once after installing or upgrading to Version 4.
 
 **Performs:**
+
 - inventories the repository;
 - preserves earlier research;
 - checks directory structure;
@@ -23,6 +24,7 @@
 **Use:** At the beginning of every fresh Claude session.
 
 **Performs:**
+
 - reads the latest checkpoint;
 - reads current focus, queue, blockers, and open contradictions;
 - checks the working tree;
@@ -38,6 +40,7 @@
 **Use:** Let Claude choose the next bounded research unit.
 
 **Performs:**
+
 - scores queued tasks by information gain, dependencies, cost, and reproducibility;
 - selects one task;
 - writes an experiment plan;
@@ -54,6 +57,7 @@
 **Use:** Before stopping, changing models, compacting context, installing files, or interrupting Mesen.
 
 **Performs:**
+
 - records active question and state;
 - lists evidence and changed files;
 - captures exact next action;
@@ -145,6 +149,7 @@ Compares reconstructed output to deterministic runtime evidence. Reports exact p
 ## `/investigate-audio <cue>`
 
 Creates a controlled audio trigger and separates:
+
 - CPU/APU messaging;
 - SPC700 driver behavior;
 - sequence data;
@@ -193,6 +198,7 @@ Freezes implementation, gathers conflicting claims and source evidence, runs a d
 ## `/implement-discovery <discovery ID>`
 
 Converts only sufficiently proven findings into Go:
+
 - code;
 - tests;
 - fuzz targets where appropriate;
@@ -211,6 +217,7 @@ Runs formatting, tests, vet, schema checks, repository-boundary audit, broken-re
 ## `/audit-project`
 
 Performs a deeper read-only-first review of:
+
 - unsupported claims;
 - stale dashboards;
 - inconsistent addresses;
@@ -230,3 +237,27 @@ Recalculates status, merges duplicate questions, flags stale hypotheses, audits 
 ## `/prepare-release <version>`
 
 Runs release checks and produces a release report. It must fail if ROM-derived bytes are tracked or quality gates fail.
+
+---
+
+## `/bootstrap-ghidra`
+
+Verifies the local Ghidra/SNES Loader environment, ROM identity, HiROM mapping, known address resolution, external workspace location, and current 65816 state limitations. It does not begin research or rename functions.
+
+---
+
+## `/correlate-static-runtime <ROMCPU address or question>`
+
+Creates one bounded correlation between Ghidra static leads and Mesen runtime evidence. Requires explicit processor-state assumptions, a falsification test, and a correlation record.
+
+Example:
+
+```text
+/correlate-static-runtime ROMCPU:$C0B593
+```
+
+---
+
+## `/export-ghidra-symbols`
+
+Exports reviewed labels/bookmarks to local text or JSON for audit. It never commits the Ghidra database or promotes names automatically.

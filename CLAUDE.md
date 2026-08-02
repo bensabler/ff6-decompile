@@ -307,3 +307,11 @@ process must:
 
 Do not begin a new research target while a recoverable active unit remains
 unfinished.
+
+### Static analysis
+
+- `/bootstrap-ghidra`
+- `/correlate-static-runtime`
+- `/export-ghidra-symbols`
+
+Ghidra output is a static lead. Mesen execution and bounded experiments are required before semantic confirmation.
