@@ -1,5 +1,21 @@
 # Architecture
 
+## Product lanes
+
+[ADR-0002](docs/decisions/ADR-0002-project-product-lanes.md) names five logical
+products in this one repository, each with its own correctness criterion:
+
+| Lane | Product | Criterion | Where |
+|---|---|---|---|
+| 1 | Evidence and RE laboratory | falsifiability | `docs/` `dashboards/` `indexes/` `manifests/` `schemas/` `mesen/` `.claude/` `cmd/ff6lab` and its supporting packages |
+| 2 | Native Go port | it runs, tests pass, each behavior traces to a Confirmed record | `cmd/ff6demo` `internal/engine` `internal/content` `internal/game` `internal/graphics` `internal/platform` `internal/audio` |
+| 3 | Matching SNES reconstruction | byte-matching assembly | `reconstruction/snes/` — **not started** |
+| 4 | Shared semantic specifications | two implementations from it agree byte-for-byte | `specs/` — **not yet extracted**; today embedded in `docs/discoveries/` and Go doc comments |
+| 5 | Private generated asset archive | byte-identical regeneration from the operator's ROM | `local_artifacts/archive/` — **never tracked** |
+
+No code moved to establish these lanes. The one boundary that matters is
+already mechanically enforced — see *The demo's ROM boundary* below.
+
 ## Repository layers
 
 ```text
