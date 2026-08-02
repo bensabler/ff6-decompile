@@ -1,7 +1,4 @@
-# Latest Checkpoint
-
-**[2026-08-02 — AUDIT-0001, workflow governance and orchestration utilization](2026-08-02-audit-0001-workflow-governance.md)**
-(preceding: [Tactical pause, evidence harvested and hashed](2026-08-02-tactical-pause-evidence-harvested.md))
+# Checkpoint — AUDIT-0001, workflow governance and orchestration utilization
 
 **Date:** 2026-08-02 · **Branch:** `maintenance/workflow-observability`
 **Parent:** `581ddbc` on `demo/whelk-content-parity`

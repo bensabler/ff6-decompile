@@ -1,12 +1,12 @@
 # Statistics
 
-As of 2026-08-02 (session 005 close; regenerate via
+As of 2026-08-02 (session 006 close; regenerate via
 `/weekly-review`). Counts are recounted from the tracked records, manifests and
 indexes rather than edited incrementally.
 
 | Metric | Count |
 |---|---|
-| Documented sessions | 5 (SES-001..005; SES-003 reconstructed post-hoc). SES-004 and SES-005 were absent from `indexes/SESSIONS.md` until 2026-08-02 |
+| Documented sessions | 6 (SES-001..006; SES-003 reconstructed post-hoc). SES-004 and SES-005 were absent from `indexes/SESSIONS.md` until 2026-08-02. SES-006 is an audit session — no game research |
 | Function records | 9 (FN-0001..0009; FN-0003..0009 Confirmed code via EXP-0001/0003/0006/0009/0010) |
 | Experiment records | 52 (EXP-0001..0047 and EXP-0049..0053; **EXP-0048 is queued, no record exists**). EXP-0008/0020/0051 negative results; EXP-0040 `blocked`, no Whelk victory |
 | Discovery records | 8 (DISC-0001..0008, all Confirmed) |
