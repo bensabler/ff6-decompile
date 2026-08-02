@@ -445,8 +445,15 @@ func evaluateEventEligibility(event RunEvent) EventEligibility {
 			if event.Selector == "" {
 				return EventEligibility{Reason: "tool event has no selector"}
 			}
+			if strings.TrimSpace(event.ToolUseID) == "" {
+				return EventEligibility{Reason: "provider tool completion lacks a tool-use binding"}
+			}
+			if event.ExitStatus == nil {
+				return EventEligibility{Eligible: true, ObservationKind: ObsBackendRun,
+					Reason: "bound provider tool completion has no captured command exit status and is only unverifiable"}
+			}
 			return EventEligibility{Eligible: true, ObservationKind: ObsBackendRun,
-				Reason: "collector-observed provider tool completion"}
+				Reason: "collector-observed provider tool completion bound to a captured command exit status"}
 		default:
 			return EventEligibility{Reason: fmt.Sprintf("event_kind %s is not invocation evidence", event.EventKind)}
 		}
@@ -492,7 +499,7 @@ func evidenceFromLedger(verification LedgerVerification) Evidence {
 		}
 		ref := fmt.Sprintf("ledger:%s:%d:%s:%s", event.RunID, event.Sequence, event.EventID, event.EventHash)
 		ev.Observations = append(ev.Observations, Observation{
-			Kind: eligibility.ObservationKind, Selector: event.Selector,
+			Kind: eligibility.ObservationKind, Sequence: event.Sequence, Selector: event.Selector,
 			ExitStatus: event.ExitStatus, Timestamp: event.ObservedAt, EvidenceRef: ref,
 		})
 	}

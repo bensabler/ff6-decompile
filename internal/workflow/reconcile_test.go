@@ -28,6 +28,12 @@ func agentReq(id string, n Necessity, p FailurePolicy) Requirement {
 	return r
 }
 
+func backendReq(id string) Requirement {
+	return Requirement{ResourceID: id, ResourceType: "backend", Necessity: Required,
+		Mode: ModeDeterministicBackend, EvidenceRule: "captured exit status",
+		Policy: BlockCompletion}
+}
+
 // The nine negative acceptance tests from AUDIT-0002 remediation plan v2.
 // Each reproduces a failure mode actually observed in AUDIT-0001 or AUDIT-0002.
 // N6 and N9 belong to R14, which owns the transcript reader and the receipt.
@@ -180,6 +186,82 @@ func TestN7ContractChangedAfterFreezing(t *testing.T) {
 	}
 	if len(got.Notes) == 0 {
 		t.Error("rejection must explain itself")
+	}
+}
+
+func TestDeterministicBackendLatestSequenceGoverns(t *testing.T) {
+	const selector = "go test ./..."
+	observation := func(sequence uint64, observedSelector string, status *int, ref string) Observation {
+		return Observation{Kind: ObsBackendRun, Sequence: sequence, Selector: observedSelector,
+			ExitStatus: status, EvidenceRef: ref}
+	}
+	tests := []struct {
+		name         string
+		observations []Observation
+		wantOutcome  Outcome
+		wantVerdict  Verdict
+		wantEvidence string
+	}{
+		{
+			name: "pass then fail",
+			observations: []Observation{
+				observation(1, selector, ptr(0), "EV-1"),
+				observation(2, selector, ptr(2), "EV-2"),
+			},
+			wantOutcome: OutcomeUnsatisfied, wantVerdict: Failed, wantEvidence: "EV-2",
+		},
+		{
+			name: "fail then pass",
+			observations: []Observation{
+				observation(1, selector, ptr(2), "EV-1"),
+				observation(2, selector, ptr(0), "EV-2"),
+			},
+			wantOutcome: OutcomeSatisfied, wantVerdict: Complete, wantEvidence: "EV-2",
+		},
+		{
+			name: "pass then unverifiable",
+			observations: []Observation{
+				observation(1, selector, ptr(0), "EV-1"),
+				observation(2, selector, nil, "EV-2"),
+			},
+			wantOutcome: OutcomeUnverifiable, wantVerdict: Unverifiable, wantEvidence: "EV-2",
+		},
+		{
+			name: "unverifiable then pass",
+			observations: []Observation{
+				observation(1, selector, nil, "EV-1"),
+				observation(2, selector, ptr(0), "EV-2"),
+			},
+			wantOutcome: OutcomeSatisfied, wantVerdict: Complete, wantEvidence: "EV-2",
+		},
+		{
+			name: "no matching run",
+			observations: []Observation{
+				observation(1, "go vet ./...", ptr(0), "EV-other"),
+			},
+			wantOutcome: OutcomeUnsatisfied, wantVerdict: Partial,
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			rec := Reconcile(frozen(t, backendReq(selector)), Evidence{Observations: tt.observations})
+			if rec.Verdict != tt.wantVerdict {
+				t.Fatalf("verdict = %q, want %q: %+v", rec.Verdict, tt.wantVerdict, rec)
+			}
+			if len(rec.Results) != 1 || rec.Results[0].Outcome != tt.wantOutcome {
+				t.Fatalf("results = %+v, want outcome %q", rec.Results, tt.wantOutcome)
+			}
+			if tt.wantEvidence == "" {
+				if len(rec.Results[0].Evidence) != 0 {
+					t.Errorf("evidence = %v, want none", rec.Results[0].Evidence)
+				}
+				return
+			}
+			if len(rec.Results[0].Evidence) != 1 || rec.Results[0].Evidence[0] != tt.wantEvidence {
+				t.Errorf("evidence = %v, want governing ref %q", rec.Results[0].Evidence, tt.wantEvidence)
+			}
+		})
 	}
 }
 

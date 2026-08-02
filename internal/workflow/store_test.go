@@ -264,6 +264,66 @@ func TestRunIdentityReplacementBreaksVerification(t *testing.T) {
 	}
 }
 
+func TestAppendRejectsReplacedIdentityBeforeLedgerOrStateMutation(t *testing.T) {
+	root := fixtureRoot(t)
+	s, c := startedRun(t, root, agentReq("graphics-researcher", Required, BlockCompletion))
+	st, err := s.LoadState(c.WorkflowID)
+	if err != nil {
+		t.Fatal(err)
+	}
+	identity, err := s.LoadRunIdentity(c.WorkflowID)
+	if err != nil {
+		t.Fatal(err)
+	}
+	event := nextEvent(t, s, c.WorkflowID, EventAgentStarted, "graphics-researcher",
+		SourceProviderHook, TrustCollectorObserved)
+	ledgerPath := s.EventsPath(c.WorkflowID, st.RunID)
+	ledgerBefore, err := os.ReadFile(ledgerPath)
+	if err != nil {
+		t.Fatal(err)
+	}
+	stateBefore, err := os.ReadFile(s.StatePath(c.WorkflowID))
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	identity.WorkflowID = "WF-9999"
+	identity.RunID = "run-ffffffffffffffffffffffffffffffff"
+	identity.ContractHash = strings.Repeat("f", 64)
+	if problems := identity.validate(); len(problems) != 0 {
+		t.Fatalf("replacement identity must remain structurally valid: %v", problems)
+	}
+	event.WorkflowID = identity.WorkflowID
+	event.RunID = identity.RunID
+	event.ContractHash = identity.ContractHash
+	if err := WriteJSON(s.IdentityPath(c.WorkflowID, st.RunID), identity); err != nil {
+		t.Fatal(err)
+	}
+
+	err = s.appendEvent(c.WorkflowID, event)
+	if err == nil {
+		t.Fatal("append accepted a replaced immutable identity")
+	}
+	if got := err.Error(); !strings.Contains(got, "identity hash") ||
+		!strings.Contains(got, "run identity does not match durable state") {
+		t.Fatalf("append error = %v, want complete identity/state verification", err)
+	}
+	ledgerAfter, err := os.ReadFile(ledgerPath)
+	if err != nil {
+		t.Fatal(err)
+	}
+	stateAfter, err := os.ReadFile(s.StatePath(c.WorkflowID))
+	if err != nil {
+		t.Fatal(err)
+	}
+	if string(ledgerAfter) != string(ledgerBefore) {
+		t.Error("identity rejection modified ledger bytes")
+	}
+	if string(stateAfter) != string(stateBefore) {
+		t.Error("identity rejection modified durable tail state bytes")
+	}
+}
+
 func TestAppendRejectsCrossBoundaryAndHistoricalEvents(t *testing.T) {
 	tests := []struct {
 		name   string
@@ -404,6 +464,126 @@ func TestBackendEventRequiresEligibleCompletionAndExitStatus(t *testing.T) {
 	}
 	if rec.Verdict != Complete {
 		t.Errorf("verdict = %q, want complete", rec.Verdict)
+	}
+}
+
+func TestProviderToolFinishedEligibility(t *testing.T) {
+	const selector = "go test ./..."
+	tests := []struct {
+		name        string
+		mutate      func(*RunEvent)
+		wantOutcome Outcome
+		wantVerdict Verdict
+		wantReason  string
+		wantNote    string
+	}{
+		{
+			name: "tool_finished without tool_use_id cannot satisfy a backend",
+			mutate: func(e *RunEvent) {
+				e.ToolUseID = ""
+			},
+			wantOutcome: OutcomeUnsatisfied, wantVerdict: Partial,
+			wantReason: "did not run", wantNote: "lacks a tool-use binding",
+		},
+		{
+			name: "tool_finished with empty tool_use_id cannot satisfy a backend",
+			mutate: func(e *RunEvent) {
+				e.ToolUseID = "   "
+			},
+			wantOutcome: OutcomeUnsatisfied, wantVerdict: Partial,
+			wantReason: "did not run", wantNote: "lacks a tool-use binding",
+		},
+		{
+			name: "tool_finished without captured exit status cannot satisfy a backend",
+			mutate: func(e *RunEvent) {
+				e.ExitStatus = nil
+			},
+			wantOutcome: OutcomeUnverifiable, wantVerdict: Unverifiable,
+			wantReason: "no exit status was captured",
+		},
+		{
+			name: "selector session and turn alone are insufficient",
+			mutate: func(e *RunEvent) {
+				e.ToolUseID = ""
+				e.ExitStatus = nil
+			},
+			wantOutcome: OutcomeUnsatisfied, wantVerdict: Partial,
+			wantReason: "did not run", wantNote: "lacks a tool-use binding",
+		},
+		{
+			name: "properly bound provider tool completion satisfies a backend",
+			mutate: func(e *RunEvent) {
+				e.ToolUseID = "provider-tool-use-1"
+			},
+			wantOutcome: OutcomeSatisfied, wantVerdict: Complete,
+			wantReason: "backend exited 0",
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			root := fixtureRoot(t)
+			s, c := startedRun(t, root, backendReq(selector))
+			event := nextEvent(t, s, c.WorkflowID, EventToolFinished, selector,
+				SourceProviderHook, TrustCollectorObserved)
+			event.ExitStatus = ptr(0)
+			tt.mutate(&event)
+			appendEvent(t, s, c.WorkflowID, event)
+			if verification := s.VerifyLedger(c.WorkflowID); !verification.Valid {
+				t.Fatalf("provider event must remain structurally valid: %v", verification.Problems)
+			}
+			rec, err := s.Close(c.WorkflowID, "2026-08-02T00:01:00Z")
+			if err != nil {
+				t.Fatal(err)
+			}
+			if rec.Verdict != tt.wantVerdict {
+				t.Fatalf("verdict = %q, want %q: %+v", rec.Verdict, tt.wantVerdict, rec)
+			}
+			if len(rec.Results) != 1 || rec.Results[0].Outcome != tt.wantOutcome {
+				t.Fatalf("results = %+v, want outcome %q", rec.Results, tt.wantOutcome)
+			}
+			if !strings.Contains(rec.Results[0].Reason, tt.wantReason) {
+				t.Errorf("reason = %q, want substring %q", rec.Results[0].Reason, tt.wantReason)
+			}
+			if tt.wantNote != "" && !strings.Contains(strings.Join(rec.Notes, "; "), tt.wantNote) {
+				t.Errorf("notes = %v, want substring %q", rec.Notes, tt.wantNote)
+			}
+		})
+	}
+}
+
+func TestLedgerSequenceSurvivesConversionAndLatestBackendCompletionGoverns(t *testing.T) {
+	const selector = "go test ./..."
+	root := fixtureRoot(t)
+	s, c := startedRun(t, root, backendReq(selector))
+	pass := nextEvent(t, s, c.WorkflowID, EventBackendFinished, selector,
+		SourceDeterministicBackend, TrustBackendExitStatus)
+	pass.ExitStatus = ptr(0)
+	appendEvent(t, s, c.WorkflowID, pass)
+	fail := nextEvent(t, s, c.WorkflowID, EventBackendFinished, selector,
+		SourceDeterministicBackend, TrustBackendExitStatus)
+	fail.ExitStatus = ptr(2)
+	appendEvent(t, s, c.WorkflowID, fail)
+
+	rec, err := s.Close(c.WorkflowID, "2026-08-02T00:01:00Z")
+	if err != nil {
+		t.Fatal(err)
+	}
+	if rec.Verdict != Failed || len(rec.Results) != 1 || rec.Results[0].Outcome != OutcomeUnsatisfied {
+		t.Fatalf("latest failing completion did not govern: %+v", rec)
+	}
+	st, err := s.LoadState(c.WorkflowID)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if len(st.Evidence.Observations) != 2 || st.Evidence.Observations[0].Sequence != 1 ||
+		st.Evidence.Observations[1].Sequence != 2 {
+		t.Fatalf("converted observation sequences = %+v, want [1 2]", st.Evidence.Observations)
+	}
+	if len(rec.Results[0].Evidence) != 1 ||
+		rec.Results[0].Evidence[0] != st.Evidence.Observations[1].EvidenceRef {
+		t.Errorf("result evidence = %v, want final completion %q",
+			rec.Results[0].Evidence, st.Evidence.Observations[1].EvidenceRef)
 	}
 }
 

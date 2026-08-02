@@ -124,9 +124,16 @@ Current eligibility is deliberately narrow:
   are present;
 - collector-observed `skill_selected` events can satisfy exact skill
   invocation requirements under the same identity constraint;
-- provider `tool_finished` events and deterministic
-  `backend_finished`/`validation_finished` events can become backend
-  observations; a null exit status remains unverifiable, never success;
+- a provider-hook `tool_finished` event can become a backend observation only
+  when it is collector-observed, carries provider session and turn identity,
+  names the exact executed command in `selector`, and has a non-empty
+  `tool_use_id` binding it to the distinct provider tool call. A captured
+  non-null command exit status governs pass or failure. A bound completion
+  with a null status remains ordering-visible only as unverifiable evidence;
+  generic provider tool completion is never inferred to mean command success;
+- deterministic `backend_finished`/`validation_finished` events can become
+  backend observations; a null exit status remains unverifiable, never
+  success;
 - output events become artifact observations only;
 - manual imports, legacy transcripts, unknown provenance, self-reported hook
   events, and operator records cannot satisfy invocation requirements here.
@@ -134,6 +141,13 @@ Current eligibility is deliberately narrow:
 `collector_observed` and `backend_exit_status` are recorded trust bases, not
 cryptographic proof. A future adapter must be reviewed and capability-tested
 before its claims should be relied upon.
+
+Each converted observation retains its verified ledger sequence. For an exact
+deterministic-backend selector, the eligible observation with the greatest
+sequence is the sole governing completion: exit zero satisfies, non-zero
+fails, and null is unverifiable. Earlier matching completions are superseded.
+No match is unsatisfied. Reconciliation does not use event timestamps, slice
+position, or map iteration as a substitute for ledger order.
 
 ## Damaged or incomplete evidence
 
@@ -155,12 +169,16 @@ contract last. If identity creation succeeds but ledger creation fails, or a
 later ordinary start step fails, the newly created runtime bundle and any new
 contract file are removed. An existing run is never overwritten or repaired.
 
-An append rejected during validation leaves the ledger unchanged. The event
-record is appended and synced before the tail anchor is updated atomically. If
-the process or filesystem fails after only one of those durable writes, the
-ledger and anchor disagree; verification then marks the channel invalid rather
-than guessing which side to repair. A partially written final JSONL line is
-also invalid and remains available for external diagnosis.
+Under the per-run append lock, the writer first verifies the complete immutable
+identity: its canonical hash must equal `state.identity_hash`, and its workflow,
+run, and contract fields must equal durable state. A replaced or mismatched
+identity is rejected before any ledger bytes are appended. Any append rejected
+during validation leaves both the ledger and durable tail state unchanged. The
+event record is appended and synced before the tail anchor is updated
+atomically. If the process or filesystem fails after only one of those durable
+writes, the ledger and anchor disagree; verification then marks the channel
+invalid rather than guessing which side to repair. A partially written final
+JSONL line is also invalid and remains available for external diagnosis.
 
 ## Default close path and compatibility
 

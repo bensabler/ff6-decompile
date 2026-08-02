@@ -31,6 +31,10 @@ const GeneralPurposeAgent = "general-purpose"
 // Observation is one thing that was seen during execution.
 type Observation struct {
 	Kind ObservationKind `json:"kind"`
+	// Sequence is the verified run-ledger sequence. It is the authoritative
+	// ordering for run-bound observations; timestamps are not used to decide
+	// which backend completion governs.
+	Sequence uint64 `json:"sequence,omitempty"`
 	// Selector is the exact identifier observed: a subagent_type, a skill name,
 	// a command, or an output path.
 	Selector string `json:"selector"`
@@ -242,24 +246,42 @@ func check(r Requirement, ev Evidence) Result {
 			res.Outcome, res.Reason = OutcomeUnverifiable, "backend record incomplete: "+why
 			return res
 		}
-		for _, o := range ev.Observations {
+		var latest *Observation
+		ambiguousLatest := false
+		for i := range ev.Observations {
+			o := &ev.Observations[i]
 			if o.Kind != ObsBackendRun || o.Selector != r.ResourceID {
 				continue
 			}
-			if o.ExitStatus == nil {
-				res.Outcome, res.Reason = OutcomeUnverifiable,
-					"backend ran but no exit status was captured; a blank status is not a pass"
-				return res
+			if latest == nil || o.Sequence > latest.Sequence {
+				latest = o
+				ambiguousLatest = false
+				continue
 			}
-			res.Evidence = append(res.Evidence, o.EvidenceRef)
-			if *o.ExitStatus != 0 {
-				res.Outcome, res.Reason = OutcomeUnsatisfied, reasonBackendFailed
-				return res
+			if o.Sequence == latest.Sequence {
+				ambiguousLatest = true
 			}
-			res.Outcome, res.Reason = OutcomeSatisfied, "backend exited 0"
+		}
+		if latest == nil {
+			res.Outcome, res.Reason = OutcomeUnsatisfied, "backend "+r.ResourceID+" did not run"
 			return res
 		}
-		res.Outcome, res.Reason = OutcomeUnsatisfied, "backend "+r.ResourceID+" did not run"
+		if ambiguousLatest {
+			res.Outcome, res.Reason = OutcomeUnverifiable,
+				"matching backend completions do not have a unique final ledger sequence"
+			return res
+		}
+		res.Evidence = append(res.Evidence, latest.EvidenceRef)
+		if latest.ExitStatus == nil {
+			res.Outcome, res.Reason = OutcomeUnverifiable,
+				"backend ran but no exit status was captured; a blank status is not a pass"
+			return res
+		}
+		if *latest.ExitStatus != 0 {
+			res.Outcome, res.Reason = OutcomeUnsatisfied, reasonBackendFailed
+			return res
+		}
+		res.Outcome, res.Reason = OutcomeSatisfied, "backend exited 0"
 		return res
 
 	case ModeOperatorAction:

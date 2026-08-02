@@ -249,11 +249,33 @@ func (s *Store) LoadRunIdentity(id string) (*RunIdentity, error) {
 	if err != nil {
 		return nil, err
 	}
+	return s.loadVerifiedRunIdentityForState(id, st)
+}
+
+// loadVerifiedRunIdentityForState verifies one identity read against the
+// already loaded durable state. Callers holding the ledger lock reuse the
+// returned value so identity verification and ledger mutation operate on the
+// same immutable record.
+func (s *Store) loadVerifiedRunIdentityForState(id string, st *RunState) (*RunIdentity, error) {
 	var identity RunIdentity
 	if err := ReadJSON(s.IdentityPath(id, st.RunID), &identity); err != nil {
 		return nil, err
 	}
 	if problems := identity.validate(); len(problems) > 0 {
+		return nil, fmt.Errorf("invalid run identity: %s", strings.Join(problems, "; "))
+	}
+	var problems []string
+	identityHash, err := runIdentityHash(identity)
+	if err != nil {
+		problems = append(problems, err.Error())
+	} else if identityHash != st.IdentityHash {
+		problems = append(problems, "immutable run identity hash does not match durable state")
+	}
+	if st.WorkflowID != id || identity.WorkflowID != st.WorkflowID ||
+		identity.RunID != st.RunID || identity.ContractHash != st.ContractHash {
+		problems = append(problems, "run identity does not match durable state")
+	}
+	if len(problems) > 0 {
 		return nil, fmt.Errorf("invalid run identity: %s", strings.Join(problems, "; "))
 	}
 	return &identity, nil
@@ -304,7 +326,7 @@ func (s *Store) appendEvent(id string, event RunEvent) error {
 	if st.Phase == PhaseClosed {
 		return fmt.Errorf("workflow %s run %s is terminally closed; event append rejected", id, st.RunID)
 	}
-	identity, err := s.LoadRunIdentity(id)
+	identity, err := s.loadVerifiedRunIdentityForState(id, st)
 	if err != nil {
 		return err
 	}
@@ -404,7 +426,7 @@ func (s *Store) VerifyLedger(id string) LedgerVerification {
 }
 
 func (s *Store) verifyLedgerForState(id string, st *RunState) LedgerVerification {
-	identity, err := s.LoadRunIdentity(id)
+	identity, err := s.loadVerifiedRunIdentityForState(id, st)
 	if err != nil {
 		return LedgerVerification{Problems: []string{err.Error()}}
 	}
@@ -414,22 +436,6 @@ func (s *Store) verifyLedgerForState(id string, st *RunState) LedgerVerification
 	}
 	verification := verifyLedger(*identity, s.EventsPath(id, st.RunID), closedAt,
 		st.LedgerSequence, st.LedgerHash)
-	identityHash, hashErr := runIdentityHash(*identity)
-	if hashErr != nil {
-		verification.Valid = false
-		verification.Events = nil
-		verification.Problems = append(verification.Problems, hashErr.Error())
-	} else if identityHash != st.IdentityHash {
-		verification.Valid = false
-		verification.Events = nil
-		verification.Problems = append(verification.Problems,
-			"immutable run identity hash does not match durable state")
-	}
-	if identity.WorkflowID != id || identity.RunID != st.RunID || identity.ContractHash != st.ContractHash {
-		verification.Valid = false
-		verification.Events = nil
-		verification.Problems = append(verification.Problems, "run identity does not match durable state")
-	}
 	return verification
 }
 
