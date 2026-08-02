@@ -832,7 +832,10 @@
       "rom_locations": [],
       "wram_locations": [],
       "cpu_routines": [
-        "ROMCPU:$C09B5C (candidate interpreter-advance: every decoded event-command handler ends LDA #$01|#$02 / JMP $C09B5C with A = plausible operand length)"
+        "ROMCPU:$C09B5C (CORR-0001, runtime-confirmed mechanism: adds A&$FF into the 24-bit LE value at DP $E5-$E7 and transfers to ROMCPU:$C09A6D; entry state measured E=native M=1 X=0 PBR=$C0 DBR=$00 DPR=$0000 SP=$15FD. Shared tail reached from multiple command handlers, not only the flag family. The 'script pointer' reading remains a strong hypothesis - no dereference was observed)",
+        "ROMCPU:$C09A6D (CORR-0001: decrements DP $E3 once per frame and takes the wait path until it reaches zero, then falls through to $C09A75; observed twice at exactly 30 frames)",
+        "ROMCPU:$C09B3B-$C09B5B (candidate opcode dispatcher, static only: bounds-checks #$31/#$35, computes (opcode-$35)*2, loads a pointer from ROMCPU:$C098C4,X into DP $2A, dispatches via JMP ($002A))",
+        "ROMCPU:$C098C4 (candidate opcode jump table, static only: first 64 entries all plausible bank-C0 code pointers spanning $C09C44-$C0A336)"
       ],
       "spc_locations": [],
       "record_count_expected": null,
@@ -863,8 +866,8 @@
         "script source in ROM (CEN-EVENT-0002 ties in)"
       ],
       "contradictions": [],
-      "next_action": "Static-decode ROMCPU:$C09B5C and its callers to find the dispatch loop and opcode table; then exec-census a dialogue advance to confirm live.",
-      "notes": "EXP-0031: the real opening auto-runs (timed dialogue) until the scripted Narshe-entry box, which waits for A indefinitely — the engine distinguishes timed from input-waiting boxes. EXP-0037 static decode: the 16 flag set/clear command handlers at ROMCPU:$C0B593-$C0B6D2 (and the $1EDF-bit7 copy handlers at $C0B940-$C0B9BF) all terminate in LDA #$01 or #$02 / JMP $C09B5C, consistent with an interpreter advancing its script pointer by the command length. $C09B5C is the first concrete code anchor for this engine; the flag number arrives in DP $EB, so $EB plausibly holds a fetched operand."
+      "next_action": "CORR-0001 settled $C09B5C's mechanism and located candidate dispatcher/table. Next: exec-watch the dispatcher's JMP ($002A) at ROMCPU:$C09B59 alongside $C09B5C, capturing DP $2A/$2B and $EA at dispatch, to name the immediate predecessor per entry and turn 'A is a command length' into a measured opcode-to-length table (decodes ROMCPU:$C098C4 as a by-product).",
+      "notes": "EXP-0031: the real opening auto-runs (timed dialogue) until the scripted Narshe-entry box, which waits for A indefinitely — the engine distinguishes timed from input-waiting boxes. EXP-0037 static decode: the 16 flag set/clear command handlers at ROMCPU:$C0B593-$C0B6D2 (and the $1EDF-bit7 copy handlers at $C0B940-$C0B9BF) all terminate in LDA #$01 or #$02 / JMP $C09B5C, consistent with an interpreter advancing its script pointer by the command length. $C09B5C is the first concrete code anchor for this engine; the flag number arrives in DP $EB, so $EB plausibly holds a fetched operand. CORR-0001 (docs/correlations/CORR-0001-C09B5C.md) then measured it live from the 01-opening-cinematic states: 12 hits per run, byte-identical across two runs, delta == A&$FF on 24/24 with deltas varying 1-7 (refuting any constant-delta reading), always continuing to $C09A6D in the same frame, and DPR measured $0000 so the DP operands resolve to WRAM:+$00E3/+$00E5-+$00E7. It also refuted the narrower reading that $C09B5C is the flag handlers' tail: 9 of 12 hits had no flag handler running, and A values of 1/3/4/5/7 are unreachable from handlers that always load #$02. Deferred, registered but not investigated: the $C09B3B dispatcher, the $C098C4 table, the $C09B1E six-byte prefetch into DP $EA-$EF, the $C09B82 variant maintaining a 3-byte-stride structure at $05F4 indexed by $E8, and candidate script data in ROM banks $CA/$CC around $CC9A55."
     },
     {
       "schema_version": "1.0",

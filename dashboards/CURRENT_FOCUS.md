@@ -187,14 +187,41 @@ paused; intervals at the command window and during action resolution were
 not. Whelk is a boss with its own script and untested here — the one
 caveat for any re-run.
 
+## Event interpreter — CORR-0001 (2026-08-01)
+
+The first static/runtime correlation landed on `ROMCPU:$C09B5C`, the shared
+tail every event-flag handler jumps to. Record:
+`docs/correlations/CORR-0001-C09B5C.md`.
+
+Confirmed across 24 observations (12 hits × 2 runs, byte-identical logs):
+entry state E = native, **M = 1**, **X = 0**, PBR = `$C0`, DBR = `$00`,
+**DPR = `$0000`**, SP = `$15FD`. DPR was measured, so the direct-page
+operands resolve to `WRAM:+$00E3` and `WRAM:+$00E5`-`+$00E7`. The 24-bit
+value there increases by **exactly `A & $FF`** (deltas varied 1-7, refuting
+a constant), control reaches `ROMCPU:$C09A6D` in the same frame every time,
+and `WRAM:+$00E3` counts down once per frame until zero (twice, at exactly
+30 frames). `$C09B5C` is a **genuine shared routine entry**, entered from
+multiple command handlers — not only the flag family.
+
+Still **Strong hypothesis, not Confirmed** — the value was never observed
+being dereferenced: event-script pointer, command length, script frame-wait.
+The **immediate predecessor is unresolved**.
+
 ## Next exact action
 
-**EXP-0048 — name the invoker of the execution path.** Stack archaeology
-has failed twice (`$C20EB6` is not a call frame; `$C20016` holds a
-plausible `JSR` yet never executes), so switch instrument: exec-watch
-outward from the confirmed `$C2141D`, or trace a single invocation.
-Narrow question — one routine, ~every 100 frames, confirmed sites to walk
-from.
+**Name the immediate predecessor at `ROMCPU:$C09B59`.** Exec-watch the
+dispatcher's `JMP ($002A)` alongside `$C09B5C`, capturing DP `$2A`/`$2B`
+and `$EA` at dispatch, and correlate each entry with the opcode that
+reached it. Closes CORR-0001's one gap, turns "A is a command length" into
+a measured opcode→length table, and decodes the candidate opcode table at
+`ROMCPU:$C098C4` as a by-product. Also the **deferred blocker** for any
+demonstration claiming to read or execute event script.
+
+Still open and unchanged, non-blocking: **EXP-0048 — name the invoker of
+the execution path.** Stack archaeology has failed twice (`$C20EB6` is not
+a call frame; `$C20016` holds a plausible `JSR` yet never executes), so
+switch instrument: exec-watch outward from the confirmed `$C2141D`, or
+trace a single invocation.
 
 **Method note:** a `JSR` at `return − 3` is necessary but not sufficient
 to confirm a stack frame. Confirm by execution.
