@@ -53,3 +53,4 @@
 | EXP-0047 | execution-path-invocation | completed | see record | [EXP-0047-execution-path-invocation](../docs/experiments/EXP-0047-execution-path-invocation.md) |
 | EXP-0049 | hud-font-glyph-mapping | completed | see record | [EXP-0049-hud-font-glyph-mapping](../docs/experiments/EXP-0049-hud-font-glyph-mapping.md) |
 | EXP-0050 | vram-rom-provenance-sweep | completed | see record | [EXP-0050-vram-rom-provenance-sweep](../docs/experiments/EXP-0050-vram-rom-provenance-sweep.md) |
+| EXP-0051 | map-tileset-selector-search | completed | see record | [EXP-0051-map-tileset-selector-search](../docs/experiments/EXP-0051-map-tileset-selector-search.md) |

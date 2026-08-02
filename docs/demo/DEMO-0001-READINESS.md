@@ -2,7 +2,7 @@
 
 - **Milestone:** [DEMO-0001](DEMO-0001-new-game-to-whelk.md)
 - **Route view:** [DEMO-0001-CONTENT-MATRIX.md](DEMO-0001-CONTENT-MATRIX.md)
-- **Updated:** 2026-08-02 (Unit 13 — EXP-0050 VRAM provenance sweep)
+- **Updated:** 2026-08-02 (Unit 15 — EXP-0051 selector search, negative)
 
 Every player-visible requirement of the acceptance run appears here exactly
 once. This file is the demo's critical-path instrument: unit selection reads it,
@@ -47,7 +47,7 @@ Status reflects the **demo**, not the research. A subsystem can be Confirmed in
 
 | # | Requirement | Subsystem | Known evidence | Missing evidence | Asset / data | Go integration point | Validation | Depends on | Status | Next action |
 |---|---|---|---|---|---|---|---|---|---|---|
-| T1 | Fixed-width font tiles | Battle HUD font | GFX-0001, EXP-0023: 257 2bpp tiles, `ROMFILE:0x047FB0-0x048FBF` (ROM-0016), uncompressed | load path (which code/DMA copies it) | `hud-font-sheet.png` | `internal/content.LoadHUDFont` | **archive-vs-ROM differential passes on all 256 glyphs** | E6, E7 | `Validated` | — |
+| T1 | Fixed-width font tiles | Battle HUD font | GFX-0001, EXP-0023: 257 2bpp tiles, `ROMFILE:0x047FB0-0x048FBF` (ROM-0016), uncompressed. **Destinations now known**: battle loads the block start to `VRAM:$AFF0` (EXP-0050); field loads its last 128 tiles to `VRAM:$B800` from `0x0487C0`, and `0x0487C0`+2048 is exactly the block end (EXP-0051) | which code/DMA copies it | `hud-font-sheet.png` | `internal/content.LoadHUDFont` | **archive-vs-ROM differential passes on all 256 glyphs** | E6, E7 | `Validated` | — |
 | T2 | Glyph → character mapping | Battle HUD font | **EXP-0049 Confirmed**: `VRAMtile = 0x100 + encodedByte`, verified by 8 direct decodes *and* the whole EXP-0023 HUD tilemap decoding to coherent game text over 37 tiles. 64 characters named; `$BF` = `?` added to `textenc` | 47 non-blank tiles carry unidentified glyphs | `data/graphics/hud-font-glyphs.json` (generated, hashes only) | `internal/game/hudfont` | relation + tracked-table consistency tests | T1 | `Integrated` | identify the 47 when a capture renders them |
 | T3 | Text drawing to framebuffer | — | `textenc.Encode`/`EncodeFixed` added (EXP-0049) | proportional/dialogue text is a different system (T4) | — | `content.Font.DrawString`, `content.SubPalette` | synthetic-font frame goldens; unverified runes never draw a ROM tile; **every index a scene draws must be one the palette defines**, and over half the drawn ink must resolve to a non-background colour (Unit 11, D0) | T1, T2, E3 | `Integrated` | — |
 | T4 | Variable-width dialogue font | Dialogue rendering | CEN-GFX-0004 `OBSERVED` only | ROM location, format, widths table | — | — | — | — | `Unknown` | research unit not yet scheduled |
@@ -85,7 +85,7 @@ retired that deviation; see DEVIATIONS D1.
 
 | # | Requirement | Subsystem | Known evidence | Missing evidence | Asset / data | Go integration point | Validation | Depends on | Status | Next action |
 |---|---|---|---|---|---|---|---|---|---|---|
-| F1 | Map headers, tilesets, tilemaps | Map system | **EXP-0050**: the BG tile data for milestones 02/04/05 is in the ROM **uncompressed**, in contiguous spans. Narshe exterior: `ROMFILE:0x208460` (8192 B), `0x223000` (8192 B), `0x224F00` (4096 B), plus ~18 short runs of 128-171 B from bank `$E6`. `0x208460` and `0x223000` are **shared with the mines interior** | the map **header** that selects these blocks; the tilemap/layout source (not verbatim in ROM); which VRAM spans are tiles vs tilemap | — | — | — | — | `Unknown` | **the tileset graphics are located; the header is not.** Follow `0x208460`/`0x223000` to the record that selects them. This row had no anchor at all before EXP-0050 |
+| F1 | Map headers, tilesets, tilemaps | Map system | **EXP-0050**: the BG tile data for milestones 02/04/05 is in the ROM **uncompressed**, in contiguous spans. Narshe exterior: `ROMFILE:0x208460` (8192 B), `0x223000` (8192 B), `0x224F00` (4096 B), plus ~18 short runs of 128-171 B from bank `$E6`. `0x208460` and `0x223000` are shared with **milestone 02**, the same town; the mines interior uses a different set, `0x20DFA0`/`0x23C0C0` (EXP-0051 corrects EXP-0050 here) | the map **header** that selects these blocks; the tilemap/layout source (not verbatim in ROM); which VRAM spans are tiles vs tilemap | — | — | — | — | `Unknown` | **EXP-0051: the addresses are not stored as pointers** under four encodings, so the loader computes them. Next instrument is the routine, not a search — Ghidra outward from the VRAM upload, or the unexercised `mesen/probes/dma-trace.lua` |
 | F2 | Map palettes | Map system | `bgr555.Decode` implemented | palette table location, bank selection | — | — | — | F1 | `Unknown` | research unit not yet scheduled |
 | F3 | Collision, map boundaries, exits | Field engine | player tile bytes `WRAM:+$00AF`/`+$00B0` (EXP-0035, CEN-WORLD-0007, strong hypothesis) | collision data location and lookup | — | — | — | F1 | `Unknown` | research unit not yet scheduled |
 | F4 | Player/NPC movement, directional animation | Field engine | route traversal reproducible (EXP-0036) | movement routine, sprite format, animation timing | — | — | — | F1, F6 | `Unknown` | research unit not yet scheduled |

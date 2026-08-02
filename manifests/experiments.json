@@ -975,6 +975,24 @@
       "falsifying_outcome": "For the uncompressed reading, any field scene whose BG1/BG2 tile region fails to map to contiguous ROM spans; for the compressed reading, any long contiguous span at all.",
       "status": "completed",
       "record": "docs/experiments/EXP-0050-vram-rom-provenance-sweep.md"
+    },
+    {
+      "schema_version": "1.0",
+      "id": "EXP-0051",
+      "domain": "graphics",
+      "question": "Are the map tile block addresses EXP-0050 located stored as pointers in the ROM, so that a map header could index them?",
+      "starting_state": {
+        "emulator": "none - static analysis of preserved SCN-0001 savestates and the ROM; no emulator was run",
+        "rom_sha256": "0f51b4fca41b7fd509e4b8f9d543151f68efa5e97b08493e4b2a0c06f5d8d5e2",
+        "state": "local_artifacts/scenarios/SCN-0001/{02-narshe-entry,04-free-movement,05-mines-entry}/run1-*.mss and local_artifacts/experiments/EXP-0035/recon-mines-inside.mss"
+      },
+      "expected_outcomes": [
+        "If a tileset pointer table exists, at least one encoding places two or more observed addresses at a fixed stride in one region.",
+        "If the addresses are computed by the loader, no encoding finds them together."
+      ],
+      "falsifying_outcome": "Any encoding placing the Narshe blocks and the mines blocks in one table.",
+      "status": "completed",
+      "record": "docs/experiments/EXP-0051-map-tileset-selector-search.md"
     }
   ]
 }

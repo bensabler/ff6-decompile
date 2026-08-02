@@ -92,8 +92,19 @@ set. The `$5000-$57FF` region is instead assembled from many short runs, most
 of them exactly **128 bytes** — four 4bpp tiles — drawn from a narrow region of
 bank `$E6` (`0x261B00-0x2635FE`).
 
-The mines interior (milestone 05) shares `0x208460` and `0x223000` and the same
-bank-`$E6` short runs, and differs in its third block.
+> **Correction (EXP-0051, same day).** This section originally read: "The mines
+> interior (milestone 05) shares `0x208460` and `0x223000` and the same
+> bank-`$E6` short runs, and differs in its third block." **That is false.** The
+> mines interior uses `0x20DFA0` (8192 B) and `0x23C0C0` (4096 B), verified on
+> both mines savestates.
+>
+> The claim was never measured. `state ppu` had been run on the mines state and
+> `state origin` on the Narshe exterior, and the two were conflated into an
+> assertion. What *is* shared, and was measured, is milestone **02** with
+> milestone 04 — the same town, so a weak result rather than a strong one.
+>
+> Nothing else in this record depends on it: the uncompressed contiguous spans
+> are measured, and so is the pressure re-ranking that followed.
 
 In the battle scene, `VRAM:$AFE8-$BFFF` maps to `ROMFILE:0x047FA8` — the HUD
 font block, ROM-0016, `0x047FB0-0x048FBF`. Party and enemy sprite regions
@@ -123,8 +134,11 @@ Two independent by-products:
 1. The HUD font's **destination** is now known: `VRAM:$AFF0` for tile `$FF`,
    which is the load address readiness T1 listed as missing evidence. The
    routine that copies it is still unlocated.
-2. `0x208460` and `0x223000` appear in both field scenes, so at least part of
-   the tile set is shared between the Narshe exterior and the mines interior.
+2. `0x208460` and `0x223000` appear in the Narshe exterior **and the Narshe
+   entry**, which are the same town. Three *other* blocks — `0x226700`,
+   `0x0487C0` and `0x182FFF` — appear in all three field scenes including the
+   mines, and EXP-0051 identifies `0x0487C0` as the HUD font block's last 128
+   tiles.
 
 ## Alternatives
 

@@ -58,8 +58,8 @@ than restating them, so a state change is edited in exactly one place.
 
 | ID | Dependency | Readiness | Anchor | State | Blocker / next action |
 |---|---|---|---|---|---|
-| CD-MAP-01 | Map header records | F1 | none; CEN-WORLD-0004 | `Unknown` | Location unknown |
-| CD-MAP-02 | Tileset graphics | F1 | **EXP-0050**: `ROMFILE:0x208460` (8192 B), `0x223000` (8192 B), `0x224F00` (4096 B) verbatim, plus ~18 short runs from bank `$E6`; the first two shared between Narshe exterior and mines | `Source Provenance Known` | needs CD-MAP-01 to know which map selects which blocks |
+| CD-MAP-01 | Map header records | F1 | CEN-WORLD-0004; **EXP-0051** ruled out a pointer table in four encodings | `Unknown` | find the routine that computes the block addresses: Ghidra outward from the VRAM upload, or a DMA trace |
+| CD-MAP-02 | Tileset graphics | F1 | **EXP-0050**: `ROMFILE:0x208460` (8192 B), `0x223000` (8192 B), `0x224F00` (4096 B) verbatim, plus ~18 short runs from bank `$E6`; the first two shared with milestone 02 (same town); the mines uses `0x20DFA0`/`0x23C0C0` instead | `Source Provenance Known` | **EXP-0051: no pointer table selects them** under four encodings. CD-MAP-01 needs the loader routine, not a search |
 | CD-MAP-03 | Tilemap layers | F1 | **EXP-0050**: the VRAM tilemaps are **not** verbatim in ROM. Expected — the VRAM tilemap is the visible window, composed at runtime — so the layout source is elsewhere | `Unknown` | find the WRAM map buffer, then its ROM source |
 | CD-MAP-04 | Map palettes | F2 | `bgr555.Decode` implemented; no palette table located | `Unknown` | CD-MAP-01 |
 | CD-MAP-05 | Collision data | F3 | player tile bytes `WRAM:+$00AF`/`+$00B0` (EXP-0035, CEN-WORLD-0007, strong hypothesis) | `Located` (position only) | Collision *data* and lookup unlocated |
