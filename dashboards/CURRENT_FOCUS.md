@@ -1,5 +1,35 @@
 # Current Focus
 
+> **PAUSED FOR CODEX HANDOFF — 2026-08-02.** Manually updated; `/checkpoint`
+> and `/session-summary` were deliberately not invoked, and no invocation
+> credit is claimed for this update.
+>
+> ```text
+> Current priority:
+> Codex onboarding, review of R12/R14, and Claude-to-Codex workflow migration.
+>
+> FF6 decompilation:
+> Paused.
+>
+> AUDIT-0002:
+> Complete; Phase 11 ran and its closure was verified at 69d99ae.
+> (The handoff request anticipated "partial; Phase 11 not run". That is not
+> what the repository records. docs/workflows/AUDIT-0002-status.md is
+> authoritative. "Complete" means the audit's own process finished and was
+> verified - it does NOT mean the remediation is done. Most of it is not.)
+>
+> Workflow remediation:
+> R12 and R14 implemented provisionally on feature/workflow-contract
+> (1d20edf, f01817f). All other remediation stopped pending Codex review.
+> R11, R13 and the seven workflow commands do not exist.
+>
+> Exact next action:
+> Read-only Codex onboarding. See docs/handoffs/CODEX-WORKFLOW-HANDOFF.md.
+> ```
+>
+> **The DEMO-0001 program described below is paused, not active.** It is
+> retained unmodified as the record of where content work stopped.
+
 **Active program:** DEMO-0001 — produce a **playable Go demo** of New
 Game through Whelk victory. Started 2026-08-02. The foundation (units
 0–9) is merged to `main` at `297ba88`, tagged `demo-0001-foundation-v0.1`;
