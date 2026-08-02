@@ -16,8 +16,14 @@ import "fmt"
 // index by 14 (LDA #$0E / JSR $4781) and MVNs 14 bytes (LDA #$000D).
 const RecordSize = 14
 
-// TableFileOffset is the ROM-file offset of record 0 (HiROM mapping of
-// ROM CPU 0xC4:6AC0).
+// TableCPUAddr is the CPU address of record 0, as it appears in the
+// loader's MVN (ROMCPU:$C46AC0).
+const TableCPUAddr = 0xC46AC0
+
+// TableFileOffset is the ROM-file offset of record 0 (ROMFILE:0x046AC0),
+// the HiROM mapping of TableCPUAddr. The two are asserted against
+// internal/platform/snesaddr in this package's tests rather than being
+// derived, so the constant stays a constant.
 const TableFileOffset = 0x046AC0
 
 // Record is one 14-byte attack/spell entry. Accessors exist only for
