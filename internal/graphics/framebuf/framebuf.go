@@ -91,6 +91,13 @@ func (f *Indexed) Rect(x, y, w, h int, idx uint8) {
 type BlitOptions struct {
 	// PaletteBase is added to each non-transparent source index, selecting
 	// a 4- or 16-color sub-palette within the 256-entry CGRAM image.
+	//
+	// It is the **first CGRAM entry of a sub-palette**, not an arbitrary
+	// brightness offset: a multiple of 4 for 2bpp tiles, of 16 for 4bpp.
+	// A 2bpp tile's ink values 1-3 land on PaletteBase+1..PaletteBase+3, so
+	// a base that is not a multiple of 4 straddles two sub-palettes and
+	// scatters one glyph's ink across colors that were never chosen
+	// together. Use IsSubPaletteBase to check a value.
 	PaletteBase uint8
 	// FlipH and FlipV mirror the tile, as the SNES tilemap attribute bits
 	// do.
@@ -163,16 +170,51 @@ func (f *Indexed) Paletted(p *Palette) *image.Paletted {
 // palette so a color change and a layout change fail differently.
 func (f *Indexed) Sum256() [32]byte { return sha256.Sum256(f.Pix) }
 
-// GrayPalette is a project-authored 4-level ramp on indices 0-3, for tests
-// and for rendering before a real FF6 palette is loaded. It contains no
-// ROM-derived color data.
+// IsSubPaletteBase reports whether base is the first entry of a sub-palette
+// holding colors entries (4 for 2bpp tiles, 16 for 4bpp).
+//
+// The check exists because BlitTile cannot make it: it receives [8][8]uint8
+// and has no idea what depth produced it. The caller knows, so the caller
+// checks.
+func IsSubPaletteBase(base uint8, colors int) bool {
+	if colors <= 0 || colors > 256 {
+		return false
+	}
+	return int(base)%colors == 0
+}
+
+// GrayPaletteDefined is the number of leading entries GrayPalette assigns a
+// color to — two four-entry sub-palettes. Entries at or above it are black,
+// so a tile drawn onto them disappears against a cleared background.
+//
+// This constant exists to be asserted against. Sum256 hashes indices and is
+// deliberately palette-independent, which means the frame goldens cannot see
+// a scene drawing onto undefined entries — and for two units, both of them
+// did. Callers name their sub-palette through content.SubPalette; this is
+// the bound that catches one that does not exist.
+const GrayPaletteDefined = 8
+
+// GrayPalette is a project-authored ramp for tests and for rendering before a
+// real FF6 palette is loaded. It defines two four-entry sub-palettes,
+// GrayPaletteDefined entries in total; everything above is black.
+//
+// It contains no ROM-derived color data. Entries 1-3 do coincide with the
+// BG 2bpp palette 0 that EXP-0023 measured (BGR555 $0000/$5294/$7FFF) — but
+// black, mid-gray and white is the obvious choice for a three-level ramp, and
+// this palette is not evidence for anything. The real map and battle palettes
+// are readiness row F2 and are still unlocated.
 func GrayPalette() *Palette {
 	var p Palette
 	for i := range p {
 		p[i] = bgr555.Color{R: 0, G: 0, B: 0}
 	}
+	// Sub-palette 0: index 0 transparent, then the font's three ink levels.
 	p[1] = bgr555.Color{R: 0x00, G: 0x00, B: 0x00}
 	p[2] = bgr555.Color{R: 0xA5, G: 0xA5, B: 0xA5}
 	p[3] = bgr555.Color{R: 0xFF, G: 0xFF, B: 0xFF}
+	// Sub-palette 1: the same shape, dimmed.
+	p[5] = bgr555.Color{R: 0x00, G: 0x00, B: 0x00}
+	p[6] = bgr555.Color{R: 0x52, G: 0x52, B: 0x52}
+	p[7] = bgr555.Color{R: 0xA5, G: 0xA5, B: 0xA5}
 	return &p
 }

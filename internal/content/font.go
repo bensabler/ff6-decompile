@@ -103,10 +103,41 @@ func (f *Font) Glyph(b byte) (*[8][8]uint8, bool) {
 	return &f.tiles[b], f.present[b]
 }
 
+// SubPalette selects one of the 64 four-color sub-palettes a 2bpp tile can
+// use within the 256-entry CGRAM image. It is a **slot number**, not a
+// palette index and not a byte offset: slot n covers entries 4n..4n+3, and
+// the font's ink values 1-3 land on 4n+1..4n+3.
+//
+// The type exists because the units were the defect. TextOptions used to take
+// a raw uint8 base, and both scenes passed 3 for "white" and 2 for "gray" —
+// reading the field as a brightness level. Those are not sub-palette bases,
+// and the ink went to entries the palette had never defined, so every bright
+// string in the demo rendered black on black for two units. Expressed as a
+// slot the same mistake is caught: slot 3 is entries 12-15, far outside what
+// framebuf.GrayPalette defines, and TestScenesDrawOnlyDefinedPaletteEntries
+// fails.
+type SubPalette uint8
+
+// Sub-palettes framebuf.GrayPalette defines. Real FF6 palettes are readiness
+// row F2 and still unlocated; when they land, these names stay and only the
+// colors behind them change.
+const (
+	// SubPalettePrimary is entries 0-3: transparent, black, gray, white.
+	SubPalettePrimary SubPalette = 0
+	// SubPaletteDim is entries 4-7, the same shape one step darker, for
+	// secondary text that should read as subordinate rather than absent.
+	SubPaletteDim SubPalette = 1
+)
+
+// Base returns the first CGRAM entry of the sub-palette, which is what
+// framebuf.BlitOptions.PaletteBase wants.
+func (s SubPalette) Base() uint8 { return uint8(s) * 4 }
+
 // TextOptions controls text rendering.
 type TextOptions struct {
-	// PaletteBase selects the sub-palette, as in framebuf.BlitOptions.
-	PaletteBase uint8
+	// Palette selects the four-color sub-palette the glyph's ink resolves
+	// through. The zero value is SubPalettePrimary.
+	Palette SubPalette
 	// ShowMissing draws a project-authored box for runes with no verified
 	// glyph, instead of skipping them. Off by default so ordinary text
 	// renders cleanly; on for debugging a decode.
@@ -127,11 +158,11 @@ func (f *Font) DrawString(dst *framebuf.Indexed, x, y int, s string, o TextOptio
 		switch {
 		case !ok:
 			if o.ShowMissing {
-				drawMissingBox(dst, x, y, o.PaletteBase)
+				drawMissingBox(dst, x, y, o.Palette.Base())
 			}
 		default:
 			if tile, ink := f.Glyph(b); ink {
-				dst.BlitTile(x, y, tile, framebuf.BlitOptions{PaletteBase: o.PaletteBase})
+				dst.BlitTile(x, y, tile, framebuf.BlitOptions{PaletteBase: o.Palette.Base()})
 			}
 		}
 		x += GlyphWidth
@@ -145,10 +176,10 @@ func (f *Font) DrawString(dst *framebuf.Indexed, x, y int, s string, o TextOptio
 func (f *Font) DrawBytes(dst *framebuf.Indexed, x, y int, src []byte, o TextOptions) int {
 	for _, b := range src {
 		if tile, ink := f.Glyph(b); ink {
-			dst.BlitTile(x, y, tile, framebuf.BlitOptions{PaletteBase: o.PaletteBase})
+			dst.BlitTile(x, y, tile, framebuf.BlitOptions{PaletteBase: o.Palette.Base()})
 		} else if o.ShowMissing {
 			if _, named := textenc.Decode(b); !named {
-				drawMissingBox(dst, x, y, o.PaletteBase)
+				drawMissingBox(dst, x, y, o.Palette.Base())
 			}
 		}
 		x += GlyphWidth

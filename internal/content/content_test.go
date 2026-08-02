@@ -247,16 +247,47 @@ func TestDrawString(t *testing.T) {
 	}
 }
 
-func TestDrawStringPaletteBase(t *testing.T) {
+func TestDrawStringSubPalette(t *testing.T) {
 	root := fixtureArchive(t, syntheticSheet(t))
 	a, _ := Open(root)
 	f, _ := LoadHUDFont(a)
 
+	// Slot 4 is entries $10-$13, so the ink lands at $10 + its level. The
+	// arithmetic is what makes SubPalette a slot rather than an offset.
+	const slot = SubPalette(4)
+	if base := slot.Base(); base != 0x10 {
+		t.Fatalf("SubPalette(4).Base() = $%02X, want $10", base)
+	}
+
 	fb := framebuf.New()
-	f.DrawString(fb, 0, 0, "A", TextOptions{PaletteBase: 0x10})
+	f.DrawString(fb, 0, 0, "A", TextOptions{Palette: slot})
 	want := uint8(int('A'-'A'+0x80)%3) + 1 + 0x10
 	if got := fb.At(0, 0); got != want {
 		t.Errorf("At(0,0) = $%02X, want $%02X", got, want)
+	}
+}
+
+func TestSubPaletteBaseIsSlotTimesFour(t *testing.T) {
+	tests := []struct {
+		slot SubPalette
+		want uint8
+	}{
+		{SubPalettePrimary, 0},
+		{SubPaletteDim, 4},
+		{2, 8},
+		{3, 12},
+		{63, 252},
+	}
+	for _, tt := range tests {
+		if got := tt.slot.Base(); got != tt.want {
+			t.Errorf("SubPalette(%d).Base() = %d, want %d", tt.slot, got, tt.want)
+		}
+	}
+	// The two values the scenes used to pass as if they were brightness
+	// levels. As slots they address entries far outside anything
+	// framebuf.GrayPalette defines, which is what makes the mistake visible.
+	if SubPalette(3).Base() != 12 || SubPalette(2).Base() != 8 {
+		t.Error("the pre-fix values no longer land where the regression test expects")
 	}
 }
 

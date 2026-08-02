@@ -1,7 +1,7 @@
 # DEMO-0001 acceptance criteria
 
 - **Milestone:** [DEMO-0001](DEMO-0001-new-game-to-whelk.md)
-- **Updated:** 2026-08-02 (Unit 10 — records reconciliation)
+- **Updated:** 2026-08-02 (Unit 11 — palette correctness)
 - **Overall:** **NOT PASSING** — 1 of 17 progression steps; gates 4 PASS, 1 PARTIAL (G4), 1 FAIL (G3)
 
 The gate line previously read "3 of 6 gates" while the table below showed four
@@ -21,7 +21,7 @@ the scorecard. A step flips to PASS only when it has a recorded evidence path;
 | G3 | The run begins at New Game without loading a savestate or injecting internal state | **FAIL** | no run exists |
 | G4 | Assets are generated locally from the operator's verified ROM by a documented workflow | **PARTIAL** | `ff6lab extract all` + `archive verify` 8/8 OK; `dialogue`/`maps`/`animations`/`scripts` categories empty |
 | G5 | No prohibited files are committed | **PASS** | CI restricted-extension scan + `ff6lab audit` `CheckRestrictedTracked` green |
-| G6 | All deviations from the original are recorded, not hidden by weakened tests | **PASS** | [DEMO-0001-DEVIATIONS.md](DEMO-0001-DEVIATIONS.md) — 0 open, 1 retired (D1) |
+| G6 | All deviations from the original are recorded, not hidden by weakened tests | **PASS** | [DEMO-0001-DEVIATIONS.md](DEMO-0001-DEVIATIONS.md) — 5 open (D2-D6), 2 retired (D0, D1) |
 
 ## Progression steps
 

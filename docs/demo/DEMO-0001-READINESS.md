@@ -2,7 +2,7 @@
 
 - **Milestone:** [DEMO-0001](DEMO-0001-new-game-to-whelk.md)
 - **Route view:** [DEMO-0001-CONTENT-MATRIX.md](DEMO-0001-CONTENT-MATRIX.md)
-- **Updated:** 2026-08-02 (Unit 10 — records reconciliation)
+- **Updated:** 2026-08-02 (Unit 11 — palette correctness)
 
 Every player-visible requirement of the acceptance run appears here exactly
 once. This file is the demo's critical-path instrument: unit selection reads it,
@@ -49,7 +49,7 @@ Status reflects the **demo**, not the research. A subsystem can be Confirmed in
 |---|---|---|---|---|---|---|---|---|---|---|
 | T1 | Fixed-width font tiles | Battle HUD font | GFX-0001, EXP-0023: 257 2bpp tiles, `ROMFILE:0x047FB0-0x048FBF` (ROM-0016), uncompressed | load path (which code/DMA copies it) | `hud-font-sheet.png` | `internal/content.LoadHUDFont` | **archive-vs-ROM differential passes on all 256 glyphs** | E6, E7 | `Validated` | — |
 | T2 | Glyph → character mapping | Battle HUD font | **EXP-0049 Confirmed**: `VRAMtile = 0x100 + encodedByte`, verified by 8 direct decodes *and* the whole EXP-0023 HUD tilemap decoding to coherent game text over 37 tiles. 64 characters named; `$BF` = `?` added to `textenc` | 47 non-blank tiles carry unidentified glyphs | `data/graphics/hud-font-glyphs.json` (generated, hashes only) | `internal/game/hudfont` | relation + tracked-table consistency tests | T1 | `Integrated` | identify the 47 when a capture renders them |
-| T3 | Text drawing to framebuffer | — | `textenc.Encode`/`EncodeFixed` added (EXP-0049) | proportional/dialogue text is a different system (T4) | — | `content.Font.DrawString` | synthetic-font frame goldens; unverified runes never draw a ROM tile | T1, T2, E3 | `Integrated` | — |
+| T3 | Text drawing to framebuffer | — | `textenc.Encode`/`EncodeFixed` added (EXP-0049) | proportional/dialogue text is a different system (T4) | — | `content.Font.DrawString`, `content.SubPalette` | synthetic-font frame goldens; unverified runes never draw a ROM tile; **every index a scene draws must be one the palette defines**, and over half the drawn ink must resolve to a non-background colour (Unit 11, D0) | T1, T2, E3 | `Integrated` | — |
 | T4 | Variable-width dialogue font | Dialogue rendering | CEN-GFX-0004 `OBSERVED` only | ROM location, format, widths table | — | — | — | — | `Unknown` | research unit not yet scheduled |
 | T5 | Dialogue window / border tiles | Menu graphics | CEN-MENU-0003 `OBSERVED` | ROM location | — | — | — | — | `Unknown` | research unit not yet scheduled |
 | T6 | Menu windows, cursor | Menu graphics | EXP-0026 captured menu tilemap/CHR/CGRAM | ROM location of the tile source | — | — | — | — | `Unknown` | research unit not yet scheduled |

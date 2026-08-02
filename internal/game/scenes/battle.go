@@ -124,38 +124,42 @@ func (b *Battle) Update(ctx *engine.Context) {
 }
 
 func (b *Battle) Draw(dst *framebuf.Indexed, _ *framebuf.Palette) {
+	// Sub-palette slots, not brightness levels. This screen used to pass 3
+	// for "white" and 2 for "gray" into a raw palette-base field, which put
+	// the font's ink on entries GrayPalette never defined and rendered the
+	// whole thing black on black. content.SubPalette carries the units now.
 	const (
-		white = 3
-		gray  = 2
+		primary   = content.SubPalettePrimary
+		secondary = content.SubPaletteDim
 	)
 	dst.Fill(0)
 
-	text := func(x, y int, s string, pal uint8) {
-		b.font.DrawString(dst, x, y, s, content.TextOptions{PaletteBase: pal})
+	text := func(x, y int, s string, pal content.SubPalette) {
+		b.font.DrawString(dst, x, y, s, content.TextOptions{Palette: pal})
 	}
 
-	text(8, 6, fmt.Sprintf("FORMATION %d", b.id), white)
+	text(8, 6, fmt.Sprintf("FORMATION %d", b.id), primary)
 	if !battledata.FormationVerified(b.id) {
 		// The archive holds more formations than any experiment has
 		// verified. Saying so on screen keeps the distinction visible.
-		text(8, 18, "UNVERIFIED RECORD", gray)
+		text(8, 18, "UNVERIFIED RECORD", secondary)
 	} else {
-		text(8, 18, "VERIFIED RECORD", gray)
+		text(8, 18, "VERIFIED RECORD", secondary)
 	}
 
 	y := 40
 	for _, e := range b.enemies {
 		// No name table exists, so the label is the record id (D2).
-		text(8, y, fmt.Sprintf("MONSTER %d", e.record), white)
-		text(112, y, fmt.Sprintf("HP %d", e.hp), white)
+		text(8, y, fmt.Sprintf("MONSTER %d", e.record), primary)
+		text(112, y, fmt.Sprintf("HP %d", e.hp), primary)
 		b.drawGauge(dst, 184, y, b.timing.Gauges[e.slot], b.timing.Ready(e.slot))
 		y += 16
 	}
 
 	y += 8
-	text(8, y, "PARTY SIDE NOT IMPLEMENTED", gray)
+	text(8, y, "PARTY SIDE NOT IMPLEMENTED", secondary)
 	y += 12
-	text(8, y, "NO CHARACTER DATA SOURCE", gray)
+	text(8, y, "NO CHARACTER DATA SOURCE", secondary)
 
 	mode := "ACTIVE"
 	if b.timing.Entry.WaitFlag != 0 {
@@ -165,12 +169,12 @@ func (b *Battle) Draw(dst *framebuf.Indexed, _ *framebuf.Palette) {
 	if b.submenu != 0 {
 		sub = "OPEN"
 	}
-	text(8, 172, fmt.Sprintf("MODE %s  MENU %s", mode, sub), gray)
-	text(8, 184, fmt.Sprintf("TICK %d", b.timing.Tick), gray)
+	text(8, 172, fmt.Sprintf("MODE %s  MENU %s", mode, sub), secondary)
+	text(8, 184, fmt.Sprintf("TICK %d", b.timing.Tick), secondary)
 	if atb.Paused(b.submenu, b.timing.Entry.WaitFlag) {
-		text(8, 196, "GATED - GAUGES FROZEN", white)
+		text(8, 196, "GATED - GAUGES FROZEN", primary)
 	} else {
-		text(8, 196, "B MENU  Y MODE  START EXIT", gray)
+		text(8, 196, "B MENU  Y MODE  START EXIT", secondary)
 	}
 }
 
@@ -210,5 +214,7 @@ func (b *Battle) drawGauge(dst *framebuf.Indexed, x, y int, gauge uint16, ready 
 		}
 	}
 	cells = append(cells, rightCap)
-	b.font.DrawBytes(dst, x, y, cells, content.TextOptions{})
+	b.font.DrawBytes(dst, x, y, cells, content.TextOptions{
+		Palette: content.SubPalettePrimary,
+	})
 }

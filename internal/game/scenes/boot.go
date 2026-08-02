@@ -69,48 +69,54 @@ func (b *Boot) Update(ctx *engine.Context) {
 }
 
 func (b *Boot) Draw(dst *framebuf.Indexed, _ *framebuf.Palette) {
+	// Text takes a sub-palette *slot*; Rect takes a direct palette *index*.
+	// Conflating the two is what made this scene's bright text render black
+	// on black: `white = 3` reads as an index, but reached the blitter as a
+	// palette base and put the font's ink on entries nothing had defined.
 	const (
-		white = 3
-		gray  = 2
+		primary   = content.SubPalettePrimary
+		secondary = content.SubPaletteDim
+		borderIdx = 2 // a direct index: gray, entry 2 of sub-palette 0
+		cursorIdx = 3 // a direct index: white
 	)
 	dst.Fill(0)
 
 	// A border, so the 256x224 extent and the host's letterboxing are both
 	// visible at a glance.
-	dst.Rect(0, 0, framebuf.Width, 1, gray)
-	dst.Rect(0, framebuf.Height-1, framebuf.Width, 1, gray)
-	dst.Rect(0, 0, 1, framebuf.Height, gray)
-	dst.Rect(framebuf.Width-1, 0, 1, framebuf.Height, gray)
+	dst.Rect(0, 0, framebuf.Width, 1, borderIdx)
+	dst.Rect(0, framebuf.Height-1, framebuf.Width, 1, borderIdx)
+	dst.Rect(0, 0, 1, framebuf.Height, borderIdx)
+	dst.Rect(framebuf.Width-1, 0, 1, framebuf.Height, borderIdx)
 
 	y := 16
-	line := func(s string, pal uint8) {
-		b.font.DrawString(dst, 16, y, s, content.TextOptions{PaletteBase: pal})
+	line := func(s string, pal content.SubPalette) {
+		b.font.DrawString(dst, 16, y, s, content.TextOptions{Palette: pal})
 		y += 12
 	}
 
-	line("FF6 RECONSTRUCTION", white)
-	line("DEMO-0001A", gray)
+	line("FF6 RECONSTRUCTION", primary)
+	line("DEMO-0001A", secondary)
 	y += 8
-	line("FONT FROM EXTRACTED ROM DATA", gray)
-	line("GLYPH MAP EXP-0049", gray)
+	line("FONT FROM EXTRACTED ROM DATA", secondary)
+	line("GLYPH MAP EXP-0049", secondary)
 	y += 8
-	line("ABCDEFGHIJKLMNOPQRSTUVWXYZ", white)
-	line("abcdefghijklmnopqrstuvwxyz", white)
-	line("0123456789 - ?", white)
+	line("ABCDEFGHIJKLMNOPQRSTUVWXYZ", primary)
+	line("abcdefghijklmnopqrstuvwxyz", primary)
+	line("0123456789 - ?", primary)
 	y += 8
 
 	// Live values, so a still frame shows the loop is actually running.
-	line(fmt.Sprintf("FRAME %d", b.frame), gray)
-	line(fmt.Sprintf("A PRESSED %d", b.pressed), gray)
+	line(fmt.Sprintf("FRAME %d", b.frame), secondary)
+	line(fmt.Sprintf("A PRESSED %d", b.pressed), secondary)
 	y += 4
 	if b.tables != nil {
-		line("A BATTLE  DPAD MOVES  START EXIT", gray)
+		line("A BATTLE  DPAD MOVES  START EXIT", secondary)
 	} else {
-		line("DPAD MOVES  START EXITS", gray)
+		line("DPAD MOVES  START EXITS", secondary)
 	}
 
-	// The cursor the d-pad drives.
-	dst.Rect(b.cursorX, b.cursorY, 8, 8, white)
+	// The cursor the d-pad drives. A direct index, like the border.
+	dst.Rect(b.cursorX, b.cursorY, 8, 8, cursorIdx)
 }
 
 func clamp(v, lo, hi int) int {
