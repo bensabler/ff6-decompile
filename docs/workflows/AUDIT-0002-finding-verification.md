@@ -52,6 +52,48 @@ Re-derived from backends rather than from AUDIT-0001's classification:
 all state their limits plainly. High honesty with incomplete backing is a
 different condition from low honesty, and the two must not share a score.
 
+## Playbook dispositions — all 28, individually assessed
+
+AUDIT-0001 returned `Keep` for all 28 from an unconditional `return`. That is
+withdrawn. Each playbook is now assessed on **content** — contract
+specificity, backend truth, overlap, outcome evidence, maintenance risk — not
+structure. Structure could not discriminate them: all 28 carry the same three
+sections, 6-9 steps, 27-57 lines, which is precisely why the old scorer emitted
+an identical 4.67 for every one.
+
+Per-playbook basis and confidence: `AUDIT-0002-corrected-baseline.json`.
+
+| Disposition | n | Playbooks |
+|---|---|---|
+| **Keep** | 14 | incl. `TRACE_DMA` and `RECOVER_COMPRESSION` — cited as the honesty model |
+| **Keep and Improve** | 5 | `RECOVER_TEXT`, `RECOVER_EVENT_OPCODE`, `IMPLEMENT_DISCOVERY`, `PREPARE_RELEASE`, `RECOVER_BACKGROUND` |
+| **Repair** | 4 | `ORCHESTRATE_RESEARCH`, `AUDIT_PROJECT`, `VALIDATE_GRAPHICS`, `RUN_QUALITY_GATES` |
+| **Narrow Scope** | 3 | `VALIDATE_AUDIO`, `RECOVER_SEQUENCE`, `TRACE_SPC_COMMAND` — backends absent |
+| **Merge Candidate** | 1 | `CAPTURE_GRAPHICS` — overlaps `CAPTURE_FRAME` |
+| **Deferred** | 1 | `WEEKLY_REVIEW` — fully specified, but no identifiable output |
+
+The four `Repair` cases share a pattern: the playbook prescribes something the
+backing reality contradicts. `ORCHESTRATE_RESEARCH` step 6 is the single word
+"Delegate" at the project's highest-frequency entry point; `AUDIT_PROJECT`'s
+required outputs make report-only execution impossible; `VALIDATE_GRAPHICS`
+step 4 prescribes the failure mode its own validator exists to prevent;
+`RUN_QUALITY_GATES` names no build step while CI enforces four.
+
+## Capability axes are contract-relative
+
+`specification_status` records **specification quality**. Compatibility with a
+particular audit's restrictions is recorded separately as
+`audit_scope_compatibility`.
+
+- **`/checkpoint` — `specification_status: complete`.** Its contract is
+  coherent: it names its skill, its template, and all three write targets
+  explicitly. Its `audit_scope_compatibility` is `incompatible`, because one of
+  those targets is a dashboard a bounded audit may not write. **A command can
+  be well specified and still be unusable inside a restricted scope.**
+- **`/session-summary` — `specification_status: partial`**, not `missing`. It
+  has meaningful procedural content and names its skill; it lacks a declared
+  output path. `audit_scope_compatibility: unverifiable`.
+
 ## Not carried forward
 
 AUDIT-0001's per-command implementation-status classification is retained as a

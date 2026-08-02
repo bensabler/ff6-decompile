@@ -38,11 +38,11 @@ escalated; regenerate outputs; pre-closure gates; two-stage closure.
 | 1 | 19 files frozen and hashed, 19/19 verify. Closure allowlist: **no deviation**. Gate comparison: only 4/12 gates had reliable capture in AUDIT-0001 |
 | 2 | Claim ledger: **26 claims — 13 refuted, 7 confirmed, 4 partially supported, 2 unverifiable**. Evidence index: 15 entries |
 | 3 | Generator replay: 4 of 6 outputs deterministic, 2 hand-authored constants. **Matcher corpus omits repository-root files.** Fixture suite 63 cases, 0 failures |
-| 4-5 | Corrected baseline, 135 resources, three-axis utilization, eight evidence-bearing axes. **All numeric scores withdrawn** |
-| 6 | Seven capability concerns re-verified; **four provisional findings refuted or downgraded** |
+| 4-5 | Corrected baseline: 135 resources × **all 8 axes**, evidence-bearing, validation PASS with 0 problems. 683 values mechanically derived, 397 manually adjudicated with rationales. **All numeric scores withdrawn** |
+| 6 | Seven capability concerns re-verified; **four provisional findings refuted or downgraded**; **all 28 playbooks individually assessed**; capability axes made contract-relative |
 | 7 | Routing probes pre-registered and run. **Automatic specialist selection refuted for the tested mechanism** |
 | 8 | Telemetry revised; derived-invocation mechanism **retracted** |
-| 9-10 | Corrected remediation plan v2; nine items, each with an unexecuted acceptance specification |
+| 9-10 | Corrected remediation plan v2: **14 items (R1-R14)**, each with an unexecuted acceptance specification, plus nine negative acceptance tests |
 
 ## Headline corrections
 
@@ -54,6 +54,13 @@ escalated; regenerate outputs; pre-closure gates; two-stage closure.
   **Probable → Confirmed**.
 - **AUDIT-0001 destroyed its own metric**: replayed against the closure tree
   the matcher reports **zero** orphans.
+- **`operator_workflow` command count is zero.** All 43 existing commands are
+  internal helpers, diagnostics, aliases or deprecated. There is no
+  outcome-named surface, which is why sequencing falls to the operator.
+  R11 targets 43 visible → **7**.
+- **`outcome_status` is `no_evidence` for 130 of 135 resources** — one
+  `validated`, three `partial`, one `failed`. Nothing ties a durable artifact
+  to the resource that produced it. This is the evidentiary basis for R12-R14.
 
 ## Not claimed
 
