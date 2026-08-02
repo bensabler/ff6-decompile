@@ -14,6 +14,8 @@ internal/assetmanifest
 
 internal/engine
     scene machine and fixed-step loop; no third-party deps, no I/O
+    - engine/headless:   stdlib-only host, authoritative for tests
+    - engine/ebitenhost: windowed host, the ONLY ebiten importer (build tag `gui`)
 
 internal/content
     archive-backed asset loading, adapted to engine-ready forms
@@ -136,3 +138,12 @@ a windowed host may skip `Draw` or pause `Update`, so it can never be.
 
 `Machine` is deterministic by construction — no wall clock, no time
 accumulator, no goroutines, and input from a `Source` a test can script.
+
+## Third-party dependencies
+
+The default build has none, and every gate runs without system libraries. The
+sole exception is Ebitengine in `internal/engine/ebitenhost`, behind the `gui`
+build tag because it requires cgo on macOS and Linux. `ff6lab audit` enforces
+the confinement as a direct-import rule, so the dependency is replaceable by
+rewriting one package. See
+[ADR-0001](docs/decisions/ADR-0001-rendering-host.md).

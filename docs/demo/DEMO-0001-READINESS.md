@@ -1,7 +1,7 @@
 # DEMO-0001 readiness matrix
 
 - **Milestone:** [DEMO-0001](DEMO-0001-new-game-to-whelk.md)
-- **Updated:** 2026-08-02 (Unit 5 — headless executable)
+- **Updated:** 2026-08-02 (Unit 6 — windowed host)
 
 Every player-visible requirement of the acceptance run appears here exactly
 once. This file is the demo's critical-path instrument: unit selection reads it,
@@ -28,10 +28,10 @@ Status reflects the **demo**, not the research. A subsystem can be Confirmed in
 
 | # | Requirement | Subsystem | Known evidence | Missing evidence | Asset / data | Go integration point | Validation | Depends on | Status | Next action |
 |---|---|---|---|---|---|---|---|---|---|---|
-| E1 | Executable launches, stable window | — | n/a (project-authored) | windowed host not yet written | — | `cmd/ff6demo`, `internal/engine/ebitenhost` | manual launch | E2, E3 | `Implemented` (headless only) | Unit 6 adds the window |
+| E1 | Executable launches, stable window | — | n/a (project-authored) | — | — | `cmd/ff6demo`, `internal/engine/ebitenhost` | launched and ran stably; ADR-0001 | E2, E3 | `Integrated` | — |
 | E2 | Deterministic fixed-step loop, frame counter | — | n/a | — | — | `internal/engine.Machine` | determinism test runs the same script twice with sleeps and extra Renders interleaved | — | `Integrated` | — |
-| E3 | 256×224 indexed framebuffer, integer scaling | SNES PPU output stage | CGRAM is 256 BGR555 entries | integer scaling belongs to the host | — | `internal/graphics/framebuf` | blit/clip/flip tests + fuzz | — | `Integrated` (framebuffer); scaling pending | Unit 6 |
-| E4 | Input: SNES pad + deterministic script source | SNES joypad | `$4218` bit order | keyboard mapping belongs to the host | — | `internal/platform/snespad`, `internal/engine` | edge tests; `-input` script drives a reproducible run | E2 | `Integrated` | Unit 6 adds the keyboard |
+| E3 | 256×224 indexed framebuffer, integer scaling | SNES PPU output stage | CGRAM is 256 BGR555 entries | — | — | `internal/graphics/framebuf`, `ebitenhost.integerScale` | blit/clip/flip tests + fuzz; scale table test incl. degenerate sizes | — | `Integrated` | — |
+| E4 | Input: SNES pad + deterministic script source | SNES joypad | `$4218` bit order | gamepad (as opposed to keyboard) unmapped | — | `internal/platform/snespad`, `ebitenhost` | edge tests; every button proven reachable from the keyboard; `-input` drives a reproducible run | E2 | `Integrated` | gamepad when the route needs it |
 | E5 | Headless frame capture (no display) | — | n/a | — | — | `internal/engine/headless` | 60 committed frame-hash goldens from a synthetic font | E2, E3 | `Integrated` | — |
 | E6 | Archive location + hash-verified asset loading | — | `manifests/assets.json`, `archive verify` 8/8 | — | `local_artifacts/archive/` | `internal/content` | fixture-archive tests cover all three sentinel errors | — | `Integrated` | — |
 | E7 | ROMCPU↔ROMFILE address translation | HiROM mapping | `offset = cpu − 0xC00000` Confirmed 18/18 vs Mesen (CORR-0001) | mirror/lower windows unverified for this ROM | — | `internal/platform/snesaddr` | 20 table cases + 21 constant assertions + round-trip fuzz | — | `Implemented` | — |
@@ -117,7 +117,7 @@ retired that deviation; see DEVIATIONS D1.
 | Status | Unit 0 | Now (Unit 5) |
 |---|---|---|
 | `Validated` | 0 | **1** |
-| `Integrated` | 0 | **6** |
+| `Integrated` | 0 | **7** |
 | `Implemented` | 5 | 7 |
 | `Evidence Ready` | 7 | 8 |
 | `Extractor Ready` | 2 | 1 |
@@ -126,7 +126,7 @@ retired that deviation; see DEVIATIONS D1.
 | `Deferred` | 1 | 1 |
 | `Unknown` | 33 | 25 |
 
-**The demo now runs.** Unit 5 moved the first seven rows into the executable
+**The demo now runs, in a window.** Units 5-6 moved the first eight rows into the executable
 and one to Validated — T1, whose archive-vs-ROM differential passes on all
 256 glyphs.
 

@@ -36,7 +36,47 @@ Automated validation against evidence
 Canonical documentation and checkpoint
 ```
 
-## Quick start
+## Running the demo
+
+DEMO-0001 is the playable deliverable: a Go reconstruction of New Game through
+Whelk victory. It is **early** — see
+[`docs/demo/DEMO-0001-READINESS.md`](docs/demo/DEMO-0001-READINESS.md) for the
+honest per-requirement state.
+
+Generate the assets from your own verified ROM (nothing ROM-derived ships in
+this repository):
+
+```bash
+export FF6_ROM=/path/to/your/verified.sfc
+go run ./cmd/ff6lab extract all
+```
+
+Then run it:
+
+```bash
+go run -tags gui ./cmd/ff6demo
+```
+
+Or headless, which needs no display and is the authoritative mode for
+automated comparison:
+
+```bash
+go run ./cmd/ff6demo -headless -frames 120 -capture-last
+```
+
+The demo binary cannot read a ROM: `internal/rom` is barred, transitively, from
+`cmd/ff6demo`, `internal/content` and `internal/engine`, and `ff6lab audit`
+walks the import graph to enforce it.
+
+### Dependencies
+
+The default build has **no third-party dependencies**, and every quality gate
+runs without system libraries. The windowed host is the single exception:
+Ebitengine, confined to `internal/engine/ebitenhost` and gated behind the `gui`
+build tag, because it requires cgo on macOS and Linux. Rationale and
+alternatives: [ADR-0001](docs/decisions/ADR-0001-rendering-host.md).
+
+## Quick start (research workflow)
 
 1. Merge this package into the root of the FF6 reconstruction repository.
 2. Keep the ROM and all extracted commercial material under `local_artifacts/`.

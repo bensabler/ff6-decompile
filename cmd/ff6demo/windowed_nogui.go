@@ -26,3 +26,7 @@ automated comparison:
 
   go run ./cmd/ff6demo -headless -frames 120 -capture-last`)
 }
+
+// windowedInput is never reached without the gui tag; runWindowed errors
+// first. It exists so both builds share one main.go.
+func windowedInput() engine.Source { return engine.NoInput }

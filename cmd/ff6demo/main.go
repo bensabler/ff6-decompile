@@ -81,6 +81,11 @@ func run(args []string) error {
 	m := engine.New(src, nil, scenes.NewBoot(font))
 
 	if !*headlessMode {
+		// A live keyboard is not reproducible, so the windowed host supplies
+		// its own Source unless a script was given explicitly.
+		if *script == "" {
+			m = engine.New(windowedInput(), nil, scenes.NewBoot(font))
+		}
 		return runWindowed(m)
 	}
 

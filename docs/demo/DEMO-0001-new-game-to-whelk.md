@@ -92,14 +92,19 @@ filled in as research lands, not skipped.
 ## Executable
 
 ```bash
-go run ./cmd/ff6demo
+go run -tags gui ./cmd/ff6demo
 ```
 
-Headless frame capture, for automated comparison and CI:
+Headless frame capture, for automated comparison and CI — no display needed,
+and the authoritative mode for any frame-exact claim:
 
 ```bash
-go run ./cmd/ff6demo -headless -frames 120
+go run ./cmd/ff6demo -headless -frames 120 -capture-last
 ```
+
+The `gui` tag is required because Ebitengine needs cgo on macOS and Linux;
+keeping it optional is what lets every gate run without system libraries
+([ADR-0001](../decisions/ADR-0001-rendering-host.md)).
 
 The demo binary **structurally cannot read a ROM**: `internal/rom` is forbidden
 — **transitively** — from `cmd/ff6demo`, `internal/content`, and
@@ -126,20 +131,31 @@ go run ./cmd/ff6lab extract all
 | Unit 2 | `internal/platform/snesaddr`; existing offsets asserted through it | `887f676` |
 | Unit 3 | EXP-0049 — the encoding indexes the font block directly | `aabad71` |
 | Unit 4 | Engine core: framebuffer, scene machine, content layer | `2febc83` |
-| Unit 5 | **The demo runs.** Headless `cmd/ff6demo` renders real FF6 text | — |
+| Unit 5 | **The demo runs.** Headless `cmd/ff6demo` renders real FF6 text | `5a8ffd8` |
+| Unit 6 | Windowed host (Ebitengine, confined + build-tagged) and ADR-0001 | — |
 
 ## Exact next action
 
-Unit 6 — the windowed host. Ebitengine v2 behind a `//go:build gui` tag,
-confined to `internal/engine/ebitenhost`, plus ADR-0001.
+**DEMO-0001A is complete.** The shell exists, runs windowed and headless,
+renders real extracted FF6 data, and every engine row of the readiness matrix
+is Integrated.
 
-The build tag is not a fallback, it is the design. Measured 2026-08-02:
-ebiten v2.9.9 requires cgo on **both** Linux and macOS (`CGO_ENABLED=0` fails
-on each; only Windows and js/wasm build without it). Keeping the host behind a
-tag is what stops `go build ./...`, `go vet ./...` and `go test ./...` from
-acquiring a system-library dependency, so CI keeps running the full demo test
-surface on a bare container.
+Unit 7 — **port the ATB layer into Go**, the first battle-vertical unit and
+the first that moves a Battle row. Everything it needs is already Confirmed
+(EXP-0041…0047) and none of it needs an asset:
 
-After that the loop turns to the battle vertical: port the Confirmed ATB layer
-(EXP-0041…0047) into Go, then formation and monster decoders, then a battle
-HUD scene that can use the font this milestone integrated.
+- gauges `WRAM:+$3AB4`, 10 entries, **stride 2** — not the `$14` of the
+  HP/stat family;
+- per-slot increment `+$3AC8`, `gauge += $3AC8,X >> 1` at `ROMCPU:$C21195`;
+- config sampled once at entry (`ROMCPU:$C22472`) into `+$3A8F` (Wait flag)
+  and `+$3A90` (`255 − 24 × speed`), with Battle Speed scaling **enemy gauges
+  only**;
+- the ACTIVE/WAIT gate at `ROMCPU:$C21124`, `LDA $2F41 / AND $3A8F / BNE`.
+
+`internal/engine`'s `LiveScene` interface already exists to express that gate:
+EXP-0044 established that a battle keeps advancing under the command window
+but pauses under the ability list.
+
+Then Unit 8 (formation and monster decoders from the archived `.bin` tables)
+and Unit 9 (a battle HUD scene using the font and the gauge tiles EXP-0049
+identified).

@@ -16,10 +16,18 @@ fuzz:
 		done; \
 	done
 
-check: fmt test vet
+check: fmt test vet deps
 
 build:
 	go build ./cmd/ff6lab
 
 clean:
 	rm -rf out dist coverage.out ff6lab ff6lab.exe
+
+deps:
+	go mod verify
+
+gui:
+	go build -tags gui ./cmd/ff6demo
+
+.PHONY: deps gui

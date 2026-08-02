@@ -234,7 +234,14 @@ go build ./...
 go vet ./...
 go test ./...
 go build ./cmd/ff6lab
+go build ./cmd/ff6demo
 go run ./cmd/ff6lab audit
+```
+
+The windowed demo needs a system-library toolchain and is checked separately:
+
+```bash
+go build -tags gui ./cmd/ff6demo
 ```
 
 `gofmt -l .` must produce no output.

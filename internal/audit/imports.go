@@ -23,6 +23,13 @@ type importRule struct {
 	Within []string
 	// Except lists package-path prefixes allowed to import it anyway.
 	Except []string
+	// Direct restricts the rule to direct imports.
+	//
+	// Most boundaries are about what gets *linked*, so they follow the
+	// graph transitively. Confinement rules are the exception: the point of
+	// the ebiten rule is that exactly one package touches the API, and
+	// every package that reaches the host through it is fine by design.
+	Direct bool
 	// Why is included in the finding, so the message explains the boundary
 	// rather than just asserting it.
 	Why string
@@ -52,6 +59,13 @@ var importRules = []importRule{
 		Within:    []string{modulePath + "/internal/platform"},
 		Why:       "internal/platform models SNES hardware and must not depend on FF6-specific packages (ARCHITECTURE.md)",
 	},
+	{
+		Forbidden: "github.com/hajimehoshi/ebiten",
+		Within:    []string{modulePath},
+		Except:    []string{modulePath + "/internal/engine/ebitenhost"},
+		Direct:    true,
+		Why:       "only internal/engine/ebitenhost may touch the rendering host, so the dependency stays replaceable at one package (docs/decisions/ADR-0001-rendering-host.md)",
+	},
 }
 
 // CheckImportBoundaries reports imports that cross an architectural boundary,
@@ -77,7 +91,7 @@ func CheckImportBoundaries(root string) ([]Finding, error) {
 			if !anyPrefix(pkg, r.Within) || anyPrefix(pkg, r.Except) {
 				continue
 			}
-			if path := findForbidden(graph, pkg, r); path != "" {
+			if path := findForbidden(graph, pkg, r, r.Direct); path != "" {
 				findings = append(findings, Finding{
 					Check:   "import-boundaries",
 					Message: path + " — " + r.Why,
@@ -127,9 +141,12 @@ func buildImportGraph(root string) (map[string][]string, error) {
 		}
 		for _, spec := range f.Imports {
 			imp, uerr := strconv.Unquote(spec.Path.Value)
-			if uerr != nil || !hasPathPrefix(imp, modulePath) {
+			if uerr != nil {
 				continue
 			}
+			// Third-party imports are recorded too, so a rule can forbid
+			// one. Traversal terminates on them naturally: they have no
+			// entry of their own, since only this module is parsed.
 			graph[pkg] = append(graph[pkg], imp)
 		}
 		return nil
@@ -138,8 +155,9 @@ func buildImportGraph(root string) (map[string][]string, error) {
 }
 
 // findForbidden walks the import graph from pkg and returns a human-readable
-// path to the first forbidden package, or "" if none is reachable.
-func findForbidden(graph map[string][]string, pkg string, r importRule) string {
+// path to the first forbidden package, or "" if none is reachable. When
+// direct is set it examines only pkg's own imports.
+func findForbidden(graph map[string][]string, pkg string, r importRule, direct bool) string {
 	type node struct {
 		pkg   string
 		trail []string
@@ -156,7 +174,7 @@ func findForbidden(graph map[string][]string, pkg string, r importRule) string {
 			if hasPathPrefix(imp, r.Forbidden) {
 				return strings.Join(append(cur.trail, short(imp)), " -> ")
 			}
-			if seen[imp] {
+			if direct || seen[imp] {
 				continue
 			}
 			seen[imp] = true

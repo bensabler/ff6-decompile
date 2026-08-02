@@ -1,7 +1,7 @@
 # DEMO-0001 acceptance criteria
 
 - **Milestone:** [DEMO-0001](DEMO-0001-new-game-to-whelk.md)
-- **Updated:** 2026-08-02 (Unit 5 — headless executable)
+- **Updated:** 2026-08-02 (Unit 6 — windowed host)
 - **Overall:** **NOT PASSING** — 1 of 17 progression steps, 3 of 6 gates
 
 DEMO-0001 is complete only when every required criterion passes. This file is
@@ -12,7 +12,7 @@ the scorecard. A step flips to PASS only when it has a recorded evidence path;
 
 | Gate | Requirement | Status | Evidence |
 |---|---|---|---|
-| G1 | A documented command launches a standalone Go application | **PASS** (headless) | `go run ./cmd/ff6demo -headless -frames 120`. Windowed launch pending Unit 6 |
+| G1 | A documented command launches a standalone Go application | **PASS** | `go run -tags gui ./cmd/ff6demo` opens a window; `go run ./cmd/ff6demo -headless` needs no display |
 | G2 | The acceptance run requires neither Mesen nor Ghidra running | **PASS** | the demo reads only the generated archive; `internal/rom` is barred from it by an enforced import boundary |
 | G3 | The run begins at New Game without loading a savestate or injecting internal state | **FAIL** | no run exists |
 | G4 | Assets are generated locally from the operator's verified ROM by a documented workflow | **PARTIAL** | `ff6lab extract all` + `archive verify` 8/8 OK; `dialogue`/`maps`/`animations`/`scripts` categories empty |
@@ -26,7 +26,7 @@ The continuous acceptance run, in order. Each step needs an evidence path under
 
 | # | Step | Beat | Status | Blocked by (readiness row) |
 |---|---|---|---|---|
-| 1 | Launches successfully | — | **PASS** (headless) | — |
+| 1 | Launches successfully | — | **PASS** | — |
 | 2 | Begins at New Game | B01 | **FAIL** | F14 |
 | 3 | Presents the opening sequence | B02 | **FAIL** | F1, F5, T4 |
 | 4 | Enters Narshe | B06 | **FAIL** | F1, F7 |

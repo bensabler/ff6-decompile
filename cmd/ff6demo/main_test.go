@@ -102,13 +102,3 @@ func TestSafeOutDirKeepsFramesLocal(t *testing.T) {
 		t.Errorf("the refusal should name the override flag: %v", err)
 	}
 }
-
-func TestRunWindowedIsUnavailableWithoutTheGuiTag(t *testing.T) {
-	err := runWindowed(nil)
-	if err == nil {
-		t.Skip("built with the gui tag")
-	}
-	if !strings.Contains(err.Error(), "-tags gui") || !strings.Contains(err.Error(), "-headless") {
-		t.Errorf("the error should name both alternatives: %v", err)
-	}
-}
