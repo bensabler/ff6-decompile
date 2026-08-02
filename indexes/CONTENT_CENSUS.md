@@ -47,7 +47,7 @@
 | CEN-GFX-0005 | GFX | hud | Battle HUD HP/ATB gauge tiles | LOCATED | OUTPUTS_CAPTURED | confirmed |
 | CEN-GFX-0006 | GFX | graphics runtime state | Mines-interior PPU configuration and VRAM image | OBSERVED | OUTPUTS_CAPTURED | confirmed |
 | CEN-GFX-0007 | GFX | graphics loading | DMA channel configuration preserved in savestates | OBSERVED | INPUTS_CAPTURED | confirmed |
-| CEN-GFX-0008 | GFX | sprites | OAM images preserved in savestates, never yet examined | UNMAPPED | OUTPUTS_CAPTURED | confirmed |
+| CEN-GFX-0008 | GFX | sprites | OAM field sprite composition, milestone 04 | LOCATED | OUTPUTS_CAPTURED | confirmed |
 | CEN-GFX-0009 | GFX | graphics loading | DMA/HDMA channel registers and transfer semantics | FORMAT_DECODED | INPUTS_CAPTURED | confirmed |
 | CEN-MAGIC-0001 | MAGIC | magitek abilities | Magitek command and ability set | CANDIDATE_LOCATION | NORMAL_PATH_VERIFIED | strong-hypothesis |
 | CEN-MAGIC-0002 | MAGIC | spell availability | Magic command and Terra's opening spell availability | LOCATED | OUTPUTS_CAPTURED | strong-hypothesis |

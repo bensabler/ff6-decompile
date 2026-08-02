@@ -2,7 +2,7 @@
 
 - **Milestone:** [DEMO-0001](DEMO-0001-new-game-to-whelk.md)
 - **Route view:** [DEMO-0001-CONTENT-MATRIX.md](DEMO-0001-CONTENT-MATRIX.md)
-- **Updated:** 2026-08-02 (Unit 17 — first authentic field graphics integrated)
+- **Updated:** 2026-08-02 (Unit 18 — OAM read for the first time)
 
 Every player-visible requirement of the acceptance run appears here exactly
 once. This file is the demo's critical-path instrument: unit selection reads it,
@@ -90,7 +90,7 @@ retired that deviation; see DEVIATIONS D1.
 | F3 | Collision, map boundaries, exits | Field engine | player tile bytes `WRAM:+$00AF`/`+$00B0` (EXP-0035, CEN-WORLD-0007, strong hypothesis) | collision data location and lookup | — | — | — | F1 | `Unknown` | research unit not yet scheduled |
 | F4 | Player/NPC movement, directional animation | Field engine | route traversal reproducible (EXP-0036) | movement routine, sprite format, animation timing | — | — | — | F1, F6 | `Unknown` | research unit not yet scheduled |
 | F5 | Camera / scrolling | Field engine | CEN-QUIRK-0002: HDMA/PPU-phase nondeterminism at milestone 01 | scroll registers driver | — | — | — | F1 | `Unknown` | research unit not yet scheduled |
-| F6 | Field sprites, walking frames | Field graphics | CEN-GFX-0002 `OBSERVED`. **OAM has never been read** from any capture, though every savestate carries it and `ff6lab state oam` now reaches it (CEN-GFX-0008) | ROM location, format, OAM layout | — | — | — | — | `Unknown` | read OAM from milestone 04 and correlate entries with on-screen actors — the cheapest unstarted graphics unit |
+| F6 | Field sprites, walking frames | Field graphics | **EXP-0053**: milestone 04 shows **5 of 128 sprites**; object mode 3 (16x16/32x32), name base `VRAM:$C000`. The player is a single 16x16 at screen centre, palette 2, tile `$000`, **tiles at `ROMFILE:0x150180`** — the project's first character graphic location. A mirrored 32x32 object uses two names H-flipped, tiles around `0x1841A0` (bank `$D8`, the same region as battle sprites). **74% of `VRAM:$C000-$FFFF` is verbatim ROM** | the sheet's ROM layout and row stride (the tile-to-ROM map is **not** linear); which character the sheet is; the walking-frame set and timing | — | `internal/platform/snesoam`, `ff6lab state sprites` | decoded and reproducible from a frozen capture | — | `Researching` | capture a second state facing a different direction and diff OAM plus the sprite tile region |
 | F7 | Map transitions | Map system | milestone 05 reproducible 3× byte-identical | header/tileset load path unlocated; `+$1EA5` lead **refuted** (CONTRA-0002) | — | — | — | F1 | `Unknown` | research unit — queued P0 #6 |
 | F8 | Event interpreter (command subset) | Event system | CORR-0001: `ROMCPU:$C09B5C` advances 24-bit `WRAM:+$00E5..+$00E7` by `A & $FF`, Confirmed 24/24; `+$00E3` per-frame wait | value never observed dereferenced; **dispatch predecessor unresolved**; opcode table `ROMCPU:$C098C4` static-only | — | — | — | — | `Researching` | CORR-0002 at `ROMCPU:$C09B59` |
 | F9 | Event flags | Event system | DISC-0008: three arrays, decoder `ROMCPU:$C0BAED`, masks `$C0BAFC`/`$C0BB04`; opening touches exactly 20 flags | flag *meanings* deliberately unassigned; 4 further array bases static-only | `data/scenarios/opening-event-flags.json` | `internal/game/eventflags` | existing tests | — | `Implemented` | wire into progression |
@@ -133,14 +133,18 @@ prose.
 | `Implemented` | 5 | 6 |
 | `Evidence Ready` | 6 | 1 |
 | `Extractor Ready` | 2 | 1 |
-| `Researching` | 3 | 2 |
+| `Researching` | 3 | 3 |
 | `Blocked` | 2 | 2 |
 | `Deferred` | 1 | 1 |
-| `Unknown` | 36 | 28 |
+| `Unknown` | 36 | 27 |
 | **Total rows** | **55** | **57** |
 
 B17 carries `Integrated` (enemy side) and F1 carries `Integrated` (tileset
 only); both are counted as Integrated. Their gaps are deviations D4 and D7.
+
+**Two Field rows have now moved.** F1 is Integrated (tileset only), and F6 is
+Researching — it had no evidence of any kind until Unit 18 read OAM, which no
+experiment had ever done despite every savestate carrying it.
 
 **F1 is the first Field row ever to move.** The demo now draws real,
 uncompressed FF6 field graphics extracted from the operator's ROM, proven

@@ -55,3 +55,4 @@
 | EXP-0050 | vram-rom-provenance-sweep | completed | see record | [EXP-0050-vram-rom-provenance-sweep](../docs/experiments/EXP-0050-vram-rom-provenance-sweep.md) |
 | EXP-0051 | map-tileset-selector-search | completed | see record | [EXP-0051-map-tileset-selector-search](../docs/experiments/EXP-0051-map-tileset-selector-search.md) |
 | EXP-0052 | map-id-and-33-byte-record | completed | see record | [EXP-0052-map-id-and-33-byte-record](../docs/experiments/EXP-0052-map-id-and-33-byte-record.md) |
+| EXP-0053 | oam-field-sprite-composition | completed | see record | [EXP-0053-oam-field-sprite-composition](../docs/experiments/EXP-0053-oam-field-sprite-composition.md) |

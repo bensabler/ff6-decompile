@@ -9,6 +9,7 @@ import (
 
 	"github.com/bensabler/ff6-decompile/internal/mesenstate"
 	"github.com/bensabler/ff6-decompile/internal/platform/snesaddr"
+	"github.com/bensabler/ff6-decompile/internal/platform/snesoam"
 	"github.com/bensabler/ff6-decompile/internal/rom"
 	"github.com/bensabler/ff6-decompile/internal/romorigin"
 )
@@ -21,6 +22,7 @@ const stateUsage = `usage:
   ff6lab state ` + stateRegions + ` <file.mss> [-o <out.bin>]
   ff6lab state read <file.mss> ` + stateRegions + ` <hexaddr> <length>
   ff6lab state diff <a.mss> <b.mss> [` + stateRegions + `]
+  ff6lab state sprites <file.mss>
   ff6lab state origin <file.mss> [` + stateRegions + `] [-rom <path>]`
 
 // runState reads emulated memory out of preserved Mesen savestates so
@@ -34,6 +36,8 @@ func runState(args []string, out io.Writer) error {
 		return stateList(args[1], out)
 	case "ppu":
 		return statePPU(args[1], out)
+	case "sprites":
+		return stateSprites(args[1], out)
 	case "origin":
 		romPath, _, rest, err := parseROMFlag(args[1:])
 		if err != nil {
@@ -235,6 +239,57 @@ func stateOrigin(path, name, romPath string, out io.Writer) error {
 	fmt.Fprintln(out, "The remainder is NOT evidence of compression. It rules out verbatim")
 	fmt.Fprintln(out, "copying and nothing more: bit-plane reordering, runtime composition or")
 	fmt.Fprintln(out, "a single changed byte all defeat this search. Treat it as a lead.")
+	return nil
+}
+
+// stateSprites decodes the object attribute table: which sprites the capture
+// actually shows, how big they are, and which tiles they read.
+//
+// It filters to on-screen sprites because the hardware draws whatever OAM
+// says and FF6 parks unused slots below the display — without the filter
+// every capture reads as 128 active sprites.
+func stateSprites(path string, out io.Writer) error {
+	st, err := mesenstate.Open(path)
+	if err != nil {
+		return err
+	}
+	p, err := st.PPUState()
+	if err != nil {
+		return err
+	}
+	raw, err := st.OAM()
+	if err != nil {
+		return err
+	}
+	sprites, err := snesoam.Decode(raw, p.OAMMode)
+	if err != nil {
+		return err
+	}
+	small, large, err := snesoam.SizesForMode(p.OAMMode)
+	if err != nil {
+		return err
+	}
+
+	vis := snesoam.OnScreen(sprites)
+	fmt.Fprintf(out, "object mode %d (%v / %v), name base VRAM:$%04X\n",
+		p.OAMMode, small, large, p.OAMBaseAddress)
+	fmt.Fprintf(out, "%d of %d sprites on screen\n\n", len(vis), len(sprites))
+	fmt.Fprintln(out, "  #     x    y   tile  size   pal  pri  flip  first tile at")
+	for _, s := range vis {
+		flip := ""
+		if s.FlipH {
+			flip += "H"
+		}
+		if s.FlipV {
+			flip += "V"
+		}
+		if flip == "" {
+			flip = "-"
+		}
+		fmt.Fprintf(out, "%3d %5d %4d  $%03X  %-5v %3d  %3d  %4s  VRAM:$%04X\n",
+			s.Index, s.X, s.Y, s.Tile, s.Size, s.Palette, s.Priority, flip,
+			snesoam.VRAMAddress(p.OAMBaseAddress, s.Tile))
+	}
 	return nil
 }
 

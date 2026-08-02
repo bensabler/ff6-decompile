@@ -1011,6 +1011,24 @@
       "falsifying_outcome": "No small value satisfies 02==04!=05; or no differing WRAM run is found in the ROM for both maps.",
       "status": "completed",
       "record": "docs/experiments/EXP-0052-map-id-and-33-byte-record.md"
+    },
+    {
+      "schema_version": "1.0",
+      "id": "EXP-0053",
+      "domain": "graphics",
+      "question": "What does OAM hold on the Narshe exterior, how are its sprites composed, and do their tiles come from the ROM verbatim?",
+      "starting_state": {
+        "emulator": "none - static analysis of a preserved savestate and the ROM",
+        "rom_sha256": "0f51b4fca41b7fd509e4b8f9d543151f68efa5e97b08493e4b2a0c06f5d8d5e2",
+        "state": "local_artifacts/scenarios/SCN-0001/04-free-movement/run1-04.mss"
+      },
+      "expected_outcomes": [
+        "A small number of on-screen sprites, most of OAM parked off-display.",
+        "If field sprite graphics are uncompressed, their VRAM tiles appear in the ROM verbatim."
+      ],
+      "falsifying_outcome": "Sprite tiles absent from the ROM.",
+      "status": "completed",
+      "record": "docs/experiments/EXP-0053-oam-field-sprite-composition.md"
     }
   ]
 }

@@ -14,7 +14,7 @@ Breadth without pretense: counts are census entries at or above each threshold (
 | WORLD | 7 | 0 | 0 | 0 | 0 | 1 |
 | EVENT | 11 | 4 | 1 | 0 | 0 | 4 |
 | MENU | 7 | 2 | 1 | 0 | 0 | 1 |
-| GFX | 9 | 3 | 2 | 1 | 1 | 0 |
+| GFX | 9 | 4 | 2 | 1 | 1 | 0 |
 | AUDIO | 6 | 3 | 2 | 2 | 1 | 1 |
 | SAVE | 1 | 0 | 0 | 0 | 0 | 0 |
 | QUIRK | 2 | 0 | 0 | 0 | 0 | 1 |
@@ -28,8 +28,8 @@ Breadth without pretense: counts are census entries at or above each threshold (
 ## Census health
 
 - Entries with unresolved fields/formats: 45.
-- Observed but not yet located (breadth backlog): 44.
-- Runtime-only findings (seen live, no location): 33.
+- Observed but not yet located (breadth backlog): 43.
+- Runtime-only findings (seen live, no location): 32.
 - Static-only findings (located, never exercised live): 1.
 
 ## Open breadth targets (next_action of unlocated entries)
@@ -56,7 +56,6 @@ Breadth without pretense: counts are census entries at or above each threshold (
 - **CEN-GFX-0004** (Variable-width dialogue font): Capture the dialogue compose region; the fixed-font provenance technique should locate the glyph source.
 - **CEN-GFX-0006** (Mines-interior PPU configuration and VRAM image): Use as the known-good output side of the X1 compression recovery.
 - **CEN-GFX-0007** (DMA channel configuration preserved in savestates): Live DMA tracing needs a Lua probe that does not exist; until then use channel state only as a lead.
-- **CEN-GFX-0008** (OAM images preserved in savestates, never yet examined): Read OAM from a field savestate and correlate entries with on-screen actors.
 - **CEN-MAGIC-0001** (Magitek command and ability set): Disambiguate the Fire Beam record index (menu-navigation press script; watch the MVN X source during the confirm).
 - **CEN-MAGIC-0005** (Spell targeting flags and menu targeting behavior): Correlate record byte 3/4 bits against multi-target spells once more are castable.
 - **CEN-MAGIC-0006** (Spell effect dispatch): Map record bytes 7/8 against effect variety once more spells are castable; hunt an effect-routine pointer table.
