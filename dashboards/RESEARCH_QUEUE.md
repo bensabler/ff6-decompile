@@ -159,6 +159,17 @@ Ordered next units (reorder when evidence exposes a better chain):
   record bytes 2-7 as ids yields record 0 (the opening guard), so the
   id field must carry a high-bit/extension not yet decoded (FF6
   exceeds 256 monsters). Blocks Whelk's monster records (B18/B14).
+  **Narrowed 2026-08-02 (DEMO-0001 Unit 8):** the leading word at
+  `+$00/+$01` is **refuted** as the extension — formation 432 and
+  formation 1 share the word `$0380`, yet formation 1's monsters are
+  Confirmed to be record 25 (27 HP/5 MP, matched live in EXP-0034).
+  Remaining candidates: the trailing bytes `+$08..+$0E`, the parallel
+  flags table at `ROMCPU:$CF5900` (4-byte stride, semantics Unknown),
+  or the loader's X-computation, which CEN-MONSTER-0001 already lists
+  as unknown ("formation->monster-id mapping"). The flags table is now
+  decoded and reachable as records via `content.LoadBattleTables`, so
+  the next attempt costs nothing but the reading. Established
+  statically; no emulator run required so far.
 - [x] Post-Whelk guard/Esper beat (CEN-EVENT-0011) — **resolved by
   EXP-0040**: the "We won't hand over the Esper!!" beat fires at
   `(2A,07)` **before** the Whelk battle on a clean, never-defeated run,

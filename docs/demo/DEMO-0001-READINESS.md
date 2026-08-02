@@ -1,7 +1,7 @@
 # DEMO-0001 readiness matrix
 
 - **Milestone:** [DEMO-0001](DEMO-0001-new-game-to-whelk.md)
-- **Updated:** 2026-08-02 (Unit 7 — ATB layer in Go)
+- **Updated:** 2026-08-02 (Unit 8 — formation and monster decoders)
 
 Every player-visible requirement of the acceptance run appears here exactly
 once. This file is the demo's critical-path instrument: unit selection reads it,
@@ -60,13 +60,13 @@ retired that deviation; see DEVIATIONS D1.
 | B4 | ATB gauges and increments | ATB | EXP-0043: gauges `WRAM:+$3AB4` stride **2**, increments `+$3AC8`, `gauge += $3AC8,X >> 1` at `ROMCPU:$C21195` | increment **formula** (`ROMCPU:$C209F0` partly decoded), readiness threshold (`$322C` undecoded), gauge reset | — | `internal/game/atb` | measured $9C→$4E advance and the observed $00B6→$0004 wrap, both reproduced; fuzz over the 16-bit add | — | `Implemented` | integrate in Unit 9 |
 | B5 | ACTIVE/WAIT behavior | ATB | EXP-0044/0045: gate `ROMCPU:$C21124`, submenu flag `WRAM:+$2F41`; pause narrower than folk model | 6 of 10 pause-matrix rows unsampled | — | `internal/game/atb.Paused`, `engine.LiveScene` | the gate is an AND of bits; gated frames freeze the tick counter with the gauges | B4 | `Implemented` | integrate in Unit 9 |
 | B6 | Battle config sampling at entry | Battle init | EXP-0041/0042: `WRAM:+$1D4D` bits, sampled once at `ROMCPU:$C22472` → `+$3A8F`/`+$3A90`; speed scales **enemy only** | whether other battle types sample differently | — | `internal/game/atb.DecodeConfig`, `SampleEntry` | decodes the two recorded fingerprints ($2A default, $25 from EXP-0047) | — | `Implemented` | integrate in Unit 9 |
-| B7 | Formations | Formation table | EXP-0030: `ROMCPU:$CF6200` + 15×id, verified 7× | bytes `+$00/01`, `+$08..+$0E`; **monster-id high-bit extension** | `raw/formations.bin` | new `internal/content/formations` | byte-for-byte vs staged `+$3F44` | E6, E7 | `Evidence Ready` | Unit 8 |
-| B8 | Monster stat records | Monster DB | EXP-0028/0029: `ROMCPU:$CF0000`, 32-byte stride; `+$08` HP, `+$0A` MP, `+$01` power | 20+ of 32 bytes; table length; **name table unlocated** | `raw/monsters.bin` | new `internal/content/monsters` | vs battle-entry WRAM | E6, E7 | `Evidence Ready` | Unit 8 |
+| B7 | Formations | Formation table | EXP-0030: `ROMCPU:$CF6200` + 15×id, verified 7× | `+$08..+$0E`; the monster-id extension (**`+$00/01` refuted**, Unit 8) | `raw/formations.bin` | `internal/game/battledata`, `content.LoadBattleTables` | six recorded compositions reproduced from the archive; Whelk's 15 bytes match SCN-0001 B18 | E6, E7 | `Implemented` | integrate in Unit 9 |
+| B8 | Monster stat records | Monster DB | EXP-0028/0029: `ROMCPU:$CF0000`, 32-byte stride; `+$08` HP, `+$0A` MP, `+$01` power | 20+ of 32 bytes; table length; **name table unlocated** | `raw/monsters.bin` | `internal/game/battledata`, `content.LoadBattleTables` | five live-measured stat sets (records 0/19/25/27/77) reproduced from the archive | E6, E7 | `Implemented` | integrate in Unit 9 |
 | B9 | Monster names | Monster DB | — | **name table unlocated** | — | — | — | — | `Unknown` | research unit (queued P0 #9) |
 | B10 | Action queue, ordering, arbitration | Battle scheduler | EXP-0046/0047: execution path periodic and ungated, ~100–120 frames | invoker unnamed (EXP-0048); queue ordering rules | — | — | — | B4 | `Researching` | EXP-0048 |
 | B11 | Command menus, target selection | Battle UI | EXP-0040: Magitek sets are character-specific (Terra 8, Wedge/Vicks 4) | command record table unlocated; Fire Beam index ambiguous | — | — | — | T1, T3 | `Unknown` | research unit not yet scheduled |
 | B12 | Enemy AI | Monster AI | — | AI script format and location unlocated | — | — | — | — | `Unknown` | research unit not yet scheduled |
-| B13 | Whelk head/shell behavior | Boss AI | EXP-0039/0040: formation 432; shell slot 4 = 50000 HP, head slot 5 = 1600 HP; head-only targeting works (6 hits, 162–186 dmg); shell counterattack observed | Whelk's monster ids (blocked on B7 extension); natural head/shell timing (EXP-0040 evidence is operator-contaminated) | — | — | — | B7, B8, B12 | `Blocked` | needs B7 monster-id extension |
+| B13 | Whelk head/shell behavior | Boss AI | EXP-0039/0040: formation 432; shell slot 4 = 50000 HP, head slot 5 = 1600 HP; head-only targeting works (6 hits, 162–186 dmg); shell counterattack observed | Whelk's monster ids (still blocked on the extension, though Unit 8 refuted the leading-word candidate); natural head/shell timing (EXP-0040 evidence is operator-contaminated) | — | — | — | B7, B8, B12 | `Blocked` | remaining candidates: trailing bytes `+$08..+$0E`, the `$CF5900` flags table, or the loader's X-computation |
 | B14 | Battle backgrounds | Battle graphics | CEN-GFX-0003 `OBSERVED` | ROM location, format | — | — | — | — | `Unknown` | research unit not yet scheduled |
 | B15 | Enemy graphics incl. Whelk | Battle graphics | CEN-MONSTER-0003 `OBSERVED` (green guard only) | ROM location, format, compression | — | — | — | compression | `Unknown` | research unit not yet scheduled |
 | B16 | Party battle sprites | Battle graphics | — | ROM location, format | — | — | — | compression | `Unknown` | research unit not yet scheduled |
@@ -114,12 +114,12 @@ retired that deviation; see DEVIATIONS D1.
 
 ## Summary at Unit 0
 
-| Status | Unit 0 | Now (Unit 7) |
+| Status | Unit 0 | Now (Unit 8) |
 |---|---|---|
 | `Validated` | 0 | **1** |
 | `Integrated` | 0 | **7** |
-| `Implemented` | 5 | 10 |
-| `Evidence Ready` | 7 | 5 |
+| `Implemented` | 5 | 12 |
+| `Evidence Ready` | 7 | 3 |
 | `Extractor Ready` | 2 | 1 |
 | `Researching` | 3 | 2 |
 | `Blocked` | 2 | 2 |

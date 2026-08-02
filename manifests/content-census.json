@@ -2553,8 +2553,13 @@
         "EXP-0030"
       ],
       "related_discoveries": [],
-      "related_implementations": [],
-      "related_tests": [],
+      "related_implementations": [
+        "internal/content.LoadBattleTables",
+        "internal/game/battledata"
+      ],
+      "related_tests": [
+        "internal/content.TestArchivedTablesMatchTheRecordedFacts"
+      ],
       "runtime_scenarios": [
         "mesen/out/exp10-battle.mss"
       ],
@@ -2612,8 +2617,14 @@
         "EXP-0030"
       ],
       "related_discoveries": [],
-      "related_implementations": [],
-      "related_tests": [],
+      "related_implementations": [
+        "internal/content.LoadBattleTables",
+        "internal/game/battledata"
+      ],
+      "related_tests": [
+        "internal/content.TestArchivedTablesMatchTheRecordedFacts",
+        "internal/content.TestLeadingWordIsNotTheMonsterIDExtension"
+      ],
       "runtime_scenarios": [
         "mesen/out/exp10-battle.mss"
       ],
@@ -2624,14 +2635,16 @@
       ],
       "confidence": "confirmed",
       "unknown_fields": [
-        "record bytes +$00/01 and +$08..+$0E semantics",
+        "record bytes +$00/01 semantics - REFUTED as the monster-id extension (see notes)",
+        "record bytes +$08..+$0E semantics",
         "flags-table fields",
         "table length",
-        "+$11E0 producer (encounter roll)"
+        "+$11E0 producer (encounter roll)",
+        "monster-id extension for ids above 255 (Whelk, formation 432)"
       ],
       "contradictions": [],
       "next_action": "Trace +$11E0's producer (encounter roll: zone data + step state).",
-      "notes": ""
+      "notes": "2026-08-02 (DEMO-0001 Unit 8): NEGATIVE RESULT. The leading word at +$00/+$01 is refuted as the monster-id extension. Formation 432 (Whelk) and formation 1 carry the same word $0380, yet formation 1's monsters are Confirmed to be record 25 (27 HP / 5 MP, matched live in EXP-0034) - so the word does not add a high bit to the ids. The extension, if there is one, must live in the trailing bytes +$08..+$0E, the parallel flags table at ROMCPU:$CF5900, or the loader's X-computation (CEN-MONSTER-0001). Established statically from the archived table; no emulator run. Asserted by TestLeadingWordIsNotTheMonsterIDExtension."
     },
     {
       "schema_version": "1.0",
