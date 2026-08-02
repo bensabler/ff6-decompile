@@ -85,7 +85,7 @@ retired that deviation; see DEVIATIONS D1.
 
 | # | Requirement | Subsystem | Known evidence | Missing evidence | Asset / data | Go integration point | Validation | Depends on | Status | Next action |
 |---|---|---|---|---|---|---|---|---|---|---|
-| F1 | Map headers, tilesets, tilemaps | Map system | **EXP-0050**: the BG tile data for milestones 02/04/05 is in the ROM **uncompressed**, in contiguous spans. Narshe exterior: `ROMFILE:0x208460` (8192 B), `0x223000` (8192 B), `0x224F00` (4096 B), plus ~18 short runs of 128-171 B from bank `$E6`. `0x208460` and `0x223000` are **shared with the mines interior** | the map **header** that selects these blocks; the tilemap/layout source (not verbatim in ROM); which VRAM spans are tiles vs tilemap | — | — | — | — | `Located` | follow the located spans to the header that selects them — this row previously had no anchor at all |
+| F1 | Map headers, tilesets, tilemaps | Map system | **EXP-0050**: the BG tile data for milestones 02/04/05 is in the ROM **uncompressed**, in contiguous spans. Narshe exterior: `ROMFILE:0x208460` (8192 B), `0x223000` (8192 B), `0x224F00` (4096 B), plus ~18 short runs of 128-171 B from bank `$E6`. `0x208460` and `0x223000` are **shared with the mines interior** | the map **header** that selects these blocks; the tilemap/layout source (not verbatim in ROM); which VRAM spans are tiles vs tilemap | — | — | — | — | `Unknown` | **the tileset graphics are located; the header is not.** Follow `0x208460`/`0x223000` to the record that selects them. This row had no anchor at all before EXP-0050 |
 | F2 | Map palettes | Map system | `bgr555.Decode` implemented | palette table location, bank selection | — | — | — | F1 | `Unknown` | research unit not yet scheduled |
 | F3 | Collision, map boundaries, exits | Field engine | player tile bytes `WRAM:+$00AF`/`+$00B0` (EXP-0035, CEN-WORLD-0007, strong hypothesis) | collision data location and lookup | — | — | — | F1 | `Unknown` | research unit not yet scheduled |
 | F4 | Player/NPC movement, directional animation | Field engine | route traversal reproducible (EXP-0036) | movement routine, sprite format, animation timing | — | — | — | F1, F6 | `Unknown` | research unit not yet scheduled |
@@ -157,8 +157,15 @@ Unknown count was 36, not 33; its Evidence Ready count was 6, not 7. The figure
 This is the failure mode of deviation D1 again: two independent records of one
 fact, disagreeing, with nothing comparing them. Dated historical claims about
 the *start* state are left as written and annotated; the live figures here are
-recounted. An audit check asserting this table against the actual row counts is
-scheduled, so the class cannot recur silently.
+recounted.
+
+**The comparison is now a check.** `audit.CheckReadinessSummary` counts the
+rows above and asserts this table against them, on every `ff6lab audit` and in
+CI. It also rejects a requirement id that appears twice and a status token
+outside the vocabulary — it caught one of each within a minute of being
+written, including a row this very unit had just given a status borrowed from
+the content matrix. Only the "Now" column is checked; the Unit 0 column is a
+dated claim about a past commit and is not recomputable.
 
 **The demo now runs a battle screen.** Unit 9 moved six Battle rows into the
 executable: real formations, real monster HP from the real records, and live
