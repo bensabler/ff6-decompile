@@ -275,43 +275,48 @@ The **immediate predecessor is unresolved**.
 
 ## Next exact action
 
-**Test EXP-0051's "block boundaries are wrong" alternative.** Nearly
-free, needs no instrument, and it would invalidate four searches if it
-holds. `ff6lab state origin` anchors a matched run where the *image*
-begins, so a ROM block starting before `VRAM:$0000`'s source is reported
-from its midpoint and its true start is never searched for. Probe the ROM
-immediately before `0x208460` and `0x20DFA0` to find the real block
-starts, then re-run the pointer search against those.
+**PAUSED at an atomic boundary.** No unit is in flight. The next session
+performs a **project-wide workflow and orchestration audit**; no research
+or implementation unit should begin before it.
 
-**Unit 15 was a negative result.** No pointer table selects the map tile
-blocks, under four meaningfully different encodings. The loader computes
-the addresses, so the next instrument is the routine — Ghidra outward
-from the VRAM upload, or the DMA trace — not another search. Recorded
-under the three-attempts stopping rule rather than by guessing further
-encodings.
+Branch `demo/whelk-content-parity`, HEAD `38a62a1`, worktree clean, no
+emulator running, no background processes. Evidence for EXP-0050 through
+EXP-0053 is harvested into `local_artifacts/experiments/` with READMEs,
+replay scripts and verified hashes.
 
-Fallback if the boundary test fails: **read OAM from milestone 04**
-(CEN-GFX-0008). Every preserved savestate carries `ppu.oamRam`,
-`ff6lab state oam` reaches it, and **no experiment has ever looked at
-it**. Readiness F6 depends on it.
+**The map-descriptor line is stopped by choice**, under the
+three-attempts rule — six meaningfully different approaches across
+EXP-0051 and EXP-0052 failed to find what selects the field tile blocks.
+The instrument is wrong: this is a question for a disassembler or a
+trace, not a search. What the line *did* establish is recorded and
+hashed: the tile block addresses, a map identifier (`$39` Narshe / `$17`
+mines at `WRAM:+$1305`/`+$13E2`/`+$1F80`), and a 33-byte record table in
+bank `$ED` carrying that id at `record[28]` on all three captures.
 
-Needing one operator session: **run `probe dma-trace` over a map load.**
-The probe exists as of Unit 16 and is **unexercised**. One run would name
-the source address and the routine that set it up in a single
-observation.
+When content work resumes, in priority order:
 
-**Units 0-16 are complete.** The demo runs windowed and headless, renders
-real extracted FF6 data visibly, and shows a battle screen driven by real
-formations and monster records with a live ATB layer.
+1. **Test the block-boundary alternative** — nearly free, needs no
+   instrument, and would invalidate all four pointer encodings if it
+   holds. `ff6lab state origin` anchors a matched run where the *image*
+   begins, so a ROM block starting before `VRAM:$0000`'s source is
+   reported from its midpoint and its true start has never been searched
+   for. Probe the ROM immediately before `0x208460` and `0x20DFA0`.
+2. **Diff the sprite tile region between milestones 02 and 04** — both
+   are the Narshe exterior, so if the player faces differently the
+   walking-frame set and the sheet's row stride fall out with no new
+   capture (F6).
+3. Needing one operator session: **run `probe dma-trace` over a map
+   load**. Written in Unit 16, still **unexercised**. One run would name
+   the source address and the routine that set it up.
 
-Carrying forward, now four instances deep: **two records of one fact are
+Carrying forward, five instances deep now: **two records of one fact are
 worth nothing unless something compares them.** The `hud-font` extractor
 vs ROM-0016 (D1). The readiness summary vs its own tables (Unit 10).
-`BlitOptions.PaletteBase`'s doc comment vs its callers (D0, Unit 11). And
-EXP-0050's "shared with the mines interior", which was never measured at
-all and was corrected by EXP-0051 the same day. The first three are now
-checks or tests; the fourth is why `state origin` is run per scene rather
-than assumed across scenes.
+`BlitOptions.PaletteBase`'s doc comment vs its callers (D0, Unit 11).
+EXP-0050's "shared with the mines interior", never measured (EXP-0051).
+And EXP-0053's first pass, where a 128-byte probe spanned a VRAM gap and
+reported the player's sprite as absent from the ROM — a negative from
+the wrong probe geometry looks exactly like a real one.
 
 ### Research actions, now sequenced behind the demo's critical path
 

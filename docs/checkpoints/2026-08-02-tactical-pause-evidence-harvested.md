@@ -1,7 +1,5 @@
-# Latest Checkpoint
+# Checkpoint 2026-08-02 — Tactical pause, evidence harvested and hashed
 
-**[2026-08-02 — Tactical pause, evidence harvested and hashed](2026-08-02-tactical-pause-evidence-harvested.md)**
-(preceding: [Unit 18, OAM read for the first time](2026-08-02-unit18-oam-field-sprites.md))
 ## Current question
 
 None. This is a deliberate pause at an atomic boundary, not a stopping point
