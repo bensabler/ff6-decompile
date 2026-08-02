@@ -39,6 +39,7 @@ func Run(root string) ([]Finding, error) {
 		CheckMarkdownLinks,
 		CheckRestrictedTracked,
 		CheckRequiredTracked,
+		CheckImportBoundaries,
 	} {
 		fs, err := fn(root)
 		if err != nil {
