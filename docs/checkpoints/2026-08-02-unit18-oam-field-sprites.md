@@ -1,7 +1,5 @@
-# Latest Checkpoint
+# Checkpoint 2026-08-02 — Unit 18, OAM read for the first time
 
-**[2026-08-02 — Unit 18, OAM read for the first time](2026-08-02-unit18-oam-field-sprites.md)**
-(preceding: [Unit 17, first authentic field graphics](2026-08-02-unit17-field-graphics.md))
 ## Current question
 
 None open. The next action is a single bounded capture-and-diff.
