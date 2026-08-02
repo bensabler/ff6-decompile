@@ -28,14 +28,24 @@ const signature = "MSS"
 
 // Block names the project reads.
 const (
-	WorkRAMBlock = "memoryManager.workRam"
-	SaveRAMBlock = "cart.saveRam"
+	WorkRAMBlock  = "memoryManager.workRam"
+	SaveRAMBlock  = "cart.saveRam"
+	VideoRAMBlock = "ppu.vram"
+	CGRAMBlock    = "ppu.cgram"
+	OAMBlock      = "ppu.oamRam"
+	AudioRAMBlock = "spc.ram"
 )
 
 // Expected sizes of those blocks on SNES.
 const (
-	WorkRAMSize = 128 * 1024
-	SaveRAMSize = 8 * 1024
+	WorkRAMSize  = 128 * 1024
+	SaveRAMSize  = 8 * 1024
+	VideoRAMSize = 64 * 1024
+	CGRAMSize    = 512 // 256 BGR555 entries
+	// OAMSize is 512 bytes of four-byte entries plus the 32-byte high
+	// table that carries each sprite's size bit and X sign bit.
+	OAMSize      = 544
+	AudioRAMSize = 64 * 1024
 )
 
 // maxSection bounds decompression so a corrupt or hostile file cannot
@@ -178,6 +188,27 @@ func (s *State) WorkRAM() ([]byte, error) { return s.region(WorkRAMBlock, WorkRA
 
 // SaveRAM returns the cartridge save RAM image.
 func (s *State) SaveRAM() ([]byte, error) { return s.region(SaveRAMBlock, SaveRAMSize) }
+
+// VideoRAM returns the 64 KB VRAM image: the tile and tilemap data the PPU
+// was actually drawing from when the state was written.
+//
+// For any graphics format this project has yet to decode, this is the
+// **known-good output side of the comparison** — the bytes a ROM decompressor
+// must reproduce. It needs no emulator, which is what makes a preserved
+// savestate corpus usable as evidence long after the session ended.
+func (s *State) VideoRAM() ([]byte, error) { return s.region(VideoRAMBlock, VideoRAMSize) }
+
+// CGRAM returns the 512-byte palette image, 256 BGR555 entries. Decode
+// entries with platform/bgr555.
+func (s *State) CGRAM() ([]byte, error) { return s.region(CGRAMBlock, CGRAMSize) }
+
+// OAM returns the 544-byte sprite attribute image: 128 four-byte entries
+// followed by the 32-byte high table.
+func (s *State) OAM() ([]byte, error) { return s.region(OAMBlock, OAMSize) }
+
+// AudioRAM returns the 64 KB SPC700 address space: the loaded audio driver,
+// its sequence data and its BRR samples, as they stood at capture time.
+func (s *State) AudioRAM() ([]byte, error) { return s.region(AudioRAMBlock, AudioRAMSize) }
 
 func (s *State) region(name string, want int) ([]byte, error) {
 	b, ok := s.blocks[name]

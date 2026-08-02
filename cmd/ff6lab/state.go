@@ -10,11 +10,14 @@ import (
 	"github.com/bensabler/ff6-decompile/internal/mesenstate"
 )
 
+const stateRegions = `wram|sram|vram|cgram|oam|aram`
+
 const stateUsage = `usage:
   ff6lab state list <file.mss>
-  ff6lab state wram|sram <file.mss> [-o <out.bin>]
-  ff6lab state read <file.mss> wram|sram <hexaddr> <length>
-  ff6lab state diff <a.mss> <b.mss> [wram|sram]`
+  ff6lab state ppu <file.mss>
+  ff6lab state ` + stateRegions + ` <file.mss> [-o <out.bin>]
+  ff6lab state read <file.mss> ` + stateRegions + ` <hexaddr> <length>
+  ff6lab state diff <a.mss> <b.mss> [` + stateRegions + `]`
 
 // runState reads emulated memory out of preserved Mesen savestates so
 // earlier captures can be re-examined without an emulator.
@@ -25,7 +28,9 @@ func runState(args []string, out io.Writer) error {
 	switch args[0] {
 	case "list":
 		return stateList(args[1], out)
-	case "wram", "sram":
+	case "ppu":
+		return statePPU(args[1], out)
+	case "wram", "sram", "vram", "cgram", "oam", "aram":
 		rest, dest := takeOutputFlag(args[2:])
 		if len(rest) != 0 {
 			return fmt.Errorf("%s", stateUsage)
@@ -63,6 +68,10 @@ func takeOutputFlag(args []string) (rest []string, dest string) {
 	return rest, dest
 }
 
+// regionNames are the memory images `state` can read, in the order the
+// usage text lists them.
+var regionNames = []string{"wram", "sram", "vram", "cgram", "oam", "aram"}
+
 // region returns the named memory image and the address prefix the
 // project uses to write addresses inside it.
 func region(st *mesenstate.State, name string) ([]byte, string, error) {
@@ -73,8 +82,21 @@ func region(st *mesenstate.State, name string) ([]byte, string, error) {
 	case "sram":
 		b, err := st.SaveRAM()
 		return b, "SRAM:+$", err
+	case "vram":
+		b, err := st.VideoRAM()
+		return b, "VRAM:$", err
+	case "cgram":
+		b, err := st.CGRAM()
+		return b, "CGRAM:$", err
+	case "oam":
+		b, err := st.OAM()
+		return b, "OAM:$", err
+	case "aram":
+		b, err := st.AudioRAM()
+		return b, "ARAM:$", err
 	default:
-		return nil, "", fmt.Errorf("unknown region %q; want wram or sram", name)
+		return nil, "", fmt.Errorf("unknown region %q; want one of %s",
+			name, strings.Join(regionNames, ", "))
 	}
 }
 
@@ -88,6 +110,74 @@ func stateList(path string, out io.Writer) error {
 		fmt.Fprintf(out, "%-48s %8d\n", n, len(b))
 	}
 	return nil
+}
+
+// statePPU prints the configuration needed to interpret a VRAM image, plus
+// the DMA channel setup that hints at where those bytes came from.
+//
+// A VRAM dump on its own says nothing about which bytes are tiles, at what
+// depth, or which layer reads them. This is the other half of the evidence,
+// and it is in the same file.
+func statePPU(path string, out io.Writer) error {
+	st, err := mesenstate.Open(path)
+	if err != nil {
+		return err
+	}
+	p, err := st.PPUState()
+	if err != nil {
+		return err
+	}
+
+	fmt.Fprintf(out, "BG mode %d   brightness %d/15   forced blank %v\n", p.BGMode, p.Brightness, p.ForcedBlank)
+	fmt.Fprintf(out, "main screen layers $%02X   sub screen layers $%02X   OAM mode %d, base VRAM:$%04X\n",
+		p.MainScreenLayers, p.SubScreenLayers, p.OAMMode, p.OAMBaseAddress)
+	fmt.Fprintln(out)
+	fmt.Fprintln(out, "layer  on   chr       tilemap   scroll        tiles  size")
+	for i, l := range p.Layers {
+		on := " "
+		if p.LayerEnabled(i) {
+			on = "*"
+		}
+		tiles := "8x8"
+		if l.LargeTiles {
+			tiles = "16x16"
+		}
+		fmt.Fprintf(out, "BG%d    %s    VRAM:$%04X VRAM:$%04X (%5d,%5d) %-6s %dx%d screens\n",
+			i+1, on, l.ChrAddress, l.TilemapAddress, l.HScroll, l.VScroll, tiles,
+			1+b2i(l.DoubleWidth), 1+b2i(l.DoubleHeight))
+	}
+
+	ch, err := st.DMAChannels()
+	if err != nil {
+		return err
+	}
+	fmt.Fprintln(out)
+	fmt.Fprintln(out, "DMA channel configuration at capture time. This is NOT a transfer log:")
+	fmt.Fprintln(out, "a finished channel keeps its last setup and an unused one keeps its")
+	fmt.Fprintln(out, "initialisation values. Treat a source address as a lead, not a trace.")
+	fmt.Fprintln(out)
+	fmt.Fprintln(out, "ch  dest    mode  source        size   target")
+	for _, c := range ch {
+		target := ""
+		switch {
+		case c.TargetsVRAM():
+			target = "VRAM"
+		case c.TargetsCGRAM():
+			target = "CGRAM"
+		case c.TargetsOAM():
+			target = "OAM"
+		}
+		fmt.Fprintf(out, "%d   $21%02X   %d     $%06X      %5d  %s\n",
+			c.Index, c.DestAddress, c.TransferMode, c.FullSource(), c.TransferSize, target)
+	}
+	return nil
+}
+
+func b2i(b bool) int {
+	if b {
+		return 1
+	}
+	return 0
 }
 
 func stateDump(path, name, dest string, out io.Writer) error {

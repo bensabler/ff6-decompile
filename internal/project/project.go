@@ -27,11 +27,13 @@ Usage:
 
 Preserved savestates (local artifacts; no emulator needed):
   ff6lab state list <file.mss>          block names and sizes
-  ff6lab state wram|sram <file.mss> -o <out.bin>
+  ff6lab state ppu <file.mss>           BG mode, layer chr/tilemap/scroll,
+                                        and DMA channel setup
+  ff6lab state wram|sram|vram|cgram|oam|aram <file.mss> -o <out.bin>
                                         write a memory image to disk
-  ff6lab state read <file.mss> wram|sram <hexaddr> <length>
+  ff6lab state read <file.mss> <region> <hexaddr> <length>
                                         hexdump a range
-  ff6lab state diff <a.mss> <b.mss> [wram|sram]
+  ff6lab state diff <a.mss> <b.mss> [region]
                                         differing byte runs between two states
 
 Archival extraction (needs the user-supplied verified ROM):

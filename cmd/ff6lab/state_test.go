@@ -128,9 +128,17 @@ func TestStateErrors(t *testing.T) {
 	p := writeState(t, dir, "a.mss", make([]byte, 128*1024))
 	var out bytes.Buffer
 
-	if err := stateRead(p, "vram", "0", "1", &out); err == nil ||
+	// A name that is not a region at all.
+	if err := stateRead(p, "nowhere", "0", "1", &out); err == nil ||
 		!strings.Contains(err.Error(), "unknown region") {
 		t.Errorf("unknown region: got %v", err)
+	}
+	// A real region the fixture happens not to carry. This must fail
+	// differently — naming the missing block — because the corpus is not
+	// uniform and "this state has no VRAM" is not "vram is not a thing".
+	if err := stateRead(p, "vram", "0", "1", &out); err == nil ||
+		!strings.Contains(err.Error(), "ppu.vram") {
+		t.Errorf("absent region: got %v", err)
 	}
 	if err := stateRead(p, "wram", "1FFFF", "8", &out); err == nil ||
 		!strings.Contains(err.Error(), "past the end") {

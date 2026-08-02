@@ -14,8 +14,8 @@ Breadth without pretense: counts are census entries at or above each threshold (
 | WORLD | 7 | 0 | 0 | 0 | 0 | 1 |
 | EVENT | 11 | 4 | 1 | 0 | 0 | 4 |
 | MENU | 7 | 2 | 1 | 0 | 0 | 1 |
-| GFX | 5 | 2 | 1 | 1 | 1 | 0 |
-| AUDIO | 5 | 3 | 2 | 2 | 1 | 1 |
+| GFX | 8 | 2 | 1 | 1 | 1 | 0 |
+| AUDIO | 6 | 3 | 2 | 2 | 1 | 1 |
 | SAVE | 1 | 0 | 0 | 0 | 0 | 0 |
 | QUIRK | 2 | 0 | 0 | 0 | 0 | 1 |
 
@@ -27,15 +27,16 @@ Breadth without pretense: counts are census entries at or above each threshold (
 
 ## Census health
 
-- Entries with unresolved fields/formats: 40.
-- Observed but not yet located (breadth backlog): 40.
-- Runtime-only findings (seen live, no location): 29.
+- Entries with unresolved fields/formats: 44.
+- Observed but not yet located (breadth backlog): 44.
+- Runtime-only findings (seen live, no location): 33.
 - Static-only findings (located, never exercised live): 1.
 
 ## Open breadth targets (next_action of unlocated entries)
 
 - **CEN-AUDIO-0004** (Battle music track (opening guard fight)): Delta-map the music-start APU command at a field-to-battle transition; locate the sequence pointer in ARAM.
 - **CEN-AUDIO-0005** (Field/event music selection): DSP snapshot on checkpoint2; compare voice/SRCN set against the battle snapshot.
+- **CEN-AUDIO-0006** (Complete ARAM images preserved in savestates): Differential two ARAM images from different music contexts to separate driver from sequence.
 - **CEN-BATTLE-0007** (Defeat flow ('Annihilated')): Capture the post-defeat transition (game over vs retry) in a dedicated run.
 - **CEN-BATTLE-0008** (Victory processing and reward windows (EXP/GP), battle-to-field writeback): Widen the post-victory write watch across the whole +$1600 block for all three members and correlate offsets against on-screen EXP/GP/level values.
 - **CEN-BATTLE-0009** (Multi-part enemy: Whelk shell and head as separate battle slots): Deferred behind the ATB research program: head/shell timing cannot be measured until submenu-pause and ATB semantics are modelled (see BLOCKERS.md).
@@ -53,6 +54,9 @@ Breadth without pretense: counts are census entries at or above each threshold (
 - **CEN-GFX-0002** (Field sprite assets (armor walker, NPCs, townsfolk)): OAM + chr capture on a field state; register the sprite sheet region.
 - **CEN-GFX-0003** (Battle background (cave scene)): BG1/BG2 VRAM + tilemap capture during battle; provenance search (EXP-0023 pattern).
 - **CEN-GFX-0004** (Variable-width dialogue font): Capture the dialogue compose region; the fixed-font provenance technique should locate the glyph source.
+- **CEN-GFX-0006** (Mines-interior PPU configuration and VRAM image): Use as the known-good output side of the X1 compression recovery.
+- **CEN-GFX-0007** (DMA channel configuration preserved in savestates): Live DMA tracing needs a Lua probe that does not exist; until then use channel state only as a lead.
+- **CEN-GFX-0008** (OAM images preserved in savestates, never yet examined): Read OAM from a field savestate and correlate entries with on-screen actors.
 - **CEN-MAGIC-0001** (Magitek command and ability set): Disambiguate the Fire Beam record index (menu-navigation press script; watch the MVN X source during the confirm).
 - **CEN-MAGIC-0005** (Spell targeting flags and menu targeting behavior): Correlate record byte 3/4 bits against multi-target spells once more are castable.
 - **CEN-MAGIC-0006** (Spell effect dispatch): Map record bytes 7/8 against effect variety once more spells are castable; hunt an effect-routine pointer table.

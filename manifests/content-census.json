@@ -217,6 +217,56 @@
     },
     {
       "schema_version": "1.0",
+      "rom_locations": [],
+      "wram_locations": [],
+      "cpu_routines": [],
+      "spc_locations": [
+        "ARAM:$0000-$FFFF"
+      ],
+      "record_count_expected": null,
+      "record_count_found": null,
+      "record_size": null,
+      "pointer_tables": [],
+      "consumers": [],
+      "producers": [],
+      "related_experiments": [
+        "EXP-0024"
+      ],
+      "related_discoveries": [],
+      "related_implementations": [
+        "internal/mesenstate.State.AudioRAM",
+        "ff6lab state aram"
+      ],
+      "related_tests": [
+        "TestMemoryImages"
+      ],
+      "runtime_scenarios": [
+        "local_artifacts/experiments/EXP-0035/recon-mines-inside.mss"
+      ],
+      "evidence": [
+        "docs/audio/AUD-0001-battle-confirm-sfx.md"
+      ],
+      "unknown_fields": [
+        "driver layout",
+        "sequence format",
+        "sample directory location",
+        "which ARAM spans are code vs data"
+      ],
+      "contradictions": [],
+      "notes": "",
+      "rom_revision": "0f51b4fca41b7fd509e4b8f9d543151f68efa5e97b08493e4b2a0c06f5d8d5e2",
+      "id": "CEN-AUDIO-0006",
+      "domain": "AUDIO",
+      "category": "audio runtime state",
+      "name": "Complete ARAM images preserved in savestates",
+      "description": "Every Mesen savestate carries spc.ram, the full 64 KB SPC700 address space: the loaded audio driver, its sequence data and its BRR samples as they stood at capture time, plus spc.dsp.* registers. ~30 preserved states span field, battle and post-victory contexts. Registered because A3 (sequences), A4 (driver) and A2 (sample directory) all sit at zero records while their runtime image has been on disk since the states were taken.",
+      "reconstruction_status": "OBSERVED",
+      "runtime_status": "OUTPUTS_CAPTURED",
+      "confidence": "confirmed",
+      "next_action": "Differential two ARAM images from different music contexts to separate driver from sequence."
+    },
+    {
+      "schema_version": "1.0",
       "id": "CEN-BATTLE-0001",
       "domain": "BATTLE",
       "category": "damage formulas",
@@ -1849,6 +1899,150 @@
       "contradictions": [],
       "next_action": "Registered from EXP-0049, not investigated. When DEMO-0001 reaches readiness B17 (battle HUD), correlate the gauge run against WRAM:+$3AB4 (ATB gauges) and the HP arrays to establish which value drives fill.",
       "notes": "Observed, registered briefly per the content-census rule; not investigated."
+    },
+    {
+      "schema_version": "1.0",
+      "rom_locations": [],
+      "wram_locations": [],
+      "cpu_routines": [],
+      "spc_locations": [],
+      "record_count_expected": null,
+      "record_count_found": null,
+      "record_size": null,
+      "pointer_tables": [],
+      "consumers": [],
+      "producers": [],
+      "related_experiments": [
+        "EXP-0035"
+      ],
+      "related_discoveries": [],
+      "related_implementations": [
+        "internal/mesenstate.State.VideoRAM",
+        "internal/mesenstate.State.PPUState",
+        "ff6lab state ppu"
+      ],
+      "related_tests": [
+        "mesenstate hardware fixtures"
+      ],
+      "runtime_scenarios": [
+        "local_artifacts/experiments/EXP-0035/recon-mines-inside.mss"
+      ],
+      "evidence": [
+        "docs/demo/DEMO-0001-CONTENT-MATRIX.md"
+      ],
+      "unknown_fields": [
+        "which VRAM spans are tiles vs tilemap",
+        "the ROM source of the tile data",
+        "the compression format"
+      ],
+      "contradictions": [],
+      "notes": "",
+      "rom_revision": "0f51b4fca41b7fd509e4b8f9d543151f68efa5e97b08493e4b2a0c06f5d8d5e2",
+      "id": "CEN-GFX-0006",
+      "domain": "GFX",
+      "category": "graphics runtime state",
+      "name": "Mines-interior PPU configuration and VRAM image",
+      "description": "Preserved savestate EXP-0035/recon-mines-inside.mss carries a complete field-map graphics state: BG mode 1, main screen $17 (BG1/BG2/BG3 + sprites), BG1 chr VRAM:$0000 tilemap VRAM:$9800, BG2 chr VRAM:$0000 tilemap VRAM:$A800, BG3 chr VRAM:$6000 tilemap VRAM:$B000, all three sharing scroll (488,336). Forced blank was set and brightness 0 at the capture instant, so the screen was off; VRAM still holds the loaded tileset. Registered as a decompressed-output reference for compression recovery, not as a decoded format.",
+      "reconstruction_status": "OBSERVED",
+      "runtime_status": "OUTPUTS_CAPTURED",
+      "confidence": "confirmed",
+      "next_action": "Use as the known-good output side of the X1 compression recovery."
+    },
+    {
+      "schema_version": "1.0",
+      "rom_locations": [],
+      "wram_locations": [
+        "WRAM:+$C180"
+      ],
+      "cpu_routines": [],
+      "spc_locations": [],
+      "record_count_expected": null,
+      "record_count_found": null,
+      "record_size": null,
+      "pointer_tables": [],
+      "consumers": [],
+      "producers": [],
+      "related_experiments": [
+        "EXP-0035"
+      ],
+      "related_discoveries": [],
+      "related_implementations": [
+        "internal/mesenstate.State.DMAChannels",
+        "ff6lab state ppu"
+      ],
+      "related_tests": [
+        "TestDMAChannels"
+      ],
+      "runtime_scenarios": [
+        "local_artifacts/experiments/EXP-0035/recon-mines-inside.mss"
+      ],
+      "evidence": [
+        "docs/demo/DEMO-0001-CONTENT-MATRIX.md",
+        "docs/research/MESEN_CAPABILITY_MATRIX.md"
+      ],
+      "unknown_fields": [
+        "which channel performed the tileset upload",
+        "the staging buffer actually used",
+        "live DMA tracing does not exist in this project"
+      ],
+      "contradictions": [],
+      "notes": "",
+      "rom_revision": "0f51b4fca41b7fd509e4b8f9d543151f68efa5e97b08493e4b2a0c06f5d8d5e2",
+      "id": "CEN-GFX-0007",
+      "domain": "GFX",
+      "category": "graphics loading",
+      "name": "DMA channel configuration preserved in savestates",
+      "description": "Every Mesen savestate carries dmaController.channel[0..7] setup: destAddress (the $21xx low byte), transferMode, srcBank, srcAddress, transferSize and the HDMA fields. In recon-mines-inside.mss channel 0 targets $2118 (VRAM) from $7EC180. IMPORTANT: this is channel state at one instant, NOT a transfer log - a finished channel keeps its last setup. Measured falsifier: VRAM[0:65536] matches WRAM[$0C180:] on only 18% of bytes with a 49-byte leading run, so that setup is NOT the transfer that produced the captured VRAM. Source addresses are leads.",
+      "reconstruction_status": "OBSERVED",
+      "runtime_status": "INPUTS_CAPTURED",
+      "confidence": "confirmed",
+      "next_action": "Live DMA tracing needs a Lua probe that does not exist; until then use channel state only as a lead."
+    },
+    {
+      "schema_version": "1.0",
+      "rom_locations": [],
+      "wram_locations": [],
+      "cpu_routines": [],
+      "spc_locations": [],
+      "record_count_expected": null,
+      "record_count_found": null,
+      "record_size": null,
+      "pointer_tables": [],
+      "consumers": [],
+      "producers": [],
+      "related_experiments": [],
+      "related_discoveries": [],
+      "related_implementations": [
+        "internal/mesenstate.State.OAM",
+        "ff6lab state oam"
+      ],
+      "related_tests": [
+        "TestMemoryImages"
+      ],
+      "runtime_scenarios": [
+        "local_artifacts/experiments/EXP-0035/recon-mines-inside.mss"
+      ],
+      "evidence": [
+        "docs/research/MESEN_CAPABILITY_MATRIX.md"
+      ],
+      "unknown_fields": [
+        "sprite composition",
+        "metasprite layout",
+        "animation frames",
+        "tile source"
+      ],
+      "contradictions": [],
+      "notes": "",
+      "rom_revision": "0f51b4fca41b7fd509e4b8f9d543151f68efa5e97b08493e4b2a0c06f5d8d5e2",
+      "id": "CEN-GFX-0008",
+      "domain": "GFX",
+      "category": "sprites",
+      "name": "OAM images preserved in savestates, never yet examined",
+      "description": "Every Mesen savestate carries ppu.oamRam: 544 bytes, 128 four-byte sprite entries plus the 32-byte high table holding each sprite's size and X sign bits. The Mesen bridge has had 'read oam' wired since it was written. No experiment has ever read OAM, by either route. Readiness F6 (field sprites, walking frames) depends on it and is at Unknown.",
+      "reconstruction_status": "UNMAPPED",
+      "runtime_status": "OUTPUTS_CAPTURED",
+      "confidence": "confirmed",
+      "next_action": "Read OAM from a field savestate and correlate entries with on-screen actors."
     },
     {
       "schema_version": "1.0",
