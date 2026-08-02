@@ -8,6 +8,12 @@ func Help() string {
 Usage:
   ff6lab help
   ff6lab version
+  ff6lab workflow list                  workflow runs and their verdicts
+  ff6lab workflow validate <file>       check a contract before approval
+  ff6lab workflow start <file>          freeze an approved contract, open the run
+  ff6lab workflow status <WF-NNNN>      planned vs observed; what remains
+  ff6lab workflow close <WF-NNNN>       reconcile evidence and compute the
+                                        verdict; it is computed, not asserted
   ff6lab audit                          repository integrity checks
                                         (includes census validation)
   ff6lab indexes generate               regenerate all generated indexes

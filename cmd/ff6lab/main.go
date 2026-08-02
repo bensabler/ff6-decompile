@@ -30,6 +30,8 @@ func run(args []string) error {
 	case "version":
 		fmt.Println(project.Version)
 		return nil
+	case "workflow":
+		return runWorkflow(".", args, os.Stdout)
 	case "audit":
 		findings, err := audit.Run(".")
 		if err != nil {
