@@ -1,6 +1,5 @@
-# Latest Checkpoint
+# Checkpoint 2026-08-02 — Unit 17, first authentic field graphics
 
-**[2026-08-02 — Unit 17, first authentic field graphics; header search stopped](2026-08-02-unit17-field-graphics.md)**
 (preceding: [Units 15-16, a negative result and the missing implementations](2026-08-02-units15-16-negative-result-and-tooling.md))
 
 State: branch `demo/whelk-content-parity`, eleven commits ahead of `main` at
