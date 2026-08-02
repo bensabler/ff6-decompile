@@ -40,6 +40,7 @@ func Run(root string) ([]Finding, error) {
 		CheckRestrictedTracked,
 		CheckRequiredTracked,
 		CheckImportBoundaries,
+		CheckTrackedBinaries,
 	} {
 		fs, err := fn(root)
 		if err != nil {
