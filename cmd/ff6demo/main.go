@@ -87,6 +87,11 @@ func run(args []string) error {
 	} else {
 		fmt.Fprintln(os.Stderr, "ff6demo: battle scene unavailable:", err)
 	}
+	if tiles, err := content.LoadNarsheTileset(archive); err == nil {
+		boot = boot.WithFieldTiles(tiles)
+	} else {
+		fmt.Fprintln(os.Stderr, "ff6demo: field tileset unavailable:", err)
+	}
 
 	m := engine.New(src, nil, boot)
 

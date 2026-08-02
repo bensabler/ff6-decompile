@@ -2,7 +2,7 @@
 
 - **Milestone:** [DEMO-0001](DEMO-0001-new-game-to-whelk.md)
 - **Route view:** [DEMO-0001-CONTENT-MATRIX.md](DEMO-0001-CONTENT-MATRIX.md)
-- **Updated:** 2026-08-02 (Unit 15 — EXP-0051 selector search, negative)
+- **Updated:** 2026-08-02 (Unit 17 — first authentic field graphics integrated)
 
 Every player-visible requirement of the acceptance run appears here exactly
 once. This file is the demo's critical-path instrument: unit selection reads it,
@@ -85,7 +85,7 @@ retired that deviation; see DEVIATIONS D1.
 
 | # | Requirement | Subsystem | Known evidence | Missing evidence | Asset / data | Go integration point | Validation | Depends on | Status | Next action |
 |---|---|---|---|---|---|---|---|---|---|---|
-| F1 | Map headers, tilesets, tilemaps | Map system | **EXP-0050**: the BG tile data for milestones 02/04/05 is in the ROM **uncompressed**, in contiguous spans. Narshe exterior: `ROMFILE:0x208460` (8192 B), `0x223000` (8192 B), `0x224F00` (4096 B), plus ~18 short runs of 128-171 B from bank `$E6`. `0x208460` and `0x223000` are shared with **milestone 02**, the same town; the mines interior uses a different set, `0x20DFA0`/`0x23C0C0` (EXP-0051 corrects EXP-0050 here) | the map **header** that selects these blocks; the tilemap/layout source (not verbatim in ROM); which VRAM spans are tiles vs tilemap | — | — | — | — | `Unknown` | **EXP-0051: the addresses are not stored as pointers** under four encodings, so the loader computes them. Next instrument is the routine, not a search — Ghidra outward from the VRAM upload, or the unexercised `mesen/probes/dma-trace.lua` |
+| F1 | Map headers, tilesets, tilemaps | Map system | **EXP-0050/0051**: the Narshe BG tile block is `ROMFILE:0x208460`, 256 tiles, 4bpp, **uncompressed**, extracted as `ASSET-GFX-0002` and **proven byte-identical to captured VRAM on two independent savestates**. Mines uses `0x20DFA0`/`0x23C0C0`. **EXP-0052**: map ids `$39` (Narshe) / `$17` (mines) at `WRAM:+$1305`/`+$13E2`/`+$1F80`, and a 33-byte ROM record table in bank `$ED` copied to `WRAM:+$0520` carrying the id at record offset 28 | the header that **selects** the tileset — six approaches have failed; the tilemap/layout source | `narshe-field-tileset.png` | `internal/content.LoadNarsheTileset`, `scenes.FieldTiles` | **all 256 tiles match captured VRAM byte-exactly on milestones 02 and 04** | E6 | `Integrated` (tileset only) | the selector needs the loader routine, not a search: Ghidra, or the unexercised DMA probe |
 | F2 | Map palettes | Map system | `bgr555.Decode` implemented | palette table location, bank selection | — | — | — | F1 | `Unknown` | research unit not yet scheduled |
 | F3 | Collision, map boundaries, exits | Field engine | player tile bytes `WRAM:+$00AF`/`+$00B0` (EXP-0035, CEN-WORLD-0007, strong hypothesis) | collision data location and lookup | — | — | — | F1 | `Unknown` | research unit not yet scheduled |
 | F4 | Player/NPC movement, directional animation | Field engine | route traversal reproducible (EXP-0036) | movement routine, sprite format, animation timing | — | — | — | F1, F6 | `Unknown` | research unit not yet scheduled |
@@ -129,18 +129,23 @@ prose.
 | Status | Unit 0 (`969b5dd`) | Now (Unit 10) |
 |---|---|---|
 | `Validated` | 0 | **1** |
-| `Integrated` | 0 | **14** |
+| `Integrated` | 0 | **15** |
 | `Implemented` | 5 | 6 |
 | `Evidence Ready` | 6 | 1 |
 | `Extractor Ready` | 2 | 1 |
 | `Researching` | 3 | 2 |
 | `Blocked` | 2 | 2 |
 | `Deferred` | 1 | 1 |
-| `Unknown` | 36 | 29 |
+| `Unknown` | 36 | 28 |
 | **Total rows** | **55** | **57** |
 
-B17 carries `Integrated` (enemy side) and is counted as Integrated; its party
-half is deviation D4.
+B17 carries `Integrated` (enemy side) and F1 carries `Integrated` (tileset
+only); both are counted as Integrated. Their gaps are deviations D4 and D7.
+
+**F1 is the first Field row ever to move.** The demo now draws real,
+uncompressed FF6 field graphics extracted from the operator's ROM, proven
+byte-identical to captured VRAM on two independent savestates. It draws them
+without a map, because the header that selects a tileset is still unlocated.
 
 Unit 10 added two rows — B19 (action animations) and X4 (transition effects) —
 which the [route content matrix](DEMO-0001-CONTENT-MATRIX.md) found were named

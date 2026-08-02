@@ -21,7 +21,7 @@ the scorecard. A step flips to PASS only when it has a recorded evidence path;
 | G3 | The run begins at New Game without loading a savestate or injecting internal state | **FAIL** | no run exists |
 | G4 | Assets are generated locally from the operator's verified ROM by a documented workflow | **PARTIAL** | `ff6lab extract all` + `archive verify` 8/8 OK; `dialogue`/`maps`/`animations`/`scripts` categories empty |
 | G5 | No prohibited files are committed | **PASS** | CI restricted-extension scan + `ff6lab audit` `CheckRestrictedTracked` green |
-| G6 | All deviations from the original are recorded, not hidden by weakened tests | **PASS** | [DEMO-0001-DEVIATIONS.md](DEMO-0001-DEVIATIONS.md) — 5 open (D2-D6), 2 retired (D0, D1) |
+| G6 | All deviations from the original are recorded, not hidden by weakened tests | **PASS** | [DEMO-0001-DEVIATIONS.md](DEMO-0001-DEVIATIONS.md) — 6 open (D2-D7), 2 retired (D0, D1) |
 
 ## Progression steps
 

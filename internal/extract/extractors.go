@@ -14,6 +14,7 @@ import (
 	"github.com/bensabler/ff6-decompile/internal/audio/brr"
 	"github.com/bensabler/ff6-decompile/internal/game/textenc"
 	"github.com/bensabler/ff6-decompile/internal/graphics/tile2bpp"
+	"github.com/bensabler/ff6-decompile/internal/graphics/tile4bpp"
 	"github.com/bensabler/ff6-decompile/internal/rom"
 )
 
@@ -423,4 +424,86 @@ func (e rawSliceExtractor) Extract(r *rom.ROM) ([]output, error) {
 		})
 	}
 	return outs, nil
+}
+
+// ---------------------------------------------------------------------
+// graphics: Narshe field BG tileset
+// ---------------------------------------------------------------------
+
+// The Narshe exterior's first BG tile block, located by EXP-0050 by tracing a
+// preserved VRAM image back to the ROM: VRAM:$0000-$1FFF on milestones 02 and
+// 04 is byte-identical to this span. 256 tiles of 4bpp planar data.
+//
+// It is **uncompressed**, which is the finding that re-scoped readiness X1:
+// this block needs a slice, not a decompressor.
+//
+// What is NOT known, and is deliberately not implied by this extractor: which
+// map header selects the block. EXP-0051 searched four pointer encodings and
+// found none, so this asset is named for the scene it was observed in rather
+// than for a map id the project cannot yet read.
+const (
+	narsheTilesetBase  = 0x208460
+	narsheTilesetTiles = 256
+)
+
+type narsheTilesetExtractor struct{}
+
+func (narsheTilesetExtractor) ID() string       { return "narshe-field-tileset" }
+func (narsheTilesetExtractor) Category() string { return "graphics" }
+func (narsheTilesetExtractor) Version() string  { return "1.0.0" }
+
+// narsheTilesetPalette is a project-authored 16-level ramp, NOT FF6 colour
+// data. The real map palettes are readiness F2 and are unlocated; deviation D6
+// records that every colour the demo shows is authored rather than extracted.
+// Index 0 is transparent, as SNES BG colour 0 is.
+var narsheTilesetPalette = func() color.Palette {
+	p := color.Palette{color.RGBA{0, 0, 0, 0}}
+	for i := 1; i < 16; i++ {
+		v := uint8(i * 17)
+		p = append(p, color.RGBA{v, v, v, 255})
+	}
+	return p
+}()
+
+func (e narsheTilesetExtractor) Extract(r *rom.ROM) ([]output, error) {
+	const cols = 16
+	rows := (narsheTilesetTiles + cols - 1) / cols
+	img := image.NewPaletted(image.Rect(0, 0, cols*8, rows*8), narsheTilesetPalette)
+	for i := 0; i < narsheTilesetTiles; i++ {
+		src, err := r.Slice(narsheTilesetBase+i*tile4bpp.EncodedSize, tile4bpp.EncodedSize)
+		if err != nil {
+			return nil, err
+		}
+		t, err := tile4bpp.Decode(src)
+		if err != nil {
+			return nil, fmt.Errorf("narshe tile %d: %w", i, err)
+		}
+		ox, oy := (i%cols)*8, (i/cols)*8
+		for y := 0; y < 8; y++ {
+			for x := 0; x < 8; x++ {
+				img.SetColorIndex(ox+x, oy+y, t[y][x])
+			}
+		}
+	}
+	var buf bytes.Buffer
+	if err := (&png.Encoder{CompressionLevel: png.DefaultCompression}).Encode(&buf, img); err != nil {
+		return nil, err
+	}
+	data := buf.Bytes()
+	p := path.Join(ArchiveRoot, "graphics", "narshe-field-tileset.png")
+	return []output{{
+		asset: Asset{
+			ID: "ASSET-GFX-0002", Name: "Narshe field BG tileset, first block",
+			Category: "graphics", ROMRevision: r.SHA256(),
+			ROMSource:   romSource(narsheTilesetBase, narsheTilesetTiles*tile4bpp.EncodedSize),
+			ExtractorID: e.ID(), ExtractorVer: e.Version(),
+			OutputPath: p, OutputFormat: "image/png",
+			Properties: fmt.Sprintf("%dx%d px; %d tiles of 8x8; 4bpp planar; uncompressed; palette is PROJECT-AUTHORED (readiness F2 unlocated, deviation D6); sheet index i = VRAM tile i at VRAM:$0000",
+				cols*8, rows*8, narsheTilesetTiles),
+			SHA256: hashBytes(data), RuntimeConsumer: "field BG1/BG2 tile data, VRAM:$0000-$1FFF on SCN-0001 milestones 02 and 04",
+			CensusRefs: []string{"CEN-GFX-0006"}, ExperimentRefs: []string{"EXP-0050", "EXP-0051"},
+			Verification: "ROM span proven byte-identical to preserved VRAM in EXP-0050; differential test compares the archive against the savestate",
+		},
+		data: data,
+	}}, nil
 }

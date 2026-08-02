@@ -1,7 +1,7 @@
 # DEMO-0001 deviations register
 
 - **Milestone:** [DEMO-0001](DEMO-0001-new-game-to-whelk.md)
-- **Updated:** 2026-08-02 (Unit 11 — palette correctness)
+- **Updated:** 2026-08-02 (Unit 17 — first authentic field graphics)
 
 Every way the Go demo differs from the original, and every piece of provisional
 scaffolding, gets a row here. The register exists so that differences are
@@ -33,6 +33,8 @@ Rules:
 | D4 | `Structural` | The battle scene renders **no party side**. Character initialisation is unlocated (readiness F14), so there is no table to read party names, HP, or MP from; EXP-0040's party HP values are observations of one playthrough, not a data source | 2026-08-02, Unit 9 | Locate the new-game character initialisation and the party record layout, then render slots 0-3 from extracted data. The scene states "PARTY SIDE NOT IMPLEMENTED / NO CHARACTER DATA SOURCE" on screen rather than drawing invented rows | **Open** |
 | D5 | `Cosmetic` | Gauge fill quantisation is a **reading of two samples**, not a decoded rule. EXP-0049 saw a full bar and a nearly empty one, from which "filled cells use `$F8`, the boundary cell uses `$F1`, the rest `$F0`" is inferred | 2026-08-02, Unit 9 | Capture intermediate gauge states and decode how the engine picks a segment tile. CEN-GFX-0005 carries the open question | **Open** |
 | D6 | `Cosmetic` | Every colour on screen comes from `framebuf.GrayPalette`, a **project-authored** two-sub-palette ramp, not from an extracted FF6 palette. No extractor produces palette data, because no palette table has been located. Entries 1-3 coincide with the BG 2bpp palette 0 that EXP-0023 measured (BGR555 `$0000/$5294/$7FFF`), but black / mid-grey / white is the obvious three-level ramp and the coincidence is not evidence | 2026-08-02, Unit 11 | Locate the palette tables (readiness **F2**), add an extractor, and load real CGRAM data through `internal/content`. The sub-palette *names* (`content.SubPalettePrimary`, `SubPaletteDim`) are chosen to survive that change — only the colours behind them move | **Open** |
+
+| D7 | `Structural` | The field scene shows the Narshe tileset **in tile-number order, not as a map**. There is no tilemap: the VRAM tilemap is only the visible window composed at runtime, and the header that selects a tileset is unlocated after six approaches (EXP-0051, EXP-0052) | 2026-08-02, Unit 17 | Locate the map header and the tilemap source, then render the layer in its real arrangement. Drawing an invented arrangement would look far more like FF6 and is exactly the "route hardcoded as one bespoke cinematic" the acceptance criteria prohibit, so the scene labels itself on screen instead | **Open** |
 
 ## Retired
 

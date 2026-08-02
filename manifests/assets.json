@@ -112,6 +112,28 @@
       "verification_status": "hash-verified against tracked manifest; ROM block proven byte-identical to live VRAM in EXP-0023"
     },
     {
+      "id": "ASSET-GFX-0002",
+      "name": "Narshe field BG tileset, first block",
+      "category": "graphics",
+      "rom_revision": "0f51b4fca41b7fd509e4b8f9d543151f68efa5e97b08493e4b2a0c06f5d8d5e2",
+      "rom_source": "ROMFILE:0x208460-0x20A45F",
+      "extractor_id": "narshe-field-tileset",
+      "extractor_version": "1.0.0",
+      "output_path": "local_artifacts/archive/graphics/narshe-field-tileset.png",
+      "output_format": "image/png",
+      "properties": "128x128 px; 256 tiles of 8x8; 4bpp planar; uncompressed; palette is PROJECT-AUTHORED (readiness F2 unlocated, deviation D6); sheet index i = VRAM tile i at VRAM:$0000",
+      "sha256": "3bd67d4fbe0433da2640b50a44914e1f715c24cd73c02afe4cad1a144d87c012",
+      "runtime_consumer": "field BG1/BG2 tile data, VRAM:$0000-$1FFF on SCN-0001 milestones 02 and 04",
+      "census_refs": [
+        "CEN-GFX-0006"
+      ],
+      "experiment_refs": [
+        "EXP-0050",
+        "EXP-0051"
+      ],
+      "verification_status": "ROM span proven byte-identical to preserved VRAM in EXP-0050; differential test compares the archive against the savestate"
+    },
+    {
       "id": "ASSET-RAW-0001",
       "name": "Monster stat record table",
       "category": "raw",

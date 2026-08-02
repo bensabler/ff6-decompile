@@ -24,6 +24,7 @@ import (
 type Boot struct {
 	font    *content.Font
 	tables  *content.BattleTables
+	tiles   *content.Tileset
 	battle  int
 	frame   uint64
 	cursorX int
@@ -34,6 +35,13 @@ type Boot struct {
 // NewBoot returns the boot scene.
 func NewBoot(font *content.Font) *Boot {
 	return &Boot{font: font, cursorX: 8, cursorY: 152}
+}
+
+// WithFieldTiles lets X push the field tileset scene. Without it the demo
+// still runs; a missing asset must not stop it launching.
+func (b *Boot) WithFieldTiles(tiles *content.Tileset) *Boot {
+	b.tiles = tiles
+	return b
 }
 
 // WithBattle lets A push a battle scene for the given formation. Without it
@@ -60,6 +68,9 @@ func (b *Boot) Update(ctx *engine.Context) {
 				ctx.Stack.Push(sc)
 			}
 		}
+	}
+	if ctx.Input.JustPressed(snespad.X) && b.tiles != nil {
+		ctx.Stack.Push(NewFieldTiles(b.tiles, b.font))
 	}
 	// Start exits, which is how the headless host learns a run finished
 	// rather than merely timing out.
@@ -110,7 +121,7 @@ func (b *Boot) Draw(dst *framebuf.Indexed, _ *framebuf.Palette) {
 	line(fmt.Sprintf("A PRESSED %d", b.pressed), secondary)
 	y += 4
 	if b.tables != nil {
-		line("A BATTLE  DPAD MOVES  START EXIT", secondary)
+		line("A BATTLE  X FIELD TILES  START EXIT", secondary)
 	} else {
 		line("DPAD MOVES  START EXITS", secondary)
 	}

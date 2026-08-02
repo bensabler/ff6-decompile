@@ -71,6 +71,7 @@ func registry() []Extractor {
 		spellExtractor{},
 		esperExtractor{},
 		hudFontExtractor{},
+		narsheTilesetExtractor{},
 		sfxPackExtractor{},
 		rawSliceExtractor{},
 	}

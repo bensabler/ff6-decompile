@@ -183,8 +183,13 @@ func IsSubPaletteBase(base uint8, colors int) bool {
 	return int(base)%colors == 0
 }
 
+// GrayFieldPaletteBase is the first entry of GrayPalette's sixteen-colour
+// sub-palette, for 4bpp BG tiles. A 4bpp sub-palette base is a multiple of 16.
+const GrayFieldPaletteBase uint8 = 16
+
 // GrayPaletteDefined is the number of leading entries GrayPalette assigns a
-// color to — two four-entry sub-palettes. Entries at or above it are black,
+// color to — two four-entry text sub-palettes, a filler group, and one
+// sixteen-entry 4bpp group. Entries at or above it are black,
 // so a tile drawn onto them disappears against a cleared background.
 //
 // This constant exists to be asserted against. Sum256 hashes indices and is
@@ -192,7 +197,7 @@ func IsSubPaletteBase(base uint8, colors int) bool {
 // a scene drawing onto undefined entries — and for two units, both of them
 // did. Callers name their sub-palette through content.SubPalette; this is
 // the bound that catches one that does not exist.
-const GrayPaletteDefined = 8
+const GrayPaletteDefined = 32
 
 // GrayPalette is a project-authored ramp for tests and for rendering before a
 // real FF6 palette is loaded. It defines two four-entry sub-palettes,
@@ -216,5 +221,18 @@ func GrayPalette() *Palette {
 	p[5] = bgr555.Color{R: 0x00, G: 0x00, B: 0x00}
 	p[6] = bgr555.Color{R: 0x52, G: 0x52, B: 0x52}
 	p[7] = bgr555.Color{R: 0xA5, G: 0xA5, B: 0xA5}
+	// Entries 8-15 are defined rather than left black so that the "defined"
+	// bound stays contiguous and a stray index there is visible instead of
+	// silently disappearing, which is the D0 failure.
+	for i := 8; i < 16; i++ {
+		v := uint8(0x20 + (i-8)*0x10)
+		p[i] = bgr555.Color{R: v, G: v, B: v}
+	}
+	// Entries 16-31: the 4bpp group, for BG tiles. Sixteen levels, so a
+	// 4bpp tile's full ink range resolves to distinguishable greys.
+	for i := 0; i < 16; i++ {
+		v := uint8(i * 17)
+		p[int(GrayFieldPaletteBase)+i] = bgr555.Color{R: v, G: v, B: v}
+	}
 	return &p
 }

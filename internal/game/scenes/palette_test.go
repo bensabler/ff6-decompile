@@ -40,6 +40,17 @@ func TestScenesDrawOnlyDefinedPaletteEntries(t *testing.T) {
 		t.Fatal(err)
 	}
 
+	// A synthetic 4bpp tileset: ink across the full 0-15 range, which is
+	// what makes the field scene exercise the 16-colour sub-palette.
+	var tiles [content.TilesetTiles][8][8]uint8
+	for i := range tiles {
+		for y := 0; y < 8; y++ {
+			for x := 0; x < 8; x++ {
+				tiles[i][y][x] = uint8((i + x + y) % 16)
+			}
+		}
+	}
+
 	cases := []struct {
 		name  string
 		scene interface {
@@ -48,6 +59,7 @@ func TestScenesDrawOnlyDefinedPaletteEntries(t *testing.T) {
 	}{
 		{"boot", NewBoot(syntheticFont())},
 		{"battle", battle},
+		{"field tiles", NewFieldTiles(content.NewTileset(&tiles), syntheticFont())},
 	}
 
 	pal := framebuf.GrayPalette()

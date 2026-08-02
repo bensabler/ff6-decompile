@@ -54,3 +54,4 @@
 | EXP-0049 | hud-font-glyph-mapping | completed | see record | [EXP-0049-hud-font-glyph-mapping](../docs/experiments/EXP-0049-hud-font-glyph-mapping.md) |
 | EXP-0050 | vram-rom-provenance-sweep | completed | see record | [EXP-0050-vram-rom-provenance-sweep](../docs/experiments/EXP-0050-vram-rom-provenance-sweep.md) |
 | EXP-0051 | map-tileset-selector-search | completed | see record | [EXP-0051-map-tileset-selector-search](../docs/experiments/EXP-0051-map-tileset-selector-search.md) |
+| EXP-0052 | map-id-and-33-byte-record | completed | see record | [EXP-0052-map-id-and-33-byte-record](../docs/experiments/EXP-0052-map-id-and-33-byte-record.md) |

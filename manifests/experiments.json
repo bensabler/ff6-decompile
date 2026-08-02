@@ -993,6 +993,24 @@
       "falsifying_outcome": "Any encoding placing the Narshe blocks and the mines blocks in one table.",
       "status": "completed",
       "record": "docs/experiments/EXP-0051-map-tileset-selector-search.md"
+    },
+    {
+      "schema_version": "1.0",
+      "id": "EXP-0052",
+      "domain": "graphics",
+      "question": "What in WRAM distinguishes one field map from another, and is a map header copied into WRAM verbatim?",
+      "starting_state": {
+        "emulator": "none - static analysis of preserved SCN-0001 savestates and the ROM",
+        "rom_sha256": "0f51b4fca41b7fd509e4b8f9d543151f68efa5e97b08493e4b2a0c06f5d8d5e2",
+        "state": "local_artifacts/scenarios/SCN-0001/{02-narshe-entry,04-free-movement,05-mines-entry}/run1-*.mss"
+      },
+      "expected_outcomes": [
+        "A map identifier appears as a small value repeated at a few WRAM addresses satisfying 02==04!=05.",
+        "If a header record is copied into WRAM, a differing run appears verbatim in the ROM for both maps at a fixed stride."
+      ],
+      "falsifying_outcome": "No small value satisfies 02==04!=05; or no differing WRAM run is found in the ROM for both maps.",
+      "status": "completed",
+      "record": "docs/experiments/EXP-0052-map-id-and-33-byte-record.md"
     }
   ]
 }
