@@ -3,6 +3,7 @@ package main
 import (
 	"bytes"
 	"os"
+	"os/exec"
 	"path/filepath"
 	"strings"
 	"testing"
@@ -25,8 +26,29 @@ func writeContract(t *testing.T, dir, body string) string {
 	return p
 }
 
-func TestRunWorkflowLifecycle(t *testing.T) {
+func workflowFixtureRoot(t *testing.T) string {
+	t.Helper()
 	root := t.TempDir()
+	runWorkflowGit(t, root, "init", "-q", "-b", "main")
+	if err := os.WriteFile(filepath.Join(root, "README.md"), []byte("fixture\n"), 0o644); err != nil {
+		t.Fatal(err)
+	}
+	runWorkflowGit(t, root, "add", "README.md")
+	runWorkflowGit(t, root, "-c", "user.name=Workflow Test", "-c", "user.email=workflow@example.invalid",
+		"commit", "-q", "-m", "fixture")
+	return root
+}
+
+func runWorkflowGit(t *testing.T, root string, args ...string) {
+	t.Helper()
+	cmdArgs := append([]string{"-C", root}, args...)
+	if out, err := exec.Command("git", cmdArgs...).CombinedOutput(); err != nil {
+		t.Fatalf("git %s: %v\n%s", strings.Join(args, " "), err, out)
+	}
+}
+
+func TestRunWorkflowLifecycle(t *testing.T) {
+	root := workflowFixtureRoot(t)
 	path := writeContract(t, root, contractJSON)
 
 	var out bytes.Buffer
@@ -63,17 +85,27 @@ func TestRunWorkflowLifecycle(t *testing.T) {
 	}
 }
 
-// close must exit non-zero when the verdict is anything but complete, so a
-// caller cannot ignore a partial or unverifiable run.
-func TestRunWorkflowCloseFailsWhenNotComplete(t *testing.T) {
-	root := t.TempDir()
+// close must ignore provider-global transcript history and exit non-zero when
+// the run ledger does not satisfy the contract.
+func TestRunWorkflowCloseDoesNotScanGlobalClaudeTranscripts(t *testing.T) {
+	root := workflowFixtureRoot(t)
 	path := writeContract(t, root, contractJSON)
 	var out bytes.Buffer
 	if err := runWorkflow(root, []string{"workflow", "start", path}, &out); err != nil {
 		t.Fatal(err)
 	}
 
-	t.Setenv("HOME", filepath.Join(root, "no-home")) // no transcripts reachable
+	home := filepath.Join(root, "home")
+	transcriptDir := filepath.Join(home, ".claude", "projects")
+	if err := os.MkdirAll(transcriptDir, 0o755); err != nil {
+		t.Fatal(err)
+	}
+	transcript := `{"timestamp":"2026-08-02T00:00:01Z","message":{"content":[` +
+		`{"type":"tool_use","name":"Agent","input":{"subagent_type":"graphics-researcher"}}]}}` + "\n"
+	if err := os.WriteFile(filepath.Join(transcriptDir, "historical.jsonl"), []byte(transcript), 0o644); err != nil {
+		t.Fatal(err)
+	}
+	t.Setenv("HOME", home)
 	out.Reset()
 	err := runWorkflow(root, []string{"workflow", "close", "WF-0042"}, &out)
 	if err == nil {
@@ -88,7 +120,7 @@ func TestRunWorkflowCloseFailsWhenNotComplete(t *testing.T) {
 }
 
 func TestRunWorkflowRefusesInvalidContract(t *testing.T) {
-	root := t.TempDir()
+	root := workflowFixtureRoot(t)
 	path := writeContract(t, root, strings.Replace(contractJSON,
 		`"stopping_conditions":["scope boundary reached"],`, `"stopping_conditions":[],`, 1))
 	var out bytes.Buffer

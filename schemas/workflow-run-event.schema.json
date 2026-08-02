@@ -1,0 +1,110 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://github.com/bensabler/ff6-decompile/schemas/workflow-run-event.schema.json",
+  "title": "Normalized workflow run event",
+  "description": "One provider-neutral, append-only workflow run ledger event. Structural and hash-chain validity do not prove authenticity or eligibility to satisfy a contract requirement.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "sequence",
+    "event_id",
+    "previous_hash",
+    "event_hash",
+    "workflow_id",
+    "run_id",
+    "contract_hash",
+    "observed_at",
+    "provider",
+    "source_kind",
+    "collector_id",
+    "trust_basis",
+    "session_id",
+    "turn_id",
+    "repository_identity",
+    "cwd",
+    "branch",
+    "head",
+    "event_kind",
+    "selector",
+    "tool_use_id",
+    "exit_status",
+    "evidence_ref"
+  ],
+  "properties": {
+    "schema_version": { "const": "1.0" },
+    "sequence": { "type": "integer", "minimum": 1 },
+    "event_id": { "type": "string", "minLength": 1 },
+    "previous_hash": { "type": "string", "pattern": "^[0-9a-f]{64}$" },
+    "event_hash": { "type": "string", "pattern": "^[0-9a-f]{64}$" },
+    "workflow_id": { "type": "string", "pattern": "^WF-[0-9]{4}$" },
+    "run_id": { "type": "string", "pattern": "^run-[0-9a-f]{32}$" },
+    "contract_hash": { "type": "string", "pattern": "^[0-9a-f]{64}$" },
+    "observed_at": { "type": "string", "format": "date-time" },
+    "provider": { "type": "string", "minLength": 1 },
+    "source_kind": {
+      "type": "string",
+      "enum": [
+        "provider_hook",
+        "deterministic_backend",
+        "operator_record",
+        "manual_import",
+        "legacy_transcript",
+        "unknown"
+      ]
+    },
+    "collector_id": { "type": "string", "minLength": 1 },
+    "trust_basis": {
+      "type": "string",
+      "enum": [
+        "collector_observed",
+        "backend_exit_status",
+        "operator_attested",
+        "self_reported",
+        "unsupported"
+      ]
+    },
+    "session_id": {
+      "type": "string",
+      "description": "Explicitly empty when the provider does not supply a session identity."
+    },
+    "turn_id": {
+      "type": "string",
+      "description": "Explicitly empty when the provider does not supply a turn identity."
+    },
+    "repository_identity": { "type": "string", "minLength": 1 },
+    "cwd": { "type": "string", "minLength": 1 },
+    "branch": { "type": "string", "minLength": 1 },
+    "head": { "type": "string", "pattern": "^[0-9a-f]{40}([0-9a-f]{24})?$" },
+    "event_kind": {
+      "type": "string",
+      "enum": [
+        "agent_started",
+        "agent_finished",
+        "skill_selected",
+        "tool_started",
+        "tool_finished",
+        "backend_finished",
+        "output_observed",
+        "validation_finished",
+        "operator_approval"
+      ]
+    },
+    "selector": {
+      "type": "string",
+      "description": "Exact normalized resource selector. A selector match alone is not eligibility evidence."
+    },
+    "tool_use_id": {
+      "type": "string",
+      "description": "Explicitly empty when no provider tool-use identity exists."
+    },
+    "exit_status": {
+      "type": ["integer", "null"],
+      "description": "Null means no exit status was captured and can never be interpreted as success."
+    },
+    "evidence_ref": {
+      "type": "string",
+      "description": "Optional non-private evidence locator, explicitly empty when unavailable."
+    }
+  }
+}

@@ -48,6 +48,12 @@ type Evidence struct {
 	// partial. Requirements discharged through those kinds become Unverifiable
 	// rather than Unsatisfied: absence of evidence is not evidence of absence.
 	Incomplete map[ObservationKind]string `json:"incomplete,omitempty"`
+	// IntegrityErrors records whole-ledger failures. No observation from an
+	// invalid ledger is admitted, and the workflow can never complete.
+	IntegrityErrors []string `json:"integrity_errors,omitempty"`
+	// Limitations explains structurally valid events that were not eligible to
+	// satisfy an invocation because of provenance, trust, or event kind.
+	Limitations []string `json:"limitations,omitempty"`
 }
 
 // Outcome is the per-requirement result.
@@ -110,6 +116,12 @@ func Reconcile(c *Contract, ev Evidence) Reconciliation {
 	for _, r := range c.Requirements {
 		rec.Results = append(rec.Results, check(r, ev))
 	}
+	for _, limitation := range ev.Limitations {
+		rec.Notes = append(rec.Notes, limitation)
+	}
+	for _, integrityError := range ev.IntegrityErrors {
+		rec.Notes = append(rec.Notes, "invalid evidence ledger: "+integrityError)
+	}
 	sort.Slice(rec.Results, func(i, j int) bool {
 		return rec.Results[i].ResourceID < rec.Results[j].ResourceID
 	})
@@ -140,6 +152,8 @@ func Reconcile(c *Contract, ev Evidence) Reconciliation {
 	}
 
 	switch {
+	case len(ev.IntegrityErrors) > 0:
+		rec.Verdict = Unverifiable
 	case failed > 0:
 		rec.Verdict = Failed
 	case unverifiable > 0 && blocking == 0 && degrading == 0:

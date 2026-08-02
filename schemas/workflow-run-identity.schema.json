@@ -1,0 +1,34 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://github.com/bensabler/ff6-decompile/schemas/workflow-run-identity.schema.json",
+  "title": "Immutable workflow run identity",
+  "description": "Binds one generated run ID to a human workflow ID, frozen contract, canonical Git repository identity, and starting Git state.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "workflow_id",
+    "run_id",
+    "contract_hash",
+    "created_at",
+    "repository_root",
+    "repository_identity",
+    "starting_branch",
+    "starting_head"
+  ],
+  "properties": {
+    "schema_version": { "const": "1.0" },
+    "workflow_id": { "type": "string", "pattern": "^WF-[0-9]{4}$" },
+    "run_id": { "type": "string", "pattern": "^run-[0-9a-f]{32}$" },
+    "contract_hash": { "type": "string", "pattern": "^[0-9a-f]{64}$" },
+    "created_at": { "type": "string", "format": "date-time" },
+    "repository_root": { "type": "string", "minLength": 1 },
+    "repository_identity": {
+      "type": "string",
+      "minLength": 1,
+      "description": "Credential-safe normalized origin remote, normalized remote-set hash, or canonical local Git common-dir identity when no remote exists."
+    },
+    "starting_branch": { "type": "string", "minLength": 1 },
+    "starting_head": { "type": "string", "pattern": "^[0-9a-f]{40}([0-9a-f]{24})?$" }
+  }
+}

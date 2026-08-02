@@ -3,8 +3,6 @@ package main
 import (
 	"fmt"
 	"io"
-	"os"
-	"path/filepath"
 	"time"
 
 	"github.com/bensabler/ff6-decompile/internal/workflow"
@@ -13,10 +11,10 @@ import (
 // `ff6lab workflow` is the deterministic authority for workflow closure
 // (AUDIT-0002 remediation R14).
 //
-// Claude may propose and execute work. Claude may not decide in prose that a
-// workflow is complete. Every verdict printed here is computed from a frozen
-// contract and observed evidence; no subcommand accepts a verdict as input, so
-// there is no path by which a caller can assert one.
+// An agent provider may propose and execute work. It may not decide in prose
+// that a workflow is complete. Every verdict printed here is computed from a
+// frozen contract and verified run evidence; no subcommand accepts a verdict
+// as input, so there is no path by which a caller can assert one.
 func runWorkflow(root string, args []string, out io.Writer) error {
 	if len(args) < 2 {
 		return workflowUsage()
@@ -81,7 +79,7 @@ func runWorkflow(root string, args []string, out io.Writer) error {
 		if len(args) < 3 {
 			return fmt.Errorf("usage: ff6lab workflow close <WF-NNNN>")
 		}
-		return workflowClose(s, root, args[2], out)
+		return workflowClose(s, args[2], out)
 	}
 	return workflowUsage()
 }
@@ -119,8 +117,8 @@ func workflowStart(s *workflow.Store, path string, out io.Writer) error {
 	if err != nil {
 		return err
 	}
-	fmt.Fprintf(out, "%s started\n  scope: %s\n  frozen: %s\n  requirements: %d\n",
-		st.WorkflowID, c.Scope, c.FrozenHash[:16], len(c.Requirements))
+	fmt.Fprintf(out, "%s started\n  run: %s\n  scope: %s\n  frozen: %s\n  requirements: %d\n",
+		st.WorkflowID, st.RunID, c.Scope, c.FrozenHash[:16], len(c.Requirements))
 	return nil
 }
 
@@ -133,7 +131,8 @@ func workflowStatus(s *workflow.Store, id string, out io.Writer) error {
 	if err != nil {
 		return err
 	}
-	fmt.Fprintf(out, "%s  %s\n  scope: %s\n  phase: %s\n", id, c.Workflow, c.Scope, st.Phase)
+	fmt.Fprintf(out, "%s  %s\n  run: %s\n  scope: %s\n  phase: %s\n",
+		id, c.Workflow, st.RunID, c.Scope, st.Phase)
 	if st.Reconciliation != nil {
 		fmt.Fprintf(out, "  verdict: %s\n", st.Reconciliation.Verdict)
 	}
@@ -148,31 +147,11 @@ func workflowStatus(s *workflow.Store, id string, out io.Writer) error {
 	return nil
 }
 
-func workflowClose(s *workflow.Store, root, id string, out io.Writer) error {
-	c, err := s.LoadContract(id)
-	if err != nil {
-		return err
-	}
-
-	// Every source reports its own blindness. A source that cannot see is not a
-	// source that saw nothing, so a missing transcript makes agent and skill
-	// requirements unverifiable rather than unsatisfied.
-	tr, err := workflow.TranscriptObservations(transcriptDir())
-	if err != nil {
-		return err
-	}
-	gl, err := workflow.GateLogObservations(
-		filepath.Join(root, "local_artifacts", "workflow-runs", id, "gate-status.tsv"))
-	if err != nil {
-		return err
-	}
-	outs, err := workflow.OutputObservations(root, c.Outputs)
-	if err != nil {
-		return err
-	}
-	ev := workflow.Merge(tr, gl, workflow.Evidence{Observations: outs})
-
-	rec, err := s.Close(id, ev, time.Now().UTC().Format(time.RFC3339))
+func workflowClose(s *workflow.Store, id string, out io.Writer) error {
+	// Close owns the evidence boundary: it verifies the current run's identity
+	// and complete ledger before converting any event into an observation.
+	// Provider-global transcripts and live artifact scans are not inputs.
+	rec, err := s.Close(id, time.Now().UTC().Format(time.RFC3339))
 	if err != nil {
 		return err
 	}
@@ -195,16 +174,4 @@ func workflowClose(s *workflow.Store, root, id string, out io.Writer) error {
 		return fmt.Errorf("workflow %s is %s, not complete", id, rec.Verdict)
 	}
 	return nil
-}
-
-// transcriptDir is where the harness writes per-session transcripts. It is
-// outside the repository, so it is resolved separately and its absence is a
-// normal, reportable condition rather than an error: a missing transcript makes
-// invocation requirements unverifiable, not unsatisfied.
-func transcriptDir() string {
-	home, err := os.UserHomeDir()
-	if err != nil {
-		return ""
-	}
-	return filepath.Join(home, ".claude", "projects")
 }

@@ -19,7 +19,7 @@
     "workflow_id": {
       "type": "string",
       "pattern": "^WF-[0-9]{4}$",
-      "description": "Stable per-run identifier."
+      "description": "Human-readable workflow identifier. The immutable execution identity uses a separate collision-resistant run_id."
     },
     "workflow": {
       "type": "string",
