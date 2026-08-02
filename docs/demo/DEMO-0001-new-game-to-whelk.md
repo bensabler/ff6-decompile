@@ -102,10 +102,15 @@ go run ./cmd/ff6demo -headless -frames 120
 ```
 
 The demo binary **structurally cannot read a ROM**: `internal/rom` is forbidden
-by import boundary from `cmd/ff6demo`, `internal/content`, and `internal/engine`,
-enforced by `ff6lab audit`. All game data is loaded from the locally generated
-archive under `local_artifacts/archive/`, which the operator produces from their
-own verified ROM:
+— **transitively** — from `cmd/ff6demo`, `internal/content`, and
+`internal/engine`, and `ff6lab audit` walks the import graph to enforce it.
+Transitivity is not a detail: `internal/content` reached `internal/rom` through
+`internal/extract` until the manifest model was split into
+`internal/assetmanifest`, and a direct-import check called that clean.
+
+All game data is loaded from the locally generated archive under
+`local_artifacts/archive/`, which the operator produces from their own verified
+ROM:
 
 ```bash
 export FF6_ROM=/path/to/your/verified.sfc
@@ -116,10 +121,25 @@ go run ./cmd/ff6lab extract all
 
 | Unit | Result | Commit |
 |---|---|---|
-| Unit 0 | DEMO-0001 program records established | — |
+| Unit 0 | DEMO-0001 program records established | `969b5dd` |
+| Unit 1 | HUD font extractor read the wrong ROM range; fixed, D1 retired | `cdc55e8` |
+| Unit 2 | `internal/platform/snesaddr`; existing offsets asserted through it | `887f676` |
+| Unit 3 | EXP-0049 — the encoding indexes the font block directly | `aabad71` |
+| Unit 4 | Engine core: framebuffer, scene machine, content layer | `2febc83` |
+| Unit 5 | **The demo runs.** Headless `cmd/ff6demo` renders real FF6 text | — |
 
 ## Exact next action
 
-Unit 1 — correct the HUD font extractor's ROM range (`ROMFILE:0x046FC0` →
-`0x047FB0`), which currently emits 255 of 257 tiles from the attack-data region.
-Nothing visual can be built on the asset until this lands.
+Unit 6 — the windowed host. Ebitengine v2 behind a `//go:build gui` tag,
+confined to `internal/engine/ebitenhost`, plus ADR-0001.
+
+The build tag is not a fallback, it is the design. Measured 2026-08-02:
+ebiten v2.9.9 requires cgo on **both** Linux and macOS (`CGO_ENABLED=0` fails
+on each; only Windows and js/wasm build without it). Keeping the host behind a
+tag is what stops `go build ./...`, `go vet ./...` and `go test ./...` from
+acquiring a system-library dependency, so CI keeps running the full demo test
+surface on a bare container.
+
+After that the loop turns to the battle vertical: port the Confirmed ATB layer
+(EXP-0041…0047) into Go, then formation and monster decoders, then a battle
+HUD scene that can use the font this milestone integrated.

@@ -78,6 +78,25 @@ func LoadHUDFont(a *Archive) (*Font, error) {
 	return f, nil
 }
 
+// NewFont builds a font from tiles indexed by encoding byte, however those
+// tiles were obtained.
+//
+// Tests use it to build a font from project-authored pixels, so frame goldens
+// can be committed without containing ROM-derived graphics.
+func NewFont(tiles *[256][8][8]uint8) *Font {
+	f := &Font{tiles: *tiles}
+	for i := range f.tiles {
+		for y := range f.tiles[i] {
+			for x := range f.tiles[i][y] {
+				if f.tiles[i][y][x] != 0 {
+					f.present[i] = true
+				}
+			}
+		}
+	}
+	return f
+}
+
 // Glyph returns the tile for an encoding byte. ok is false when the tile is
 // blank, which for an unmapped byte means there is nothing to draw.
 func (f *Font) Glyph(b byte) (*[8][8]uint8, bool) {

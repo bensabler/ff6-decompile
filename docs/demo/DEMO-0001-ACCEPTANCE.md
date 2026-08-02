@@ -1,8 +1,8 @@
 # DEMO-0001 acceptance criteria
 
 - **Milestone:** [DEMO-0001](DEMO-0001-new-game-to-whelk.md)
-- **Updated:** 2026-08-02 (Unit 0 — program start)
-- **Overall:** **NOT PASSING** — 0 of 17 progression steps, 0 of 6 gates
+- **Updated:** 2026-08-02 (Unit 5 — headless executable)
+- **Overall:** **NOT PASSING** — 1 of 17 progression steps, 3 of 6 gates
 
 DEMO-0001 is complete only when every required criterion passes. This file is
 the scorecard. A step flips to PASS only when it has a recorded evidence path;
@@ -12,12 +12,12 @@ the scorecard. A step flips to PASS only when it has a recorded evidence path;
 
 | Gate | Requirement | Status | Evidence |
 |---|---|---|---|
-| G1 | A documented command launches a standalone Go application | **FAIL** | `cmd/ff6demo` does not exist |
-| G2 | The acceptance run requires neither Mesen nor Ghidra running | **FAIL** | no run exists |
+| G1 | A documented command launches a standalone Go application | **PASS** (headless) | `go run ./cmd/ff6demo -headless -frames 120`. Windowed launch pending Unit 6 |
+| G2 | The acceptance run requires neither Mesen nor Ghidra running | **PASS** | the demo reads only the generated archive; `internal/rom` is barred from it by an enforced import boundary |
 | G3 | The run begins at New Game without loading a savestate or injecting internal state | **FAIL** | no run exists |
 | G4 | Assets are generated locally from the operator's verified ROM by a documented workflow | **PARTIAL** | `ff6lab extract all` + `archive verify` 8/8 OK; `dialogue`/`maps`/`animations`/`scripts` categories empty |
 | G5 | No prohibited files are committed | **PASS** | CI restricted-extension scan + `ff6lab audit` `CheckRestrictedTracked` green |
-| G6 | All deviations from the original are recorded, not hidden by weakened tests | **PASS** (vacuously) | [DEMO-0001-DEVIATIONS.md](DEMO-0001-DEVIATIONS.md) — 1 open row |
+| G6 | All deviations from the original are recorded, not hidden by weakened tests | **PASS** | [DEMO-0001-DEVIATIONS.md](DEMO-0001-DEVIATIONS.md) — 0 open, 1 retired (D1) |
 
 ## Progression steps
 
@@ -26,7 +26,7 @@ The continuous acceptance run, in order. Each step needs an evidence path under
 
 | # | Step | Beat | Status | Blocked by (readiness row) |
 |---|---|---|---|---|
-| 1 | Launches successfully | — | **FAIL** | E1 |
+| 1 | Launches successfully | — | **PASS** (headless) | — |
 | 2 | Begins at New Game | B01 | **FAIL** | F14 |
 | 3 | Presents the opening sequence | B02 | **FAIL** | F1, F5, T4 |
 | 4 | Enters Narshe | B06 | **FAIL** | F1, F7 |
@@ -48,12 +48,12 @@ The continuous acceptance run, in order. Each step needs an evidence path under
 
 | Kind | Requirement | Status |
 |---|---|---|
-| Unit tests | parsers and deterministic logic | partial — existing packages covered; engine not yet written |
-| Integration tests | subsystem boundaries | **none** |
+| Unit tests | parsers and deterministic logic | **PASS** — 23 packages, including framebuffer blit/clip/flip, scene-stack ordering, input edges, archive sentinel errors, and 5 fuzz targets |
+| Integration tests | subsystem boundaries | partial — archive→font→framebuffer covered end to end; enforced import boundary checked by `ff6lab audit` |
 | Scenario tests | route progression under deterministic input scripts | **none** for the demo; `internal/scenario/route` covers the *emulator* route |
-| Framebuffer comparison | demo output vs Mesen at named milestones | **none** |
+| Framebuffer comparison | demo output vs Mesen at named milestones | **none** vs Mesen. 60 committed frame-hash goldens guard the demo against itself (synthetic font, so no ROM bytes are tracked) |
 | Dialogue/event transcript comparison | demo vs recorded event-flag timeline | **none** — `data/scenarios/opening-event-flags.json` is the target |
-| Asset hashes and provenance | every runtime asset traceable to a ROM span | **PASS** for the 8 extracted assets |
+| Asset hashes and provenance | every runtime asset traceable to a ROM span | **PASS** — 8 assets; every runtime read is hash-verified, and the HUD font is differentially compared against the ROM |
 | Audio cue order and timing | demo cue sequence vs captured | **none** |
 | Battle-state assertions | HP/MP/ATB/queue vs Mesen | **none** |
 | Full acceptance evidence | complete New Game → Whelk run | **none** |

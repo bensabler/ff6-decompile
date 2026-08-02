@@ -1,7 +1,7 @@
 # DEMO-0001 readiness matrix
 
 - **Milestone:** [DEMO-0001](DEMO-0001-new-game-to-whelk.md)
-- **Updated:** 2026-08-02 (Unit 3 — glyph mapping)
+- **Updated:** 2026-08-02 (Unit 5 — headless executable)
 
 Every player-visible requirement of the acceptance run appears here exactly
 once. This file is the demo's critical-path instrument: unit selection reads it,
@@ -28,21 +28,21 @@ Status reflects the **demo**, not the research. A subsystem can be Confirmed in
 
 | # | Requirement | Subsystem | Known evidence | Missing evidence | Asset / data | Go integration point | Validation | Depends on | Status | Next action |
 |---|---|---|---|---|---|---|---|---|---|---|
-| E1 | Executable launches, stable window | — | n/a (project-authored) | — | — | `cmd/ff6demo`, `internal/engine/ebitenhost` | manual launch | E2, E3 | `Unknown` | Unit 6 |
-| E2 | Deterministic fixed-step loop, frame counter | — | n/a | — | — | `internal/engine.Machine` | same input ⇒ identical frame hashes | — | `Unknown` | Unit 4 |
-| E3 | 256×224 indexed framebuffer, integer scaling | SNES PPU output stage | CGRAM is 256 BGR555 entries; `bgr555.Decode` implemented | — | — | `internal/graphics/framebuf` | blit/clip unit tests | — | `Unknown` | Unit 4 |
-| E4 | Input: SNES pad + deterministic script source | SNES joypad | `$4218` bit order; `internal/scenario/route` models scheduled input | — | — | `internal/platform/snespad`, `internal/engine` | scripted-input determinism test | E2 | `Unknown` | Unit 4 |
-| E5 | Headless frame capture (no display) | — | n/a | — | — | `internal/engine/headless` | frame-hash goldens in CI | E2, E3 | `Unknown` | Unit 5 |
-| E6 | Archive location + hash-verified asset loading | — | `manifests/assets.json`, `extract.LoadManifest`, `archive verify` 8/8 | — | `local_artifacts/archive/` | `internal/content` | fixture-archive tests, sentinel errors | — | `Unknown` | Unit 4 |
-| E7 | ROMCPU↔ROMFILE address translation | HiROM mapping | `offset = cpu − 0xC00000` Confirmed 18/18 vs Mesen (CORR-0001) | mirror/LoROM windows unverified for this ROM | — | `internal/platform/snesaddr` | table tests + constant assertions | — | `Unknown` | Unit 2 |
+| E1 | Executable launches, stable window | — | n/a (project-authored) | windowed host not yet written | — | `cmd/ff6demo`, `internal/engine/ebitenhost` | manual launch | E2, E3 | `Implemented` (headless only) | Unit 6 adds the window |
+| E2 | Deterministic fixed-step loop, frame counter | — | n/a | — | — | `internal/engine.Machine` | determinism test runs the same script twice with sleeps and extra Renders interleaved | — | `Integrated` | — |
+| E3 | 256×224 indexed framebuffer, integer scaling | SNES PPU output stage | CGRAM is 256 BGR555 entries | integer scaling belongs to the host | — | `internal/graphics/framebuf` | blit/clip/flip tests + fuzz | — | `Integrated` (framebuffer); scaling pending | Unit 6 |
+| E4 | Input: SNES pad + deterministic script source | SNES joypad | `$4218` bit order | keyboard mapping belongs to the host | — | `internal/platform/snespad`, `internal/engine` | edge tests; `-input` script drives a reproducible run | E2 | `Integrated` | Unit 6 adds the keyboard |
+| E5 | Headless frame capture (no display) | — | n/a | — | — | `internal/engine/headless` | 60 committed frame-hash goldens from a synthetic font | E2, E3 | `Integrated` | — |
+| E6 | Archive location + hash-verified asset loading | — | `manifests/assets.json`, `archive verify` 8/8 | — | `local_artifacts/archive/` | `internal/content` | fixture-archive tests cover all three sentinel errors | — | `Integrated` | — |
+| E7 | ROMCPU↔ROMFILE address translation | HiROM mapping | `offset = cpu − 0xC00000` Confirmed 18/18 vs Mesen (CORR-0001) | mirror/lower windows unverified for this ROM | — | `internal/platform/snesaddr` | 20 table cases + 21 constant assertions + round-trip fuzz | — | `Implemented` | — |
 
 ## Text and UI
 
 | # | Requirement | Subsystem | Known evidence | Missing evidence | Asset / data | Go integration point | Validation | Depends on | Status | Next action |
 |---|---|---|---|---|---|---|---|---|---|---|
-| T1 | Fixed-width font tiles | Battle HUD font | GFX-0001, EXP-0023: 257 2bpp tiles, `ROMFILE:0x047FB0-0x048FBF` (ROM-0016), uncompressed | load path (which code/DMA copies it) | `hud-font-sheet.png` | `internal/content/hudfont` | ledger-agreement tests green; differential vs ROM decode pending | E6, E7 | `Extractor Ready` | Unit 4 — consume it from the demo |
-| T2 | Glyph → character mapping | Battle HUD font | **EXP-0049 Confirmed**: `VRAMtile = 0x100 + encodedByte`, verified by 8 direct decodes *and* the whole EXP-0023 HUD tilemap decoding to coherent game text over 37 tiles. 64 characters named; `$BF` = `?` added to `textenc` | 47 non-blank tiles carry unidentified glyphs | `data/graphics/hud-font-glyphs.json` (generated, hashes only) | `internal/game/hudfont` | relation + tracked-table consistency tests | T1 | `Implemented` | consume it in Unit 4 |
-| T3 | Text drawing to framebuffer | — | `textenc.Encode`/`EncodeFixed` added (EXP-0049) | — | — | `internal/content` font drawer | synthetic-font frame goldens | T1, T2, E3 | `Unknown` | Unit 4 |
+| T1 | Fixed-width font tiles | Battle HUD font | GFX-0001, EXP-0023: 257 2bpp tiles, `ROMFILE:0x047FB0-0x048FBF` (ROM-0016), uncompressed | load path (which code/DMA copies it) | `hud-font-sheet.png` | `internal/content.LoadHUDFont` | **archive-vs-ROM differential passes on all 256 glyphs** | E6, E7 | `Validated` | — |
+| T2 | Glyph → character mapping | Battle HUD font | **EXP-0049 Confirmed**: `VRAMtile = 0x100 + encodedByte`, verified by 8 direct decodes *and* the whole EXP-0023 HUD tilemap decoding to coherent game text over 37 tiles. 64 characters named; `$BF` = `?` added to `textenc` | 47 non-blank tiles carry unidentified glyphs | `data/graphics/hud-font-glyphs.json` (generated, hashes only) | `internal/game/hudfont` | relation + tracked-table consistency tests | T1 | `Integrated` | identify the 47 when a capture renders them |
+| T3 | Text drawing to framebuffer | — | `textenc.Encode`/`EncodeFixed` added (EXP-0049) | proportional/dialogue text is a different system (T4) | — | `content.Font.DrawString` | synthetic-font frame goldens; unverified runes never draw a ROM tile | T1, T2, E3 | `Integrated` | — |
 | T4 | Variable-width dialogue font | Dialogue rendering | CEN-GFX-0004 `OBSERVED` only | ROM location, format, widths table | — | — | — | — | `Unknown` | research unit not yet scheduled |
 | T5 | Dialogue window / border tiles | Menu graphics | CEN-MENU-0003 `OBSERVED` | ROM location | — | — | — | — | `Unknown` | research unit not yet scheduled |
 | T6 | Menu windows, cursor | Menu graphics | EXP-0026 captured menu tilemap/CHR/CGRAM | ROM location of the tile source | — | — | — | — | `Unknown` | research unit not yet scheduled |
@@ -114,18 +114,23 @@ retired that deviation; see DEVIATIONS D1.
 
 ## Summary at Unit 0
 
-| Status | Unit 0 | Now |
+| Status | Unit 0 | Now (Unit 5) |
 |---|---|---|
+| `Validated` | 0 | **1** |
+| `Integrated` | 0 | **6** |
 | `Implemented` | 5 | 7 |
 | `Evidence Ready` | 7 | 8 |
-| `Extractor Ready` | 2 | 2 |
+| `Extractor Ready` | 2 | 1 |
 | `Researching` | 3 | 2 |
 | `Blocked` | 2 | 2 |
 | `Deferred` | 1 | 1 |
-| `Unknown` | 33 | 31 |
-| **Integrated / Validated** | **0** | **0** |
+| `Unknown` | 33 | 25 |
 
-Zero rows are Integrated. That is the accurate reading of the project at demo
-program start, and the number this program exists to move. Units 1-3 moved
-rows *toward* implementation without integrating any, because no executable
-exists yet; Unit 5 is the first unit that can raise this number.
+**The demo now runs.** Unit 5 moved the first seven rows into the executable
+and one to Validated — T1, whose archive-vs-ROM differential passes on all
+256 glyphs.
+
+Every Integrated row is engine or text plumbing. No row of the Battle, Field,
+or Audio sections has moved, and none will until either the ATB port (Unit 7)
+or the research that unblocks the field half lands. That is the honest shape
+of the progress: the demo has a spine, not yet a game.

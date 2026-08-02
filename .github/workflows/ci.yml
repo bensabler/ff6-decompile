@@ -19,11 +19,14 @@ jobs:
       - run: git diff --exit-code
       - run: go vet ./...
       - run: go test ./...
-      - name: Build the CLI deliverable
-        run: go build ./cmd/ff6lab
+      - name: Build the deliverables
+        run: |
+          go build ./cmd/ff6lab
+          go build ./cmd/ff6demo
       - name: Required tracked sources present
         run: |
           git ls-files --error-unmatch cmd/ff6lab/main.go
+          git ls-files --error-unmatch cmd/ff6demo/main.go
           git ls-files --error-unmatch local_artifacts/README.md
       - name: Repository audit (indexes, links, manifests, boundaries)
         run: go run ./cmd/ff6lab audit
@@ -34,3 +37,13 @@ jobs:
             echo "Tracked ROM-derived or restricted file detected."
             exit 1
           fi
+      - name: Reject tracked rendered graphics/audio
+        shell: bash
+        run: |
+          # The demo can render ROM-derived frames. Decoded graphics and audio
+          # stay in local_artifacts/; the repository tracks hashes instead.
+          if git ls-files | grep -Ei '\.(png|bmp|gif|jpe?g|tiff?|pcm|brr)$'; then
+            echo "Tracked rendered asset detected (docs/legal/ASSET_POLICY.md)."
+            exit 1
+          fi
+
