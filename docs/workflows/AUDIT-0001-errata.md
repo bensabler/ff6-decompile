@@ -86,8 +86,9 @@ template and `/session-summary` does not — survives.
 
 ## Gate capture — understated
 
-The brief alleged missing exit capture for two gates. **4 of 12 gates had
-reliable capture at Phase 0, and 4 of 12 at closure.** At closure the three
+The brief alleged missing exit capture for two gates. **5 of 12 gates lacked an
+exit status at Phase 0 and 6 of 12 at closure** — 7 captured at Phase 0, 4 at
+closure, with only 4 comparable across both runs. At closure the three
 build gates were collapsed into a block printing `ff6lab ok / ff6demo ok /
 gui ok` with no status at all.
 

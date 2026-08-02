@@ -46,8 +46,8 @@
     "verdict": "PASS"
   },
   "derivation_summary": {
-    "mechanically_derived": 683,
-    "manually_adjudicated": 397
+    "mechanically_derived": 662,
+    "manually_adjudicated": 418
   },
   "axis_value_distribution": {
     "specification_status": {
@@ -74,10 +74,11 @@
       "absent": 3
     },
     "outcome_status": {
-      "no_evidence": 130,
+      "no_evidence": 109,
       "validated": 1,
       "partial": 3,
-      "failed": 1
+      "failed": 1,
+      "not_applicable": 21
     },
     "enforcement_status": {
       "advisory_only": 134,
@@ -10204,15 +10205,16 @@
           "rationale": "Transcript-confirmed invocations only. Artifact existence never credited."
         },
         "outcome_status": {
-          "value": "no_evidence",
+          "value": "not_applicable",
           "confidence": "high",
           "evidence_basis": [
-            "absence_observed"
+            "directly_verified"
           ],
           "evidence_refs": [
-            "EV-011"
+            "EV-013"
           ],
-          "derivation": "mechanically_derived"
+          "derivation": "manually_adjudicated",
+          "rationale": "Reference/policy/form document; produces no artifact of its own, so an outcome axis does not apply. Consistent with backend_status for these types."
         },
         "enforcement_status": {
           "value": "advisory_only",
@@ -10320,15 +10322,16 @@
           "rationale": "Transcript-confirmed invocations only. Artifact existence never credited."
         },
         "outcome_status": {
-          "value": "no_evidence",
+          "value": "not_applicable",
           "confidence": "high",
           "evidence_basis": [
-            "absence_observed"
+            "directly_verified"
           ],
           "evidence_refs": [
-            "EV-011"
+            "EV-013"
           ],
-          "derivation": "mechanically_derived"
+          "derivation": "manually_adjudicated",
+          "rationale": "Reference/policy/form document; produces no artifact of its own, so an outcome axis does not apply. Consistent with backend_status for these types."
         },
         "enforcement_status": {
           "value": "advisory_only",
@@ -10436,15 +10439,16 @@
           "rationale": "Transcript-confirmed invocations only. Artifact existence never credited."
         },
         "outcome_status": {
-          "value": "no_evidence",
+          "value": "not_applicable",
           "confidence": "high",
           "evidence_basis": [
-            "absence_observed"
+            "directly_verified"
           ],
           "evidence_refs": [
-            "EV-011"
+            "EV-013"
           ],
-          "derivation": "mechanically_derived"
+          "derivation": "manually_adjudicated",
+          "rationale": "Reference/policy/form document; produces no artifact of its own, so an outcome axis does not apply. Consistent with backend_status for these types."
         },
         "enforcement_status": {
           "value": "advisory_only",
@@ -10554,15 +10558,16 @@
           "rationale": "Transcript-confirmed invocations only. Artifact existence never credited."
         },
         "outcome_status": {
-          "value": "no_evidence",
+          "value": "not_applicable",
           "confidence": "high",
           "evidence_basis": [
-            "absence_observed"
+            "directly_verified"
           ],
           "evidence_refs": [
-            "EV-011"
+            "EV-013"
           ],
-          "derivation": "mechanically_derived"
+          "derivation": "manually_adjudicated",
+          "rationale": "Reference/policy/form document; produces no artifact of its own, so an outcome axis does not apply. Consistent with backend_status for these types."
         },
         "enforcement_status": {
           "value": "advisory_only",
@@ -10694,15 +10699,16 @@
           "rationale": "Transcript-confirmed invocations only. Artifact existence never credited."
         },
         "outcome_status": {
-          "value": "no_evidence",
+          "value": "not_applicable",
           "confidence": "high",
           "evidence_basis": [
-            "absence_observed"
+            "directly_verified"
           ],
           "evidence_refs": [
-            "EV-011"
+            "EV-013"
           ],
-          "derivation": "mechanically_derived"
+          "derivation": "manually_adjudicated",
+          "rationale": "Reference/policy/form document; produces no artifact of its own, so an outcome axis does not apply. Consistent with backend_status for these types."
         },
         "enforcement_status": {
           "value": "advisory_only",
@@ -10800,15 +10806,16 @@
           "rationale": "Transcript-confirmed invocations only. Artifact existence never credited."
         },
         "outcome_status": {
-          "value": "no_evidence",
+          "value": "not_applicable",
           "confidence": "high",
           "evidence_basis": [
-            "absence_observed"
+            "directly_verified"
           ],
           "evidence_refs": [
-            "EV-011"
+            "EV-013"
           ],
-          "derivation": "mechanically_derived"
+          "derivation": "manually_adjudicated",
+          "rationale": "Reference/policy/form document; produces no artifact of its own, so an outcome axis does not apply. Consistent with backend_status for these types."
         },
         "enforcement_status": {
           "value": "advisory_only",
@@ -10936,15 +10943,16 @@
           "rationale": "Transcript-confirmed invocations only. Artifact existence never credited."
         },
         "outcome_status": {
-          "value": "no_evidence",
+          "value": "not_applicable",
           "confidence": "high",
           "evidence_basis": [
-            "absence_observed"
+            "directly_verified"
           ],
           "evidence_refs": [
-            "EV-011"
+            "EV-013"
           ],
-          "derivation": "mechanically_derived"
+          "derivation": "manually_adjudicated",
+          "rationale": "Reference/policy/form document; produces no artifact of its own, so an outcome axis does not apply. Consistent with backend_status for these types."
         },
         "enforcement_status": {
           "value": "advisory_only",
@@ -11044,15 +11052,16 @@
           "rationale": "Transcript-confirmed invocations only. Artifact existence never credited."
         },
         "outcome_status": {
-          "value": "no_evidence",
+          "value": "not_applicable",
           "confidence": "high",
           "evidence_basis": [
-            "absence_observed"
+            "directly_verified"
           ],
           "evidence_refs": [
-            "EV-011"
+            "EV-013"
           ],
-          "derivation": "mechanically_derived"
+          "derivation": "manually_adjudicated",
+          "rationale": "Reference/policy/form document; produces no artifact of its own, so an outcome axis does not apply. Consistent with backend_status for these types."
         },
         "enforcement_status": {
           "value": "advisory_only",
@@ -11181,15 +11190,16 @@
           "rationale": "Transcript-confirmed invocations only. Artifact existence never credited."
         },
         "outcome_status": {
-          "value": "no_evidence",
+          "value": "not_applicable",
           "confidence": "high",
           "evidence_basis": [
-            "absence_observed"
+            "directly_verified"
           ],
           "evidence_refs": [
-            "EV-011"
+            "EV-013"
           ],
-          "derivation": "mechanically_derived"
+          "derivation": "manually_adjudicated",
+          "rationale": "Reference/policy/form document; produces no artifact of its own, so an outcome axis does not apply. Consistent with backend_status for these types."
         },
         "enforcement_status": {
           "value": "advisory_only",
@@ -14647,15 +14657,16 @@
           "rationale": "Transcript-confirmed invocations only. Artifact existence never credited."
         },
         "outcome_status": {
-          "value": "no_evidence",
+          "value": "not_applicable",
           "confidence": "high",
           "evidence_basis": [
-            "absence_observed"
+            "directly_verified"
           ],
           "evidence_refs": [
-            "EV-011"
+            "EV-013"
           ],
-          "derivation": "mechanically_derived"
+          "derivation": "manually_adjudicated",
+          "rationale": "Reference/policy/form document; produces no artifact of its own, so an outcome axis does not apply. Consistent with backend_status for these types."
         },
         "enforcement_status": {
           "value": "advisory_only",
@@ -14759,15 +14770,16 @@
           "rationale": "Transcript-confirmed invocations only. Artifact existence never credited."
         },
         "outcome_status": {
-          "value": "no_evidence",
+          "value": "not_applicable",
           "confidence": "high",
           "evidence_basis": [
-            "absence_observed"
+            "directly_verified"
           ],
           "evidence_refs": [
-            "EV-011"
+            "EV-013"
           ],
-          "derivation": "mechanically_derived"
+          "derivation": "manually_adjudicated",
+          "rationale": "Reference/policy/form document; produces no artifact of its own, so an outcome axis does not apply. Consistent with backend_status for these types."
         },
         "enforcement_status": {
           "value": "advisory_only",
@@ -14869,15 +14881,16 @@
           "rationale": "Transcript-confirmed invocations only. Artifact existence never credited."
         },
         "outcome_status": {
-          "value": "no_evidence",
+          "value": "not_applicable",
           "confidence": "high",
           "evidence_basis": [
-            "absence_observed"
+            "directly_verified"
           ],
           "evidence_refs": [
-            "EV-011"
+            "EV-013"
           ],
-          "derivation": "mechanically_derived"
+          "derivation": "manually_adjudicated",
+          "rationale": "Reference/policy/form document; produces no artifact of its own, so an outcome axis does not apply. Consistent with backend_status for these types."
         },
         "enforcement_status": {
           "value": "advisory_only",
@@ -14979,15 +14992,16 @@
           "rationale": "Transcript-confirmed invocations only. Artifact existence never credited."
         },
         "outcome_status": {
-          "value": "no_evidence",
+          "value": "not_applicable",
           "confidence": "high",
           "evidence_basis": [
-            "absence_observed"
+            "directly_verified"
           ],
           "evidence_refs": [
-            "EV-011"
+            "EV-013"
           ],
-          "derivation": "mechanically_derived"
+          "derivation": "manually_adjudicated",
+          "rationale": "Reference/policy/form document; produces no artifact of its own, so an outcome axis does not apply. Consistent with backend_status for these types."
         },
         "enforcement_status": {
           "value": "advisory_only",
@@ -15089,15 +15103,16 @@
           "rationale": "Transcript-confirmed invocations only. Artifact existence never credited."
         },
         "outcome_status": {
-          "value": "no_evidence",
+          "value": "not_applicable",
           "confidence": "high",
           "evidence_basis": [
-            "absence_observed"
+            "directly_verified"
           ],
           "evidence_refs": [
-            "EV-011"
+            "EV-013"
           ],
-          "derivation": "mechanically_derived"
+          "derivation": "manually_adjudicated",
+          "rationale": "Reference/policy/form document; produces no artifact of its own, so an outcome axis does not apply. Consistent with backend_status for these types."
         },
         "enforcement_status": {
           "value": "advisory_only",
@@ -15199,15 +15214,16 @@
           "rationale": "Transcript-confirmed invocations only. Artifact existence never credited."
         },
         "outcome_status": {
-          "value": "no_evidence",
+          "value": "not_applicable",
           "confidence": "high",
           "evidence_basis": [
-            "absence_observed"
+            "directly_verified"
           ],
           "evidence_refs": [
-            "EV-011"
+            "EV-013"
           ],
-          "derivation": "mechanically_derived"
+          "derivation": "manually_adjudicated",
+          "rationale": "Reference/policy/form document; produces no artifact of its own, so an outcome axis does not apply. Consistent with backend_status for these types."
         },
         "enforcement_status": {
           "value": "advisory_only",
@@ -15309,15 +15325,16 @@
           "rationale": "Transcript-confirmed invocations only. Artifact existence never credited."
         },
         "outcome_status": {
-          "value": "no_evidence",
+          "value": "not_applicable",
           "confidence": "high",
           "evidence_basis": [
-            "absence_observed"
+            "directly_verified"
           ],
           "evidence_refs": [
-            "EV-011"
+            "EV-013"
           ],
-          "derivation": "mechanically_derived"
+          "derivation": "manually_adjudicated",
+          "rationale": "Reference/policy/form document; produces no artifact of its own, so an outcome axis does not apply. Consistent with backend_status for these types."
         },
         "enforcement_status": {
           "value": "advisory_only",
@@ -15419,15 +15436,16 @@
           "rationale": "Transcript-confirmed invocations only. Artifact existence never credited."
         },
         "outcome_status": {
-          "value": "no_evidence",
+          "value": "not_applicable",
           "confidence": "high",
           "evidence_basis": [
-            "absence_observed"
+            "directly_verified"
           ],
           "evidence_refs": [
-            "EV-011"
+            "EV-013"
           ],
-          "derivation": "mechanically_derived"
+          "derivation": "manually_adjudicated",
+          "rationale": "Reference/policy/form document; produces no artifact of its own, so an outcome axis does not apply. Consistent with backend_status for these types."
         },
         "enforcement_status": {
           "value": "advisory_only",
@@ -15531,15 +15549,16 @@
           "rationale": "Transcript-confirmed invocations only. Artifact existence never credited."
         },
         "outcome_status": {
-          "value": "no_evidence",
+          "value": "not_applicable",
           "confidence": "high",
           "evidence_basis": [
-            "absence_observed"
+            "directly_verified"
           ],
           "evidence_refs": [
-            "EV-011"
+            "EV-013"
           ],
-          "derivation": "mechanically_derived"
+          "derivation": "manually_adjudicated",
+          "rationale": "Reference/policy/form document; produces no artifact of its own, so an outcome axis does not apply. Consistent with backend_status for these types."
         },
         "enforcement_status": {
           "value": "advisory_only",
@@ -15641,15 +15660,16 @@
           "rationale": "Transcript-confirmed invocations only. Artifact existence never credited."
         },
         "outcome_status": {
-          "value": "no_evidence",
+          "value": "not_applicable",
           "confidence": "high",
           "evidence_basis": [
-            "absence_observed"
+            "directly_verified"
           ],
           "evidence_refs": [
-            "EV-011"
+            "EV-013"
           ],
-          "derivation": "mechanically_derived"
+          "derivation": "manually_adjudicated",
+          "rationale": "Reference/policy/form document; produces no artifact of its own, so an outcome axis does not apply. Consistent with backend_status for these types."
         },
         "enforcement_status": {
           "value": "advisory_only",
@@ -15751,15 +15771,16 @@
           "rationale": "Transcript-confirmed invocations only. Artifact existence never credited."
         },
         "outcome_status": {
-          "value": "no_evidence",
+          "value": "not_applicable",
           "confidence": "high",
           "evidence_basis": [
-            "absence_observed"
+            "directly_verified"
           ],
           "evidence_refs": [
-            "EV-011"
+            "EV-013"
           ],
-          "derivation": "mechanically_derived"
+          "derivation": "manually_adjudicated",
+          "rationale": "Reference/policy/form document; produces no artifact of its own, so an outcome axis does not apply. Consistent with backend_status for these types."
         },
         "enforcement_status": {
           "value": "advisory_only",
@@ -15861,15 +15882,16 @@
           "rationale": "Transcript-confirmed invocations only. Artifact existence never credited."
         },
         "outcome_status": {
-          "value": "no_evidence",
+          "value": "not_applicable",
           "confidence": "high",
           "evidence_basis": [
-            "absence_observed"
+            "directly_verified"
           ],
           "evidence_refs": [
-            "EV-011"
+            "EV-013"
           ],
-          "derivation": "mechanically_derived"
+          "derivation": "manually_adjudicated",
+          "rationale": "Reference/policy/form document; produces no artifact of its own, so an outcome axis does not apply. Consistent with backend_status for these types."
         },
         "enforcement_status": {
           "value": "advisory_only",

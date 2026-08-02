@@ -148,7 +148,7 @@ The frozen logs show the failure was far broader.
 | baseline JSON parse | absent | absent | no exit line either run |
 | `archive verify` | absent | absent | not run — `FF6_ROM` unset |
 
-**4 of 12 gates had reliable exit capture at Phase 0. 4 of 12 at closure.** At
+**7 of 12 gates captured an exit status at Phase 0; 4 of 12 at closure. Only 4 gates support a reliable Phase-0-to-closure comparison** — the intersection. (Corrected in Phase 11: an earlier draft reported 4 at Phase 0, conflating per-run capture with cross-run comparability.) At
 closure the three build gates were collapsed into a `builds` block printing
 `ff6lab ok / ff6demo ok / gui ok` with no status at all.
 

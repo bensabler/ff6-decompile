@@ -177,12 +177,37 @@ learn whether the right ones were used.
 
 **Measured result: of the 43 existing commands, `operator_workflow` count is
 zero.** Every one is an internal helper, a diagnostic tool, an alias, or
-deprecated. There is no outcome-named surface at all, which is why sequencing
-falls to the operator.
+deprecated.
 
-`outcome_status` is `no_evidence` for **130 of 135** resources — one
-`validated`, three `partial`, one `failed`. Nothing ties a durable artifact to
-the resource that produced it. That is the evidentiary basis for R12-R14.
+`outcome_status` is `no_evidence` for **109 of 114 assessable** resources — one
+`validated`, three `partial`, one `failed`. Twenty-one rules, shared contracts
+and templates are `not_applicable`: they produce no artifact of their own.
+
+> ### Confirmation-risk disclosure
+>
+> Phase 11 review raised this and I accept it. **The `operator_workflow`
+> category's defining properties — argument-free, interactively negotiated,
+> contract-with-approval — are taken from R11's own proposal. No independent
+> rubric predates it.** A count of zero against a bar this section defines
+> cannot fail to support the section's own recommendation. That is the
+> strongest form of confirmation risk in this document, and it is a sharper
+> version of what AUDIT-0001 was faulted for.
+>
+> The honest, narrower claim is: **no existing command meets R11's
+> contract-and-approval bar, and several already perform part of the job.**
+> `/orchestrate` selects units, `/resume-session` restores context,
+> `/checkpoint` records state — the baseline entry for `/orchestrate` says
+> outright that it "becomes the internal planner behind the future outcome
+> workflows."
+>
+> The evidence that manual sequencing is the status quo is **the operator's
+> own stated experience**, not this metric. R11 should be judged on whether it
+> solves that, not on a zero it defines into existence.
+>
+> `outcome_status` carries a weaker form of the same risk: the artifact-
+> provenance bar is one this audit chose. It was tightened during review — 21
+> non-artifact-producing resources moved to `not_applicable` — but the
+> remaining 109 still reflect a standard the project never agreed to.
 
 ## Command classification — two independent dimensions
 
