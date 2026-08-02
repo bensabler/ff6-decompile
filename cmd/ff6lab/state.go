@@ -185,7 +185,7 @@ func statePPU(path string, out io.Writer) error {
 			target = "OAM"
 		}
 		fmt.Fprintf(out, "%d   $21%02X   %d     $%06X      %5d  %s\n",
-			c.Index, c.DestAddress, c.TransferMode, c.FullSource(), c.TransferSize, target)
+			c.Index, c.DestAddress, c.TransferMode, c.FullSource(), c.ByteCount(), target)
 	}
 	return nil
 }

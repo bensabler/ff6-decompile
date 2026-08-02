@@ -14,7 +14,7 @@ Breadth without pretense: counts are census entries at or above each threshold (
 | WORLD | 7 | 0 | 0 | 0 | 0 | 1 |
 | EVENT | 11 | 4 | 1 | 0 | 0 | 4 |
 | MENU | 7 | 2 | 1 | 0 | 0 | 1 |
-| GFX | 8 | 2 | 1 | 1 | 1 | 0 |
+| GFX | 9 | 3 | 2 | 1 | 1 | 0 |
 | AUDIO | 6 | 3 | 2 | 2 | 1 | 1 |
 | SAVE | 1 | 0 | 0 | 0 | 0 | 0 |
 | QUIRK | 2 | 0 | 0 | 0 | 0 | 1 |
@@ -27,7 +27,7 @@ Breadth without pretense: counts are census entries at or above each threshold (
 
 ## Census health
 
-- Entries with unresolved fields/formats: 44.
+- Entries with unresolved fields/formats: 45.
 - Observed but not yet located (breadth backlog): 44.
 - Runtime-only findings (seen live, no location): 33.
 - Static-only findings (located, never exercised live): 1.

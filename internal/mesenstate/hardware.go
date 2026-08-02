@@ -1,6 +1,10 @@
 package mesenstate
 
-import "fmt"
+import (
+	"fmt"
+
+	"github.com/bensabler/ff6-decompile/internal/platform/snesdma"
+)
 
 // This file decodes the scalar hardware state a savestate carries alongside
 // its memory images.
@@ -197,17 +201,32 @@ func (c DMAChannel) FullSource() uint32 {
 	return uint32(c.SrcBank)<<16 | uint32(c.SrcAddress)
 }
 
+// ByteCount returns how many bytes the configured transfer would move.
+//
+// TransferSize is the raw register pair, and **zero means 65536**: the
+// hardware decrements the counter before testing it. Reading the raw value is
+// how a 64 KB VRAM upload gets recorded as an empty transfer, which is exactly
+// how the mines savestate's channel 0 read before this method existed.
+func (c DMAChannel) ByteCount() int {
+	if c.TransferSize == 0 {
+		return 65536
+	}
+	return int(c.TransferSize)
+}
+
 // TargetsVRAM reports whether the channel was configured to write the VRAM
 // data port ($2118/$2119).
-func (c DMAChannel) TargetsVRAM() bool { return c.DestAddress == 0x18 || c.DestAddress == 0x19 }
+func (c DMAChannel) TargetsVRAM() bool {
+	return c.DestAddress == snesdma.DestVRAMLow || c.DestAddress == snesdma.DestVRAMHigh
+}
 
 // TargetsCGRAM reports whether the channel was configured to write the
 // palette data port ($2122).
-func (c DMAChannel) TargetsCGRAM() bool { return c.DestAddress == 0x22 }
+func (c DMAChannel) TargetsCGRAM() bool { return c.DestAddress == snesdma.DestCGRAM }
 
 // TargetsOAM reports whether the channel was configured to write the sprite
 // data port ($2104).
-func (c DMAChannel) TargetsOAM() bool { return c.DestAddress == 0x04 }
+func (c DMAChannel) TargetsOAM() bool { return c.DestAddress == snesdma.DestOAM }
 
 // DMAChannels decodes all eight channel configurations.
 func (s *State) DMAChannels() ([]DMAChannel, error) {

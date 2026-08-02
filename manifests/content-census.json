@@ -2046,6 +2046,58 @@
     },
     {
       "schema_version": "1.0",
+      "rom_locations": [],
+      "wram_locations": [],
+      "cpu_routines": [],
+      "spc_locations": [],
+      "record_count_expected": null,
+      "record_count_found": null,
+      "record_size": null,
+      "pointer_tables": [],
+      "consumers": [],
+      "producers": [],
+      "related_experiments": [
+        "EXP-0050"
+      ],
+      "related_discoveries": [],
+      "related_implementations": [
+        "internal/platform/snesdma",
+        "internal/mesenstate.DMAChannels",
+        "mesen/probes/dma-trace.lua",
+        "ff6lab state ppu"
+      ],
+      "related_tests": [
+        "TestDecodeControlBits",
+        "TestZeroSizeMeans64K",
+        "TestSourceSpan",
+        "TestParseTraceLine",
+        "FuzzDecode",
+        "FuzzParseTraceLine"
+      ],
+      "runtime_scenarios": [],
+      "evidence": [
+        "docs/research/MESEN_CAPABILITY_MATRIX.md",
+        ".claude/playbooks/TRACE_DMA.md"
+      ],
+      "unknown_fields": [
+        "which FF6 routines drive each channel",
+        "mesen/probes/dma-trace.lua is UNEXERCISED - never run, output unverified"
+      ],
+      "contradictions": [],
+      "notes": "",
+      "rom_revision": "0f51b4fca41b7fd509e4b8f9d543151f68efa5e97b08493e4b2a0c06f5d8d5e2",
+      "id": "CEN-GFX-0009",
+      "domain": "GFX",
+      "category": "graphics loading",
+      "name": "DMA/HDMA channel registers and transfer semantics",
+      "description": "SNES DMA channel n occupies $43n0-$43nA; a transfer begins on a write to $420B (MDMAEN) or $420C (HDMAEN). Decoded in internal/platform/snesdma: control bits (mode 0-7, fixed, decrement, HDMA indirect, direction), destination as the $21xx low byte, 24-bit source, and byte count where a raw size of ZERO means 65536. The source address is 16-bit and the bank does not increment, so a transfer past $FFFF wraps within the bank and is NOT a contiguous span - SourceSpan refuses those rather than reporting a range into the next bank.",
+      "reconstruction_status": "FORMAT_DECODED",
+      "runtime_status": "INPUTS_CAPTURED",
+      "confidence": "confirmed",
+      "next_action": "Run dma-trace.lua in one operator session and check its output against a known transfer; that also closes EXP-0051's open question."
+    },
+    {
+      "schema_version": "1.0",
       "id": "CEN-MAGIC-0001",
       "domain": "MAGIC",
       "category": "magitek abilities",
