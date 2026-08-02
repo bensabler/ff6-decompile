@@ -1,0 +1,594 @@
+{
+  "audit_id": "AUDIT-0002",
+  "phase": 3,
+  "purpose": "Fixture suite for AUDIT-0001's reference matcher. Replayable: rerun this file to reproduce.",
+  "matcher_source": "build_inventory.py::patterns_for, lifted verbatim",
+  "total_cases": 63,
+  "failures": 0,
+  "verdict": "PASS",
+  "regression_pin": {
+    "name": "skill_stable_id_is_not_SKILL",
+    "path": ".claude/skills/example-skill/SKILL.md",
+    "naive_stem": "SKILL",
+    "correct_stable_id": "example-skill",
+    "matcher_uses": "example-skill",
+    "pass": true,
+    "note": "AUDIT-0001 initially used Path(path).stem for skills, yielding 'SKILL' for all 30 and misidentifying every skill. Fixed mid-run with no test. This pins the fix."
+  },
+  "cases": [
+    {
+      "resource_type": "command",
+      "resource_id": "/recover-map",
+      "condition": "full_repository_path",
+      "probe": "see `.claude/commands/recover-map.md` for detail",
+      "expected": true,
+      "actual": true,
+      "pass": true
+    },
+    {
+      "resource_type": "command",
+      "resource_id": "/recover-map",
+      "condition": "filename",
+      "probe": "the recover-map.md command",
+      "expected": true,
+      "actual": true,
+      "pass": true
+    },
+    {
+      "resource_type": "command",
+      "resource_id": "/recover-map",
+      "condition": "stable_identifier",
+      "probe": "run /recover-map on the mines",
+      "expected": true,
+      "actual": true,
+      "pass": true
+    },
+    {
+      "resource_type": "command",
+      "resource_id": "/recover-map",
+      "condition": "bare_prose_reference",
+      "probe": "the recover map workflow",
+      "expected": false,
+      "actual": false,
+      "pass": true
+    },
+    {
+      "resource_type": "command",
+      "resource_id": "/recover-map",
+      "condition": "alias_spelling",
+      "probe": "/reconstruct-map is the other spelling",
+      "expected": false,
+      "actual": false,
+      "pass": true
+    },
+    {
+      "resource_type": "command",
+      "resource_id": "/recover-map",
+      "condition": "near_match_must_not_count",
+      "probe": "/recover-maps and /recover-map-data",
+      "expected": false,
+      "actual": false,
+      "pass": true
+    },
+    {
+      "resource_type": "command",
+      "resource_id": "/recover-map",
+      "condition": "self_reference_excluded",
+      "probe": "(handled by caller, not regex)",
+      "expected": "excluded_by_caller",
+      "actual": "excluded_by_caller",
+      "pass": true,
+      "note": "build_inventory.py skips rel == r['path'] before matching"
+    },
+    {
+      "resource_type": "command",
+      "resource_id": "/recover-map",
+      "condition": "manual_entry_point",
+      "probe": "operators type /recover-map directly",
+      "expected": true,
+      "actual": true,
+      "pass": true
+    },
+    {
+      "resource_type": "command",
+      "resource_id": "/recover-map",
+      "condition": "auto_loaded_rule",
+      "probe": "n/a for commands",
+      "expected": false,
+      "actual": false,
+      "pass": true
+    },
+    {
+      "resource_type": "skill",
+      "resource_id": "example-skill",
+      "condition": "full_repository_path",
+      "probe": "`.claude/skills/example-skill/SKILL.md`",
+      "expected": true,
+      "actual": true,
+      "pass": true
+    },
+    {
+      "resource_type": "skill",
+      "resource_id": "example-skill",
+      "condition": "filename",
+      "probe": "SKILL.md alone must NOT match this skill",
+      "expected": false,
+      "actual": false,
+      "pass": true
+    },
+    {
+      "resource_type": "skill",
+      "resource_id": "example-skill",
+      "condition": "stable_identifier",
+      "probe": "load the example-skill skill",
+      "expected": true,
+      "actual": true,
+      "pass": true
+    },
+    {
+      "resource_type": "skill",
+      "resource_id": "example-skill",
+      "condition": "bare_prose_reference",
+      "probe": "the example skill",
+      "expected": false,
+      "actual": false,
+      "pass": true
+    },
+    {
+      "resource_type": "skill",
+      "resource_id": "example-skill",
+      "condition": "alias_spelling",
+      "probe": "example_skill with an underscore",
+      "expected": false,
+      "actual": false,
+      "pass": true
+    },
+    {
+      "resource_type": "skill",
+      "resource_id": "example-skill",
+      "condition": "near_match_must_not_count",
+      "probe": "example-skills and my-example-skill",
+      "expected": false,
+      "actual": false,
+      "pass": true
+    },
+    {
+      "resource_type": "skill",
+      "resource_id": "example-skill",
+      "condition": "self_reference_excluded",
+      "probe": "(handled by caller, not regex)",
+      "expected": "excluded_by_caller",
+      "actual": "excluded_by_caller",
+      "pass": true,
+      "note": "build_inventory.py skips rel == r['path'] before matching"
+    },
+    {
+      "resource_type": "skill",
+      "resource_id": "example-skill",
+      "condition": "manual_entry_point",
+      "probe": "Use the example-skill skill.",
+      "expected": true,
+      "actual": true,
+      "pass": true
+    },
+    {
+      "resource_type": "skill",
+      "resource_id": "example-skill",
+      "condition": "auto_loaded_rule",
+      "probe": "n/a",
+      "expected": false,
+      "actual": false,
+      "pass": true
+    },
+    {
+      "resource_type": "shared-contract",
+      "resource_id": "EVIDENCE_STANDARD",
+      "condition": "full_repository_path",
+      "probe": "`.claude/skills/_shared/EVIDENCE_STANDARD.md`",
+      "expected": true,
+      "actual": true,
+      "pass": true
+    },
+    {
+      "resource_type": "shared-contract",
+      "resource_id": "EVIDENCE_STANDARD",
+      "condition": "filename",
+      "probe": "see EVIDENCE_STANDARD.md",
+      "expected": true,
+      "actual": true,
+      "pass": true
+    },
+    {
+      "resource_type": "shared-contract",
+      "resource_id": "EVIDENCE_STANDARD",
+      "condition": "stable_identifier",
+      "probe": "the EVIDENCE_STANDARD contract",
+      "expected": false,
+      "actual": false,
+      "pass": true
+    },
+    {
+      "resource_type": "shared-contract",
+      "resource_id": "EVIDENCE_STANDARD",
+      "condition": "bare_prose_reference",
+      "probe": "the evidence standard",
+      "expected": false,
+      "actual": false,
+      "pass": true
+    },
+    {
+      "resource_type": "shared-contract",
+      "resource_id": "EVIDENCE_STANDARD",
+      "condition": "alias_spelling",
+      "probe": "_shared/EVIDENCE_STANDARD",
+      "expected": true,
+      "actual": true,
+      "pass": true
+    },
+    {
+      "resource_type": "shared-contract",
+      "resource_id": "EVIDENCE_STANDARD",
+      "condition": "near_match_must_not_count",
+      "probe": "EVIDENCE_STANDARDS.md",
+      "expected": false,
+      "actual": false,
+      "pass": true
+    },
+    {
+      "resource_type": "shared-contract",
+      "resource_id": "EVIDENCE_STANDARD",
+      "condition": "self_reference_excluded",
+      "probe": "(handled by caller, not regex)",
+      "expected": "excluded_by_caller",
+      "actual": "excluded_by_caller",
+      "pass": true,
+      "note": "build_inventory.py skips rel == r['path'] before matching"
+    },
+    {
+      "resource_type": "shared-contract",
+      "resource_id": "EVIDENCE_STANDARD",
+      "condition": "manual_entry_point",
+      "probe": "Follow EVIDENCE_STANDARD.md.",
+      "expected": true,
+      "actual": true,
+      "pass": true
+    },
+    {
+      "resource_type": "shared-contract",
+      "resource_id": "EVIDENCE_STANDARD",
+      "condition": "auto_loaded_rule",
+      "probe": "n/a",
+      "expected": false,
+      "actual": false,
+      "pass": true
+    },
+    {
+      "resource_type": "agent",
+      "resource_id": "dma-researcher",
+      "condition": "full_repository_path",
+      "probe": "`.claude/agents/dma-researcher.md`",
+      "expected": true,
+      "actual": true,
+      "pass": true
+    },
+    {
+      "resource_type": "agent",
+      "resource_id": "dma-researcher",
+      "condition": "filename",
+      "probe": "dma-researcher.md",
+      "expected": true,
+      "actual": true,
+      "pass": true
+    },
+    {
+      "resource_type": "agent",
+      "resource_id": "dma-researcher",
+      "condition": "stable_identifier",
+      "probe": "delegate to dma-researcher",
+      "expected": true,
+      "actual": true,
+      "pass": true
+    },
+    {
+      "resource_type": "agent",
+      "resource_id": "dma-researcher",
+      "condition": "bare_prose_reference",
+      "probe": "the DMA researcher",
+      "expected": false,
+      "actual": false,
+      "pass": true
+    },
+    {
+      "resource_type": "agent",
+      "resource_id": "dma-researcher",
+      "condition": "alias_spelling",
+      "probe": "dma_researcher",
+      "expected": false,
+      "actual": false,
+      "pass": true
+    },
+    {
+      "resource_type": "agent",
+      "resource_id": "dma-researcher",
+      "condition": "near_match_must_not_count",
+      "probe": "dma-researchers and sub-dma-researcher",
+      "expected": false,
+      "actual": false,
+      "pass": true
+    },
+    {
+      "resource_type": "agent",
+      "resource_id": "dma-researcher",
+      "condition": "self_reference_excluded",
+      "probe": "(handled by caller, not regex)",
+      "expected": "excluded_by_caller",
+      "actual": "excluded_by_caller",
+      "pass": true,
+      "note": "build_inventory.py skips rel == r['path'] before matching"
+    },
+    {
+      "resource_type": "agent",
+      "resource_id": "dma-researcher",
+      "condition": "manual_entry_point",
+      "probe": "subagent_type: dma-researcher",
+      "expected": true,
+      "actual": true,
+      "pass": true
+    },
+    {
+      "resource_type": "agent",
+      "resource_id": "dma-researcher",
+      "condition": "auto_loaded_rule",
+      "probe": "n/a",
+      "expected": false,
+      "actual": false,
+      "pass": true
+    },
+    {
+      "resource_type": "playbook",
+      "resource_id": "TRACE_DMA",
+      "condition": "full_repository_path",
+      "probe": "`.claude/playbooks/TRACE_DMA.md`",
+      "expected": true,
+      "actual": true,
+      "pass": true
+    },
+    {
+      "resource_type": "playbook",
+      "resource_id": "TRACE_DMA",
+      "condition": "filename",
+      "probe": "follow TRACE_DMA.md",
+      "expected": true,
+      "actual": true,
+      "pass": true
+    },
+    {
+      "resource_type": "playbook",
+      "resource_id": "TRACE_DMA",
+      "condition": "stable_identifier",
+      "probe": "the TRACE_DMA procedure",
+      "expected": false,
+      "actual": false,
+      "pass": true
+    },
+    {
+      "resource_type": "playbook",
+      "resource_id": "TRACE_DMA",
+      "condition": "bare_prose_reference",
+      "probe": "trace dma",
+      "expected": false,
+      "actual": false,
+      "pass": true
+    },
+    {
+      "resource_type": "playbook",
+      "resource_id": "TRACE_DMA",
+      "condition": "alias_spelling",
+      "probe": "playbooks/TRACE_DMA",
+      "expected": true,
+      "actual": true,
+      "pass": true
+    },
+    {
+      "resource_type": "playbook",
+      "resource_id": "TRACE_DMA",
+      "condition": "near_match_must_not_count",
+      "probe": "TRACE_DMA_V2.md",
+      "expected": false,
+      "actual": false,
+      "pass": true
+    },
+    {
+      "resource_type": "playbook",
+      "resource_id": "TRACE_DMA",
+      "condition": "self_reference_excluded",
+      "probe": "(handled by caller, not regex)",
+      "expected": "excluded_by_caller",
+      "actual": "excluded_by_caller",
+      "pass": true,
+      "note": "build_inventory.py skips rel == r['path'] before matching"
+    },
+    {
+      "resource_type": "playbook",
+      "resource_id": "TRACE_DMA",
+      "condition": "manual_entry_point",
+      "probe": "Follow `.claude/playbooks/TRACE_DMA.md`.",
+      "expected": true,
+      "actual": true,
+      "pass": true
+    },
+    {
+      "resource_type": "playbook",
+      "resource_id": "TRACE_DMA",
+      "condition": "auto_loaded_rule",
+      "probe": "n/a",
+      "expected": false,
+      "actual": false,
+      "pass": true
+    },
+    {
+      "resource_type": "rule",
+      "resource_id": "research",
+      "condition": "full_repository_path",
+      "probe": "`.claude/rules/research.md`",
+      "expected": true,
+      "actual": true,
+      "pass": true
+    },
+    {
+      "resource_type": "rule",
+      "resource_id": "research",
+      "condition": "filename",
+      "probe": "see research.md",
+      "expected": true,
+      "actual": true,
+      "pass": true
+    },
+    {
+      "resource_type": "rule",
+      "resource_id": "research",
+      "condition": "stable_identifier",
+      "probe": "the research rule",
+      "expected": false,
+      "actual": false,
+      "pass": true
+    },
+    {
+      "resource_type": "rule",
+      "resource_id": "research",
+      "condition": "bare_prose_reference",
+      "probe": "research rules apply",
+      "expected": false,
+      "actual": false,
+      "pass": true
+    },
+    {
+      "resource_type": "rule",
+      "resource_id": "research",
+      "condition": "alias_spelling",
+      "probe": "rules/research",
+      "expected": false,
+      "actual": false,
+      "pass": true
+    },
+    {
+      "resource_type": "rule",
+      "resource_id": "research",
+      "condition": "near_match_must_not_count",
+      "probe": "researcher.md and re-research.md",
+      "expected": false,
+      "actual": false,
+      "pass": true
+    },
+    {
+      "resource_type": "rule",
+      "resource_id": "research",
+      "condition": "self_reference_excluded",
+      "probe": "(handled by caller, not regex)",
+      "expected": "excluded_by_caller",
+      "actual": "excluded_by_caller",
+      "pass": true,
+      "note": "build_inventory.py skips rel == r['path'] before matching"
+    },
+    {
+      "resource_type": "rule",
+      "resource_id": "research",
+      "condition": "manual_entry_point",
+      "probe": "n/a - rules are path-scoped, not invoked",
+      "expected": false,
+      "actual": false,
+      "pass": true
+    },
+    {
+      "resource_type": "rule",
+      "resource_id": "research",
+      "condition": "auto_loaded_rule",
+      "probe": "applied automatically by path scope, never named",
+      "expected": false,
+      "actual": false,
+      "pass": true
+    },
+    {
+      "resource_type": "template",
+      "resource_id": "CHECKPOINT",
+      "condition": "full_repository_path",
+      "probe": "`.claude/templates/CHECKPOINT.md`",
+      "expected": true,
+      "actual": true,
+      "pass": true
+    },
+    {
+      "resource_type": "template",
+      "resource_id": "CHECKPOINT",
+      "condition": "filename",
+      "probe": "based on CHECKPOINT.md",
+      "expected": true,
+      "actual": true,
+      "pass": true
+    },
+    {
+      "resource_type": "template",
+      "resource_id": "CHECKPOINT",
+      "condition": "stable_identifier",
+      "probe": "the CHECKPOINT template",
+      "expected": false,
+      "actual": false,
+      "pass": true
+    },
+    {
+      "resource_type": "template",
+      "resource_id": "CHECKPOINT",
+      "condition": "bare_prose_reference",
+      "probe": "write a checkpoint",
+      "expected": false,
+      "actual": false,
+      "pass": true
+    },
+    {
+      "resource_type": "template",
+      "resource_id": "CHECKPOINT",
+      "condition": "alias_spelling",
+      "probe": "templates/CHECKPOINT",
+      "expected": false,
+      "actual": false,
+      "pass": true
+    },
+    {
+      "resource_type": "template",
+      "resource_id": "CHECKPOINT",
+      "condition": "near_match_must_not_count",
+      "probe": "CHECKPOINTS.md",
+      "expected": false,
+      "actual": false,
+      "pass": true
+    },
+    {
+      "resource_type": "template",
+      "resource_id": "CHECKPOINT",
+      "condition": "self_reference_excluded",
+      "probe": "(handled by caller, not regex)",
+      "expected": "excluded_by_caller",
+      "actual": "excluded_by_caller",
+      "pass": true,
+      "note": "build_inventory.py skips rel == r['path'] before matching"
+    },
+    {
+      "resource_type": "template",
+      "resource_id": "CHECKPOINT",
+      "condition": "manual_entry_point",
+      "probe": "Use `.claude/templates/CHECKPOINT.md`.",
+      "expected": true,
+      "actual": true,
+      "pass": true
+    },
+    {
+      "resource_type": "template",
+      "resource_id": "CHECKPOINT",
+      "condition": "auto_loaded_rule",
+      "probe": "n/a",
+      "expected": false,
+      "actual": false,
+      "pass": true
+    }
+  ]
+}

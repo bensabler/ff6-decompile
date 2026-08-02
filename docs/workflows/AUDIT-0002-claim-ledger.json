@@ -1,0 +1,552 @@
+{
+  "audit_id": "AUDIT-0002",
+  "completion_status": "partial",
+  "coverage_reconciliation": {
+    "audit_0001_tracked_records_reviewed": 6,
+    "audit_0001_baseline_fields_reviewed": "all 135 resource records, every field",
+    "method": "Exhaustive over execution facts, closure facts, headline numbers, resource classifications, recommendations and remediation justifications. Score cells validated programmatically with one claim per scoring dimension x root-cause pattern (A2-CLAIM-013/014) rather than per cell.",
+    "score_cells_validated": 1482,
+    "score_claim_entries": 2,
+    "exceptions_with_own_entries": [
+      "CMD_OVERRIDE set (10 manual values)",
+      "/validate-graphics deliberate genuine zero"
+    ]
+  },
+  "claims": [
+    {
+      "claim_id": "A2-CLAIM-001",
+      "source_file": "docs/workflows/AUDIT-0001-usage-baseline.md",
+      "source_location": "The six Confirmed, row 5",
+      "claim_text": "/run-quality-gates was invoked at AUDIT-0001 Phase 0 and Phase 10",
+      "claim_type": "execution_fact",
+      "temporal_scope": "during_audit",
+      "verification_method": "Searched all four preserved session transcripts for Skill tool calls",
+      "status": "refuted",
+      "evidence_basis": [
+        "directly_verified",
+        "absence_observed"
+      ],
+      "review_state": "primary_only",
+      "confidence": "high",
+      "attestation_confidence": null,
+      "evidence_refs": [
+        "EV-007"
+      ],
+      "correction": "No Skill call for /run-quality-gates exists in any preserved session, including the AUDIT-0001 session in full. Underlying shell commands were run instead. Bounded to 2026-08-02 transcript coverage."
+    },
+    {
+      "claim_id": "A2-CLAIM-002",
+      "source_file": "docs/workflows/AUDIT-0001-usage-baseline.md",
+      "source_location": "The six Confirmed, row 3",
+      "claim_text": "/bootstrap-ghidra Confirmed because its artifact exists",
+      "claim_type": "execution_fact",
+      "temporal_scope": "pre_audit",
+      "verification_method": "Transcript search",
+      "status": "confirmed",
+      "evidence_basis": [
+        "directly_verified"
+      ],
+      "review_state": "primary_only",
+      "confidence": "high",
+      "attestation_confidence": null,
+      "evidence_refs": [
+        "EV-008"
+      ],
+      "correction": "CONCLUSION CORRECT, METHOD INVALID. Invoked 2026-08-02T00:50:05Z. The artifact-existence reasoning remains an invalid method; it reached a true answer by luck."
+    },
+    {
+      "claim_id": "A2-CLAIM-003",
+      "source_file": "docs/workflows/AUDIT-0001-usage-baseline.md",
+      "source_location": "The six Confirmed, row 4",
+      "claim_text": "/correlate-static-runtime Confirmed because CORR-0001 exists",
+      "claim_type": "execution_fact",
+      "temporal_scope": "pre_audit",
+      "verification_method": "Transcript search",
+      "status": "unverifiable",
+      "evidence_basis": [
+        "absence_observed",
+        "historically_unverifiable"
+      ],
+      "review_state": "primary_only",
+      "confidence": "high",
+      "attestation_confidence": null,
+      "evidence_refs": [
+        "EV-007",
+        "EV-008",
+        "EV-009",
+        "EV-010"
+      ],
+      "correction": "Absent from all transcripts; CORR-0001 predates coverage. Reverts to unverifiable."
+    },
+    {
+      "claim_id": "A2-CLAIM-004",
+      "source_file": "docs/workflows/AUDIT-0001-usage-baseline.md",
+      "source_location": "Notable Probable cases",
+      "claim_text": "/checkpoint is Probable",
+      "claim_type": "execution_fact",
+      "temporal_scope": "pre_audit",
+      "verification_method": "Transcript search",
+      "status": "refuted",
+      "evidence_basis": [
+        "directly_verified"
+      ],
+      "review_state": "primary_only",
+      "confidence": "high",
+      "attestation_confidence": null,
+      "evidence_refs": [
+        "EV-008",
+        "EV-009"
+      ],
+      "correction": "UNDER-classified. Invoked twice (00:25:54, 14:32:14). Actual status: Confirmed."
+    },
+    {
+      "claim_id": "A2-CLAIM-005",
+      "source_file": "docs/workflows/AUDIT-0001-usage-baseline.md",
+      "source_location": "Notable Probable cases",
+      "claim_text": "/session-summary is Probable",
+      "claim_type": "execution_fact",
+      "temporal_scope": "pre_audit",
+      "verification_method": "Transcript search",
+      "status": "refuted",
+      "evidence_basis": [
+        "directly_verified"
+      ],
+      "review_state": "primary_only",
+      "confidence": "high",
+      "attestation_confidence": null,
+      "evidence_refs": [
+        "EV-009"
+      ],
+      "correction": "UNDER-classified. Invoked once (14:33:45). Actual status: Confirmed."
+    },
+    {
+      "claim_id": "A2-CLAIM-006",
+      "source_file": "docs/workflows/AUDIT-0001-orchestration-inventory.md",
+      "source_location": "Orphans table",
+      "claim_text": "31 of 135 resources have zero inbound references",
+      "claim_type": "repository_fact",
+      "temporal_scope": "pre_audit",
+      "verification_method": "Generator replay against 581ddbc, then re-scan including repository-root files",
+      "status": "refuted",
+      "evidence_basis": [
+        "generator_verified",
+        "directly_verified"
+      ],
+      "review_state": "primary_only",
+      "confidence": "high",
+      "attestation_confidence": null,
+      "evidence_refs": [
+        "EV-012",
+        "EV-013"
+      ],
+      "correction": "The count reproduces exactly against its true input tree, so the generator is deterministic. But the matcher corpus omits repository-ROOT files, and PACKAGE_MANIFEST.json lists 24 of the 31 by full path. CORRECTED TEXTUAL ORPHANS: 7."
+    },
+    {
+      "claim_id": "A2-CLAIM-007",
+      "source_file": "docs/workflows/AUDIT-0001-orchestration-inventory.md",
+      "source_location": "Finding A",
+      "claim_text": "12 of 13 agents have zero inbound references; explicit routing absent",
+      "claim_type": "repository_fact",
+      "temporal_scope": "pre_audit",
+      "verification_method": "Routing-bearing inbound recomputation excluding packaging manifests and narrative records",
+      "status": "confirmed",
+      "evidence_basis": [
+        "generator_verified",
+        "directly_verified"
+      ],
+      "review_state": "primary_only",
+      "confidence": "high",
+      "attestation_confidence": null,
+      "evidence_refs": [
+        "EV-012",
+        "EV-013"
+      ],
+      "correction": "Textual figure was 12/13; 11 of those appear in PACKAGE_MANIFEST.json, which is packaging, not routing. Measured correctly: ALL 13 agents have zero ROUTING-BEARING inbound. The finding strengthens; AUDIT-0001 reached it via a proxy that was wrong in both directions."
+    },
+    {
+      "claim_id": "A2-CLAIM-008",
+      "source_file": "docs/workflows/AUDIT-0001-orchestration-inventory.md",
+      "source_location": "Finding E",
+      "claim_text": "9 of 12 templates are unreferenced",
+      "claim_type": "repository_fact",
+      "temporal_scope": "pre_audit",
+      "verification_method": "Re-scan including root files; separate consumer-reference from packaging",
+      "status": "partially_supported",
+      "evidence_basis": [
+        "directly_verified"
+      ],
+      "review_state": "primary_only",
+      "confidence": "high",
+      "attestation_confidence": null,
+      "evidence_refs": [
+        "EV-013"
+      ],
+      "correction": "All 9 appear in PACKAGE_MANIFEST.json, so 'unreferenced' is false as stated. 10 of 12 have no CONSUMER reference. The defect is real; the metric was wrong."
+    },
+    {
+      "claim_id": "A2-CLAIM-009",
+      "source_file": "docs/workflows/AUDIT-0001-orchestration-inventory.md",
+      "source_location": "Orphans table, rules row",
+      "claim_text": "3 of 4 rules are orphaned",
+      "claim_type": "repository_fact",
+      "temporal_scope": "pre_audit",
+      "verification_method": "Read rule frontmatter",
+      "status": "refuted",
+      "evidence_basis": [
+        "directly_verified"
+      ],
+      "review_state": "primary_only",
+      "confidence": "high",
+      "attestation_confidence": null,
+      "evidence_refs": [
+        "EV-013"
+      ],
+      "correction": "CATEGORY ERROR. All four rules carry `paths:` frontmatter and are auto-loaded by glob scope, never invoked by name. Being unnamed is their design, not a defect. AUDIT-0001's 'Clarify Routing' recommendation for them is withdrawn."
+    },
+    {
+      "claim_id": "A2-CLAIM-010",
+      "source_file": "local_artifacts/.../build_baseline.py",
+      "source_location": "lines 412-414",
+      "claim_text": "audit_status complete, completed_phases [0..10] at generation time",
+      "claim_type": "execution_fact",
+      "temporal_scope": "during_audit",
+      "verification_method": "File mtime ordering vs closure gate log",
+      "status": "partially_supported",
+      "evidence_basis": [
+        "directly_verified",
+        "artifact_verified"
+      ],
+      "review_state": "primary_only",
+      "confidence": "medium",
+      "attestation_confidence": null,
+      "evidence_refs": [
+        "EV-003",
+        "EV-002"
+      ],
+      "correction": "Hard-coded values directly verified. 'Before Phase 10 occurred' rests on mtimes (11:23 vs 11:29), which are mutable."
+    },
+    {
+      "claim_id": "A2-CLAIM-011",
+      "source_file": "docs/workflows/AUDIT-0001-capability-honesty.md",
+      "source_location": "gate table",
+      "claim_text": "Exit capture missing for go test and census validate",
+      "claim_type": "execution_fact",
+      "temporal_scope": "during_audit",
+      "verification_method": "Parsed both frozen gate logs for exit lines",
+      "status": "partially_supported",
+      "evidence_basis": [
+        "directly_verified"
+      ],
+      "review_state": "primary_only",
+      "confidence": "high",
+      "attestation_confidence": null,
+      "evidence_refs": [
+        "EV-001",
+        "EV-002"
+      ],
+      "correction": "UNDERSTATED. 4 of 12 gates had reliable capture at Phase 0 and 4 of 12 at closure. At closure the three build gates were collapsed into a block with no status at all."
+    },
+    {
+      "claim_id": "A2-CLAIM-012",
+      "source_file": "docs/workflows/AUDIT-0001-capability-honesty.md",
+      "source_location": "The validator nothing calls",
+      "claim_text": "internal/validate has zero importers",
+      "claim_type": "repository_fact",
+      "temporal_scope": "pre_audit",
+      "verification_method": "go list importer analysis",
+      "status": "confirmed",
+      "evidence_basis": [
+        "directly_verified"
+      ],
+      "review_state": "primary_only",
+      "confidence": "high",
+      "attestation_confidence": null,
+      "evidence_refs": [
+        "EV-011"
+      ],
+      "correction": null
+    },
+    {
+      "claim_id": "A2-CLAIM-013",
+      "source_file": "docs/workflows/AUDIT-0001-effectiveness-scorecard.md",
+      "source_location": "Method section",
+      "claim_text": "Composite scores for commands/agents/skills/playbooks",
+      "claim_type": "score",
+      "temporal_scope": "during_audit",
+      "verification_method": "Read the scoring functions in build_baseline.py",
+      "status": "refuted",
+      "evidence_basis": [
+        "directly_verified"
+      ],
+      "review_state": "primary_only",
+      "confidence": "high",
+      "attestation_confidence": null,
+      "evidence_refs": [
+        "EV-003"
+      ],
+      "correction": "INVALID PROXIES AND HARD-CODED DEFAULTS: scope_clarity=4, output_contract=4, capability_honesty=5, maintenance_burden=4 assigned to every command regardless of evidence; stop_conditions derived from backend existence; artifact_production derived from usage class. All composites withdrawn."
+    },
+    {
+      "claim_id": "A2-CLAIM-014",
+      "source_file": "docs/workflows/AUDIT-0001-effectiveness-scorecard.md",
+      "source_location": "Recommendations table",
+      "claim_text": "All 28 playbooks recommended Keep",
+      "claim_type": "recommendation",
+      "temporal_scope": "during_audit",
+      "verification_method": "Read recommend() in build_baseline.py",
+      "status": "refuted",
+      "evidence_basis": [
+        "directly_verified"
+      ],
+      "review_state": "primary_only",
+      "confidence": "high",
+      "attestation_confidence": null,
+      "evidence_refs": [
+        "EV-003"
+      ],
+      "correction": "Produced by an unconditional `if t == 'playbook': return 'Keep'`. No playbook was individually assessed. Withdrawn."
+    },
+    {
+      "claim_id": "A2-CLAIM-015",
+      "source_file": "docs/workflows/AUDIT-0001-orchestration-inventory.md",
+      "source_location": "Broken references",
+      "claim_text": "Zero broken references",
+      "claim_type": "repository_fact",
+      "temporal_scope": "pre_audit",
+      "verification_method": "Generator replay",
+      "status": "partially_supported",
+      "evidence_basis": [
+        "generator_verified"
+      ],
+      "review_state": "primary_only",
+      "confidence": "medium",
+      "attestation_confidence": null,
+      "evidence_refs": [
+        "EV-012"
+      ],
+      "correction": "Reproduces, but measures only two categories (markdown links, backtick paths). Says nothing about missing named commands/skills/agents/playbooks or invalid declared output paths. A zero in two categories was generalised to all."
+    },
+    {
+      "claim_id": "A2-CLAIM-016",
+      "source_file": "docs/workflows/AUDIT-0001-usage-baseline.md",
+      "source_location": "Agent rows",
+      "claim_text": "All 13 agents have Unknown historical use",
+      "claim_type": "repository_fact",
+      "temporal_scope": "pre_audit",
+      "verification_method": "Transcript search across all sessions",
+      "status": "refuted",
+      "evidence_basis": [
+        "directly_verified"
+      ],
+      "review_state": "primary_only",
+      "confidence": "high",
+      "attestation_confidence": null,
+      "evidence_refs": [
+        "EV-007",
+        "EV-008"
+      ],
+      "correction": "documentation-reviewer was invoked in session 46404e8c hours BEFORE AUDIT-0001. Its pre-audit live use is Confirmed, not Unknown."
+    },
+    {
+      "claim_id": "A2-CLAIM-017",
+      "source_file": "docs/workflows/AUDIT-0001-usage-baseline.md",
+      "source_location": "Agent rows",
+      "claim_text": "13 agents live-invoked during AUDIT-0001 Phase 4",
+      "claim_type": "execution_fact",
+      "temporal_scope": "during_audit",
+      "verification_method": "Transcript Agent-call census",
+      "status": "confirmed",
+      "evidence_basis": [
+        "directly_verified"
+      ],
+      "review_state": "primary_only",
+      "confidence": "high",
+      "attestation_confidence": null,
+      "evidence_refs": [
+        "EV-007"
+      ],
+      "correction": "Corroborated by harness evidence: 13 Agent calls with 13 distinct project subagent types. No longer attestation alone. AUDIT-0001 omitted these from usage totals."
+    },
+    {
+      "claim_id": "A2-CLAIM-018",
+      "source_file": "docs/workflows/AUDIT-0001-telemetry-design.md",
+      "source_location": "Not depending on Claude to remember",
+      "claim_text": "Hooks cannot be skipped",
+      "claim_type": "inference",
+      "temporal_scope": "future_design",
+      "verification_method": "No capability test performed",
+      "status": "unverifiable",
+      "evidence_basis": [
+        "absence_observed"
+      ],
+      "review_state": "primary_only",
+      "confidence": "high",
+      "attestation_confidence": null,
+      "evidence_refs": [
+        "EV-011"
+      ],
+      "correction": "Asserted without testing. Hook capability remains untested; classified 'available but untested'."
+    },
+    {
+      "claim_id": "A2-CLAIM-019",
+      "source_file": "docs/workflows/AUDIT-0001-telemetry-design.md",
+      "source_location": "Derived events",
+      "claim_text": "Derived events can establish command invocation without cooperation",
+      "claim_type": "inference",
+      "temporal_scope": "future_design",
+      "verification_method": "Compared against the corrected invocation evidence",
+      "status": "refuted",
+      "evidence_basis": [
+        "directly_verified"
+      ],
+      "review_state": "primary_only",
+      "confidence": "high",
+      "attestation_confidence": null,
+      "evidence_refs": [
+        "EV-007",
+        "EV-013"
+      ],
+      "correction": "A checkpoint file appearing is compatible with /checkpoint but does not establish it. AUDIT-0001's own /bootstrap-ghidra and /correlate-static-runtime errors are the counterexample: same artifact logic, one true and one false. Derived events may only produce Probable associations."
+    },
+    {
+      "claim_id": "A2-CLAIM-020",
+      "source_file": "docs/workflows/AUDIT-0001-capability-honesty.md",
+      "source_location": "/audit-project section",
+      "claim_text": "/audit-project has no report-only mode",
+      "claim_type": "repository_fact",
+      "temporal_scope": "pre_audit",
+      "verification_method": "Re-read command and playbook contracts",
+      "status": "confirmed",
+      "evidence_basis": [
+        "directly_verified"
+      ],
+      "review_state": "primary_only",
+      "confidence": "high",
+      "attestation_confidence": null,
+      "evidence_refs": [
+        "EV-011"
+      ],
+      "correction": null
+    },
+    {
+      "claim_id": "A2-CLAIM-021",
+      "source_file": "docs/workflows/AUDIT-0001-capability-honesty.md",
+      "source_location": "/trace-dma four surfaces",
+      "claim_text": "/trace-dma comprises four surfaces of unequal maturity",
+      "claim_type": "repository_fact",
+      "temporal_scope": "pre_audit",
+      "verification_method": "Re-read probe header, playbook, Go sources and tests",
+      "status": "confirmed",
+      "evidence_basis": [
+        "directly_verified"
+      ],
+      "review_state": "primary_only",
+      "confidence": "high",
+      "attestation_confidence": null,
+      "evidence_refs": [
+        "EV-011"
+      ],
+      "correction": null
+    },
+    {
+      "claim_id": "A2-CLAIM-022",
+      "source_file": "docs/workflows/AUDIT-0001-orchestration-inventory.md",
+      "source_location": "Finding G",
+      "claim_text": "Unit IDs collide globally",
+      "claim_type": "repository_fact",
+      "temporal_scope": "pre_audit",
+      "verification_method": "Re-read ACTIVITY_LOG vs checkpoints",
+      "status": "confirmed",
+      "evidence_basis": [
+        "directly_verified"
+      ],
+      "review_state": "primary_only",
+      "confidence": "high",
+      "attestation_confidence": null,
+      "evidence_refs": [
+        "EV-011"
+      ],
+      "correction": null
+    },
+    {
+      "claim_id": "A2-CLAIM-023",
+      "source_file": "AUDIT-0002 Phase 1",
+      "source_location": "named-command policy",
+      "claim_text": "/checkpoint mutation contract is compatible with a bounded audit scope",
+      "claim_type": "repository_fact",
+      "temporal_scope": "closure",
+      "verification_method": "Read command contract",
+      "status": "refuted",
+      "evidence_basis": [
+        "directly_verified"
+      ],
+      "review_state": "primary_only",
+      "confidence": "high",
+      "attestation_confidence": null,
+      "evidence_refs": [
+        "EV-011"
+      ],
+      "correction": "NEW FINDING. /checkpoint declares it updates dashboards/CURRENT_FOCUS.md, a substantive dashboard write. It cannot be invoked inside a bounded audit that prohibits dashboard changes. This is a capability-scope defect, not a usage question."
+    },
+    {
+      "claim_id": "A2-CLAIM-024",
+      "source_file": "AUDIT-0002 Phase 1",
+      "source_location": "named-command policy",
+      "claim_text": "/session-summary has a specified output contract",
+      "claim_type": "repository_fact",
+      "temporal_scope": "closure",
+      "verification_method": "Read command and skill contracts",
+      "status": "refuted",
+      "evidence_basis": [
+        "directly_verified"
+      ],
+      "review_state": "primary_only",
+      "confidence": "high",
+      "attestation_confidence": null,
+      "evidence_refs": [
+        "EV-011"
+      ],
+      "correction": "NEW FINDING. It declares no output path at all. Compatibility with any allowlist cannot be verified from its contract."
+    },
+    {
+      "claim_id": "A2-CLAIM-025",
+      "source_file": "AUDIT-0002 Phase 3",
+      "source_location": "self-contamination",
+      "claim_text": "The orphan metric remains measurable after AUDIT-0001 published",
+      "claim_type": "repository_fact",
+      "temporal_scope": "closure",
+      "verification_method": "Replay against 93f7d03 vs 581ddbc",
+      "status": "refuted",
+      "evidence_basis": [
+        "generator_verified"
+      ],
+      "review_state": "primary_only",
+      "confidence": "high",
+      "attestation_confidence": null,
+      "evidence_refs": [
+        "EV-012"
+      ],
+      "correction": "NEW FINDING. Replayed against the closure tree the matcher reports ZERO orphans: AUDIT-0001-baseline.json names all 135 resources, so the audit's own output destroys the metric it reported. Any future run reports 0 regardless of reality."
+    },
+    {
+      "claim_id": "A2-CLAIM-026",
+      "source_file": "AUDIT-0002 Phase 7",
+      "source_location": "routing",
+      "claim_text": "Automatic selection of a project specialist can occur",
+      "claim_type": "repository_fact",
+      "temporal_scope": "closure",
+      "verification_method": "Pre-registered probes P1/P2 with no subagent_type",
+      "status": "refuted",
+      "evidence_basis": [
+        "directly_verified"
+      ],
+      "review_state": "primary_only",
+      "confidence": "high",
+      "attestation_confidence": null,
+      "evidence_refs": [
+        "EV-014"
+      ],
+      "correction": "NEW FINDING. Omitting subagent_type yields general-purpose, never a project specialist. Automatic and implicit-description routing are refuted FOR THIS MECHANISM. Command-triggered and /orchestrate routing remain not_tested."
+    }
+  ]
+}

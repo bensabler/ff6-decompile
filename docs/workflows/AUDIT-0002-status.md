@@ -4,8 +4,8 @@
 {
   "audit_id": "AUDIT-0002",
   "completion_status": "partial",
-  "completed_phases": [0, 1],
-  "remaining_phases": [2, 3, 4, 5, 6, 7, 8, 9, 10, 11],
+  "completed_phases": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
+  "remaining_phases": [11],
   "base_commit": "93f7d03a199f0c396886ec6497e8401cef88ff54",
   "branch": "maintenance/workflow-observability-audit2",
   "worktree": "../ff6-audit2",
@@ -14,60 +14,63 @@
 }
 ```
 
-**`completion_status` is `partial`.** Only Phase 11 Stage B may set `complete`,
-and only as an outcome of successful closure verification. If any Stage A or
-Stage B check fails after a commit, `closure_failed` is written **and
-committed** as the latest audit status — `complete` is never left standing as
-the latest committed status after a known failure (amendment 1).
+**`completion_status` is `partial`.** Phase 11 has not run. Only Phase 11
+Stage B may set `complete`, and only as an outcome of successful closure
+verification. If any Stage A or Stage B check fails after a commit,
+`closure_failed` is written **and committed** as the latest audit status
+(amendment 1).
 
 ## Exact resumption point
 
-**Phase 2 — claim ledger and evidence index.** Phases 0 and 1 are complete and
-committed; nothing in Phase 2 has begun.
+**Phase 11 — resolution and closure**, pending operator approval of the
+corrected remediation plan.
+
+Phase 11 requires: freeze provisional findings; `verification-engineer` and
+`quality-reviewer` bounded reviews of frozen evidence before seeing
+conclusions; disagreement resolution with unresolved high-impact disputes
+escalated; regenerate outputs; pre-closure gates; two-stage closure.
 
 ## Completed
 
-- **Phase 0a** slash-command feasibility preflight — **PASS**. Invocation-level
-  evidence exists in harness session transcripts and is preservable.
-- **Phase 0b** state re-observation — no stop condition triggered.
-- **Phase 0c** isolated worktree created from the verified closure commit.
-- **Phase 0d** gate baseline — direct `/run-quality-gates` invocation plus an
-  independent shell harness; 11/11 required gates `rc=0`, AGGREGATE PASS. The
-  harness was itself tested with a negative control.
-- **Phase 1** evidence frozen and hashed (19 files, 19/19 verify OK);
-  `/checkpoint` and `/session-summary` mutation contracts established; closure
-  allowlist verified with no committed deviation; gate comparison table built.
+| Phase | Outcome |
+|---|---|
+| 0 | Preflight **PASS** — invocation evidence exists in harness transcripts. Worktree isolated. Gate baseline 11/11 `rc=0`; harness verified by negative control |
+| 1 | 19 files frozen and hashed, 19/19 verify. Closure allowlist: **no deviation**. Gate comparison: only 4/12 gates had reliable capture in AUDIT-0001 |
+| 2 | Claim ledger: **26 claims — 13 refuted, 7 confirmed, 4 partially supported, 2 unverifiable**. Evidence index: 15 entries |
+| 3 | Generator replay: 4 of 6 outputs deterministic, 2 hand-authored constants. **Matcher corpus omits repository-root files.** Fixture suite 63 cases, 0 failures |
+| 4-5 | Corrected baseline, 135 resources, three-axis utilization, eight evidence-bearing axes. **All numeric scores withdrawn** |
+| 6 | Seven capability concerns re-verified; **four provisional findings refuted or downgraded** |
+| 7 | Routing probes pre-registered and run. **Automatic specialist selection refuted for the tested mechanism** |
+| 8 | Telemetry revised; derived-invocation mechanism **retracted** |
+| 9-10 | Corrected remediation plan v2; nine items, each with an unexecuted acceptance specification |
 
-Detail: `AUDIT-0002-closure-verification.md`.
+## Headline corrections
 
-## Blocked — operator approval required
+- **Orphans 31 → 7.** The matcher never scanned repository-root files;
+  `PACKAGE_MANIFEST.json` lists 24 of the 31.
+- **Routing-bearing orphans: 38**, and **13 of 13 agents** have none.
+- `/run-quality-gates` **Confirmed → refuted**; `/correlate-static-runtime`
+  **Confirmed → unverifiable**; `/checkpoint` and `/session-summary`
+  **Probable → Confirmed**.
+- **AUDIT-0001 destroyed its own metric**: replayed against the closure tree
+  the matcher reports **zero** orphans.
 
-**`/checkpoint` and `/session-summary` cannot be invoked under the approved
-allowlist.**
+## Not claimed
 
-- `/checkpoint` declares it updates `dashboards/CURRENT_FOCUS.md` — not
-  allowlisted, and a substantive dashboard change the plan prohibits.
-- `/session-summary` declares no output path at all; compatibility cannot be
-  verified from its contract.
-
-Per the named-command policy these may not be invoked without explicit operator
-approval after their side effects are known. They are now known. Pending a
-decision, continuation uses this file and **no slash-command invocation credit
-is claimed**.
-
-Also pending under amendment 2: before Phase 11 creates any closure checkpoint
-or session record, the actual closure date and next available session ID are
-revalidated, and **any changed path requires operator approval before
-creation**. No existing record is ever overwritten.
+- No `/checkpoint` or `/session-summary` invocation credit. Their contracts are
+  incompatible with a bounded audit scope and are preserved as findings R8.
+- AUDIT-0001's Phase 4 process metrics: **unverifiable**; no transcripts exist.
+- Command-triggered and `/orchestrate` routing: **not_tested**.
+- Pre-2026-08-02 invocation history: **historically_unverifiable**; no
+  transcripts cover sessions 001-004.
+- `archive verify`: **not run** — `FF6_ROM` unset. Never inferred.
 
 ## Evidence integrity
 
 `local_artifacts/workflow-audit/AUDIT-0002/frozen/hashes.sha256` — 19 files,
-verified. Custody begins at AUDIT-0002; creation-time integrity of AUDIT-0001's
-artifacts is unrecoverable and is recorded as an evidence limitation, not a
-proven governance defect.
+verified. Custody begins at AUDIT-0002.
 
 ## Gates
 
-Phase 0 run `gate-logs/phase-00-20260802T164950Z/` — AGGREGATE **PASS**,
-11/11 required gates `rc=0`, `archive-verify` `not_run: FF6_ROM unset`.
+Phase 0 run `gate-logs/phase-00-20260802T164950Z/` — AGGREGATE **PASS**, 11/11
+required `rc=0`. Phase 11 pre-closure run not yet performed.
