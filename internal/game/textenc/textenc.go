@@ -6,13 +6,24 @@
 // exercised across all 54 spell names and 27 esper names in EXP-0027:
 //
 //	'A'..'Z' = $80.. ; 'a'..'z' = $9A.. ; '0'..'9' = $B4.. ;
-//	'-' = $C4 ; narrow space = $FE ; blank/padding = $FF.
+//	'-' = $C4 ; '?' = $BF ; narrow space = $FE ; blank/padding = $FF.
 //
 // Of the digit run only '2'=$B6 and '3'=$B7 were individually observed
 // on-screen; the $B4 base is the arithmetic consequence and is carried at
 // the same confidence as the letter runs. Every other byte is UNMAPPED and
 // decodes to an explicit \xNN escape — unknown glyphs are surfaced, never
 // guessed.
+//
+// EXP-0049 established that these byte values index the battle HUD font
+// block directly: VRAM tile = $100 + byte, i.e. ROMFILE 0x047FC0 + 16*byte.
+// Decoding the EXP-0023 HUD tilemap through that relation yields coherent
+// game text ("Were-Rat", "Repo Man", "WEDGE", "VICKS", "MagiTek", "Item",
+// "Row", "Tek", HP digits), which is what promoted the encoding from
+// "derived from a menu tilemap" to "verified against rendered output".
+//
+// $BF ('?') was added by EXP-0049: it renders as a question-mark glyph and
+// occupies all five cells of the unnamed protagonist's HUD name slot in the
+// same capture where WEDGE and VICKS render normally.
 package textenc
 
 import "fmt"
@@ -27,6 +38,8 @@ func Decode(b byte) (r rune, ok bool) {
 		return rune('a' + b - 0x9A), true
 	case b >= 0xB4 && b <= 0xBD:
 		return rune('0' + b - 0xB4), true
+	case b == 0xBF:
+		return '?', true
 	case b == 0xC4:
 		return '-', true
 	case b == 0xFE, b == 0xFF:
@@ -34,6 +47,56 @@ func Decode(b byte) (r rune, ok bool) {
 	default:
 		return 0, false
 	}
+}
+
+// Encode maps a glyph back to its byte. ok is false for runes the encoding
+// has no verified value for. It is the exact inverse of Decode over Decode's
+// mapped range, except that ' ' encodes to $FF (padding), the value name and
+// menu fields are written with.
+//
+// Callers rendering text must treat !ok as "no glyph", not as "skip": see
+// the fallback rule in the demo's font drawer.
+func Encode(r rune) (b byte, ok bool) {
+	switch {
+	case r >= 'A' && r <= 'Z':
+		return byte(0x80 + r - 'A'), true
+	case r >= 'a' && r <= 'z':
+		return byte(0x9A + r - 'a'), true
+	case r >= '0' && r <= '9':
+		return byte(0xB4 + r - '0'), true
+	case r == '?':
+		return 0xBF, true
+	case r == '-':
+		return 0xC4, true
+	case r == ' ':
+		return 0xFF, true
+	default:
+		return 0, false
+	}
+}
+
+// EncodeFixed encodes s into a width-byte field padded with $FF, the
+// convention the name tables use. Runes with no verified glyph are an error
+// rather than a silent substitution, and so is text that does not fit.
+func EncodeFixed(s string, width int) ([]byte, error) {
+	if width < 0 {
+		return nil, fmt.Errorf("encode fixed field: negative width %d", width)
+	}
+	out := make([]byte, 0, width)
+	for _, r := range s {
+		b, ok := Encode(r)
+		if !ok {
+			return nil, fmt.Errorf("encode %q: rune %q has no verified glyph value", s, r)
+		}
+		out = append(out, b)
+	}
+	if len(out) > width {
+		return nil, fmt.Errorf("encode %q: %d glyphs exceed the %d-byte field", s, len(out), width)
+	}
+	for len(out) < width {
+		out = append(out, 0xFF)
+	}
+	return out, nil
 }
 
 // DecodeFixed decodes a fixed-width name field. Trailing padding/space is

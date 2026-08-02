@@ -1,7 +1,7 @@
 # DEMO-0001 readiness matrix
 
 - **Milestone:** [DEMO-0001](DEMO-0001-new-game-to-whelk.md)
-- **Updated:** 2026-08-02 (Unit 0 — program start)
+- **Updated:** 2026-08-02 (Unit 3 — glyph mapping)
 
 Every player-visible requirement of the acceptance run appears here exactly
 once. This file is the demo's critical-path instrument: unit selection reads it,
@@ -41,8 +41,8 @@ Status reflects the **demo**, not the research. A subsystem can be Confirmed in
 | # | Requirement | Subsystem | Known evidence | Missing evidence | Asset / data | Go integration point | Validation | Depends on | Status | Next action |
 |---|---|---|---|---|---|---|---|---|---|---|
 | T1 | Fixed-width font tiles | Battle HUD font | GFX-0001, EXP-0023: 257 2bpp tiles, `ROMFILE:0x047FB0-0x048FBF` (ROM-0016), uncompressed | load path (which code/DMA copies it) | `hud-font-sheet.png` | `internal/content/hudfont` | ledger-agreement tests green; differential vs ROM decode pending | E6, E7 | `Extractor Ready` | Unit 4 — consume it from the demo |
-| T2 | Glyph → character mapping | Battle HUD font | `VRAMtile = 0x100 + encodedByte`; 8 spot checks (A B Z a z 0 9 -) | bytes `$C5`–`$FD`, tiles `$FF`–`$17F` unnamed | `data/graphics/hud-font-glyphs.json` | `hudfont.Font.Glyph` | per-glyph tile hashes | T1 | `Researching` | Unit 3 (EXP-0049) |
-| T3 | Text drawing to framebuffer | — | n/a | — | — | `hudfont.Font.DrawString` | synthetic-font frame goldens | T1, E3 | `Unknown` | Unit 4 |
+| T2 | Glyph → character mapping | Battle HUD font | **EXP-0049 Confirmed**: `VRAMtile = 0x100 + encodedByte`, verified by 8 direct decodes *and* the whole EXP-0023 HUD tilemap decoding to coherent game text over 37 tiles. 64 characters named; `$BF` = `?` added to `textenc` | 47 non-blank tiles carry unidentified glyphs | `data/graphics/hud-font-glyphs.json` (generated, hashes only) | `internal/game/hudfont` | relation + tracked-table consistency tests | T1 | `Implemented` | consume it in Unit 4 |
+| T3 | Text drawing to framebuffer | — | `textenc.Encode`/`EncodeFixed` added (EXP-0049) | — | — | `internal/content` font drawer | synthetic-font frame goldens | T1, T2, E3 | `Unknown` | Unit 4 |
 | T4 | Variable-width dialogue font | Dialogue rendering | CEN-GFX-0004 `OBSERVED` only | ROM location, format, widths table | — | — | — | — | `Unknown` | research unit not yet scheduled |
 | T5 | Dialogue window / border tiles | Menu graphics | CEN-MENU-0003 `OBSERVED` | ROM location | — | — | — | — | `Unknown` | research unit not yet scheduled |
 | T6 | Menu windows, cursor | Menu graphics | EXP-0026 captured menu tilemap/CHR/CGRAM | ROM location of the tile source | — | — | — | — | `Unknown` | research unit not yet scheduled |
@@ -70,7 +70,7 @@ retired that deviation; see DEVIATIONS D1.
 | B14 | Battle backgrounds | Battle graphics | CEN-GFX-0003 `OBSERVED` | ROM location, format | — | — | — | — | `Unknown` | research unit not yet scheduled |
 | B15 | Enemy graphics incl. Whelk | Battle graphics | CEN-MONSTER-0003 `OBSERVED` (green guard only) | ROM location, format, compression | — | — | — | compression | `Unknown` | research unit not yet scheduled |
 | B16 | Party battle sprites | Battle graphics | — | ROM location, format | — | — | — | compression | `Unknown` | research unit not yet scheduled |
-| B17 | Battle HUD (names, HP, gauges, damage numerals) | Battle UI | HUD font Confirmed; HUD tilemap captured in EXP-0023 | HUD layout table | — | new battle scene | frame goldens | T1, T3, B4 | `Unknown` | Unit 9 |
+| B17 | Battle HUD (names, HP, gauges, damage numerals) | Battle UI | HUD font + glyph mapping Confirmed; EXP-0049 decoded the layout (CEN-BATTLE-0014) and identified the five gauge tiles (CEN-GFX-0005) | the compose routine; per-field cell addresses; what drives gauge fill | — | new battle scene | frame goldens | T1, T3, B4 | `Evidence Ready` | Unit 9 |
 | B18 | Victory detection, rewards, battle exit | Battle flow | EXP-0033: battle 1 gives 32 EXP / 96 GP; writeback `ROMCPU:$C2496E`/`$C24979` → `WRAM:+$1609`/`+$160D` | reward field layout in monster records | — | — | — | B8 | `Evidence Ready` | Unit 8+ |
 
 ## Field, event, and world
@@ -114,16 +114,18 @@ retired that deviation; see DEVIATIONS D1.
 
 ## Summary at Unit 0
 
-| Status | Count |
-|---|---|
-| `Implemented` | 5 |
-| `Evidence Ready` | 7 |
-| `Extractor Ready` | 2 |
-| `Researching` | 3 |
-| `Blocked` | 2 |
-| `Deferred` | 1 |
-| `Unknown` | 33 |
-| **Integrated / Validated** | **0** |
+| Status | Unit 0 | Now |
+|---|---|---|
+| `Implemented` | 5 | 7 |
+| `Evidence Ready` | 7 | 8 |
+| `Extractor Ready` | 2 | 2 |
+| `Researching` | 3 | 2 |
+| `Blocked` | 2 | 2 |
+| `Deferred` | 1 | 1 |
+| `Unknown` | 33 | 31 |
+| **Integrated / Validated** | **0** | **0** |
 
 Zero rows are Integrated. That is the accurate reading of the project at demo
-program start, and the number this program exists to move.
+program start, and the number this program exists to move. Units 1-3 moved
+rows *toward* implementation without integrating any, because no executable
+exists yet; Unit 5 is the first unit that can raise this number.

@@ -21,6 +21,7 @@ Usage:
   ff6lab rom gaps                       unknown ROM spans, largest first
   ff6lab addr cpu <ROMCPU addr>         translate ROMCPU -> ROMFILE
   ff6lab addr file <ROMFILE offset>     translate ROMFILE -> ROMCPU
+  ff6lab graphics glyphmap              regenerate the HUD font glyph table
   ff6lab attackdata scan <hexdump>      decode a $C46AC0 table dump
                                         (bridge "read cpu" hex format)
 

@@ -67,3 +67,94 @@ func TestClean(t *testing.T) {
 		t.Fatal("Clean() = true despite an unmapped byte")
 	}
 }
+
+func TestEncodeRoundTrip(t *testing.T) {
+	// Every byte Decode maps must survive Decode -> Encode -> Decode. The
+	// one intentional asymmetry is the pair $FE/$FF, which both decode to
+	// ' ' and re-encode to $FF.
+	for i := 0; i < 256; i++ {
+		b := byte(i)
+		r, ok := Decode(b)
+		if !ok {
+			continue
+		}
+		got, ok := Encode(r)
+		if !ok {
+			t.Errorf("Decode($%02X) = %q, but Encode(%q) reports no glyph", b, r, r)
+			continue
+		}
+		back, ok := Decode(got)
+		if !ok || back != r {
+			t.Errorf("$%02X -> %q -> $%02X -> %q, want a stable round trip", b, r, got, back)
+		}
+		if b != got && r != ' ' {
+			t.Errorf("Encode(%q) = $%02X, want $%02X", r, got, b)
+		}
+	}
+}
+
+func TestEncodeRejectsUnverifiedGlyphs(t *testing.T) {
+	// 53 bytes in the HUD block are non-blank but unidentified (EXP-0049).
+	// Guessing any of them would put invented data into the reconstruction.
+	for _, r := range []rune{'!', '.', ',', ':', '/', '@', 'é', '漢', 0} {
+		if b, ok := Encode(r); ok {
+			t.Errorf("Encode(%q) = $%02X, but that glyph value is not verified", r, b)
+		}
+	}
+}
+
+func TestEncodeFixed(t *testing.T) {
+	got, err := EncodeFixed("WEDGE", 6)
+	if err != nil {
+		t.Fatalf("EncodeFixed: %v", err)
+	}
+	want := []byte{0x96, 0x84, 0x83, 0x86, 0x84, 0xFF}
+	if len(got) != len(want) {
+		t.Fatalf("EncodeFixed(\"WEDGE\", 6) = %X, want %X", got, want)
+	}
+	for i := range want {
+		if got[i] != want[i] {
+			t.Fatalf("EncodeFixed(\"WEDGE\", 6) = %X, want %X", got, want)
+		}
+	}
+	if s := DecodeFixed(got); s != "WEDGE" {
+		t.Errorf("round trip through the name field gave %q", s)
+	}
+
+	if _, err := EncodeFixed("TOOLONG", 4); err == nil {
+		t.Error("overlong text should be an error, not a truncation")
+	}
+	if _, err := EncodeFixed("no!", 8); err == nil {
+		t.Error("an unverified glyph should be an error, not a substitution")
+	}
+}
+
+// TestQuestionMarkGlyph pins the EXP-0049 addition.
+func TestQuestionMarkGlyph(t *testing.T) {
+	if r, ok := Decode(0xBF); !ok || r != '?' {
+		t.Errorf("Decode($BF) = %q, %v; want '?', true (EXP-0049)", r, ok)
+	}
+}
+
+func FuzzEncodeDecode(f *testing.F) {
+	for _, s := range []string{"WEDGE", "Were-Rat", "0", "29", "?????", ""} {
+		f.Add(s)
+	}
+	f.Fuzz(func(t *testing.T, s string) {
+		b, err := EncodeFixed(s, len([]rune(s))+2)
+		if err != nil {
+			return // unverified glyph or overlong: both are valid answers
+		}
+		if got := DecodeFixed(b); got != trimTrailingSpace(s) {
+			t.Fatalf("EncodeFixed(%q) -> DecodeFixed = %q", s, got)
+		}
+	})
+}
+
+func trimTrailingSpace(s string) string {
+	r := []rune(s)
+	for len(r) > 0 && r[len(r)-1] == ' ' {
+		r = r[:len(r)-1]
+	}
+	return string(r)
+}
