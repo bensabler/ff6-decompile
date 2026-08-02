@@ -755,8 +755,13 @@
         "EXP-0041"
       ],
       "related_discoveries": [],
-      "related_implementations": [],
-      "related_tests": [],
+      "related_implementations": [
+        "internal/game/atb"
+      ],
+      "related_tests": [
+        "internal/game/atb.TestAdvanceSlotMatchesTheMeasuredIncrement",
+        "internal/game/atb.TestFrameFreezesEverythingWhenGated"
+      ],
       "runtime_scenarios": [
         "local_artifacts/experiments/EXP-0042/in-battle-active-speed6.mss"
       ],
@@ -810,8 +815,13 @@
         "EXP-0040"
       ],
       "related_discoveries": [],
-      "related_implementations": [],
-      "related_tests": [],
+      "related_implementations": [
+        "internal/game/atb"
+      ],
+      "related_tests": [
+        "internal/game/atb.TestAdvanceSlotMatchesTheMeasuredIncrement",
+        "internal/game/atb.TestFrameFreezesEverythingWhenGated"
+      ],
       "runtime_scenarios": [
         "local_artifacts/experiments/EXP-0042/in-battle-active-speed6.mss"
       ],

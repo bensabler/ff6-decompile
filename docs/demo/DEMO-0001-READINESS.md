@@ -1,7 +1,7 @@
 # DEMO-0001 readiness matrix
 
 - **Milestone:** [DEMO-0001](DEMO-0001-new-game-to-whelk.md)
-- **Updated:** 2026-08-02 (Unit 6 — windowed host)
+- **Updated:** 2026-08-02 (Unit 7 — ATB layer in Go)
 
 Every player-visible requirement of the acceptance run appears here exactly
 once. This file is the demo's critical-path instrument: unit selection reads it,
@@ -57,9 +57,9 @@ retired that deviation; see DEVIATIONS D1.
 | B1 | Damage / healing arithmetic | Battle formulas | DISC-0002…0006, byte-exact, golden chain test | — | — | `internal/game/battle` | existing tests + differential | — | `Implemented` | wire into a battle scene |
 | B2 | Attack/spell records | Attack data | DISC-0007: 14-byte records, `ROMCPU:$C46AC0` | 6 of 14 bytes unmapped; true table length | `raw/spells.json` | `internal/game/attackdata` | fuzz + ROM cross-check | E7 | `Implemented` | — |
 | B3 | Ten-slot battle arrays | Battle state | DISC-0001: stride `$14`, 10 slots, ~19 arrays | — | — | `internal/game/battle.BattleSlots` | existing tests | — | `Implemented` | — |
-| B4 | ATB gauges and increments | ATB | EXP-0043: gauges `WRAM:+$3AB4` stride **2**, increments `+$3AC8`, `gauge += $3AC8,X >> 1` at `ROMCPU:$C21195` | increment formula inputs, readiness threshold, gauge reset | — | new `internal/game/atb` | golden gauge traces vs Mesen | — | `Evidence Ready` | Unit 7 |
-| B5 | ACTIVE/WAIT behavior | ATB | EXP-0044/0045: gate `ROMCPU:$C21124`, submenu flag `WRAM:+$2F41`; pause narrower than folk model | 6 of 10 pause-matrix rows unsampled | — | `internal/game/atb` | pause-matrix replay | B4 | `Evidence Ready` | Unit 7 |
-| B6 | Battle config sampling at entry | Battle init | EXP-0041/0042: `WRAM:+$1D4D` bits, sampled once at `ROMCPU:$C22472` → `+$3A8F`/`+$3A90`; speed scales **enemy only** | whether other battle types sample differently | — | `internal/game/atb` | config fingerprint tests | — | `Evidence Ready` | Unit 7 |
+| B4 | ATB gauges and increments | ATB | EXP-0043: gauges `WRAM:+$3AB4` stride **2**, increments `+$3AC8`, `gauge += $3AC8,X >> 1` at `ROMCPU:$C21195` | increment **formula** (`ROMCPU:$C209F0` partly decoded), readiness threshold (`$322C` undecoded), gauge reset | — | `internal/game/atb` | measured $9C→$4E advance and the observed $00B6→$0004 wrap, both reproduced; fuzz over the 16-bit add | — | `Implemented` | integrate in Unit 9 |
+| B5 | ACTIVE/WAIT behavior | ATB | EXP-0044/0045: gate `ROMCPU:$C21124`, submenu flag `WRAM:+$2F41`; pause narrower than folk model | 6 of 10 pause-matrix rows unsampled | — | `internal/game/atb.Paused`, `engine.LiveScene` | the gate is an AND of bits; gated frames freeze the tick counter with the gauges | B4 | `Implemented` | integrate in Unit 9 |
+| B6 | Battle config sampling at entry | Battle init | EXP-0041/0042: `WRAM:+$1D4D` bits, sampled once at `ROMCPU:$C22472` → `+$3A8F`/`+$3A90`; speed scales **enemy only** | whether other battle types sample differently | — | `internal/game/atb.DecodeConfig`, `SampleEntry` | decodes the two recorded fingerprints ($2A default, $25 from EXP-0047) | — | `Implemented` | integrate in Unit 9 |
 | B7 | Formations | Formation table | EXP-0030: `ROMCPU:$CF6200` + 15×id, verified 7× | bytes `+$00/01`, `+$08..+$0E`; **monster-id high-bit extension** | `raw/formations.bin` | new `internal/content/formations` | byte-for-byte vs staged `+$3F44` | E6, E7 | `Evidence Ready` | Unit 8 |
 | B8 | Monster stat records | Monster DB | EXP-0028/0029: `ROMCPU:$CF0000`, 32-byte stride; `+$08` HP, `+$0A` MP, `+$01` power | 20+ of 32 bytes; table length; **name table unlocated** | `raw/monsters.bin` | new `internal/content/monsters` | vs battle-entry WRAM | E6, E7 | `Evidence Ready` | Unit 8 |
 | B9 | Monster names | Monster DB | — | **name table unlocated** | — | — | — | — | `Unknown` | research unit (queued P0 #9) |
@@ -114,12 +114,12 @@ retired that deviation; see DEVIATIONS D1.
 
 ## Summary at Unit 0
 
-| Status | Unit 0 | Now (Unit 5) |
+| Status | Unit 0 | Now (Unit 7) |
 |---|---|---|
 | `Validated` | 0 | **1** |
 | `Integrated` | 0 | **7** |
-| `Implemented` | 5 | 7 |
-| `Evidence Ready` | 7 | 8 |
+| `Implemented` | 5 | 10 |
+| `Evidence Ready` | 7 | 5 |
 | `Extractor Ready` | 2 | 1 |
 | `Researching` | 3 | 2 |
 | `Blocked` | 2 | 2 |
