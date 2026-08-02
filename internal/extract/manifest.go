@@ -1,7 +1,6 @@
 package extract
 
 import (
-	"encoding/json"
 	"fmt"
 	"io/fs"
 	"os"
@@ -9,20 +8,17 @@ import (
 	"sort"
 	"strings"
 
+	"github.com/bensabler/ff6-decompile/internal/assetmanifest"
 	"github.com/bensabler/ff6-decompile/internal/rom"
 )
 
-// ManifestPath is the tracked asset manifest, relative to the repo root.
-const ManifestPath = "manifests/assets.json"
+// ManifestPath and Manifest alias the model in internal/assetmanifest, which
+// carries no ROM dependency so the demo can read the manifest without linking
+// ROM-reading code.
+const ManifestPath = assetmanifest.Path
 
 // Manifest is the tracked public record of every locally generated asset.
-type Manifest struct {
-	SchemaVersion string  `json:"schema_version"`
-	ROMRevision   string  `json:"rom_revision"`
-	ArchiveRoot   string  `json:"archive_root"`
-	Note          string  `json:"note"`
-	Assets        []Asset `json:"assets"`
-}
+type Manifest = assetmanifest.Manifest
 
 const manifestNote = "Locally generated archival assets. The files themselves are never " +
 	"committed (see docs/legal/ASSET_POLICY.md); this manifest records their identity, " +
@@ -30,17 +26,7 @@ const manifestNote = "Locally generated archival assets. The files themselves ar
 	"byte-for-byte via `ff6lab extract all` and prove it with `ff6lab archive verify`."
 
 // LoadManifest reads the tracked manifest.
-func LoadManifest(repoRoot string) (*Manifest, error) {
-	b, err := os.ReadFile(filepath.Join(repoRoot, ManifestPath))
-	if err != nil {
-		return nil, fmt.Errorf("reading %s: %w", ManifestPath, err)
-	}
-	var m Manifest
-	if err := json.Unmarshal(b, &m); err != nil {
-		return nil, fmt.Errorf("parsing %s: %w", ManifestPath, err)
-	}
-	return &m, nil
-}
+func LoadManifest(repoRoot string) (*Manifest, error) { return assetmanifest.Load(repoRoot) }
 
 // WriteManifest writes assets to the tracked manifest in stable ID order.
 func WriteManifest(repoRoot, romRevision string, assets []Asset) error {

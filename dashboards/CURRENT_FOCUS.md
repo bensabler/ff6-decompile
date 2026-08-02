@@ -1,10 +1,58 @@
 # Current Focus
 
-**Program:** SCN-0001 — reconstruct the opening scenario, New Game
-through Whelk victory, as an evidence-backed vertical slice.
+**Active program:** DEMO-0001 — produce a **playable Go demo** of New
+Game through Whelk victory. Started 2026-08-02 on branch
+`demo/new-game-to-whelk`. The deliverable is a runnable program;
+research, extraction, and documentation are supporting activities.
+Records: `docs/demo/DEMO-0001-new-game-to-whelk.md`,
+`DEMO-0001-READINESS.md` (the critical-path instrument),
+`DEMO-0001-ACCEPTANCE.md`, `DEMO-0001-DEVIATIONS.md`.
+
+**Evidence program:** SCN-0001 — reconstruct the opening scenario, New
+Game through Whelk victory, as an evidence-backed vertical slice.
 Master record: `docs/scenarios/SCN-0001-opening-to-whelk.md`;
 machine manifest: `data/scenarios/opening-to-whelk.json`
 (19 beats B01–B19, per-beat status and links live there).
+DEMO-0001 **consumes** SCN-0001; it does not replace it.
+
+## DEMO-0001 build order — evidence-led, not route-ordered
+
+Decided 2026-08-02. The milestone ladder reads in route order (shell →
+opening → first map → events → battle), but the project's evidence is
+distributed almost inversely: a field room needs the map system and a
+compression format, both at **zero records**, while a battle needs
+systems already Confirmed and partly in Go.
+
+1. **Technical shell** — executable, deterministic loop, input, indexed
+   framebuffer, archive-backed asset loading, headless frame capture.
+2. **Battle vertical** — ATB model into Go, formation/monster decoders,
+   battle HUD scene, then a playable encounter.
+3. **Field/event vertical** — gated behind research into the map system,
+   the dialogue corpus, and the event opcode table.
+
+Readiness at program start was **0 of 53 requirements Integrated** — 5
+Implemented, 7 Evidence Ready, 2 Extractor Ready, 3 Researching, 2
+Blocked, 1 Deferred, **33 Unknown**. ROM ownership 0.49 %.
+
+After units 0–7: **7 Integrated, 1 Validated, 10 Implemented**, 25
+Unknown. Every Integrated row is engine or text plumbing — no Field or
+Audio row has moved. The demo has a spine, not yet a game.
+
+**Defect D1 (parity-blocking) — found at program start, fixed in Unit 1.**
+The `hud-font` extractor read `ROMFILE:0x046FC0` as a block start, but
+that address is only the back-projected anchor for VRAM tile `$000`. The
+real block is `ROMFILE:0x047FB0-0x048FBF`, which
+`manifests/rom-regions.json` ROM-0016 recorded correctly the whole time —
+the extractor and the ledger were two records of one fact that disagreed,
+and nothing compared them. **255 of 257 tiles in the shipped
+`hud-font-sheet.png` were attack-table bytes rendered as tiles**, from
+2026-07-30 until 2026-08-02.
+
+Now asserted two ways: `TestHUDFontMatchesROMLedger` compares the
+extractor's span to ROM-0016 with no ROM needed, and a skip-guarded
+archive-vs-ROM differential compares all 256 glyphs. The general lesson is
+recorded in `ARCHITECTURE.md`: a hand-computed offset needs something that
+asserts it against its other record.
 
 ## Golden route — power-on through milestone 05
 
@@ -208,6 +256,33 @@ being dereferenced: event-script pointer, command length, script frame-wait.
 The **immediate predecessor is unresolved**.
 
 ## Next exact action
+
+**DEMO-0001 Unit 8 — decode formations and monster records into Go.**
+Both tables are already in the archive and both formats are Confirmed
+(EXP-0028/0029/0030): `formations.bin` (`ROMCPU:$CF6200` + 15×id,
+verified against seven encounters) and `monsters.bin` (`ROMCPU:$CF0000`,
+32-byte stride, `+$08` HP / `+$0A` MP / `+$01` power). New package
+`internal/content/battledata`, read through the archive — the import
+boundary forbids touching the ROM. Targets readiness rows B7 and B8.
+
+Then Unit 9: a battle HUD scene consuming the font, the ATB layer, and
+those tables — the first player-visible battle screen.
+
+**Units 0–7 are complete** (branch `demo/new-game-to-whelk`, 8 commits,
+worktree clean, not pushed). DEMO-0001A is done: the demo runs windowed
+and headless and renders real extracted FF6 data. Readiness moved from
+0 Integrated to 7 Integrated + 1 Validated + 10 Implemented.
+
+Carrying forward: the `hud-font` extractor had been reading the wrong ROM
+range since 2026-07-30 (255 of 257 tiles were attack-table bytes), which
+ROM-0016 had recorded correctly the whole time — fixed, and now asserted.
+EXP-0049 closed the glyph mapping the census carried as Unknown.
+
+### Research actions, now sequenced behind the demo's critical path
+
+These remain the correct next research units, and each is named in the
+readiness matrix against the demo requirement it unblocks. They are no
+longer the *first* action, because implementation-ready work exists.
 
 **Name the immediate predecessor at `ROMCPU:$C09B59`.** Exec-watch the
 dispatcher's `JMP ($002A)` alongside `$C09B5C`, capturing DP `$2A`/`$2B`

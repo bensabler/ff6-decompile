@@ -51,3 +51,4 @@
 | EXP-0045 | gate-transition-and-matrix-completion | completed | see record | [EXP-0045-gate-transition-and-matrix-completion](../docs/experiments/EXP-0045-gate-transition-and-matrix-completion.md) |
 | EXP-0046 | action-queue-execution-path | completed | see record | [EXP-0046-action-queue-execution-path](../docs/experiments/EXP-0046-action-queue-execution-path.md) |
 | EXP-0047 | execution-path-invocation | completed | see record | [EXP-0047-execution-path-invocation](../docs/experiments/EXP-0047-execution-path-invocation.md) |
+| EXP-0049 | hud-font-glyph-mapping | completed | see record | [EXP-0049-hud-font-glyph-mapping](../docs/experiments/EXP-0049-hud-font-glyph-mapping.md) |

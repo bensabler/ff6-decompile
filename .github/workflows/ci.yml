@@ -19,11 +19,14 @@ jobs:
       - run: git diff --exit-code
       - run: go vet ./...
       - run: go test ./...
-      - name: Build the CLI deliverable
-        run: go build ./cmd/ff6lab
+      - name: Build the deliverables
+        run: |
+          go build ./cmd/ff6lab
+          go build ./cmd/ff6demo
       - name: Required tracked sources present
         run: |
           git ls-files --error-unmatch cmd/ff6lab/main.go
+          git ls-files --error-unmatch cmd/ff6demo/main.go
           git ls-files --error-unmatch local_artifacts/README.md
       - name: Repository audit (indexes, links, manifests, boundaries)
         run: go run ./cmd/ff6lab audit
@@ -34,3 +37,35 @@ jobs:
             echo "Tracked ROM-derived or restricted file detected."
             exit 1
           fi
+      - name: Reject tracked rendered graphics/audio
+        shell: bash
+        run: |
+          # The demo can render ROM-derived frames. Decoded graphics and audio
+          # stay in local_artifacts/; the repository tracks hashes instead.
+          if git ls-files | grep -Ei '\.(png|bmp|gif|jpe?g|tiff?|pcm|brr)$'; then
+            echo "Tracked rendered asset detected (docs/legal/ASSET_POLICY.md)."
+            exit 1
+          fi
+
+  # The windowed host needs cgo plus system OpenGL/X11 libraries (ADR-0001),
+  # so it sits behind the `gui` build tag and compiles in its own job. The
+  # gates above stay free of any system-library requirement, which is what
+  # lets the full demo test surface run on a bare container.
+  gui-build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-go@v5
+        with:
+          go-version-file: go.mod
+      - name: Install windowing system headers
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y libgl1-mesa-dev xorg-dev libasound2-dev
+      - name: Verify pinned module checksums
+        run: go mod verify
+      - name: Build the windowed demo
+        run: go build -tags gui ./cmd/ff6demo
+      - name: Vet the gui build path
+        run: go vet -tags gui ./...
+

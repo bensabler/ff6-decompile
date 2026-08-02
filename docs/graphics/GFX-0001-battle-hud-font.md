@@ -39,20 +39,38 @@ capture instant — mid-frame sampling artifact suspected (Tentative);
 screen visibly renders (brightness 15, forcedBlank false).
 
 ## Source/loading provenance
-**ROMFILE `0x046FC0` + 16×tileindex (`ROMCPU:$C4:6FC0`), raw copy.**
-Established by byte-identity: 15 distinctive glyph tiles each found
-exactly once in the 3 MiB ROM, all implying base `0x046FC0`; the
-contiguous identical run covers tiles `$FF-$1FF` (4112 bytes,
-`ROMFILE 0x047FB0-0x048FBF`). The load path (which code/DMA copies it
-into VRAM, and when) is **unresolved** — queued follow-up.
+**Block: `ROMFILE 0x047FB0-0x048FBF`** (4112 bytes, 257 tiles), addressed
+by the affine relation **`ROMFILE = 0x046FC0 + 16×VRAMtileindex`**
+(`ROMCPU:$C4:6FC0`), raw copy. Established by byte-identity: 15
+distinctive glyph tiles each found exactly once in the 3 MiB ROM, all
+implying anchor `0x046FC0`; the contiguous identical run covers tiles
+`$FF-$1FF`. Ledger region: **ROM-0016**. The load path (which code/DMA
+copies it into VRAM, and when) is **unresolved** — queued follow-up.
+
+> **`0x046FC0` is an anchor, not a block start.** It back-projects to
+> VRAM tile `$000`, which does not exist in the copy, and lands inside
+> the attack-data region (`0x046AC0`), with which the font shares no
+> bytes. The block begins at the first tile that does exist, VRAM `$FF`:
+> `0x046FC0 + 16×0xFF = 0x047FB0`.
+>
+> This distinction is load-bearing. From 2026-07-30 to 2026-08-02 the
+> `hud-font` extractor read 257 tiles starting at the anchor, so 255 of
+> them were attack-table bytes rendered as tiles, while
+> `manifests/rom-regions.json` ROM-0016 recorded the correct span the
+> whole time. Nothing compared the two records. Fixed in extractor
+> version 2.0.0; regression test
+> `internal/extract.TestHUDFontMatchesROMLedger` now asserts the
+> extractor's span against the ledger's.
 
 ## Compression/format
 Stored uncompressed in ROM, SNES 2bpp planar (row = plane0,plane1
 byte pair). Decoder: `internal/graphics/tile2bpp`.
 
 ## Reconstruction recipe
-1. Read 16×N bytes at ROMFILE `0x046FC0 + 16×index` (index `$FF-$1FF`
-   verified; lower indices carry no runtime identity claim).
+1. Read 4112 bytes at ROMFILE `0x047FB0` — equivalently, 16 bytes at
+   `0x046FC0 + 16×index` for each index `$FF`…`$1FF`. **Start at index
+   `$FF`, not 0**: lower indices are not font data and carry no runtime
+   identity claim. Sheet index `i` corresponds to VRAM tile `$FF + i`.
 2. Decode with `tile2bpp.Decode` (or `ff6lab tiles decode2bpp`).
 3. Apply BG palette 0 via `internal/platform/bgr555` for display
    colors.

@@ -23,6 +23,8 @@ coverage.out
 *.test
 /ff6lab
 /ff6lab.exe
+/ff6demo
+/ff6demo.exe
 
 # Local settings
 .env

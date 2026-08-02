@@ -6,7 +6,7 @@ Breadth without pretense: counts are census entries at or above each threshold (
 
 | Domain | Registered | Located | Decoded | Extracted | Implemented | Runtime verified |
 |---|---|---|---|---|---|---|
-| BATTLE | 12 | 9 | 5 | 3 | 3 | 9 |
+| BATTLE | 13 | 9 | 5 | 3 | 3 | 9 |
 | CHAR | 4 | 1 | 1 | 1 | 1 | 1 |
 | MAGIC | 9 | 4 | 2 | 1 | 0 | 3 |
 | MONSTER | 4 | 3 | 0 | 0 | 0 | 0 |
@@ -14,7 +14,7 @@ Breadth without pretense: counts are census entries at or above each threshold (
 | WORLD | 7 | 0 | 0 | 0 | 0 | 1 |
 | EVENT | 11 | 4 | 1 | 0 | 0 | 4 |
 | MENU | 7 | 2 | 1 | 0 | 0 | 1 |
-| GFX | 4 | 1 | 1 | 1 | 1 | 0 |
+| GFX | 5 | 2 | 1 | 1 | 1 | 0 |
 | AUDIO | 5 | 3 | 2 | 2 | 1 | 1 |
 | SAVE | 1 | 0 | 0 | 0 | 0 | 0 |
 | QUIRK | 2 | 0 | 0 | 0 | 0 | 1 |
@@ -27,9 +27,9 @@ Breadth without pretense: counts are census entries at or above each threshold (
 
 ## Census health
 
-- Entries with unresolved fields/formats: 38.
-- Observed but not yet located (breadth backlog): 39.
-- Runtime-only findings (seen live, no location): 28.
+- Entries with unresolved fields/formats: 40.
+- Observed but not yet located (breadth backlog): 40.
+- Runtime-only findings (seen live, no location): 29.
 - Static-only findings (located, never exercised live): 1.
 
 ## Open breadth targets (next_action of unlocated entries)
@@ -39,6 +39,7 @@ Breadth without pretense: counts are census entries at or above each threshold (
 - **CEN-BATTLE-0007** (Defeat flow ('Annihilated')): Capture the post-defeat transition (game over vs retry) in a dedicated run.
 - **CEN-BATTLE-0008** (Victory processing and reward windows (EXP/GP), battle-to-field writeback): Widen the post-victory write watch across the whole +$1600 block for all three members and correlate offsets against on-screen EXP/GP/level values.
 - **CEN-BATTLE-0009** (Multi-part enemy: Whelk shell and head as separate battle slots): Deferred behind the ATB research program: head/shell timing cannot be measured until submenu-pause and ATB semantics are modelled (see BLOCKERS.md).
+- **CEN-BATTLE-0014** (Battle HUD text layout (32x32 BG3 tilemap)): Registered from EXP-0049's tilemap decode, not investigated. Needed for DEMO-0001 readiness B17; locate the HUD compose routine when that unit starts.
 - **CEN-CHAR-0002** (Party formation and follower chain): Locate the party-composition store consumed at battle init (slot staging producers from EXP-0018 are the thread).
 - **CEN-CHAR-0003** (Field player/NPC objects (Magitek armor walker, guards, townsfolk)): OAM capture on the field state to register the sprite composition (tiles, palettes, OAM layout).
 - **CEN-CHAR-0004** (Field character-record block (~WRAM:+$1600)): Map the record stride via a second character's values; relate to the $C10DF3 copy-loop source.

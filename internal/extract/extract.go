@@ -20,12 +20,13 @@ import (
 	"sort"
 	"strings"
 
+	"github.com/bensabler/ff6-decompile/internal/assetmanifest"
 	"github.com/bensabler/ff6-decompile/internal/rom"
 )
 
 // ArchiveRoot is the ignored local root the archive is generated under,
 // relative to the repository root.
-const ArchiveRoot = "local_artifacts/archive"
+const ArchiveRoot = assetmanifest.ArchiveRoot
 
 // Categories in fixed presentation order. Categories may be registered
 // with no extractors yet; running them reports that honestly instead of
@@ -40,23 +41,10 @@ var CategoryNotes = map[string]string{
 
 // Asset is one generated file's public manifest entry. Field order is the
 // tracked JSON order; do not reorder casually.
-type Asset struct {
-	ID              string   `json:"id"`
-	Name            string   `json:"name"`
-	Category        string   `json:"category"`
-	ROMRevision     string   `json:"rom_revision"`
-	ROMSource       string   `json:"rom_source"`
-	ExtractorID     string   `json:"extractor_id"`
-	ExtractorVer    string   `json:"extractor_version"`
-	OutputPath      string   `json:"output_path"`
-	OutputFormat    string   `json:"output_format"`
-	Properties      string   `json:"properties,omitempty"`
-	SHA256          string   `json:"sha256"`
-	RuntimeConsumer string   `json:"runtime_consumer,omitempty"`
-	CensusRefs      []string `json:"census_refs,omitempty"`
-	ExperimentRefs  []string `json:"experiment_refs,omitempty"`
-	Verification    string   `json:"verification_status"`
-}
+// Asset aliases the manifest model. The type lives in
+// internal/assetmanifest so the demo can read the manifest without linking
+// ROM-reading code; extraction keeps using it under the familiar name.
+type Asset = assetmanifest.Asset
 
 // output is one file an extractor produces.
 type output struct {

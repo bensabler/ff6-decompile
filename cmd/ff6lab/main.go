@@ -74,6 +74,10 @@ func run(args []string) error {
 			return romGaps(".")
 		}
 		return fmt.Errorf("usage: ff6lab rom gaps")
+	case "addr":
+		return addrCmd(args[1:], os.Stdout)
+	case "graphics":
+		return graphicsCmd(args[1:], os.Stdout)
 	case "attackdata":
 		if len(args) > 2 && args[1] == "scan" {
 			return scanAttackTable(args[2], os.Stdout)

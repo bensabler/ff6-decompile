@@ -1,6 +1,10 @@
 package attackdata
 
-import "testing"
+import (
+	"testing"
+
+	"github.com/bensabler/ff6-decompile/internal/platform/snesaddr"
+)
 
 // Synthetic fixture only — no ROM bytes.
 func syntheticRecord() []byte {
@@ -66,4 +70,22 @@ func FuzzDecode(f *testing.F) {
 		}
 		_ = r
 	})
+}
+
+// TestTableAddressesAgree checks the CPU address and the file offset name the
+// same bytes. Two hand-written records of one fact are exactly the shape of
+// error that put the HUD font extractor on the wrong ROM range for three days
+// (DEMO-0001 deviation D1); this asserts them against the mapping.
+func TestTableAddressesAgree(t *testing.T) {
+	off, win, err := snesaddr.ROMFile(TableCPUAddr)
+	if err != nil {
+		t.Fatalf("ROMFile(ROMCPU:$%06X): %v", TableCPUAddr, err)
+	}
+	if off != TableFileOffset {
+		t.Errorf("ROMCPU:$%06X maps to ROMFILE:0x%06X, but TableFileOffset is ROMFILE:0x%06X",
+			TableCPUAddr, off, TableFileOffset)
+	}
+	if !win.Confirmed() {
+		t.Errorf("attack table resolves through %v, which carries no FF6 runtime evidence", win)
+	}
 }

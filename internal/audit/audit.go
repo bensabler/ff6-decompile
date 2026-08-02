@@ -39,6 +39,8 @@ func Run(root string) ([]Finding, error) {
 		CheckMarkdownLinks,
 		CheckRestrictedTracked,
 		CheckRequiredTracked,
+		CheckImportBoundaries,
+		CheckTrackedBinaries,
 	} {
 		fs, err := fn(root)
 		if err != nil {
@@ -287,6 +289,15 @@ func CheckMarkdownLinks(root string) ([]Finding, error) {
 
 var restrictedExt = regexp.MustCompile(`(?i)\.(sfc|smc|fig|spc|srm|sav|state[0-9]*|mss|wav|flac|mp3|ogg)$`)
 
+// renderedExt covers formats that carry decoded commercial graphics or audio.
+// The demo renders ROM-derived frames, so these became reachable the moment
+// `ff6demo -capture-last` existed; nothing in the repository tracks one
+// today, which is exactly when a guard is cheap to add.
+//
+// Frame hashes and glyph hashes are tracked instead — they are verifiable
+// without reproducing the bytes (docs/legal/ASSET_POLICY.md).
+var renderedExt = regexp.MustCompile(`(?i)\.(png|bmp|gif|jpe?g|tiff?|pcm|brr)$`)
+
 // CheckRestrictedTracked scans the git index for restricted file types.
 func CheckRestrictedTracked(root string) ([]Finding, error) {
 	files, err := gitLsFiles(root)
@@ -295,8 +306,12 @@ func CheckRestrictedTracked(root string) ([]Finding, error) {
 	}
 	var fs []Finding
 	for _, f := range files {
-		if restrictedExt.MatchString(f) {
+		switch {
+		case restrictedExt.MatchString(f):
 			fs = append(fs, Finding{"restricted", "tracked restricted file: " + f})
+		case renderedExt.MatchString(f):
+			fs = append(fs, Finding{"restricted", "tracked rendered asset: " + f +
+				" — decoded graphics and audio stay in local_artifacts/; track hashes instead (docs/legal/ASSET_POLICY.md)"})
 		}
 	}
 	return fs, nil
@@ -306,6 +321,7 @@ func CheckRestrictedTracked(root string) ([]Finding, error) {
 // clean clone (the .gitignore collision class of defect).
 var RequiredTracked = []string{
 	"cmd/ff6lab/main.go",
+	"cmd/ff6demo/main.go",
 	"local_artifacts/README.md",
 	"go.mod",
 	"CLAUDE.md",
