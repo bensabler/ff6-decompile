@@ -30,18 +30,29 @@ systems already Confirmed and partly in Go.
 3. **Field/event vertical** — gated behind research into the map system,
    the dialogue corpus, and the event opcode table.
 
-Readiness at program start: **0 of 53 requirements Integrated** — 5
+Readiness at program start was **0 of 53 requirements Integrated** — 5
 Implemented, 7 Evidence Ready, 2 Extractor Ready, 3 Researching, 2
 Blocked, 1 Deferred, **33 Unknown**. ROM ownership 0.49 %.
 
-**Defect found at program start (D1, parity-blocking):** the `hud-font`
-extractor reads `ROMFILE:0x046FC0` as a block start, but that address is
-only the arithmetic anchor for tile index 0. The real block is
-`ROMFILE:0x047FB0-0x048FBF`, which `manifests/rom-regions.json` ROM-0016
-already records correctly — so the manifest and the extractor contradict
-each other. **255 of 257 tiles in the shipped `hud-font-sheet.png` are
-attack-table bytes rendered as tiles.** Verified by decoding the tracked
-EXP-0023 dump.
+After units 0–7: **7 Integrated, 1 Validated, 10 Implemented**, 25
+Unknown. Every Integrated row is engine or text plumbing — no Field or
+Audio row has moved. The demo has a spine, not yet a game.
+
+**Defect D1 (parity-blocking) — found at program start, fixed in Unit 1.**
+The `hud-font` extractor read `ROMFILE:0x046FC0` as a block start, but
+that address is only the back-projected anchor for VRAM tile `$000`. The
+real block is `ROMFILE:0x047FB0-0x048FBF`, which
+`manifests/rom-regions.json` ROM-0016 recorded correctly the whole time —
+the extractor and the ledger were two records of one fact that disagreed,
+and nothing compared them. **255 of 257 tiles in the shipped
+`hud-font-sheet.png` were attack-table bytes rendered as tiles**, from
+2026-07-30 until 2026-08-02.
+
+Now asserted two ways: `TestHUDFontMatchesROMLedger` compares the
+extractor's span to ROM-0016 with no ROM needed, and a skip-guarded
+archive-vs-ROM differential compares all 256 glyphs. The general lesson is
+recorded in `ARCHITECTURE.md`: a hand-computed offset needs something that
+asserts it against its other record.
 
 ## Golden route — power-on through milestone 05
 
@@ -246,13 +257,26 @@ The **immediate predecessor is unresolved**.
 
 ## Next exact action
 
-**DEMO-0001 Unit 1 — correct the HUD font extractor's ROM range**
-(`ROMFILE:0x046FC0` → `0x047FB0`), regenerate the archive, and
-synchronize GFX-0001 / EXP-0023 / CEN-GFX-0001 with ROM-0016. Nothing
-visual can be built on that asset until it lands. Then Unit 2
-(`internal/platform/snesaddr`), Unit 3 (EXP-0049 glyph mapping), Unit 4
-(engine core), Unit 5 (headless `cmd/ff6demo`), Unit 6 (Ebitengine host
-+ ADR-0001).
+**DEMO-0001 Unit 8 — decode formations and monster records into Go.**
+Both tables are already in the archive and both formats are Confirmed
+(EXP-0028/0029/0030): `formations.bin` (`ROMCPU:$CF6200` + 15×id,
+verified against seven encounters) and `monsters.bin` (`ROMCPU:$CF0000`,
+32-byte stride, `+$08` HP / `+$0A` MP / `+$01` power). New package
+`internal/content/battledata`, read through the archive — the import
+boundary forbids touching the ROM. Targets readiness rows B7 and B8.
+
+Then Unit 9: a battle HUD scene consuming the font, the ATB layer, and
+those tables — the first player-visible battle screen.
+
+**Units 0–7 are complete** (branch `demo/new-game-to-whelk`, 8 commits,
+worktree clean, not pushed). DEMO-0001A is done: the demo runs windowed
+and headless and renders real extracted FF6 data. Readiness moved from
+0 Integrated to 7 Integrated + 1 Validated + 10 Implemented.
+
+Carrying forward: the `hud-font` extractor had been reading the wrong ROM
+range since 2026-07-30 (255 of 257 tiles were attack-table bytes), which
+ROM-0016 had recorded correctly the whole time — fixed, and now asserted.
+EXP-0049 closed the glyph mapping the census carried as Unknown.
 
 ### Research actions, now sequenced behind the demo's critical path
 
