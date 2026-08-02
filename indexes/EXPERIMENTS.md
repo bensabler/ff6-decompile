@@ -52,3 +52,4 @@
 | EXP-0046 | action-queue-execution-path | completed | see record | [EXP-0046-action-queue-execution-path](../docs/experiments/EXP-0046-action-queue-execution-path.md) |
 | EXP-0047 | execution-path-invocation | completed | see record | [EXP-0047-execution-path-invocation](../docs/experiments/EXP-0047-execution-path-invocation.md) |
 | EXP-0049 | hud-font-glyph-mapping | completed | see record | [EXP-0049-hud-font-glyph-mapping](../docs/experiments/EXP-0049-hud-font-glyph-mapping.md) |
+| EXP-0050 | vram-rom-provenance-sweep | completed | see record | [EXP-0050-vram-rom-provenance-sweep](../docs/experiments/EXP-0050-vram-rom-provenance-sweep.md) |

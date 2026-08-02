@@ -957,6 +957,24 @@
       "falsifying_outcome": "Any byte whose tile does not render the character textenc names; a tilemap decoding to non-text; referenced tiles outside $180-$1FF; or a glyph needing an offset other than $100.",
       "status": "completed",
       "record": "docs/experiments/EXP-0049-hud-font-glyph-mapping.md"
+    },
+    {
+      "schema_version": "1.0",
+      "id": "EXP-0050",
+      "domain": "graphics",
+      "question": "Which captured VRAM regions are verbatim ROM copies, and does a compression format really gate all map and battle graphics?",
+      "starting_state": {
+        "emulator": "none - static analysis of preserved SCN-0001 savestates and the ROM; no emulator was run",
+        "rom_sha256": "0f51b4fca41b7fd509e4b8f9d543151f68efa5e97b08493e4b2a0c06f5d8d5e2",
+        "state": "local_artifacts/scenarios/SCN-0001/*/run1-*.mss, frozen and covered by each directory's hashes.sha256"
+      },
+      "expected_outcomes": [
+        "If FF6 stores map tile graphics compressed, a field scene's BG tile region shows no long verbatim runs.",
+        "If it stores them uncompressed, the tile region maps to a small number of long contiguous ROM spans."
+      ],
+      "falsifying_outcome": "For the uncompressed reading, any field scene whose BG1/BG2 tile region fails to map to contiguous ROM spans; for the compressed reading, any long contiguous span at all.",
+      "status": "completed",
+      "record": "docs/experiments/EXP-0050-vram-rom-provenance-sweep.md"
     }
   ]
 }

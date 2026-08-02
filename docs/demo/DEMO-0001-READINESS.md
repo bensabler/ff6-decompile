@@ -2,7 +2,7 @@
 
 - **Milestone:** [DEMO-0001](DEMO-0001-new-game-to-whelk.md)
 - **Route view:** [DEMO-0001-CONTENT-MATRIX.md](DEMO-0001-CONTENT-MATRIX.md)
-- **Updated:** 2026-08-02 (Unit 11 — palette correctness)
+- **Updated:** 2026-08-02 (Unit 13 — EXP-0050 VRAM provenance sweep)
 
 Every player-visible requirement of the acceptance run appears here exactly
 once. This file is the demo's critical-path instrument: unit selection reads it,
@@ -75,8 +75,8 @@ retired that deviation; see DEVIATIONS D1.
 | B12 | Enemy AI | Monster AI | — | AI script format and location unlocated | — | — | — | — | `Unknown` | research unit not yet scheduled |
 | B13 | Whelk head/shell behavior | Boss AI | EXP-0039/0040: formation 432; shell slot 4 = 50000 HP, head slot 5 = 1600 HP; head-only targeting works (6 hits, 162–186 dmg); shell counterattack observed | Whelk's monster ids (still blocked on the extension, though Unit 8 refuted the leading-word candidate); natural head/shell timing (EXP-0040 evidence is operator-contaminated) | — | — | — | B7, B8, B12 | `Blocked` | remaining candidates: trailing bytes `+$08..+$0E`, the `$CF5900` flags table, or the loader's X-computation |
 | B14 | Battle backgrounds | Battle graphics | CEN-GFX-0003 `OBSERVED` | ROM location, format | — | — | — | — | `Unknown` | research unit not yet scheduled |
-| B15 | Enemy graphics incl. Whelk | Battle graphics | CEN-MONSTER-0003 `OBSERVED` (green guard only) | ROM location, format, compression | — | — | — | compression | `Unknown` | research unit not yet scheduled |
-| B16 | Party battle sprites | Battle graphics | — | ROM location, format | — | — | — | compression | `Unknown` | research unit not yet scheduled |
+| B15 | Enemy graphics incl. Whelk | Battle graphics | CEN-MONSTER-0003 `OBSERVED` (green guard only); **EXP-0050**: the battle scene's sprite regions `VRAM:$6180-$7829` map to short verbatim runs in banks `$D8`/`$E9`, so at least part is uncompressed | which runs are enemy vs party; the record that selects them; the unmatched remainder | — | — | — | — | `Unknown` | sweep `ff6lab state origin` over a battle state and separate the two sprite families |
+| B16 | Party battle sprites | Battle graphics | **EXP-0050**: same short verbatim runs in banks `$D8`/`$E9` as B15 | which runs are the party side | — | — | — | — | `Unknown` | see B15 |
 | B17 | Battle HUD (names, HP, gauges, damage numerals) | Battle UI | HUD font + glyph mapping Confirmed; EXP-0049 decoded the layout (CEN-BATTLE-0014) and identified the five gauge tiles (CEN-GFX-0005) | the compose routine; per-field cell addresses; gauge fill quantisation (**D5**); damage numerals; **party side (D4)** | — | `internal/game/scenes.Battle` | enemy rows, HP and live gauges render from extracted data using the identified tiles | T1, T3, B4 | `Integrated` (enemy side) | party side needs F14 |
 | B18 | Victory detection, rewards, battle exit | Battle flow | EXP-0033: battle 1 gives 32 EXP / 96 GP; writeback `ROMCPU:$C2496E`/`$C24979` → `WRAM:+$1609`/`+$160D` | reward field layout in monster records | — | — | — | B8 | `Evidence Ready` | Unit 8+ |
 | B19 | Action animations and effects | Battle graphics | — | everything: attack/spell/damage effect graphics, frame tables, timing | — | — | — | compression | `Unknown` | research unit not yet scheduled |
@@ -85,12 +85,12 @@ retired that deviation; see DEVIATIONS D1.
 
 | # | Requirement | Subsystem | Known evidence | Missing evidence | Asset / data | Go integration point | Validation | Depends on | Status | Next action |
 |---|---|---|---|---|---|---|---|---|---|---|
-| F1 | Map headers, tilesets, tilemaps | Map system | **none** | everything: location, structure, format, compression | — | — | — | compression | `Unknown` | research unit — blocks B06, B08–B13, B16 |
+| F1 | Map headers, tilesets, tilemaps | Map system | **EXP-0050**: the BG tile data for milestones 02/04/05 is in the ROM **uncompressed**, in contiguous spans. Narshe exterior: `ROMFILE:0x208460` (8192 B), `0x223000` (8192 B), `0x224F00` (4096 B), plus ~18 short runs of 128-171 B from bank `$E6`. `0x208460` and `0x223000` are **shared with the mines interior** | the map **header** that selects these blocks; the tilemap/layout source (not verbatim in ROM); which VRAM spans are tiles vs tilemap | — | — | — | — | `Located` | follow the located spans to the header that selects them — this row previously had no anchor at all |
 | F2 | Map palettes | Map system | `bgr555.Decode` implemented | palette table location, bank selection | — | — | — | F1 | `Unknown` | research unit not yet scheduled |
 | F3 | Collision, map boundaries, exits | Field engine | player tile bytes `WRAM:+$00AF`/`+$00B0` (EXP-0035, CEN-WORLD-0007, strong hypothesis) | collision data location and lookup | — | — | — | F1 | `Unknown` | research unit not yet scheduled |
 | F4 | Player/NPC movement, directional animation | Field engine | route traversal reproducible (EXP-0036) | movement routine, sprite format, animation timing | — | — | — | F1, F6 | `Unknown` | research unit not yet scheduled |
 | F5 | Camera / scrolling | Field engine | CEN-QUIRK-0002: HDMA/PPU-phase nondeterminism at milestone 01 | scroll registers driver | — | — | — | F1 | `Unknown` | research unit not yet scheduled |
-| F6 | Field sprites, walking frames | Field graphics | CEN-GFX-0002 `OBSERVED`, no OAM capture | ROM location, format, OAM layout | — | — | — | compression | `Unknown` | research unit not yet scheduled |
+| F6 | Field sprites, walking frames | Field graphics | CEN-GFX-0002 `OBSERVED`. **OAM has never been read** from any capture, though every savestate carries it and `ff6lab state oam` now reaches it (CEN-GFX-0008) | ROM location, format, OAM layout | — | — | — | — | `Unknown` | read OAM from milestone 04 and correlate entries with on-screen actors — the cheapest unstarted graphics unit |
 | F7 | Map transitions | Map system | milestone 05 reproducible 3× byte-identical | header/tileset load path unlocated; `+$1EA5` lead **refuted** (CONTRA-0002) | — | — | — | F1 | `Unknown` | research unit — queued P0 #6 |
 | F8 | Event interpreter (command subset) | Event system | CORR-0001: `ROMCPU:$C09B5C` advances 24-bit `WRAM:+$00E5..+$00E7` by `A & $FF`, Confirmed 24/24; `+$00E3` per-frame wait | value never observed dereferenced; **dispatch predecessor unresolved**; opcode table `ROMCPU:$C098C4` static-only | — | — | — | — | `Researching` | CORR-0002 at `ROMCPU:$C09B59` |
 | F9 | Event flags | Event system | DISC-0008: three arrays, decoder `ROMCPU:$C0BAED`, masks `$C0BAFC`/`$C0BB04`; opening touches exactly 20 flags | flag *meanings* deliberately unassigned; 4 further array bases static-only | `data/scenarios/opening-event-flags.json` | `internal/game/eventflags` | existing tests | — | `Implemented` | wire into progression |
@@ -116,7 +116,7 @@ retired that deviation; see DEVIATIONS D1.
 
 | # | Requirement | Known evidence | Missing evidence | Status | Next action |
 |---|---|---|---|---|---|
-| X1 | FF6 compression format | **none** — never investigated, zero records, zero code | identification, algorithm, decompressor | `Unknown` | **Highest-leverage unscheduled research.** Gates F1, F6, B14, B15, B16 |
+| X1 | FF6 compression format | **EXP-0050 re-scoped this row.** A verbatim search against preserved VRAM finds 47-52 % of a field scene's VRAM present in the ROM uncompressed, including all three contiguous BG tile blocks (20 KB). Battle 38 %; Mode 7 opening 0 % | what accounts for the unmatched 48-62 %, and whether **any** of it is compressed. A verbatim search is also defeated by bit-plane reordering, runtime composition and tilemaps built in WRAM, so "not matched" is not "compressed" | `Unknown` | **No longer a blanket gate.** It does not gate the map tile graphics on this route at all. Re-derive which rows it really gates before scheduling it |
 | X2 | Reproducible one-command asset generation | `ff6lab extract all` + `archive verify` 8/8 | dialogue/maps/animations/scripts categories are empty | `Extractor Ready` | extend per family as formats land |
 | X3 | Whelk victory observed at all | **never achieved.** EXP-0040 lost twice; ATB blocker since discharged | a completed Branch-A run | `Blocked` | re-run with the ATB model in hand |
 | X4 | Scene transition effects (fades, battle-entry wipes) | **none** — named by the route, owned by no other row until now | which effects the route uses, their driver, their timing | `Unknown` | research unit not yet scheduled |

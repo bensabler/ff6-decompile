@@ -8,6 +8,9 @@ import (
 	"strings"
 
 	"github.com/bensabler/ff6-decompile/internal/mesenstate"
+	"github.com/bensabler/ff6-decompile/internal/platform/snesaddr"
+	"github.com/bensabler/ff6-decompile/internal/rom"
+	"github.com/bensabler/ff6-decompile/internal/romorigin"
 )
 
 const stateRegions = `wram|sram|vram|cgram|oam|aram`
@@ -17,7 +20,8 @@ const stateUsage = `usage:
   ff6lab state ppu <file.mss>
   ff6lab state ` + stateRegions + ` <file.mss> [-o <out.bin>]
   ff6lab state read <file.mss> ` + stateRegions + ` <hexaddr> <length>
-  ff6lab state diff <a.mss> <b.mss> [` + stateRegions + `]`
+  ff6lab state diff <a.mss> <b.mss> [` + stateRegions + `]
+  ff6lab state origin <file.mss> [` + stateRegions + `] [-rom <path>]`
 
 // runState reads emulated memory out of preserved Mesen savestates so
 // earlier captures can be re-examined without an emulator.
@@ -30,6 +34,19 @@ func runState(args []string, out io.Writer) error {
 		return stateList(args[1], out)
 	case "ppu":
 		return statePPU(args[1], out)
+	case "origin":
+		romPath, _, rest, err := parseROMFlag(args[1:])
+		if err != nil {
+			return err
+		}
+		if len(rest) < 1 || len(rest) > 2 {
+			return fmt.Errorf("%s", stateUsage)
+		}
+		name := "vram"
+		if len(rest) == 2 {
+			name = rest[1]
+		}
+		return stateOrigin(rest[0], name, romPath, out)
 	case "wram", "sram", "vram", "cgram", "oam", "aram":
 		rest, dest := takeOutputFlag(args[2:])
 		if len(rest) != 0 {
@@ -170,6 +187,54 @@ func statePPU(path string, out io.Writer) error {
 		fmt.Fprintf(out, "%d   $21%02X   %d     $%06X      %5d  %s\n",
 			c.Index, c.DestAddress, c.TransferMode, c.FullSource(), c.TransferSize, target)
 	}
+	return nil
+}
+
+// stateOrigin traces a captured memory image back to the ROM spans it was
+// copied from, and reports what fraction did not come from the ROM verbatim.
+//
+// That fraction is the useful number. A region that maps to contiguous ROM
+// needs a slice, not a decompressor. A region that does not was transformed
+// on the way — by compression, by runtime composition, or by generation — and
+// only then is a format question open.
+func stateOrigin(path, name, romPath string, out io.Writer) error {
+	st, err := mesenstate.Open(path)
+	if err != nil {
+		return err
+	}
+	img, prefix, err := region(st, name)
+	if err != nil {
+		return err
+	}
+	r, err := loadROM(romPath)
+	if err != nil {
+		return err
+	}
+	romImage, err := r.Slice(0, rom.Size)
+	if err != nil {
+		return err
+	}
+
+	blocks := romorigin.Merge(romorigin.Trace(img, romImage, romorigin.DefaultOptions()))
+
+	fmt.Fprintf(out, "%s: %d bytes, ROM revision %s\n\n", strings.ToUpper(name), len(img), r.SHA256()[:16])
+	fmt.Fprintf(out, "%-21s %-10s %-10s %8s\n", "image", "ROMFILE", "ROMCPU", "length")
+	for _, b := range blocks {
+		cpu, err := snesaddr.ROMCPU(b.ROMOffset)
+		cpuStr := "—"
+		if err == nil {
+			cpuStr = fmt.Sprintf("$%06X", cpu)
+		}
+		fmt.Fprintf(out, "%s%04X-%s%04X 0x%06X   %-10s %8d\n",
+			prefix, b.ImageOffset, prefix, b.ImageOffset+b.Length-1, b.ROMOffset, cpuStr, b.Length)
+	}
+
+	cov := romorigin.Coverage(blocks)
+	fmt.Fprintf(out, "\n%d of %d bytes (%d%%) are verbatim ROM copies in %d spans.\n",
+		cov, len(img), cov*100/max(len(img), 1), len(blocks))
+	fmt.Fprintln(out, "The remainder is NOT evidence of compression. It rules out verbatim")
+	fmt.Fprintln(out, "copying and nothing more: bit-plane reordering, runtime composition or")
+	fmt.Fprintln(out, "a single changed byte all defeat this search. Treat it as a lead.")
 	return nil
 }
 
