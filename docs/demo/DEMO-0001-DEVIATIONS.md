@@ -26,7 +26,12 @@ Rules:
 
 ## Open
 
-_None._
+| ID | Severity | Deviation | Introduced | Exact replacement requirement | Status |
+|---|---|---|---|---|---|
+| D2 | `Cosmetic` | The battle scene labels enemies by **monster record id** ("MONSTER 19") instead of by name. The monster name table is unlocated (readiness B9), so no name is extractable | 2026-08-02, Unit 9 | Locate the monster name table, add an extractor, and render the extracted names. Until then the label must stay obviously non-diegetic — an invented FF6-sounding name would be indistinguishable from recovered data, which is the exact failure this register exists to prevent | **Open** |
+| D3 | `Structural` | Enemy ATB increments use the constant `$9C` that EXP-0043 **measured** for formation 14's enemies, rather than a computed value. `ROMCPU:$C209F0` is only partly decoded — it reads per-slot Speed and adds `$14` before an enemy-only multiply by `+$3A90` | 2026-08-02, Unit 9 | Decode `ROMCPU:$C209F0` fully and compute the increment from the monster record's Speed field and the sampled `+$3A90`. `internal/game/atb` already takes increments as an input for this reason, so the replacement is local to the scene | **Open** |
+| D4 | `Structural` | The battle scene renders **no party side**. Character initialisation is unlocated (readiness F14), so there is no table to read party names, HP, or MP from; EXP-0040's party HP values are observations of one playthrough, not a data source | 2026-08-02, Unit 9 | Locate the new-game character initialisation and the party record layout, then render slots 0-3 from extracted data. The scene states "PARTY SIDE NOT IMPLEMENTED / NO CHARACTER DATA SOURCE" on screen rather than drawing invented rows | **Open** |
+| D5 | `Cosmetic` | Gauge fill quantisation is a **reading of two samples**, not a decoded rule. EXP-0049 saw a full bar and a nearly empty one, from which "filled cells use `$F8`, the boundary cell uses `$F1`, the rest `$F0`" is inferred | 2026-08-02, Unit 9 | Capture intermediate gauge states and decode how the engine picks a segment tile. CEN-GFX-0005 carries the open question | **Open** |
 
 ## Retired
 

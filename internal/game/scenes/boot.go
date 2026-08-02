@@ -23,6 +23,8 @@ import (
 // glyphs, and says plainly what is not implemented.
 type Boot struct {
 	font    *content.Font
+	tables  *content.BattleTables
+	battle  int
 	frame   uint64
 	cursorX int
 	cursorY int
@@ -32,6 +34,13 @@ type Boot struct {
 // NewBoot returns the boot scene.
 func NewBoot(font *content.Font) *Boot {
 	return &Boot{font: font, cursorX: 8, cursorY: 152}
+}
+
+// WithBattle lets A push a battle scene for the given formation. Without it
+// the boot scene stands alone, so a missing battle table is not fatal.
+func (b *Boot) WithBattle(tables *content.BattleTables, formationID int) *Boot {
+	b.tables, b.battle = tables, formationID
+	return b
 }
 
 func (b *Boot) Update(ctx *engine.Context) {
@@ -46,6 +55,11 @@ func (b *Boot) Update(ctx *engine.Context) {
 
 	if ctx.Input.JustPressed(snespad.A) {
 		b.pressed++
+		if b.tables != nil {
+			if sc, err := NewBattle(b.font, b.tables, b.battle); err == nil {
+				ctx.Stack.Push(sc)
+			}
+		}
 	}
 	// Start exits, which is how the headless host learns a run finished
 	// rather than merely timing out.
@@ -89,7 +103,11 @@ func (b *Boot) Draw(dst *framebuf.Indexed, _ *framebuf.Palette) {
 	line(fmt.Sprintf("FRAME %d", b.frame), gray)
 	line(fmt.Sprintf("A PRESSED %d", b.pressed), gray)
 	y += 4
-	line("DPAD MOVES  START EXITS", gray)
+	if b.tables != nil {
+		line("A BATTLE  DPAD MOVES  START EXIT", gray)
+	} else {
+		line("DPAD MOVES  START EXITS", gray)
+	}
 
 	// The cursor the d-pad drives.
 	dst.Rect(b.cursorX, b.cursorY, 8, 8, white)

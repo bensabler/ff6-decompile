@@ -56,6 +56,7 @@ func run(args []string) error {
 		archiveRoot  = fs.String("archive", "", "repository root holding the generated archive")
 		script       = fs.String("input", "", "headless: scripted input, e.g. 'A@10,Right@20-40'")
 		printHashes  = fs.Bool("hashes", false, "headless: print per-frame framebuffer hashes")
+		formationID  = fs.Int("formation", 44, "formation id the battle scene shows (A opens it)")
 	)
 	if err := fs.Parse(args); err != nil {
 		return err
@@ -78,13 +79,22 @@ func run(args []string) error {
 		}
 	}
 
-	m := engine.New(src, nil, scenes.NewBoot(font))
+	// The battle tables are optional: a demo that cannot open a battle is
+	// still a demo, and a missing table should not stop it launching.
+	boot := scenes.NewBoot(font)
+	if tables, err := content.LoadBattleTables(archive); err == nil {
+		boot = boot.WithBattle(tables, *formationID)
+	} else {
+		fmt.Fprintln(os.Stderr, "ff6demo: battle scene unavailable:", err)
+	}
+
+	m := engine.New(src, nil, boot)
 
 	if !*headlessMode {
 		// A live keyboard is not reproducible, so the windowed host supplies
 		// its own Source unless a script was given explicitly.
 		if *script == "" {
-			m = engine.New(windowedInput(), nil, scenes.NewBoot(font))
+			m = engine.New(windowedInput(), nil, boot)
 		}
 		return runWindowed(m)
 	}

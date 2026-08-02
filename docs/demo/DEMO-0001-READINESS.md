@@ -1,7 +1,7 @@
 # DEMO-0001 readiness matrix
 
 - **Milestone:** [DEMO-0001](DEMO-0001-new-game-to-whelk.md)
-- **Updated:** 2026-08-02 (Unit 8 — formation and monster decoders)
+- **Updated:** 2026-08-02 (Unit 9 — battle HUD scene)
 
 Every player-visible requirement of the acceptance run appears here exactly
 once. This file is the demo's critical-path instrument: unit selection reads it,
@@ -57,11 +57,11 @@ retired that deviation; see DEVIATIONS D1.
 | B1 | Damage / healing arithmetic | Battle formulas | DISC-0002…0006, byte-exact, golden chain test | — | — | `internal/game/battle` | existing tests + differential | — | `Implemented` | wire into a battle scene |
 | B2 | Attack/spell records | Attack data | DISC-0007: 14-byte records, `ROMCPU:$C46AC0` | 6 of 14 bytes unmapped; true table length | `raw/spells.json` | `internal/game/attackdata` | fuzz + ROM cross-check | E7 | `Implemented` | — |
 | B3 | Ten-slot battle arrays | Battle state | DISC-0001: stride `$14`, 10 slots, ~19 arrays | — | — | `internal/game/battle.BattleSlots` | existing tests | — | `Implemented` | — |
-| B4 | ATB gauges and increments | ATB | EXP-0043: gauges `WRAM:+$3AB4` stride **2**, increments `+$3AC8`, `gauge += $3AC8,X >> 1` at `ROMCPU:$C21195` | increment **formula** (`ROMCPU:$C209F0` partly decoded), readiness threshold (`$322C` undecoded), gauge reset | — | `internal/game/atb` | measured $9C→$4E advance and the observed $00B6→$0004 wrap, both reproduced; fuzz over the 16-bit add | — | `Implemented` | integrate in Unit 9 |
-| B5 | ACTIVE/WAIT behavior | ATB | EXP-0044/0045: gate `ROMCPU:$C21124`, submenu flag `WRAM:+$2F41`; pause narrower than folk model | 6 of 10 pause-matrix rows unsampled | — | `internal/game/atb.Paused`, `engine.LiveScene` | the gate is an AND of bits; gated frames freeze the tick counter with the gauges | B4 | `Implemented` | integrate in Unit 9 |
-| B6 | Battle config sampling at entry | Battle init | EXP-0041/0042: `WRAM:+$1D4D` bits, sampled once at `ROMCPU:$C22472` → `+$3A8F`/`+$3A90`; speed scales **enemy only** | whether other battle types sample differently | — | `internal/game/atb.DecodeConfig`, `SampleEntry` | decodes the two recorded fingerprints ($2A default, $25 from EXP-0047) | — | `Implemented` | integrate in Unit 9 |
-| B7 | Formations | Formation table | EXP-0030: `ROMCPU:$CF6200` + 15×id, verified 7× | `+$08..+$0E`; the monster-id extension (**`+$00/01` refuted**, Unit 8) | `raw/formations.bin` | `internal/game/battledata`, `content.LoadBattleTables` | six recorded compositions reproduced from the archive; Whelk's 15 bytes match SCN-0001 B18 | E6, E7 | `Implemented` | integrate in Unit 9 |
-| B8 | Monster stat records | Monster DB | EXP-0028/0029: `ROMCPU:$CF0000`, 32-byte stride; `+$08` HP, `+$0A` MP, `+$01` power | 20+ of 32 bytes; table length; **name table unlocated** | `raw/monsters.bin` | `internal/game/battledata`, `content.LoadBattleTables` | five live-measured stat sets (records 0/19/25/27/77) reproduced from the archive | E6, E7 | `Implemented` | integrate in Unit 9 |
+| B4 | ATB gauges and increments | ATB | EXP-0043: gauges `WRAM:+$3AB4` stride **2**, increments `+$3AC8`, `gauge += $3AC8,X >> 1` at `ROMCPU:$C21195` | increment **formula** (`ROMCPU:$C209F0` partly decoded — **D3**), readiness threshold (`$322C` undecoded), gauge reset | — | `internal/game/atb`, battle scene | measured $9C→$4E advance and the observed $00B6→$0004 wrap reproduced; gauges visibly advance in the demo | — | `Integrated` | decode the increment formula (D3) |
+| B5 | ACTIVE/WAIT behavior | ATB | EXP-0044/0045: gate `ROMCPU:$C21124`, submenu flag `WRAM:+$2F41`; pause narrower than folk model | 6 of 10 pause-matrix rows unsampled | — | `internal/game/atb.Paused`, battle scene | both halves of the matrix operable in the demo (B toggles the submenu, Y the mode) and asserted in tests | B4 | `Integrated` | sample the remaining matrix rows |
+| B6 | Battle config sampling at entry | Battle init | EXP-0041/0042: `WRAM:+$1D4D` bits, sampled once at `ROMCPU:$C22472` → `+$3A8F`/`+$3A90`; speed scales **enemy only** | whether other battle types sample differently | — | `internal/game/atb.DecodeConfig`, `SampleEntry` | decodes the two recorded fingerprints ($2A default, $25 from EXP-0047); the scene samples at construction | — | `Integrated` | — |
+| B7 | Formations | Formation table | EXP-0030: `ROMCPU:$CF6200` + 15×id, verified 7× | `+$08..+$0E`; the monster-id extension (**`+$00/01` refuted**, Unit 8) | `raw/formations.bin` | `internal/game/battledata`, battle scene | six recorded compositions reproduced; the scene places them and flags unverified records on screen | E6, E7 | `Integrated` | — |
+| B8 | Monster stat records | Monster DB | EXP-0028/0029: `ROMCPU:$CF0000`, 32-byte stride; `+$08` HP, `+$0A` MP, `+$01` power | 20+ of 32 bytes; table length; **name table unlocated (D2)** | `raw/monsters.bin` | `internal/game/battledata`, battle scene | five live-measured stat sets reproduced; HP rendered on screen from the real records | E6, E7 | `Integrated` | — |
 | B9 | Monster names | Monster DB | — | **name table unlocated** | — | — | — | — | `Unknown` | research unit (queued P0 #9) |
 | B10 | Action queue, ordering, arbitration | Battle scheduler | EXP-0046/0047: execution path periodic and ungated, ~100–120 frames | invoker unnamed (EXP-0048); queue ordering rules | — | — | — | B4 | `Researching` | EXP-0048 |
 | B11 | Command menus, target selection | Battle UI | EXP-0040: Magitek sets are character-specific (Terra 8, Wedge/Vicks 4) | command record table unlocated; Fire Beam index ambiguous | — | — | — | T1, T3 | `Unknown` | research unit not yet scheduled |
@@ -70,7 +70,7 @@ retired that deviation; see DEVIATIONS D1.
 | B14 | Battle backgrounds | Battle graphics | CEN-GFX-0003 `OBSERVED` | ROM location, format | — | — | — | — | `Unknown` | research unit not yet scheduled |
 | B15 | Enemy graphics incl. Whelk | Battle graphics | CEN-MONSTER-0003 `OBSERVED` (green guard only) | ROM location, format, compression | — | — | — | compression | `Unknown` | research unit not yet scheduled |
 | B16 | Party battle sprites | Battle graphics | — | ROM location, format | — | — | — | compression | `Unknown` | research unit not yet scheduled |
-| B17 | Battle HUD (names, HP, gauges, damage numerals) | Battle UI | HUD font + glyph mapping Confirmed; EXP-0049 decoded the layout (CEN-BATTLE-0014) and identified the five gauge tiles (CEN-GFX-0005) | the compose routine; per-field cell addresses; what drives gauge fill | — | new battle scene | frame goldens | T1, T3, B4 | `Evidence Ready` | Unit 9 |
+| B17 | Battle HUD (names, HP, gauges, damage numerals) | Battle UI | HUD font + glyph mapping Confirmed; EXP-0049 decoded the layout (CEN-BATTLE-0014) and identified the five gauge tiles (CEN-GFX-0005) | the compose routine; per-field cell addresses; gauge fill quantisation (**D5**); damage numerals; **party side (D4)** | — | `internal/game/scenes.Battle` | enemy rows, HP and live gauges render from extracted data using the identified tiles | T1, T3, B4 | `Integrated` (enemy side) | party side needs F14 |
 | B18 | Victory detection, rewards, battle exit | Battle flow | EXP-0033: battle 1 gives 32 EXP / 96 GP; writeback `ROMCPU:$C2496E`/`$C24979` → `WRAM:+$1609`/`+$160D` | reward field layout in monster records | — | — | — | B8 | `Evidence Ready` | Unit 8+ |
 
 ## Field, event, and world
@@ -114,20 +114,24 @@ retired that deviation; see DEVIATIONS D1.
 
 ## Summary at Unit 0
 
-| Status | Unit 0 | Now (Unit 8) |
+| Status | Unit 0 | Now (Unit 9) |
 |---|---|---|
 | `Validated` | 0 | **1** |
-| `Integrated` | 0 | **7** |
-| `Implemented` | 5 | 12 |
-| `Evidence Ready` | 7 | 3 |
+| `Integrated` | 0 | **13** |
+| `Implemented` | 5 | 6 |
+| `Evidence Ready` | 7 | 2 |
 | `Extractor Ready` | 2 | 1 |
 | `Researching` | 3 | 2 |
 | `Blocked` | 2 | 2 |
 | `Deferred` | 1 | 1 |
 | `Unknown` | 33 | 25 |
 
-**The demo now runs, in a window.** Units 5-6 moved the first eight rows into the executable
-and one to Validated — T1, whose archive-vs-ROM differential passes on all
+**The demo now runs a battle screen.** Unit 9 moved six Battle rows into the
+executable: real formations, real monster HP from the real records, and live
+ATB gauges drawn with the tiles EXP-0049 identified, with the ACTIVE/WAIT gate
+operable from the pad.
+
+Units 5-6 moved the first eight rows into the executable and one to Validated — T1, whose archive-vs-ROM differential passes on all
 256 glyphs.
 
 Every Integrated row is engine or text plumbing. No row of the Battle, Field,
