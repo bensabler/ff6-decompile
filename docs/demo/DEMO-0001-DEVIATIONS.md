@@ -26,13 +26,13 @@ Rules:
 
 ## Open
 
-| ID | Severity | Deviation | Introduced | Exact replacement requirement | Status |
-|---|---|---|---|---|---|
-| D1 | `Parity-blocking` | The `hud-font` extractor reads `ROMFILE:0x046FC0` as a block start, but that address is only the arithmetic anchor for tile index 0. The real 257-tile block is `ROMFILE:0x047FB0-0x048FBF` (ROM-0016). 255 of 257 tiles in `hud-font-sheet.png` are attack-table bytes rendered as tiles. `manifests/rom-regions.json` and `internal/extract/extractors.go` currently contradict each other | Pre-existing; identified 2026-08-02 during DEMO-0001 planning | Set `hudFontBase = 0x047FB0`, bump the extractor version, regenerate the archive, and add a skip-guarded differential test decoding `ROMFILE:0x047FB0` with `tile2bpp` and comparing tile-for-tile against the loaded PNG | **Open** — Unit 1 |
+_None._
 
 ## Retired
 
-_None yet._
+| ID | Severity | Deviation | Introduced | How it was retired | Retired |
+|---|---|---|---|---|---|
+| D1 | `Parity-blocking` | The `hud-font` extractor read `ROMFILE:0x046FC0` as a block start, but that address is only the arithmetic anchor for VRAM tile `$000`. The real 257-tile block is `ROMFILE:0x047FB0-0x048FBF` (ROM-0016). 255 of 257 tiles in `hud-font-sheet.png` were attack-table bytes rendered as tiles. `manifests/rom-regions.json` and `internal/extract/extractors.go` contradicted each other, and nothing compared them | Pre-existing (extractor v1.0.0, 2026-07-30); identified 2026-08-02 during DEMO-0001 planning | Extractor v2.0.0 derives `hudFontBase` from the anchor relation (`hudFontAnchor + hudFontFirstVRAMTile*16`) so the block start stays checkable rather than magic. Archive regenerated: exactly one asset changed, `archive verify` 8/8 clean, `rom_source` now `ROMFILE:0x047FB0-0x048FBF`. Regression tests `TestHUDFontMatchesROMLedger` (asserts the extractor span against ROM-0016) and `TestHUDFontAnchorRelation` (pins the affine relation) added — neither needs a ROM. GFX-0001 and CEN-GFX-0001 synchronized. Visually confirmed: the sheet now renders a legible font | 2026-08-02, Unit 1 |
 
 ## Explicitly out of scope (not deviations)
 

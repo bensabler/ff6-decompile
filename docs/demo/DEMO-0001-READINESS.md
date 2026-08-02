@@ -40,15 +40,15 @@ Status reflects the **demo**, not the research. A subsystem can be Confirmed in
 
 | # | Requirement | Subsystem | Known evidence | Missing evidence | Asset / data | Go integration point | Validation | Depends on | Status | Next action |
 |---|---|---|---|---|---|---|---|---|---|---|
-| T1 | Fixed-width font tiles | Battle HUD font | GFX-0001, EXP-0023: 257 2bpp tiles, `ROMFILE:0x047FB0-0x048FBF` (ROM-0016), uncompressed | load path (which code/DMA copies it) | `hud-font-sheet.png` | `internal/content/hudfont` | differential vs ROM decode (skip-guarded) | E6, E7 | `Extractor Ready`¹ | Unit 1 — extractor reads the wrong range |
+| T1 | Fixed-width font tiles | Battle HUD font | GFX-0001, EXP-0023: 257 2bpp tiles, `ROMFILE:0x047FB0-0x048FBF` (ROM-0016), uncompressed | load path (which code/DMA copies it) | `hud-font-sheet.png` | `internal/content/hudfont` | ledger-agreement tests green; differential vs ROM decode pending | E6, E7 | `Extractor Ready` | Unit 4 — consume it from the demo |
 | T2 | Glyph → character mapping | Battle HUD font | `VRAMtile = 0x100 + encodedByte`; 8 spot checks (A B Z a z 0 9 -) | bytes `$C5`–`$FD`, tiles `$FF`–`$17F` unnamed | `data/graphics/hud-font-glyphs.json` | `hudfont.Font.Glyph` | per-glyph tile hashes | T1 | `Researching` | Unit 3 (EXP-0049) |
 | T3 | Text drawing to framebuffer | — | n/a | — | — | `hudfont.Font.DrawString` | synthetic-font frame goldens | T1, E3 | `Unknown` | Unit 4 |
 | T4 | Variable-width dialogue font | Dialogue rendering | CEN-GFX-0004 `OBSERVED` only | ROM location, format, widths table | — | — | — | — | `Unknown` | research unit not yet scheduled |
 | T5 | Dialogue window / border tiles | Menu graphics | CEN-MENU-0003 `OBSERVED` | ROM location | — | — | — | — | `Unknown` | research unit not yet scheduled |
 | T6 | Menu windows, cursor | Menu graphics | EXP-0026 captured menu tilemap/CHR/CGRAM | ROM location of the tile source | — | — | — | — | `Unknown` | research unit not yet scheduled |
 
-¹ `Extractor Ready` is qualified: an extractor exists and produces a
-hash-verified asset, but it reads the wrong ROM range. See DEVIATIONS D1.
+T1 was qualified at Unit 0 (the extractor read the wrong ROM range). Unit 1
+retired that deviation; see DEVIATIONS D1.
 
 ## Battle
 

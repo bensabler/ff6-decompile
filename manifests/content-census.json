@@ -1346,7 +1346,7 @@
       "domain": "GFX",
       "category": "fonts",
       "name": "Battle HUD fixed 8x8 text tile block",
-      "description": "257-tile 2bpp block, raw ROM copy; all HUD-referenced tiles inside; glyph semantics unassigned.",
+      "description": "257-tile 2bpp block, raw ROM copy at ROMFILE:0x047FB0-0x048FBF (block index i = VRAM tile $FF+i); all HUD-referenced tiles inside; glyph semantics unassigned.",
       "reconstruction_status": "REGRESSION_TESTED",
       "runtime_status": "OUTPUTS_CAPTURED",
       "rom_revision": "0f51b4fca41b7fd509e4b8f9d543151f68efa5e97b08493e4b2a0c06f5d8d5e2",
@@ -1368,10 +1368,13 @@
       "related_discoveries": [],
       "related_implementations": [
         "internal/graphics/tile2bpp",
-        "ff6lab tiles decode2bpp"
+        "ff6lab tiles decode2bpp",
+        "internal/extract hud-font extractor v2.0.0"
       ],
       "related_tests": [
-        "tile2bpp synthetic vectors + fuzz"
+        "tile2bpp synthetic vectors + fuzz",
+        "internal/extract.TestHUDFontMatchesROMLedger",
+        "internal/extract.TestHUDFontAnchorRelation"
       ],
       "runtime_scenarios": [
         "mesen/out/exp10-battle.mss"
@@ -1387,7 +1390,7 @@
       ],
       "contradictions": [],
       "next_action": "Trace the ROM->VRAM load path (DMA watch at battle entry); name glyphs empirically.",
-      "notes": ""
+      "notes": "2026-08-02 (DEMO-0001 D1): the hud-font extractor had been reading 257 tiles from the back-projected anchor ROMFILE:0x046FC0 rather than the block start 0x047FB0, so 255 of 257 archived tiles were attack-table bytes. ROM-0016 recorded the correct span throughout; nothing compared the extractor to the ledger. Fixed in extractor v2.0.0 and now asserted by TestHUDFontMatchesROMLedger."
     },
     {
       "schema_version": "1.0",

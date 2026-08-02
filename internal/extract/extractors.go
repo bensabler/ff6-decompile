@@ -36,9 +36,22 @@ const (
 	esperNameCount  = 27
 
 	// hudFontBase: battle HUD 2bpp tile block, raw copy of VRAM tiles
-	// $FF-$1FF (EXP-0023 / GFX-0001).
-	hudFontBase  = 0x046FC0
-	hudFontTiles = 257
+	// $FF-$1FF (EXP-0023 / GFX-0001, ledger region ROM-0016).
+	//
+	// GFX-0001 states the provenance as the affine relation
+	// "ROMFILE:0x046FC0 + 16*tileindex", where tileindex is the *VRAM* tile
+	// number. 0x046FC0 is therefore the back-projected anchor for VRAM tile
+	// $000 and is NOT the start of the block: it lands inside the attack-data
+	// region (spellDataBase = 0x046AC0), with which the font shares no bytes.
+	//
+	// The block starts at the first tile that actually exists in the copy,
+	// VRAM $FF: 0x046FC0 + 16*0xFF = 0x047FB0. Reading from the anchor instead
+	// emits 255 tiles of attack-table bytes (DEMO-0001 deviation D1, fixed
+	// 2026-08-02). hudFontFirstVRAMTile keeps the relation checkable.
+	hudFontAnchor        = 0x046FC0
+	hudFontFirstVRAMTile = 0xFF
+	hudFontBase          = hudFontAnchor + hudFontFirstVRAMTile*tile2bpp.EncodedSize // 0x047FB0
+	hudFontTiles         = 257
 
 	// sfxPackBase: 288 bytes byte-identical to ARAM $4800-$491F, samples
 	// 0-7; sample 5 (the battle confirm cue) starts at 0x051FA1
@@ -232,7 +245,10 @@ type hudFontExtractor struct{}
 
 func (hudFontExtractor) ID() string       { return "hud-font" }
 func (hudFontExtractor) Category() string { return "graphics" }
-func (hudFontExtractor) Version() string  { return "1.0.0" }
+
+// Version 2.0.0: corrected the source range from the back-projected anchor
+// 0x046FC0 to the true block start 0x047FB0 (DEMO-0001 deviation D1).
+func (hudFontExtractor) Version() string { return "2.0.0" }
 
 // hudPalette is the live BG-2bpp palette 0 recorded in EXP-0023
 // (BGR555 $0000, $0000, $5294, $7FFF). Index 0 is rendered transparent.
@@ -277,9 +293,9 @@ func (e hudFontExtractor) Extract(r *rom.ROM) ([]output, error) {
 			ROMSource:   romSource(hudFontBase, hudFontTiles*tile2bpp.EncodedSize),
 			ExtractorID: e.ID(), ExtractorVer: e.Version(),
 			OutputPath: p, OutputFormat: "image/png",
-			Properties: fmt.Sprintf("%dx%d px; %d tiles of 8x8; 2bpp planar; palette BGR555 0000/0000/5294/7FFF (index 0 transparent)",
-				cols*8, rows*8, hudFontTiles),
-			SHA256: hashBytes(data), RuntimeConsumer: "battle HUD BG3 text layer (VRAM tiles $FF-$1FF)",
+			Properties: fmt.Sprintf("%dx%d px; %d tiles of 8x8; 2bpp planar; palette BGR555 0000/0000/5294/7FFF (index 0 transparent); sheet index i = VRAM tile $%03X+i, row-major in %d columns",
+				cols*8, rows*8, hudFontTiles, hudFontFirstVRAMTile, cols),
+			SHA256: hashBytes(data), RuntimeConsumer: "battle HUD BG3 text layer (VRAM tiles $FF-$1FF); sheet index 0 = VRAM tile $FF",
 			CensusRefs: []string{"CEN-GFX-0001"}, ExperimentRefs: []string{"EXP-0023"},
 			Verification: "hash-verified against tracked manifest; ROM block proven byte-identical to live VRAM in EXP-0023",
 		},
