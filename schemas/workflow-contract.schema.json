@@ -1,0 +1,161 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://github.com/bensabler/ff6-decompile/schemas/workflow-contract.schema.json",
+  "title": "Workflow execution contract",
+  "description": "The frozen plan for one workflow run (AUDIT-0002 remediation R12). Declares, before work begins, which resources a workflow requires and what evidence would prove each ran. After freezing, a requirement may not be weakened, removed, or reclassified; changes require an amendment that preserves the original.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "workflow_id",
+    "workflow",
+    "scope",
+    "state",
+    "requirements",
+    "stopping_conditions"
+  ],
+  "properties": {
+    "schema_version": { "const": "1.0" },
+    "workflow_id": {
+      "type": "string",
+      "pattern": "^WF-[0-9]{4}$",
+      "description": "Stable per-run identifier."
+    },
+    "workflow": {
+      "type": "string",
+      "enum": ["research", "extract", "reconstruct", "implement", "validate"],
+      "description": "The operator-facing outcome workflow this run belongs to."
+    },
+    "scope": {
+      "type": "string",
+      "minLength": 1,
+      "description": "The bounded point-A-to-point-B range agreed with the operator. A workflow with no bounded scope cannot stop."
+    },
+    "state": {
+      "type": "string",
+      "enum": ["draft", "displayed", "approved", "frozen", "executing", "reconciled"],
+      "description": "Lifecycle position. Work may only begin at 'frozen'."
+    },
+    "requirements": {
+      "type": "array",
+      "minItems": 1,
+      "items": { "$ref": "#/definitions/requirement" }
+    },
+    "required_outputs": {
+      "type": "array",
+      "items": { "type": "string" },
+      "description": "Repository-relative paths the run must produce."
+    },
+    "stopping_conditions": {
+      "type": "array",
+      "minItems": 1,
+      "items": { "type": "string" }
+    },
+    "approval_boundaries": {
+      "type": "array",
+      "items": { "type": "string" },
+      "description": "Points at which the workflow must stop and ask, such as drifting outside the agreed scope."
+    },
+    "frozen_at": { "type": "string" },
+    "frozen_hash": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$",
+      "description": "SHA-256 over the canonical contract with volatile freeze fields cleared, so the hash covers the plan rather than the act of recording it."
+    },
+    "amendments": {
+      "type": "array",
+      "items": { "$ref": "#/definitions/amendment" }
+    }
+  },
+  "definitions": {
+    "requirement": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "resource_id",
+        "resource_type",
+        "requirement",
+        "execution_mode",
+        "evidence_rule",
+        "failure_policy"
+      ],
+      "properties": {
+        "resource_id": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Canonical id: an exact subagent_type, skill name, command, or backend invocation."
+        },
+        "resource_type": {
+          "type": "string",
+          "enum": ["agent", "skill", "command", "backend", "output", "validation"]
+        },
+        "requirement": { "type": "string", "enum": ["required", "conditional"] },
+        "execution_mode": {
+          "type": "string",
+          "enum": [
+            "explicit_agent_call",
+            "explicit_skill_call",
+            "deterministic_backend",
+            "operator_action",
+            "context_only",
+            "not_applicable"
+          ],
+          "description": "Determines which observations count. An artifact never proves an invocation, and general-purpose never satisfies a named specialist."
+        },
+        "evidence_rule": {
+          "type": "string",
+          "minLength": 1,
+          "description": "What would prove this requirement ran."
+        },
+        "failure_policy": {
+          "type": "string",
+          "enum": ["block_completion", "degrade_to_partial", "warn_only"],
+          "description": "warn_only is illegal on a required requirement: a required step that can be skipped silently is not a requirement."
+        },
+        "applicability_rule": {
+          "type": "string",
+          "description": "Required on conditional requirements. Without it, not_applicable cannot be justified."
+        },
+        "not_applicable_reason": {
+          "type": "string",
+          "description": "Preserved when a conditional requirement is discharged as not applicable."
+        }
+      },
+      "allOf": [
+        {
+          "if": { "properties": { "requirement": { "const": "required" } } },
+          "then": {
+            "properties": { "failure_policy": { "not": { "const": "warn_only" } } }
+          }
+        },
+        {
+          "if": { "properties": { "requirement": { "const": "conditional" } } },
+          "then": { "required": ["applicability_rule"] }
+        },
+        {
+          "if": { "properties": { "execution_mode": { "const": "not_applicable" } } },
+          "then": {
+            "required": ["not_applicable_reason", "applicability_rule"],
+            "properties": { "requirement": { "const": "conditional" } }
+          }
+        }
+      ]
+    },
+    "amendment": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["reason", "approved_by", "supersedes_hash", "created_at"],
+      "properties": {
+        "reason": { "type": "string", "minLength": 1 },
+        "approved_by": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Renewed operator approval. An amendment is not self-authorising."
+        },
+        "supersedes_hash": { "type": "string", "pattern": "^[0-9a-f]{64}$" },
+        "frozen_hash": { "type": "string", "pattern": "^[0-9a-f]{64}$" },
+        "created_at": { "type": "string" }
+      }
+    }
+  }
+}
