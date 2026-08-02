@@ -77,9 +77,22 @@ single lattice:
 
 660 = 20 × 33 and 726 = 22 × 33 exactly. **Stride 33.**
 
-And the record carries the identifier: `record[28]` is `$39` for the Narshe
-capture and `$17` for the mines capture, matching the three WRAM addresses
-above.
+And every record carries the identifier at the same offset. `record[28]` is:
+
+| Capture | Record start | `record[28]` | WRAM id |
+|---|---|---|---|
+| 02 narshe-entry | `0x2D9173` (inferred from the lattice) | `$39` | `$39` |
+| 04 free-movement | `0x2D9407` (matched directly) | `$39` | `$39` |
+| 05 mines-entry | `0x2D9449` (matched directly) | `$17` | `$17` |
+
+Milestone 02's record start is **inferred**: its verbatim match begins one byte
+earlier, at `0x2D9172`, because the preceding byte happens to agree. The
+lattice fixes the true start at `0x2D9173`, and `record[28]` there is `$39` —
+so the inference is independently confirmed by the field it predicts, rather
+than resting on the arithmetic alone.
+
+(Verified during the Unit 19 evidence harvest; the original revision of this
+record checked only the two directly-matched records.)
 
 ## Interpretation
 
@@ -88,9 +101,13 @@ above.
 `+$13E2` and `+$1F80`.
 
 **This is not the map header.** Milestones 02 and 04 share a map identifier and
-a tileset but load *different* records, twenty apart. A structure indexed by
-map id would give them the same record. Whatever the table is indexed by, it is
-not the identifier.
+a tileset but load *different* records, twenty apart, **and both records carry
+`$39` at offset 28**. A structure indexed by map id would give them the same
+record. Whatever the table is indexed by, it is not the identifier.
+
+Two distinct records referencing one map is what strengthens the
+entrance/warp reading below: a map has several entrances, and each would need
+its own record naming the map it leads to.
 
 The most that is established is: a 33-byte static record, selected per capture
 by something not yet known, referencing a map by the same id WRAM holds.
@@ -99,7 +116,10 @@ by something not yet known, referencing a map by the same id WRAM holds.
 
 - **The table is entrance/warp records** — "go to map `$39` at position X,Y" —
   which would explain two records for one map, since a map has several
-  entrances. Consistent with the data, untested.
+  entrances. This is now the **leading** alternative: all three records carry a
+  map id at offset 28, and the two that name the same map are different
+  records. Still untested — nothing here checks the other 32 bytes against a
+  position, and no third map has been examined.
 - **`$39`/`$17` are not map ids** but area or tileset ids, and the identical
   value across 02 and 04 reflects a shared tileset rather than a shared map.
   EXP-0050 cannot separate these, because 02 and 04 agree on both.
