@@ -1,127 +1,86 @@
 # Latest Checkpoint
 
-**[2026-08-02 — AUDIT-0001, workflow governance and orchestration utilization](2026-08-02-audit-0001-workflow-governance.md)**
-(preceding: [Tactical pause, evidence harvested and hashed](2026-08-02-tactical-pause-evidence-harvested.md))
+**[2026-08-02 — AUDIT-0002 closure, independent re-audit of AUDIT-0001](2026-08-02-audit-0002-closure.md)**
+(preceding: [AUDIT-0001, workflow governance and orchestration utilization](2026-08-02-audit-0001-workflow-governance.md))
 
-**Date:** 2026-08-02 · **Branch:** `maintenance/workflow-observability`
-**Parent:** `581ddbc` on `demo/whelk-content-parity`
+**Date:** 2026-08-02 · **Branch:** `maintenance/workflow-observability-audit2`
+**Worktree:** `../ff6-audit2` · **Base:** `93f7d03`
 
 ## What this session was
 
-**A workflow audit. No game research occurred.** No Mesen session was opened at
-any point. No Ghidra tooling was run. No experiment was designed or started. No
-ROM was read. No remediation was implemented.
+**An audit of an audit. No game research occurred.** No Mesen session was
+opened, no Ghidra tooling run, no experiment designed, no ROM read, no
+remediation implemented.
 
-**Every finding in the AUDIT-0001 records is a proposal awaiting operator
-review.**
+**Every finding is a proposal awaiting review.**
 
 ## Current question
 
-None. AUDIT-0001 is complete and its remediation plan is unapproved. No
+None. AUDIT-0002 is closed; its corrected remediation plan is unapproved. No
 research or implementation unit is in flight.
 
 ## State
 
-Branch `maintenance/workflow-observability`, created from
-`demo/whelk-content-parity` at `581ddbc`, which remains synchronized with
-`origin`. The audit branch is local-only and **was not pushed**.
+Branch `maintenance/workflow-observability-audit2` in an isolated worktree,
+created from the verified AUDIT-0001 closure commit `93f7d03`. **Not pushed.**
+`demo/whelk-content-parity` remains at `581ddbc`; DEMO-0001 untouched.
 
-No emulator running. No background processes. No resident instrumentation.
+No emulator, no background processes, no resident instrumentation.
 
-## Work completed
+## What AUDIT-0002 established
 
-Ten phases, all complete. `AUDIT-0001-baseline.json` records
-`audit_status: complete`, `completed_phases: [0..10]`, `remaining_phases: []`.
-The Phase 4 context-safety boundary was assessed and **did not fire** — the
-audit finished in one session, so one session record and one commit, as the
-plan's single-session case provides.
+The preflight changed what could be proved. The harness writes per-session
+transcripts recording every tool call with a timestamp, so invocation became
+**verifiable from harness evidence** rather than from the auditor's
+recollection — the weakest basis in AUDIT-0002's own vocabulary.
 
-### Files created — seven tracked records
+**AUDIT-0001 was wrong in both directions.** `/run-quality-gates` was never
+invoked as a skill in any preserved session — its `Confirmed` is refuted.
+`/correlate-static-runtime` is unverifiable. But `/bootstrap-ghidra` *was*
+genuinely invoked, so AUDIT-0001 reached a true conclusion by the invalid
+artifact-existence method — conclusion stands, method stays condemned. And
+`/checkpoint` and `/session-summary` were each invoked and had been
+under-classified.
 
-```text
-docs/workflows/AUDIT-0001-orchestration-inventory.md
-docs/workflows/AUDIT-0001-capability-honesty.md
-docs/workflows/AUDIT-0001-usage-baseline.md
-docs/workflows/AUDIT-0001-effectiveness-scorecard.md
-docs/workflows/AUDIT-0001-telemetry-design.md
-docs/workflows/AUDIT-0001-remediation-plan.md
-docs/workflows/AUDIT-0001-baseline.json
-```
+**The 31-orphan headline was a measurement bug, not a miscount.** The generator
+replays byte-identically against its true input tree; its corpus simply never
+scanned repository-root files, and `PACKAGE_MANIFEST.json` lists 24 of the 31.
+Corrected: **7 textual orphans**. But textual inbound was never the right
+proxy — measured on routing-bearing inbound the figure is **38**, and **all 13
+agents have zero**. The routing finding survives and strengthens; the number
+used to reach it was wrong in both directions.
 
-Plus this checkpoint, `docs/sessions/SESSION_006.md`, and the permitted closure
-synchronization: `docs/checkpoints/LATEST.md`, `indexes/SESSIONS.md`, and the
-single session-count row in `dashboards/STATISTICS.md`.
+**AUDIT-0001 destroyed the metric it reported.** Replayed against the closure
+tree, the matcher returns **zero** orphans, because `AUDIT-0001-baseline.json`
+enumerates all 135 resource ids.
 
-Raw evidence and the generator scripts are ignored under
-`local_artifacts/workflow-audit/AUDIT-0001/`.
+**Automatic specialist selection does not exist.** Pre-registered probes:
+omitting `subagent_type` yields `general-purpose`, never a project agent.
 
-### Headline results
+## Phase 11 review
 
-**135 resources** inventoried — 43 commands, 30 skills, 5 shared contracts,
-13 agents, 28 playbooks, 4 rules, 12 templates. The figure of 126 used during
-planning was an arithmetic error and is withdrawn.
+Findings frozen and hashed at `e9490a6` before any review.
+`verification-engineer` ran **blind** to the conclusions;
+`quality-reviewer` was asked to attack them. **Six disputes, all resolved,
+none escalated.**
 
-**Zero broken references.** **31 orphans**, of which 12 are agents.
+Four corrections came from review rather than from me: the gate capture counts
+(7/12 at Phase 0, not 4); my own `hashes.sha256` verifying only from inside
+`frozen/`; `operator_workflow == 0` being circular; and `outcome_status`
+applying an artifact bar to resources that produce no artifacts.
 
-**Agent routing** — stated as two separate facts. Reachability is **Confirmed**:
-all 13 agents were invoked successfully. Explicit project routing is
-**Confirmed absent**: no command, skill, playbook, rule or template names any
-agent, and `ORCHESTRATE_RESEARCH.md` step 6 is the single word "Delegate."
-Three independent agents converged on this, including `quality-reviewer` given
-free choice of target.
-
-**Capability honesty** — 16 Implemented and Verified, 10 Partially Implemented,
-10 Orchestration Only, 4 Implemented but Unexercised, 3 Missing Backend.
-Nothing Broken, nothing Documentation Only.
-
-**Historical usage** — 6 Confirmed, 16 Probable, 12 Possible, **101 Unknown**.
-Unknown means no evidence was found; it is never reported as zero use.
-
-**Zero removal, deprecation or merge candidates.**
-
-### Findings the brief did not anticipate
-
-- **`/audit-project` has no report-only mode.** Its playbook's Required outputs
-  mandate updated records and a checkpoint, so the fix-nothing override could
-  not be guaranteed. **The command was not invoked**; its eight steps were
-  performed manually, read-only, and the missing mode is recorded as a
-  capability-honesty finding.
-- **`internal/validate` has zero importers.** `CompareResolved` — written to
-  catch the palette-index defect — is reachable only from its own tests, while
-  `VALIDATE_GRAPHICS.md:16` prescribes indexed comparison, the exact failure
-  mode it prevents.
-- **Unit IDs collide globally.** `ACTIVITY_LOG.md` reached Unit 35 by 08-01;
-  Session 005 restarted at Unit 10. Unit 12, 17 and 18 each name two unrelated
-  units. The proposed telemetry `unit_id` must be session-qualified.
-- **`schemas/experiment.schema.json` omits three constitutional fields** —
-  controlled variables, required evidence, stopping condition — and `domain`
-  appears in 12 manifest entries the schema never defines.
-- **`/session-summary` is missing from `docs/WORKFLOW_COMMANDS.md`**, and does
-  not name `SESSION.md`, which is why that template is orphaned.
-- **`ff6lab state origin` and `state sprites` are absent from `ff6lab help`**
-  despite being cited as durable instrumentation.
-- **`ASSET-GFX-0002`** (Narshe tileset) links **`CEN-GFX-0006`** (mines
-  interior). Not repaired — research records are outside this audit's scope.
+The sharpest criticism is preserved rather than engineered away: **R11-R14's
+diagnosis and remedy share one rubric that this audit defines.** A
+confirmation-risk disclosure now sits in the remediation plan.
 
 ## Uncertain
 
-- 101 of 135 resources have no recoverable usage evidence. This is a
-  measurement failure, not a usage failure, and it is the floor of what
-  historical reconstruction can establish.
-- Skill and playbook composite scores do not discriminate (28 of 30 skills at
-  exactly 4.00; all 28 playbooks at 4.67). The dimensions that would separate
-  them need invocation telemetry. **Those composites must not drive decisions**
-  — stated in the scorecard.
-- Whether `/capture-graphics` genuinely overlaps `/capture-frame` or has a real
-  distinct scope is a scoping call for the operator.
-
-## Contradiction preserved, not resolved
-
-`CLAUDE.md` requires a completed unit to synchronize dashboards; the AUDIT-0001
-brief forbids modifying them. Resolved for this session as generated/required
-synchronization only. **The contradiction is recorded in the inventory record**
-and a future governance decision should state which authority wins for
-audit-class sessions.
+- Transcript coverage is **2026-08-02 only**. Sessions 001-004 remain
+  `historically_unverifiable`.
+- AUDIT-0001's Phase 4 process metrics are **unrecoverable** — no transcripts.
+- Command-triggered and `/orchestrate` routing remain **`not_tested`**.
+- Reviews are **correlated, not independent** — same underlying model as the
+  auditor.
 
 ## Active emulator state
 
@@ -133,34 +92,54 @@ None.
 
 ## Evidence paths
 
-`local_artifacts/workflow-audit/AUDIT-0001/` — `inventory.json`,
-`reference-graph.json`, `command-capabilities.json`, `agent-smoke-tests.json`,
-`historical-usage.json`, `broken-references.json`, `gates-baseline.txt`,
-`gates-closure.txt`, and the four generator scripts. All gitignored; none
-ROM-derived.
+`local_artifacts/workflow-audit/AUDIT-0002/` — `frozen/` (19 files, hashed;
+verify from **inside** `frozen/`), `closure/provisional/` (12 files,
+pre-review), `closure/reviews/`, `gate-logs/`, `fixtures/`,
+`generator-replay/`. All gitignored; none ROM-derived; transcript extracts
+carry **tool-call metadata only**, no prompts or conversation content.
+
+## Files created
+
+```text
+docs/workflows/AUDIT-0002-closure-verification.md
+docs/workflows/AUDIT-0002-claim-ledger.json
+docs/workflows/AUDIT-0002-evidence-index.json
+docs/workflows/AUDIT-0002-methodology-review.md
+docs/workflows/AUDIT-0002-matcher-fixtures.json
+docs/workflows/AUDIT-0002-corrected-baseline.json
+docs/workflows/AUDIT-0002-finding-verification.md
+docs/workflows/AUDIT-0002-routing-and-agent-review.md
+docs/workflows/AUDIT-0002-telemetry-revision.md
+docs/workflows/AUDIT-0002-remediation-plan-v2.md
+docs/workflows/AUDIT-0002-self-compliance.md
+docs/workflows/AUDIT-0002-status.md
+docs/workflows/AUDIT-0001-errata.md
+```
+
+Plus this checkpoint and `docs/sessions/SESSION_007.md`.
+
+**AUDIT-0001's six records and baseline are preserved unmodified.** Corrections
+live in the errata.
 
 ## Tests and quality gates
 
-Run **twice** — a pre-audit baseline at Phase 0 and again at closure. **Results
-identical.**
+Run twice with reliable exit capture — Phase 0 baseline and Phase 11
+pre-closure. **All eleven required gates `rc=0` in both runs, identical, no
+differences to explain.** The harness itself was negative-control tested.
 
-gofmt clean; `go build`, `go vet`, `go test` pass; `ff6lab`, `ff6demo` and the
-`-tags gui` build all compile; `ff6lab audit` clean (eleven checks);
-`census validate` clean; restricted-file scan clean; `AUDIT-0001-baseline.json`
-parses and reports 135 resources.
-
-**`archive verify` NOT RUN** — `FF6_ROM` is unset. Recorded as not run, never
-as passing.
+**`archive verify` NOT RUN** — `FF6_ROM` unset. Never inferred.
 
 ## Git status
 
-Branch `maintenance/workflow-observability`. One audit-only commit. Not pushed,
-as directed.
+Three commits on the audit branch. Worktree clean. **Not pushed.**
 
 ## Unresolved decisions
 
-Whether to approve, revise or reject the AUDIT-0001 remediation plan. Nothing
-in it has been implemented.
+Whether to approve, revise or reject AUDIT-0002's corrected remediation plan
+(R1-R14). Nothing in it is implemented.
+
+Also open: whether AUDIT-0001's six records should eventually be superseded
+rather than left standing with errata.
 
 ## Blockers
 
@@ -168,15 +147,19 @@ None.
 
 ## Exact next action
 
-**Review and approve, revise, or reject AUDIT-0001's remediation plan**
-(`docs/workflows/AUDIT-0001-remediation-plan.md`).
+**Review and approve, revise, or reject AUDIT-0002's corrected remediation
+plan** (`docs/workflows/AUDIT-0002-remediation-plan-v2.md`).
 
-If approved, the recommended order is P0-1 agent routing → P0-3 documentation
-sync with its gate → P0-2 `/audit-project` report-only mode → P1-1 wire
-`internal/validate`. Items 1–4 are text and small Go changes with no migration
-cost and address the three highest-risk findings. Nothing in the plan requires
-an emulator except the `/trace-dma` live validation, which is deferred to an
-authorized operator session.
+If approved, the order is R12 → R14 → R11 → R13 — enforcement substrate,
+deterministic verdict, operator surface, receipt — then R8, R3, R9, R5, R2,
+R4, R6, R10. Only R7 requires an emulator.
 
-DEMO-0001 remains paused and unchanged. When content work resumes, the
-tactical-pause checkpoint's priority list still stands.
+DEMO-0001 remains paused. When content work resumes, the tactical-pause
+checkpoint's priority list still stands.
+
+## Recommended next command
+
+None. **`/checkpoint` and `/session-summary` were deliberately not invoked** —
+`/checkpoint` declares a write to `dashboards/CURRENT_FOCUS.md` that a bounded
+audit may not make, and `/session-summary` declares no output path at all.
+Both are preserved as remediation finding R8.

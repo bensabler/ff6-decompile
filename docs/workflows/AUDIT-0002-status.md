@@ -3,23 +3,30 @@
 ```json
 {
   "audit_id": "AUDIT-0002",
-  "completion_status": "closure_pending",
+  "completion_status": "complete",
   "completed_phases": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11],
   "remaining_phases": [],
   "base_commit": "93f7d03a199f0c396886ec6497e8401cef88ff54",
   "branch": "maintenance/workflow-observability-audit2",
   "worktree": "../ff6-audit2",
   "pushed": false,
-  "blocked_on_operator": false
+  "blocked_on_operator": false,
+  "closure_candidate_commit": "b1b0f4a",
+  "closure_candidate_verified": true
 }
 ```
 
-**`closure_pending`, not `complete`.** This is the Stage A closure candidate.
-`complete` may only be written in Stage B, **after** the candidate commit's
-diff, branch, HEAD, remote non-reachability and clean worktree have all been
-verified. If any Stage A or Stage B check fails, `closure_failed` is written
-**and committed** as the latest audit status — `complete` is never left
-standing after a known failure.
+**`complete` — written in Stage B as an outcome of verification, never before
+it.** The Stage A closure candidate `b1b0f4a` passed all eight checks: committed
+diff within the allowlist (8 files); AUDIT-0001's originals unmodified across
+the whole branch; no command, skill, agent, playbook, schema, manifest, Go
+file, probe, dashboard or index touched; branch and HEAD correct; audit branch
+absent from `origin`; clean worktree; no `docs/workflows/runs/`; all JSON
+parses.
+
+Had any check failed, `closure_failed` would have been written **and
+committed** as the latest status. `complete` is never left standing after a
+known failure.
 
 ## Phase 11 — resolution and closure
 
