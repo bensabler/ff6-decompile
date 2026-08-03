@@ -119,9 +119,10 @@ manual_import          legacy_transcript       unknown
 
 Current eligibility is deliberately narrow:
 
-- collector-observed provider-hook `agent_started`/`agent_finished` events can
-  satisfy exact agent invocation requirements when session and turn identity
-  are present;
+- a collector-observed provider-hook `agent_started` event can satisfy an exact
+  agent invocation requirement when its selector and provider session and turn
+  identity are present. An `agent_finished` event remains valid lifecycle
+  evidence but cannot independently satisfy an invocation requirement;
 - collector-observed `skill_selected` events can satisfy exact skill
   invocation requirements under the same identity constraint;
 - a provider-hook `tool_finished` event can become a backend observation only

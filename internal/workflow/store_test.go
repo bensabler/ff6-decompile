@@ -417,18 +417,118 @@ func TestProvenanceEligibilityIsSeparateFromChainValidity(t *testing.T) {
 	}
 }
 
-func TestValidCorrectRunEventSatisfiesRequirement(t *testing.T) {
-	root := fixtureRoot(t)
-	s, c := startedRun(t, root, agentReq("graphics-researcher", Required, BlockCompletion))
-	event := nextEvent(t, s, c.WorkflowID, EventAgentStarted, "graphics-researcher",
-		SourceProviderHook, TrustCollectorObserved)
-	appendEvent(t, s, c.WorkflowID, event)
-	rec, err := s.Close(c.WorkflowID, "2026-08-02T00:01:00Z")
-	if err != nil {
-		t.Fatal(err)
+func TestAgentInvocationEligibilityRequiresStart(t *testing.T) {
+	const requiredAgent = "graphics-researcher"
+	type lifecycleEvent struct {
+		kind     EventKind
+		selector string
+		turnID   string
 	}
-	if rec.Verdict != Complete {
-		t.Errorf("verdict = %q, want complete: %+v", rec.Verdict, rec)
+	tests := []struct {
+		name                  string
+		events                []lifecycleEvent
+		wantVerdict           Verdict
+		wantOutcome           Outcome
+		wantAgentCalls        int
+		wantMatchingCalls     int
+		wantFinishLimitations int
+	}{
+		{
+			name: "start-only event satisfies invocation",
+			events: []lifecycleEvent{
+				{kind: EventAgentStarted, selector: requiredAgent, turnID: "turn-1"},
+			},
+			wantVerdict: Complete, wantOutcome: OutcomeSatisfied,
+			wantAgentCalls: 1, wantMatchingCalls: 1,
+		},
+		{
+			name: "matching start and finish satisfy through start",
+			events: []lifecycleEvent{
+				{kind: EventAgentStarted, selector: requiredAgent, turnID: "turn-1"},
+				{kind: EventAgentFinished, selector: requiredAgent, turnID: "turn-1"},
+			},
+			wantVerdict: Complete, wantOutcome: OutcomeSatisfied,
+			wantAgentCalls: 1, wantMatchingCalls: 1, wantFinishLimitations: 1,
+		},
+		{
+			name: "finish-only event cannot satisfy invocation",
+			events: []lifecycleEvent{
+				{kind: EventAgentFinished, selector: requiredAgent, turnID: "turn-1"},
+			},
+			wantVerdict: Partial, wantOutcome: OutcomeUnsatisfied,
+			wantAgentCalls: 0, wantMatchingCalls: 0, wantFinishLimitations: 1,
+		},
+		{
+			name: "unmatched finish cannot satisfy invocation",
+			events: []lifecycleEvent{
+				{kind: EventAgentStarted, selector: "asset-librarian", turnID: "turn-1"},
+				{kind: EventAgentFinished, selector: requiredAgent, turnID: "turn-2"},
+			},
+			wantVerdict: Partial, wantOutcome: OutcomeUnsatisfied,
+			wantAgentCalls: 1, wantMatchingCalls: 0, wantFinishLimitations: 1,
+		},
+		{
+			name: "repeated finishes create no additional invocation credit",
+			events: []lifecycleEvent{
+				{kind: EventAgentStarted, selector: requiredAgent, turnID: "turn-1"},
+				{kind: EventAgentFinished, selector: requiredAgent, turnID: "turn-1"},
+				{kind: EventAgentFinished, selector: requiredAgent, turnID: "turn-2"},
+			},
+			wantVerdict: Complete, wantOutcome: OutcomeSatisfied,
+			wantAgentCalls: 1, wantMatchingCalls: 1, wantFinishLimitations: 2,
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			root := fixtureRoot(t)
+			s, c := startedRun(t, root, agentReq(requiredAgent, Required, BlockCompletion))
+			for _, spec := range tt.events {
+				event := nextEvent(t, s, c.WorkflowID, spec.kind, spec.selector,
+					SourceProviderHook, TrustCollectorObserved)
+				event.TurnID = spec.turnID
+				appendEvent(t, s, c.WorkflowID, event)
+			}
+
+			verification := s.VerifyLedger(c.WorkflowID)
+			if !verification.Valid {
+				t.Fatalf("lifecycle events must remain structurally valid: %v", verification.Problems)
+			}
+			evidence := evidenceFromLedger(verification)
+			var agentCalls, matchingCalls int
+			for _, observation := range evidence.Observations {
+				if observation.Kind != ObsAgentCall {
+					continue
+				}
+				agentCalls++
+				if observation.Selector == requiredAgent {
+					matchingCalls++
+				}
+			}
+			if agentCalls != tt.wantAgentCalls || matchingCalls != tt.wantMatchingCalls {
+				t.Errorf("agent observations = %d total, %d matching; want %d total, %d matching",
+					agentCalls, matchingCalls, tt.wantAgentCalls, tt.wantMatchingCalls)
+			}
+			if got := len(evidence.Limitations); got != tt.wantFinishLimitations {
+				t.Errorf("limitations = %d, want %d: %v", got, tt.wantFinishLimitations, evidence.Limitations)
+			}
+			for _, limitation := range evidence.Limitations {
+				if !strings.Contains(limitation, "agent_finished is lifecycle evidence only") {
+					t.Errorf("finish limitation = %q", limitation)
+				}
+			}
+
+			rec, err := s.Close(c.WorkflowID, "2026-08-02T00:01:00Z")
+			if err != nil {
+				t.Fatal(err)
+			}
+			if rec.Verdict != tt.wantVerdict {
+				t.Fatalf("verdict = %q, want %q: %+v", rec.Verdict, tt.wantVerdict, rec)
+			}
+			if len(rec.Results) != 1 || rec.Results[0].Outcome != tt.wantOutcome {
+				t.Fatalf("results = %+v, want outcome %q", rec.Results, tt.wantOutcome)
+			}
+		})
 	}
 }
 
@@ -494,8 +594,9 @@ func TestProviderToolFinishedEligibility(t *testing.T) {
 			wantReason: "did not run", wantNote: "lacks a tool-use binding",
 		},
 		{
-			name: "tool_finished without captured exit status cannot satisfy a backend",
+			name: "bound tool_finished with null exit status is unverifiable, never pass",
 			mutate: func(e *RunEvent) {
+				e.ToolUseID = "provider-tool-use-1"
 				e.ExitStatus = nil
 			},
 			wantOutcome: OutcomeUnverifiable, wantVerdict: Unverifiable,

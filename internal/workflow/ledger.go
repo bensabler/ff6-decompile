@@ -429,12 +429,15 @@ func evaluateEventEligibility(event RunEvent) EventEligibility {
 			return EventEligibility{Reason: "provider-hook invocation lacks session or turn identity"}
 		}
 		switch event.EventKind {
-		case EventAgentStarted, EventAgentFinished:
+		case EventAgentStarted:
 			if event.Selector == "" {
 				return EventEligibility{Reason: "agent event has no selector"}
 			}
 			return EventEligibility{Eligible: true, ObservationKind: ObsAgentCall,
-				Reason: "collector-observed provider agent event"}
+				Reason: "collector-observed provider agent start"}
+		case EventAgentFinished:
+			return EventEligibility{
+				Reason: "agent_finished is lifecycle evidence only and cannot independently prove invocation"}
 		case EventSkillSelected:
 			if event.Selector == "" {
 				return EventEligibility{Reason: "skill event has no selector"}

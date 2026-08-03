@@ -3,8 +3,9 @@
 This report characterizes the Codex hook surface needed by the provider-neutral
 R14 run-event ledger. It is a diagnostic capability probe, not a production
 adapter. Nothing in this unit writes to the workflow ledger, asserts trusted
-`provider_hook` provenance, implements contract approval, or changes
-reconciliation.
+`provider_hook` provenance, implements contract approval, or adds agent
+completion requirements. The follow-up hardening changes only which verified
+agent lifecycle event may become invocation evidence.
 
 ```text
 probe date: 2026-08-02
@@ -12,16 +13,21 @@ foundation commit: df3a0c6aa4e8c078b5795bba34490a1b3b63c599
 working branch: codex/r14-codex-hook-probe
 installed CLI: codex-cli 0.146.0-alpha.9.2
 installed app: 26.727.51351 (build 6119)
-repository hook definitions recognized or loaded in this task: not established
-repository hook definitions trusted in this task: no
-repository hook handler execution observed in this task: no
-sanitized live captures recovered: none
-live hook probe: not run
+setup-task hook definitions recognized or loaded: not established
+setup-task hook definitions trusted: no
+setup-task hook handler execution observed: no
+controlled live-probe matching handler execution: locally observed
+sanitized live record count: 12
+preserved capture filename: not supplied
+preserved capture SHA-256: not supplied
+live hook probe: completed; do not rerun
 ```
 
-The setup requires operator review of the exact hook definitions and a fresh
-session. A fresh session is necessary even if hook loading can occur without a
-full app restart, because this task's `SessionStart` has already passed.
+The operator reports that the controlled probe was completed after the setup
+commit. The supplied matching sanitized records establish handler execution;
+they do not independently record the exact hook-trust UI state, which remains
+unknown. The probe must not be rerun, and the preserved raw JSONL must not be
+inspected in this unit.
 
 ## Evidence vocabulary
 
@@ -30,21 +36,25 @@ This report keeps these classifications distinct:
 - **officially documented**: stated by current public Codex documentation;
 - **locally observed**: returned by the installed runtime or present in a real
   sanitized hook capture;
-- **inferred**: a bounded conclusion from documented and local facts;
-- **not observed**: the live probe has not produced the evidence;
+- **inference**: a bounded conclusion from documented and locally observed
+  facts, not direct evidence by itself;
+- **unknown**: the available documented and local evidence does not resolve the
+  question;
+- **unsupported**: the documented or directly tested surface does not provide
+  the required capability; every such statement names its scope;
+- **not observed**: the controlled capture did not produce the evidence;
 - **not testable**: the current documented/configurable surface offers no
-  corresponding probe point;
-- **unsupported**: the documented surface explicitly does not provide the
-  capability.
+  corresponding probe point.
 
 Synthetic test fixtures establish sanitizer behavior only. They are never
 classified as live hook evidence.
 
-## Recovered state and completed phases
+## Setup-time recovered state and completed phases
 
-Recovery found the branch at the required foundation commit with three
-untracked setup files and no probe documentation or sanitized output. No
-pre-existing repository hook configuration was overwritten.
+This section is a historical record of the setup task, before the later
+controlled live probe. Recovery found the branch at the required foundation
+commit with three untracked setup files and no probe documentation or sanitized
+output. No pre-existing repository hook configuration was overwritten.
 
 The completed work before recovery was:
 
@@ -55,10 +65,10 @@ The completed work before recovery was:
 4. an initial focused synthetic test run.
 
 The hook definitions were not established as loaded and were not trusted in
-this already-running task.
-No live `SessionStart`, subagent, Bash success, Bash failure, or skill-selection
-event was captured. The first incomplete step was therefore to finish this
-report, validate the setup, commit it once, and stop for operator action.
+that already-running setup task. No live `SessionStart`, subagent, Bash success,
+Bash failure, or skill-selection event was captured in that task. The setup
+report was then validated and committed for the later operator-controlled probe
+whose sanitized results are recorded below.
 
 ## Runtime, configuration, trust, and reload
 
@@ -72,8 +82,8 @@ report, validate the setup, commit it once, and stop for operator action.
 | Cloud/session policy | unknown | Local file inspection cannot prove that no cloud-delivered or session-only policy exists. |
 | Project-layer loading | officially documented | Project `.codex` configuration loads only for a trusted project. |
 | Command-hook trust | officially documented | A non-managed command hook is skipped until its exact definition is reviewed and trusted. Project trust alone is insufficient. |
-| Hook hot reload | unknown | The documented app-server API lists `hooks/list`, but no hook reload method. The current task did not establish hot reload. |
-| Full app restart | inferred fallback | A restart is conservative if newly trusted definitions still appear skipped, but the documentation does not establish that it is always required. |
+| Hook hot reload | unknown | The documented app-server API lists `hooks/list`, but no hook reload method. The setup task did not establish hot reload. |
+| Full app restart | inference | A restart was a conservative fallback if newly trusted definitions still appeared skipped, but the documentation did not establish that it was always required. |
 
 Current references are the official [Hooks](https://developers.openai.com/codex/hooks),
 [Advanced configuration](https://developers.openai.com/codex/config-advanced),
@@ -147,6 +157,26 @@ matcher were bypassed. Input containing production fields such as `workflow_id`,
 verdict is rejected. Collection errors return success without steering Codex
 and do not create a production event.
 
+## Sanitized live-capture summary
+
+The operator-supplied sanitized findings describe one controlled live capture
+containing 12 records. This recording unit did not inspect the preserved raw
+JSONL. The operator did not supply its preserved filename or SHA-256 digest, so
+neither value is asserted here.
+
+| Hook event | Record count |
+|---|---:|
+| `SessionStart` | 1 |
+| `SubagentStart` | 1 |
+| `SubagentStop` | 2 |
+| `PreToolUse` | 4 |
+| `PostToolUse` | 4 |
+| **Total** | **12** |
+
+The supplied findings characterize the two controlled command pairs identified
+below. They do not assign a purpose or outcome to the other `PreToolUse` and
+`PostToolUse` records, and this report makes no inference about them.
+
 ## Official payload matrix versus local evidence
 
 Codex documents these common hook fields: `session_id`, `transcript_path`,
@@ -156,11 +186,11 @@ read by this probe.
 
 | Event | Additional officially documented fields | Locally observed fields | Status |
 |---|---|---|---|
-| `SessionStart` | `source`; no documented `turn_id` | none | not observed — live probe not run |
-| `SubagentStart` | `turn_id`, `agent_id`, `agent_type` | none | not observed — live probe not run |
-| `SubagentStop` | `turn_id`, `agent_id`, `agent_type`, `agent_transcript_path`, `stop_hook_active`, `last_assistant_message` | none | not observed — live probe not run |
-| `PreToolUse` for Bash | `turn_id`, `tool_name`, `tool_use_id`, `tool_input`; Bash input documents `command` | none | not observed — live probe not run |
-| `PostToolUse` for Bash | the PreToolUse identity/input fields plus `tool_response` | none | not observed — live probe not run |
+| `SessionStart` | `source`; no documented `turn_id` | `session_id`, `cwd`, `permission_mode` | locally observed |
+| `SubagentStart` | `turn_id`, `agent_id`, `agent_type` | `session_id`, `turn_id`, `agent_id`, `agent_type` | locally observed |
+| `SubagentStop` | `turn_id`, `agent_id`, `agent_type`, `agent_transcript_path`, `stop_hook_active`, `last_assistant_message` | `session_id`, `turn_id`, `agent_id`, `agent_type` | locally observed |
+| `PreToolUse` for Bash | `turn_id`, `tool_name`, `tool_use_id`, `tool_input`; Bash input documents `command` | `session_id`, `turn_id`, `tool_name`, `tool_use_id`, exact safe command | locally observed |
+| `PostToolUse` for Bash | the PreToolUse identity/input fields plus `tool_response` | `session_id`, `turn_id`, `tool_name`, `tool_use_id`, exact safe command; no explicit exit-status field | locally observed |
 
 Documentation states that `PostToolUse` runs after a tool completes, including
 when the underlying command exits nonzero. It does not document a stable Bash
@@ -173,55 +203,74 @@ not evidence that the command succeeded.
 
 | Required value | Official surface | Local capture |
 |---|---|---|
-| `session_id` | documented | not observed |
-| `turn_id` | documented for subagent events | not observed |
-| `agent_id` | documented | not observed |
-| `agent_type` | documented | not observed |
-| `SubagentStart` or `SubagentStop` identity | documented by `hook_event_name` plus agent fields | not observed |
+| `session_id` | documented | observed on start and stop |
+| `turn_id` | documented for subagent events | observed on start and stop |
+| `agent_id` | documented | observed on start and stop |
+| `agent_type` | documented | observed on start and stop |
+| `SubagentStart` identity | documented by `hook_event_name` plus agent fields | observed |
+| matching start/stop lifecycle | both events document the same identity fields | observed |
 
-These values were **not actually observed together**. One subagent lifecycle
-occurred while preparing this setup, but loading was not established and no
-handler execution was observed; it produced no capture and earns no evidence credit. Agent invocation is
-plausibly observable from the official contract but is not yet reliable in
-this environment.
+One complete lifecycle was locally observed: a `SubagentStart` and
+`SubagentStop` had matching `session_id`, `turn_id`, `agent_id`, and
+`agent_type` values. A second `SubagentStop` had the same agent ID and type but
+a different turn ID and no corresponding captured start. Its cause is
+**unknown**. It is neither an independently proven invocation nor skill
+evidence.
+
+Agent start identity and a matching start/stop lifecycle are therefore locally
+observable. For R14 eligibility, a verified `agent_started` event may satisfy
+an explicit agent-invocation requirement when all existing selector, provider
+identity, provenance, and trust requirements are met. An `agent_finished` event
+remains valid lifecycle evidence but cannot independently satisfy invocation;
+no stop event is required merely to prove that invocation began. This
+diagnostic result does not itself write or authenticate a production ledger
+event.
 
 ### Backend execution
 
 | Required value | Official surface | Local capture |
 |---|---|---|
-| `session_id` | documented | not observed |
-| `turn_id` | documented | not observed |
-| `tool_use_id` | documented | not observed |
-| exact predetermined command | documented as Bash `tool_input.command` | not observed |
-| completion event | documented as `PostToolUse` | not observed |
-| real underlying command exit status | no stable field documented | not observed |
+| `session_id` | documented | observed |
+| `turn_id` | documented | observed |
+| `tool_use_id` | documented | observed and matched across each controlled pair |
+| exact predetermined command | documented as Bash `tool_input.command` | observed for both safe commands |
+| completion event | documented as `PostToolUse` | observed for both safe commands |
+| real underlying command exit status | no stable field documented | explicit field absent from both controlled completions |
 
-These values were **not actually observed together**. The real command exit
-status is currently unknown. Until a live success capture contains `0` and the
-live exit-7 capture contains `7` in an explicit provider field, the hook
-surface cannot reliably satisfy R14 deterministic-backend evidence.
+The success command's `PreToolUse` and `PostToolUse` records had identical
+tool-use identity. The exit-7 command's records did too. Thus exact safe command
+invocation and Pre/Post completion correlation are locally observable.
+
+The success command was expected to exit 0 and the failure command was expected
+to exit 7. Neither `PostToolUse` record exposed an explicit exit-status field,
+so the real underlying status was not locally observable through the hook
+payload. Hook-based deterministic backend pass/fail is therefore
+**unsupported in the observed runtime**. A `PostToolUse` event proves hook
+completion, not command success or failure.
 
 ### Sanitized Bash response shapes
 
-| Controlled command | Documented PostToolUse shape | Sanitized live shape | Real exit status |
+| Controlled command | Documented PostToolUse shape | Sanitized live shape | Expected outcome / observed status |
 |---|---|---|---|
-| success command | `tool_response` is a JSON value; exact members are unspecified | not observed | unknown |
-| exit-7 command | `tool_response` is a JSON value; exact members are unspecified | not observed | unknown |
+| success command | `tool_response` is a JSON value; exact members are unspecified | completion observed; explicit exit-status field absent | expected 0 / explicit status absent |
+| exit-7 command | `tool_response` is a JSON value; exact members are unspecified | completion observed; explicit exit-status field absent | expected 7 / explicit status absent |
 
 Synthetic fixtures exercise a response object containing string, number, and
 exit-status members. They prove only that arbitrary response strings become
-length-only shape, that arbitrary output is omitted, and that a genuinely present numeric
-`exit_code` or `exit_status` can be retained and compared with the safe
-command's expected value. They do not establish the real Codex response shape.
+length-only shape, that arbitrary output is omitted, and that a genuinely
+present numeric `exit_code` or `exit_status` can be retained and compared with
+the safe command's expected value. They do not establish a field that was
+absent from the real Codex response shape.
 
 ### Skill invocation
 
 The official hook event list has no dedicated skill-selection or
 skill-invocation event. That capability is **unsupported by the documented hook
-surface**. No explicit skill attempt was captured locally, so a dedicated
-runtime event is also **not observed**. Because there is no configurable skill
-hook event to attach the collector to, the stronger runtime question is **not
-testable through this hook configuration**.
+surface**. No dedicated skill-selection event was locally observed in the
+supplied controlled capture. Because there is no configurable skill hook event
+to attach the collector to, exact skill invocation is **not testable through
+this hook configuration**. The unmatched `SubagentStop` is not skill evidence
+and must not be reclassified as such.
 
 Reading `SKILL.md`, mentioning a skill, selecting it in prose, or observing
 generic tools used by a skill cannot be upgraded into `skill_selected`
@@ -239,10 +288,12 @@ a distinct event bound to the displayed contract hash.
 
 - Hosted `WebSearch` is documented as outside normal hook coverage, and some
   specialized tools may opt out.
-- Agent tooling has provider-specific lifecycle hooks, but the exact local
-  identity tuple remains unobserved.
+- One complete agent start/stop identity tuple was locally observed, but an
+  unmatched stop also occurred. The cause and broader frequency of unmatched
+  or repeated stops remain unknown, and a stop is not independent invocation
+  evidence.
 - `PostToolUse` means that the tool completed; it does not define command
-  success or document a real exit-status member.
+  success, and neither controlled completion exposed a real exit-status member.
 - The hook surface supplies no dedicated skill event.
 - Hook payloads do not document a universal provider timestamp. The collector
   timestamp is diagnostic local time, not authenticated provider time.
@@ -257,17 +308,18 @@ a distinct event bound to the displayed contract hash.
 
 | Controlled event | Status |
 |---|---|
-| fresh `SessionStart` | not performed |
-| one captured `SubagentStart` and `SubagentStop` lifecycle | not performed |
-| `printf 'codex-hook-probe-success\n'` | not performed |
-| `sh -c 'printf "codex-hook-probe-failure\n" >&2; exit 7'` | not performed |
-| one explicit available-skill selection attempt | not performed |
+| fresh `SessionStart` | performed; one record captured |
+| one captured `SubagentStart` and `SubagentStop` lifecycle | performed; one matching lifecycle plus one unmatched stop captured |
+| `printf 'codex-hook-probe-success\n'` | performed; Pre/Post records correlated, no exit-status field exposed |
+| `sh -c 'printf "codex-hook-probe-failure\n" >&2; exit 7'` | performed; Pre/Post records correlated, no exit-status field exposed |
+| dedicated skill-selection event | not observed; exact skill invocation remains unavailable |
 
 ```text
-live hook probe: not run
+live hook probe: completed
+live hook probe rerun: prohibited in this unit
 ```
 
-## Validation
+## Setup validation (historical)
 
 The final setup validation is recorded here before the single setup commit:
 
@@ -300,66 +352,47 @@ exited 0 as recorded above; the initial exit 1 was an environment restriction,
 not a source-gate result. The restricted-file searches also use exit 1 to mean
 "no match," which is their passing result.
 
-No validation command is a live hook event: the definitions were not trusted,
-loading was not established, no handler execution was observed, and no capture
-was produced in this task.
+No validation command listed above was a live hook event in the historical
+setup task: the definitions were not trusted, loading was not established, no
+handler execution was observed, and no capture was produced in that task.
+These results are not current-unit validation, and this report does not invent
+current-unit gate outcomes.
 
-## Exact operator action required
+## Live-capture preservation boundary
 
-After checking out the setup commit, perform the following from the repository
-root:
+The controlled live probe is complete and must not be rerun. The preserved raw
+JSONL remains ignored and uncommitted and must not be inspected or copied into
+tracked documentation in this unit. This report uses only the operator-supplied
+sanitized findings.
 
-1. Start the bundled CLI against the repository:
-
-   ```sh
-   /Applications/ChatGPT.app/Contents/Resources/codex -C "$(git rev-parse --show-toplevel)"
-   ```
-
-2. Open `/hooks`. Review and trust the exact repository command-hook
-   definition or definitions for the five configured events. Repository trust
-   by itself is not enough.
-3. Exit that startup task. An untrusted `SessionStart` may already have been
-   skipped before the definitions were approved.
-4. Start a fresh Codex app task rooted at this repository. If the definitions
-   still appear skipped or absent, restart the app as a conservative fallback,
-   reopen the repository, and check `/hooks` again.
-5. In that fresh task only, allow the automatic startup capture, ask Codex to
-   spawn one available subagent and let it finish, then ask Codex to execute
-   each command exactly once:
-
-   ```sh
-   printf 'codex-hook-probe-success\n'
-   sh -c 'printf "codex-hook-probe-failure\n" >&2; exit 7'
-   ```
-
-6. Submit this exact harmless explicit skill-selection prompt once:
-
-   ```text
-   $anthropic-skills:learn Acknowledge this explicit skill selection in one sentence. Do not call tools.
-   ```
-
-   This checks only whether any dedicated event appears. The configured hook
-   surface has no skill event, so absence remains `not observed` and `not
-   testable`; it is not additional proof beyond the documented unsupported
-   surface. Do not infer invocation from the prompt, a skill-file read, or
-   generic tool events.
-7. End the task before inspecting `local_artifacts/codex-hook-probe/events.jsonl`
-   from an ordinary terminal, so inspection commands do not add probe events.
-   Keep the raw diagnostic file ignored and uncommitted.
-8. Review only the sanitized field/type/length/digest records. If any private
-   value appears, stop and quarantine the diagnostic file rather than copying
-   it into tracked documentation.
+The operator supplied the record count but not the preserved capture filename
+or SHA-256 digest. Those values must not be derived from the raw capture. If the
+operator later supplies them, only that filename, count, and digest may be
+added; no raw identifiers or JSONL contents may be recorded.
 
 ## Production-adapter readiness
 
-The current evidence is **not sufficient to design or activate the production
-Codex adapter**. The official contract makes agent evidence promising, but the
-required local identity tuple has not been captured. Backend evidence remains
-blocked on a real, explicit command exit status. Dedicated skill evidence is
-unsupported by the documented hook surface. Operator approval and coverage
-gaps remain separate unsolved boundaries.
+The current evidence is **not sufficient to activate a production Codex
+adapter**. Agent start identity and one matching lifecycle are locally
+observable, but no reviewed adapter writes those events into the production run
+ledger. An unmatched stop also shows why finish-only evidence cannot establish
+invocation.
 
-After the operator-controlled live capture, a new review may characterize the
-actual sanitized wire shapes and decide whether a narrow adapter is feasible.
-That later review must not translate diagnostic records into trusted workflow
-events automatically.
+Backend identity and Pre/Post correlation are locally observable, but
+hook-based deterministic backend pass/fail is unsupported in the observed
+runtime because neither controlled completion exposed a real process exit
+status. Dedicated skill evidence remains unsupported by the documented hook
+surface and unavailable through the tested configuration. Operator approval
+and coverage gaps remain separate unsolved boundaries.
+
+A future implementation must keep two responsibilities separate:
+
+- a Codex hook adapter may supply session, turn, agent, tool, and tool-use
+  identity evidence; and
+- a deterministic backend executor must execute each frozen-contract command
+  itself, capture the real process exit status, and write
+  `deterministic_backend` events. It must never accept a caller-provided claim
+  that the command passed.
+
+Neither production component is implemented by this unit. Diagnostic records
+must not be translated into trusted workflow events automatically.
