@@ -10,24 +10,28 @@ agent lifecycle event may become invocation evidence.
 ```text
 probe date: 2026-08-02
 foundation commit: df3a0c6aa4e8c078b5795bba34490a1b3b63c599
-working branch: codex/r14-codex-hook-probe
+probe working branch: codex/r14-codex-hook-probe
 installed CLI: codex-cli 0.146.0-alpha.9.2
 installed app: 26.727.51351 (build 6119)
 setup-task hook definitions recognized or loaded: not established
 setup-task hook definitions trusted: no
 setup-task hook handler execution observed: no
 controlled live-probe matching handler execution: locally observed
-sanitized live record count: 12
-preserved capture filename: not supplied
-preserved capture SHA-256: not supplied
+controlled sanitized summary record count: 12
+preserved archive record count: 414
+post-probe spillover record count: 402 by count, assuming append-only operation
+preserved archive filename: local_artifacts/codex-hook-probe/events-probe-and-postprobe-20260802.jsonl
+preserved archive SHA-256 (operator supplied): 86d00525ae7f5d4661ed82e8a3f2c6c5c289fa7c40d40435689b1a77238bbda8
+repository hook registration: retired after the probe
 live hook probe: completed; do not rerun
 ```
 
 The operator reports that the controlled probe was completed after the setup
-commit. The supplied matching sanitized records establish handler execution;
-they do not independently record the exact hook-trust UI state, which remains
-unknown. The probe must not be rerun, and the preserved raw JSONL must not be
-inspected in this unit.
+commit. The accepted capability conclusions come only from the original
+12-record sanitized summary. Those supplied matching sanitized records
+establish handler execution; they do not independently record the exact
+hook-trust UI state, which remains unknown. The probe must not be rerun, and the
+preserved raw JSONL must not be inspected in this unit.
 
 ## Evidence vocabulary
 
@@ -90,9 +94,9 @@ Current references are the official [Hooks](https://developers.openai.com/codex/
 [Managed configuration](https://developers.openai.com/codex/enterprise/managed-configuration),
 and [App Server](https://developers.openai.com/codex/app-server) documentation.
 
-## Diagnostic setup
+## Diagnostic setup and retirement
 
-The tracked setup consists only of:
+The historical tracked setup consisted only of:
 
 ```text
 .codex/hooks.json
@@ -101,8 +105,17 @@ The tracked setup consists only of:
 docs/workflows/R14-CODEX-HOOK-PROBE.md
 ```
 
-`.codex/hooks.json` registers observational command hooks for only the required
-events:
+After the controlled probe and subsequent diagnostic spillover, this retirement
+unit removed `.codex/hooks.json` to prevent further automatic diagnostic
+collection. No replacement repository, plugin, or user hook is introduced by
+this retirement unit, and no other tracked repository file actively registers
+the collector. The collector and its synthetic tests remain tracked as inactive
+reference material only; tracked repository configuration no longer registers
+them for automatic execution. Hook retirement does not modify production R14
+ledger behavior.
+
+During the active diagnostic phase, `.codex/hooks.json` registered observational
+command hooks for only the required events:
 
 | Hook event | Matcher | Purpose |
 |---|---|---|
@@ -112,16 +125,21 @@ events:
 | `PreToolUse` | `^Bash$` | Bash identity and exact controlled input |
 | `PostToolUse` | `^Bash$` | Bash completion and response shape |
 
-Each handler invokes the same repository-local collector, returns success, and
-provides no hook decision or additional context. Matching handlers may run
-concurrently; the collector makes no inference from arrival order.
+While the configuration was active, each handler invoked the same
+repository-local collector, returned success, and provided no hook decision or
+additional context. Matching handlers could run concurrently; the collector
+made no inference from arrival order.
 
-The collector reads at most one 1 MiB UTF-8 JSON object from standard input and
-appends one sanitized record beneath the already ignored path:
+When invoked during the active diagnostic phase, the collector read at most one
+1 MiB UTF-8 JSON object from standard input and appended one sanitized record
+beneath the already ignored path:
 
 ```text
 local_artifacts/codex-hook-probe/events.jsonl
 ```
+
+That was the collector's historical configured write path. The accumulated
+archive was later preserved under the normalized filename recorded below.
 
 The directory is forced to mode `0700` and the regular, non-symlink JSONL file
 to `0600`. Appends use an inter-process exclusive lock and `fsync`. Each record
@@ -159,10 +177,9 @@ and do not create a production event.
 
 ## Sanitized live-capture summary
 
-The operator-supplied sanitized findings describe one controlled live capture
-containing 12 records. This recording unit did not inspect the preserved raw
-JSONL. The operator did not supply its preserved filename or SHA-256 digest, so
-neither value is asserted here.
+The accepted capability evidence is the operator-supplied sanitized summary of
+the original controlled 12-record checkpoint. This report does not derive any
+event facts from the preserved raw JSONL.
 
 | Hook event | Record count |
 |---|---:|
@@ -356,24 +373,74 @@ No validation command listed above was a live hook event in the historical
 setup task: the definitions were not trusted, loading was not established, no
 handler execution was observed, and no capture was produced in that task.
 These results are not current-unit validation, and this report does not invent
-current-unit gate outcomes.
+current-unit gate outcomes. The historical `no capture present` result predates
+the controlled probe and later archive.
+
+## Probe-retirement validation
+
+The retirement unit was validated without opening, reading, parsing, copying,
+or hashing the raw archive:
+
+```text
+.codex/hooks.json absent from working tree: pass — exit 0
+tracked active collector registration search: pass — no match, exit 1
+preserved archive ignore boundary: pass — ignored, exit 0
+preserved archive tracked-file check: pass — not tracked, expected exit 1
+focused collector tests: pass — 12 tests, exit 0
+production R14 ledger source diff: pass — no diff, exit 0
+git diff --check: pass — exit 0
+gofmt -l .: pass — exit 0, no output
+go test ./...: pass — exit 0
+go vet ./...: pass — exit 0
+go build ./...: pass — exit 0
+go build ./cmd/ff6lab: pass — exit 0
+go build ./cmd/ff6demo: pass — exit 0
+go run ./cmd/ff6lab audit: pass — exit 0, audit clean
+go run ./cmd/ff6lab census validate: pass — exit 0, census clean
+go mod verify: pass — exit 0, all modules verified
+go build -tags gui ./cmd/ff6demo: pass — exit 0
+go vet -tags gui ./...: pass — exit 0
+go test -tags gui ./...: pass — exit 0
+tracked ROM/audio/state extension scan: pass — exit 0
+tracked rendered-asset extension scan: pass — exit 0
+archive verify: not run — FF6_ROM unavailable
+```
+
+The build commands exited 0 after completing successfully. The sandbox denied
+best-effort writes to the external Go module stat cache and emitted non-fatal
+warnings; this did not change the recorded command statuses.
 
 ## Live-capture preservation boundary
 
 The controlled live probe is complete and must not be rerun. The preserved raw
-JSONL remains ignored and uncommitted and must not be inspected or copied into
-tracked documentation in this unit. This report uses only the operator-supplied
-sanitized findings.
+JSONL remains ignored, private, untracked, and uncommitted and must not be
+inspected or copied into tracked documentation. The operator supplied this
+archive metadata without requiring inspection of its contents:
 
-The operator supplied the record count but not the preserved capture filename
-or SHA-256 digest. Those values must not be derived from the raw capture. If the
-operator later supplies them, only that filename, count, and digest may be
-added; no raw identifiers or JSONL contents may be recorded.
+```text
+archive filename: local_artifacts/codex-hook-probe/events-probe-and-postprobe-20260802.jsonl
+total archived records: 414
+SHA-256: 86d00525ae7f5d4661ed82e8a3f2c6c5c289fa7c40d40435689b1a77238bbda8
+```
+
+The archive is not an isolated 12-record capture. The diagnostic hook remained
+active during later Codex sessions, so the archive grew to 414 records. By
+count, 402 records accumulated after the original 12-record checkpoint,
+assuming the collector continued its documented append-only behavior. Those
+post-probe spillover records were not inspected, classified, or used as
+workflow evidence. No conclusion may be drawn from them without a new,
+separately approved evidence review, which is outside this unit's scope.
+
+The archive metadata above is operator supplied. It must not be recalculated or
+augmented from the raw file in this unit. This retirement unit did not open,
+read, parse, summarize, copy, or hash the archive, and the supplied digest was
+not independently verified.
 
 ## Production-adapter readiness
 
-The current evidence is **not sufficient to activate a production Codex
-adapter**. Agent start identity and one matching lifecycle are locally
+The accepted controlled 12-record evidence is **not sufficient to activate a
+production Codex adapter**. The 402 unreviewed spillover records add no accepted
+evidence. Agent start identity and one matching lifecycle are locally
 observable, but no reviewed adapter writes those events into the production run
 ledger. An unmatched stop also shows why finish-only evidence cannot establish
 invocation.
