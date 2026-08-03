@@ -150,6 +150,15 @@ fails, and null is unverifiable. Earlier matching completions are superseded.
 No match is unsatisfied. Reconciliation does not use event timestamps, slice
 position, or map iteration as a substitute for ledger order.
 
+The current package-private deterministic executor obtains its command from an
+exact `resource_id` in the active frozen contract, runs it as one `/bin/sh -c`
+argument from the immutable repository root, and records the shell's actual
+`ProcessState.ExitCode()`. It allocates sequence and revalidates the run,
+identity, ledger, contract, and requirement under the append lock after
+execution; stdout, stderr, and inherited environment are not ledger evidence.
+Its complete boundary and platform limitations are documented in
+[`R14-DETERMINISTIC-BACKEND.md`](R14-DETERMINISTIC-BACKEND.md).
+
 ## Damaged or incomplete evidence
 
 The verifier never skips, repairs, reorders, or discards malformed history.
@@ -190,9 +199,9 @@ Codex conversations, read a legacy gate TSV, or infer invocation from live
 artifact existence.
 
 No public command was added for asserting that an agent, skill, command, or
-backend ran. The event append method is package-private until a reviewed
-adapter defines a narrower capability. Tests append internal fixture events
-while exercising the same
+backend ran. The deterministic executor and event append method are
+package-private until a reviewed adapter defines a narrower capability. Tests
+append internal fixture events while exercising the same
 identity, integrity, provenance, and eligibility checks future adapters must
 use.
 

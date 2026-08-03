@@ -34,14 +34,19 @@ var workflowIDPattern = regexp.MustCompile(`^WF-[0-9]{4}$`)
 // Store reads and writes workflow runs beneath a repository root passed in
 // explicitly, so tests run against fixture trees.
 type Store struct {
-	root          string
-	generateRunID func() (string, error)
-	createLedger  func(string) error
+	root              string
+	generateRunID     func() (string, error)
+	createLedger      func(string) error
+	backendRunner     deterministicBackendRunner
+	saveStateOverride func(*RunState) error
 }
 
 // NewStore returns a Store rooted at the given repository path.
 func NewStore(root string) *Store {
-	return &Store{root: root, generateRunID: newRunID, createLedger: createLedgerFile}
+	return &Store{
+		root: root, generateRunID: newRunID, createLedger: createLedgerFile,
+		backendRunner: shellDeterministicBackendRunner{},
+	}
 }
 
 // ContractPath is the tracked location of a run's approved contract.
@@ -282,6 +287,9 @@ func (s *Store) loadVerifiedRunIdentityForState(id string, st *RunState) (*RunId
 }
 
 func (s *Store) saveState(st *RunState) error {
+	if s.saveStateOverride != nil {
+		return s.saveStateOverride(st)
+	}
 	return writeJSONAtomic(s.StatePath(st.WorkflowID), st, 0o600)
 }
 
@@ -313,15 +321,49 @@ func (s *Store) appendEvent(id string, event RunEvent) error {
 	if err != nil {
 		return err
 	}
-	release, err := s.acquireLedgerLock(id, st.RunID)
+	return s.appendEventAllocatingSequence(id, st.RunID, func(context lockedAppendContext) (RunEvent, error) {
+		expectedSequence := context.verification.TailSequence + 1
+		if event.Sequence != expectedSequence {
+			return RunEvent{}, fmt.Errorf("event sequence %d, want next sequence %d", event.Sequence, expectedSequence)
+		}
+		event.Sequence = 0
+		return event, nil
+	})
+}
+
+// lockedAppendContext is the verified run snapshot exposed only to an
+// in-package event constructor while the per-run ledger lock is held.
+type lockedAppendContext struct {
+	state        *RunState
+	identity     *RunIdentity
+	verification LedgerVerification
+}
+
+// appendEventAllocatingSequence owns final sequence selection, hash linkage,
+// validation, durable append, and tail anchoring under one per-run lock. The
+// constructor must not supply a sequence; callers that observed a long-running
+// operation therefore cannot race an event appended while that operation ran.
+func (s *Store) appendEventAllocatingSequence(id, expectedRunID string,
+	construct func(lockedAppendContext) (RunEvent, error)) error {
+	if !runIDPattern.MatchString(expectedRunID) {
+		return fmt.Errorf("invalid expected run_id %q", expectedRunID)
+	}
+	if construct == nil {
+		return fmt.Errorf("event constructor is nil")
+	}
+	release, err := s.acquireLedgerLock(id, expectedRunID)
 	if err != nil {
 		return err
 	}
 	defer release()
 
-	st, err = s.LoadState(id)
+	st, err := s.LoadState(id)
 	if err != nil {
 		return err
+	}
+	if st.RunID != expectedRunID {
+		return fmt.Errorf("workflow %s run changed from %s to %s; event append rejected",
+			id, expectedRunID, st.RunID)
 	}
 	if st.Phase == PhaseClosed {
 		return fmt.Errorf("workflow %s run %s is terminally closed; event append rejected", id, st.RunID)
@@ -334,15 +376,20 @@ func (s *Store) appendEvent(id string, event RunEvent) error {
 	if !verification.Valid {
 		return fmt.Errorf("refusing to append to invalid ledger: %s", strings.Join(verification.Problems, "; "))
 	}
-	expectedSequence := verification.TailSequence + 1
-	if event.Sequence != expectedSequence {
-		return fmt.Errorf("event sequence %d, want next sequence %d", event.Sequence, expectedSequence)
+	event, err := construct(lockedAppendContext{state: st, identity: identity, verification: verification})
+	if err != nil {
+		return err
+	}
+	if event.Sequence != 0 {
+		return fmt.Errorf("event constructor supplied sequence %d; sequence allocation belongs to the ledger writer",
+			event.Sequence)
 	}
 	for _, existing := range verification.Events {
 		if event.EventID == existing.EventID {
 			return fmt.Errorf("duplicate event_id %q", event.EventID)
 		}
 	}
+	event.Sequence = verification.TailSequence + 1
 	event.PreviousHash = verification.TailHash
 	event.EventHash = ""
 	hash, err := eventHash(event)
